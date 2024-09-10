@@ -18,7 +18,8 @@ import AceEditor from "react-ace";
 // import "ace-builds/src-noconflict/ext-language_tools";
 
 
-const PROTO_URL = '/profedit.proto'; // Adjust the path to your .proto file
+const PROTO_URL = '/src/proto/profedit.proto'; // Adjust the path to your .proto file
+const EXAMPLE_A7P = '/assets/example.a7p'
 preferredUnits.distance = Unit.Meter
 preferredUnits.velocity = Unit.MPS
 preferredUnits.angular = Unit.Degree
@@ -35,7 +36,7 @@ export default function FileLoader() {
     async function fetchBinaryFile() {
       try {
         // URL to the file in the public directory
-        const response = await fetch('/example.a7p');
+        const response = await fetch(EXAMPLE_A7P);
         const arrayBuffer = await response.arrayBuffer();
         // Convert ArrayBuffer to Base64
         const base64 = bufferToBase64(arrayBuffer);
