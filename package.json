@@ -9,10 +9,22 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@archerlink/protocol": "^1.0.0",
+    "@expo/metro-runtime": "~3.2.3",
+    "crypto-js": "^4.2.0",
     "expo": "~51.0.28",
     "expo-status-bar": "~1.12.1",
+    "i": "^0.3.7",
+    "js-ballistics": "^2.0.0-beta.2",
+    "npm": "^10.8.3",
+    "protobuf-validator": "^1.2.0",
+    "protobufjs": "^7.4.0",
     "react": "18.2.0",
-    "react-native": "0.74.5"
+    "react-ace": "^12.0.0",
+    "react-dom": "18.2.0",
+    "react-native": "0.74.5",
+    "react-native-table-component": "^1.2.2",
+    "react-native-web": "~0.19.10"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
