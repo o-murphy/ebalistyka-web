@@ -31,16 +31,14 @@ export default function FileLoader({ EXAMPLE_A7P, PROTO_URL }) {
   }, [fileContent]);
 
   return (
-    <View style={styles.container}>
-      {(fileContent && calculatorData) ? (
-        <View>
+      (fileContent && calculatorData) ? (
+        <View style={styles.container}>
           <TrajectoryTable calculatorData={calculatorData} />
           <TrajectoryChart calculatorData={calculatorData} />
         </View>
       ) : (
         <Text>No data available</Text>
-      )}
-    </View>
+      )
   );
 }
 
