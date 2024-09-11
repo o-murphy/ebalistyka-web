@@ -9,6 +9,7 @@ interface DoubleSpinBoxProps {
     min?: number; // Minimum value
     max?: number; // Maximum value
     step?: number;
+    inputProps?: any;
 }
 
 const DoubleSpinBox: React.FC<DoubleSpinBoxProps> = ({
@@ -18,7 +19,7 @@ const DoubleSpinBox: React.FC<DoubleSpinBoxProps> = ({
     min = 0, // Default min value
     max = 100, // Default max value
     step = 1,
-    ...rest
+    inputProps = null
 }: DoubleSpinBoxProps) => {
     const [currentValue, setCurrentValue] = useState<string>(value.toFixed(fixedPoints));
     const [error, setError] = useState<string | null>(null);
@@ -96,7 +97,7 @@ const DoubleSpinBox: React.FC<DoubleSpinBoxProps> = ({
             <TextInput
                 // right={affix ? <TextInput.Affix text={affix} /> : null}
                 // left={icon ? <TextInput.Icon icon={icon} /> : null}
-                {...rest}
+                {...inputProps}
                 mode="flat"
                 dense={true}
                 keyboardType="numeric"
@@ -135,9 +136,10 @@ const styles = StyleSheet.create({
     container: {
         alignItems: 'center',
         justifyContent: 'center',
+        margin: 0
     },
     input: {
-        // width: 150,
+        width: 200,
         textAlign: 'center',
         fontSize: 16,
     },

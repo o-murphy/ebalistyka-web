@@ -6974,6 +6974,11 @@ react-native-chart-kit@^6.12.0:
     paths-js "^0.4.10"
     point-in-polygon "^1.0.1"
 
+react-native-paper-grid@^0.1.12:
+  version "0.1.12"
+  resolved "https://registry.npmjs.org/react-native-paper-grid/-/react-native-paper-grid-0.1.12.tgz"
+  integrity sha512-8ANVcZ3p9YghWimAkICGYnD5A9ZZwNbzCVHJVwru6UDXlHV7v/CZvLaklrd2qpTXcGGTjmpSPajpoDIoGAdpkA==
+
 react-native-paper@^5.12.5:
   version "5.12.5"
   resolved "https://registry.npmjs.org/react-native-paper/-/react-native-paper-5.12.5.tgz"

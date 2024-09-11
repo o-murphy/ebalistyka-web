@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FileUploader } from "react-drag-drop-files";
-import parseA7P from "../utils/parseA7P";
-import { ProfileProps } from '../utils/parseA7P';
+import parseA7P from "../../utils/parseA7P";
+import { ProfileProps } from '../../utils/parseA7P';
 
 const fileTypes = ["A7P"];
 

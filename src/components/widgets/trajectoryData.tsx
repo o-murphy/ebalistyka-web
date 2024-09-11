@@ -1,13 +1,13 @@
 import { useContext, useState, useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { ProfileLoaderContext } from '../providers/profileLoaderProvider'; // Path to where you created the context
-import { prepareCalculator } from '../utils/prepareCalculator';
+import { ProfileLoaderContext } from '../../providers/profileLoaderProvider'; // Path to where you created the context
+import { prepareCalculator } from '../../utils/prepareCalculator';
 import TrajectoryChart from './trajectoryChart';
 import TrajectoryTable from './trajectoryTable';
 import {
   preferredUnits, Unit
 } from 'js-ballistics/dist/v2';
-import { ProfileProps } from '../utils/parseA7P';
+import { ProfileProps } from '../../utils/parseA7P';
 
 preferredUnits.distance = Unit.Meter
 preferredUnits.velocity = Unit.MPS

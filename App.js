@@ -1,12 +1,13 @@
 import React, {useState} from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
-import TrajectoryData from './src/components/trajectoryData';
+import TrajectoryData from './src/components/widgets/trajectoryData';
 import { ProfileLoaderProvider } from './src/providers/profileLoaderProvider';
-import A7PFileUploader from './src/components/fileDrop';
-import DoubleSpinBox from './src/components/doubleSpinBox';
+import A7PFileUploader from './src/components/widgets/fileDrop';
+import DoubleSpinBox from './src/components/widgets/doubleSpinBox';
 import { TextInput, PaperProvider, MD3LightTheme, MD3DarkTheme } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import WeaponCard from './src/components/cards/weaponCard';
 // import { isMobile } from 'react-device-detect';
 
 const PROTO_URL = '/src/proto/profedit.proto'; // Adjust the path to your .proto file
@@ -36,6 +37,7 @@ export default function App() {
           <View style={styles.container}>
             {/* <DoubleSpinBox right={<TextInput.Affix text="Inch" />}/> */}
             <A7PFileUploader />
+            <WeaponCard />
             <TrajectoryData EXAMPLE_A7P={EXAMPLE_A7P} />
             {/* <StatusBar style="auto" /> */}
           </View>
