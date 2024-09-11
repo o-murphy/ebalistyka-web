@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { View, StyleSheet, TextInput as NativeTextInput, NativeSyntheticEvent, TextInputKeyPressEventData } from 'react-native';
+import { View, StyleSheet, TextInput as NativeTextInput, NativeSyntheticEvent, TextInputKeyPressEventData, TextInputScrollEventData } from 'react-native';
 import { TextInput, HelperText } from 'react-native-paper';
 
 interface DoubleSpinBoxProps {
@@ -14,11 +14,12 @@ interface DoubleSpinBoxProps {
 const DoubleSpinBox: React.FC<DoubleSpinBoxProps> = ({
     value = 0,
     onValueChange,
-    fixedPoints = 2, // Default to 3 decimal places
+    fixedPoints = 3, // Default to 3 decimal places
     min = 0, // Default min value
     max = 100, // Default max value
     step = 1,
-}) => {
+    ...rest
+}: DoubleSpinBoxProps) => {
     const [currentValue, setCurrentValue] = useState<string>(value.toFixed(fixedPoints));
     const [error, setError] = useState<string | null>(null);
     const inputRef = useRef<NativeTextInput>(null); // To hold reference to the TextInput
@@ -59,7 +60,7 @@ const DoubleSpinBox: React.FC<DoubleSpinBoxProps> = ({
     const processKeyPress = (e: NativeSyntheticEvent<TextInputKeyPressEventData>) => {
         const key = e.nativeEvent.key;
 
-        if (key === '-') {
+        if (key === '-' || key === '+') {
             // Handle negative sign
             if (!currentValue.includes('-')) {
                 // console.log(currentValue)
@@ -80,15 +81,27 @@ const DoubleSpinBox: React.FC<DoubleSpinBoxProps> = ({
                     currentValue.slice(0, -1)
                 );
             }
+        } else {
+            const numValue = parseFloat(currentValue)
+            if (key === 'ArrowUp') {
+                handleInputChange((numValue + step).toFixed(fixedPoints))
+            } else if (key === 'ArrowDown') {
+                handleInputChange((numValue - step).toFixed(fixedPoints))
+            }
         }
     };
 
     return (
         <View style={styles.container}>
             <TextInput
-                // label="Diameter"
+                // right={affix ? <TextInput.Affix text={affix} /> : null}
+                // left={icon ? <TextInput.Icon icon={icon} /> : null}
+                {...rest}
                 mode="flat"
+                dense={true}
                 keyboardType="numeric"
+                //label={error ? error : null}
+                error={!!error}
                 value={currentValue} // Display the current value
                 onKeyPress={processKeyPress} // Handle key press for input and backspace
                 style={styles.input}
@@ -124,85 +137,10 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     input: {
-        width: 150,
+        // width: 150,
         textAlign: 'center',
-        fontSize: 24,
+        fontSize: 16,
     },
 });
 
 export default DoubleSpinBox;
-
-// import React, { useState } from 'react';
-// import { View, StyleSheet } from 'react-native';
-// import { TextInput, Button, IconButton } from 'react-native-paper';
-
-// interface DoubleSpinBoxProps {
-//   minValue?: number;
-//   maxValue?: number;
-//   step?: number;
-//   value?: number;
-//   onValueChange?: (newValue: number) => void;
-// }
-
-// const DoubleSpinBox: React.FC<DoubleSpinBoxProps> = ({
-//   minValue = 0,
-//   maxValue = 100,
-//   step = 0.1,
-//   value = 0,
-//   onValueChange,
-// }) => {
-//   const [currentValue, setCurrentValue] = useState<number>(value);
-
-//   const handleIncrease = () => {
-//     const newValue = Math.min(currentValue + step, maxValue);
-//     setCurrentValue(newValue);
-//     if (onValueChange) {
-//       onValueChange(newValue);
-//     }
-//   };
-
-//   const handleDecrease = () => {
-//     const newValue = Math.max(currentValue - step, minValue);
-//     setCurrentValue(newValue);
-//     if (onValueChange) {
-//       onValueChange(newValue);
-//     }
-//   };
-
-//   const handleInputChange = (text: string) => {
-//     const newValue = parseFloat(text) || 0;
-//     if (newValue >= minValue && newValue <= maxValue) {
-//       setCurrentValue(newValue);
-//       if (onValueChange) {
-//         onValueChange(newValue);
-//       }
-//     }
-//   };
-
-//   return (
-//     <View style={styles.container}>
-//       <IconButton icon="minus" mode="contained" onPress={handleDecrease} />
-//       <TextInput
-//         mode="outlined"
-//         keyboardType="numeric"
-//         value={currentValue.toFixed(2)}
-//         onChangeText={handleInputChange}
-//         style={styles.input}
-//       />
-//       <IconButton icon="plus" mode="contained" onPress={handleIncrease} />
-//     </View>
-//   );
-// };
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flexDirection: 'row',
-//     alignItems: 'center',
-//   },
-//   input: {
-//     width: 100,
-//     textAlign: 'center',
-//   },
-// });
-
-// export default DoubleSpinBox;
