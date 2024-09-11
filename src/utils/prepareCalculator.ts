@@ -4,8 +4,10 @@ import Calculator, {
     DragModel
 
 } from 'js-ballistics/dist/v2';
+import { ProfileProps } from './parseA7P';
 
-export const prepareCalculator = (profile) => {
+export const prepareCalculator = (profile: ProfileProps) => {
+    console.log(profile)
     const zeroAtmo = new Atmo({
         pressure: UNew.hPa(profile.cZeroAirPressure / 10),
         temperature: UNew.Celsius(profile.cZeroAirTemperature),

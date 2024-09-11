@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
-import FileLoader from './src/components/trajectoryData';
+import TrajectoryData from './src/components/trajectoryData';
 import { ProfileLoaderProvider } from './src/providers/profileLoaderProvider';
-import FileDrop from './src/components/dndField';
+import A7PFileUploader from './src/components/fileDrop';
 import DoubleSpinBox from './src/components/doubleSpinBox';
 import { TextInput, PaperProvider, MD3LightTheme, MD3DarkTheme } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -35,8 +35,8 @@ export default function App() {
         <ProfileLoaderProvider>
           <View style={styles.container}>
             {/* <DoubleSpinBox right={<TextInput.Affix text="Inch" />}/> */}
-            <FileDrop />
-            {/* <FileLoader EXAMPLE_A7P={EXAMPLE_A7P} PROTO_URL={PROTO_URL} /> */}
+            <A7PFileUploader />
+            <TrajectoryData EXAMPLE_A7P={EXAMPLE_A7P} />
             {/* <StatusBar style="auto" /> */}
           </View>
         </ProfileLoaderProvider>
