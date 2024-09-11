@@ -34,8 +34,8 @@ export default function App() {
 
         <ProfileLoaderProvider>
           <View style={styles.container}>
-            <DoubleSpinBox right={<TextInput.Affix text="Inch" />}/>
-            {/* <FileDrop /> */}
+            {/* <DoubleSpinBox right={<TextInput.Affix text="Inch" />}/> */}
+            <FileDrop />
             {/* <FileLoader EXAMPLE_A7P={EXAMPLE_A7P} PROTO_URL={PROTO_URL} /> */}
             {/* <StatusBar style="auto" /> */}
           </View>
