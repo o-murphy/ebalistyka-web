@@ -8,6 +8,7 @@ const fileTypes = ["A7P"];
 function A7PFileUploader({onSuccess = null}: {onSuccess?: (profile: ProfileProps) => void}) {
   const [error, setError] = useState(null);
 
+  
   const handleChange = (file) => {
 
     // Create a FileReader instance

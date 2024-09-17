@@ -1,6 +1,6 @@
 import * as React from 'react';
-import {Portal, Chip, useTheme, Button, Dialog, Text, FAB, Icon} from 'react-native-paper';
-import {View} from "react-native";
+import {Portal, Chip, useTheme, Dialog, FAB} from 'react-native-paper';
+import {StyleSheet, View} from "react-native";
 
 
 const SimpleDialog = ({
@@ -9,7 +9,8 @@ const SimpleDialog = ({
                          text,
                          icon = null,
                          onAccept = null,
-                         onDecline = null
+                         onDecline = null,
+                         style = null
                      }) => {
 
     const [visible, setVisible] = React.useState(false);
@@ -30,7 +31,7 @@ const SimpleDialog = ({
     }
 
     return (
-        <View style={{display: "flex", justifyContent: "center"}}>
+        <View style={style}>
             <Chip icon={icon} closeIcon="square-edit-outline" style={{margin: 0}} textStyle={{fontSize: 16}}
                   onPress={showDialog}
                   onClose={showDialog}
@@ -39,7 +40,7 @@ const SimpleDialog = ({
             </Chip>
             <Portal>
 
-                <Dialog visible={visible} onDismiss={hideDialog} style={{justifyContent: "center"}}>
+                <Dialog visible={visible} onDismiss={hideDialog} style={styles.dialog}>
                     <Dialog.Title>{label}</Dialog.Title>
 
                     <Dialog.Content>{children}</Dialog.Content>
@@ -55,5 +56,9 @@ const SimpleDialog = ({
         </View>
     );
 };
+
+const styles = StyleSheet.create({
+    dialog: {width: 400, alignSelf: "center", justifyContent: "center"},
+})
 
 export default SimpleDialog;

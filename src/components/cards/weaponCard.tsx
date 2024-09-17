@@ -1,56 +1,15 @@
-import {Text, SegmentedButtons, TextInput, useTheme} from "react-native-paper";
-import {Col, Grid, Row} from "react-native-paper-grid";
-import React, {useState} from "react";
+import { Text, SegmentedButtons, TextInput, useTheme } from "react-native-paper";
+import React, { useState } from "react";
 import InputCard from "./inputCard";
-import styleSheet from "../../stylesheet";
 import SimpleDialog from "../dialogs/simpleDialog";
-// import MeasureSliderModal from "../measure-slider-modal/MeasureSliderModal";
-import {Unit, UnitProps} from "js-ballistics/dist/v2";
+import { Unit, UnitProps } from "js-ballistics/dist/v2";
 import DoubleSpinBox from "../widgets/doubleSpinBox";
-// import {useTranslate} from "../../translations/UseTranslate";
+import { StyleSheet, View } from "react-native";
 
 
 export default function WeaponCard() {
 
-    const me = WeaponCard.name
-
     const theme = useTheme()
-
-    const fields = [
-        {
-            key: "diameter",
-            label: "Diameter",
-            suffix: UnitProps[Unit.Inch].symbol,
-            icon: "diameter-variant",
-            mode: "float" as const,
-            initialValue: 0.308,
-            maxValue: 22,
-            minValue: 0.001,
-            decimals: 3,
-        },
-        {
-            key: "sight_height",
-            label: "Sight height",
-            suffix: UnitProps[Unit.Inch].symbol,
-            icon: "crosshairs",
-            mode: "float" as const,
-            initialValue: 3,
-            maxValue: 5,
-            minValue: 0,
-            decimals: 1,
-        },
-        {
-            key: "twist",
-            label: "Twist",
-            suffix: UnitProps[Unit.Inch].symbol,
-            icon: "screw-flat-top",
-            mode: "float" as const,
-            initialValue: 11,
-            maxValue: 20,
-            minValue: -20,
-            decimals: 2,
-        },
-    ]
 
     const twistStates = [
         {
@@ -91,66 +50,112 @@ export default function WeaponCard() {
         setName(curName)
     }
 
-    const Field = ({field}) => {
-        return (
-            <Row                 style={styleSheet.grid.row}>
-                <Col size={8}>
-                    <Text style={{fontSize: 16}}>{field.label}</Text>
-                </Col>
-                <Col size={8}>
-                    <DoubleSpinBox 
-                        value={field.initialValue}
-                        // onValueChange
-                        fixedPoints={field.decimals}
-                        min={field.minValue}
-                        max={field.maxValue}
-                        step={1}
-                        inputProps={{
-                            right: <TextInput.Affix text={field.suffix}/>,
-                            left: <TextInput.Icon icon={field.icon}/>
-                        }}
-                    />
-                </Col>
-            </Row>
-        )
-    }
-
     return (
-
         <InputCard title={"Weapon"}>
-
-            <SimpleDialog label={"Name"} icon={"card-bulleted-outline"}
-                          text={curName}
-                          onAccept={acceptName}
-                          onDecline={declineName}
+            {/* <View style={{...styles.row, flex: 1}}> */}
+            <SimpleDialog
+                style={styles.nameContainer}
+                label={"Name"}
+                icon={"card-bulleted-outline"}
+                text={curName}
+                onAccept={acceptName}
+                onDecline={declineName}
             >
                 <TextInput value={name} onChangeText={setName} />
             </SimpleDialog>
 
-            <Grid 
-            style={styleSheet.grid.grid}
-            >
+            {/* </View> */}
 
-                {/* {fields.map(field => <MeasureSliderModal key={field.key} field={field}/>)} */}
-                {fields.map(field => <Field field={field}/>)}
-
-                <Row 
-                style={styleSheet.grid.row}
-                >
-                    <Col size={8}>
-                        <Text style={{fontSize: 16}}>{"Twist direction"}</Text>
-                    </Col>
-                    <Col size={8}>
-                        <SimpleDialog label={"Twist direction"} icon={curTwistDir === "Right" ? "rotate-right" : "rotate-left"}
-                                      text={curTwistDir} onAccept={acceptTwistDir} onDecline={declineTwistDir}>
-                            <SegmentedButtons
-                                buttons={twistStates} value={twistDir} onValueChange={setTwistDir}/>
-                        </SimpleDialog>
-                    </Col>
-                </Row>
-
-            </Grid>
+            {fields.map(field => (
+                <View style={styles.row}>
+                    <Text style={[styles.column, styles.label]}>{field.label}</Text>
+                    <DoubleSpinBox
+                        value={field.initialValue}
+                        onValueChange={value => console.log(value)}
+                        fixedPoints={field.decimals}
+                        min={field.minValue}
+                        max={field.maxValue}
+                        step={1}
+                        style={[styles.inputContainer]}
+                        inputProps={{
+                            mode: "outlined",
+                            dense: true,
+                            style: styles.input,
+                            right: <TextInput.Affix text={field.suffix} />,
+                            left: <TextInput.Icon icon={field.icon} />
+                        }}
+                    />
+                </View>
+            ))}
+            
+            <View style={styles.row}>
+                <Text style={[styles.column, styles.label]}>{"Twist direction"}</Text>
+                <SegmentedButtons style={[styles.column, { justifyContent: "flex-end" }]}
+                    buttons={twistStates} value={twistDir} onValueChange={setTwistDir} />
+            </View>
         </InputCard>
 
     )
 }
+
+const fields = [
+    {
+        key: "diameter",
+        label: "Diameter",
+        suffix: UnitProps[Unit.Inch].symbol,
+        icon: "diameter-variant",
+        mode: "float" as const,
+        initialValue: 0.308,
+        maxValue: 22,
+        minValue: 0.001,
+        decimals: 3,
+    },
+    {
+        key: "sight_height",
+        label: "Sight height",
+        suffix: UnitProps[Unit.Inch].symbol,
+        icon: "crosshairs",
+        mode: "float" as const,
+        initialValue: 3,
+        maxValue: 5,
+        minValue: 0,
+        decimals: 1,
+    },
+    {
+        key: "twist",
+        label: "Twist",
+        suffix: UnitProps[Unit.Inch].symbol,
+        icon: "screw-flat-top",
+        mode: "float" as const,
+        initialValue: 11,
+        maxValue: 20,
+        minValue: 0,
+        decimals: 2,
+    },
+]
+
+const styles = StyleSheet.create({
+    column: {
+        flex: 1,
+        flexDirection: "row",
+        marginHorizontal: 8
+    },
+    row: {
+        flex: 1,
+        flexDirection: "row",
+        marginVertical: 8,
+        alignItems: 'center',
+    },
+    inputContainer: {
+        flex: 1, // Input takes up 1 portions of the width
+        justifyContent: 'center',
+    },
+    input: {
+        width: '100%'
+    },
+    nameContainer: {
+        flex: 1,
+        marginVertical: 8,
+    },
+    label: { fontSize: 16 }
+})

@@ -22,7 +22,7 @@ export default function App() {
     setNightMode((prevNightMode) => !prevNightMode);
   };
 
-  const styles = {
+  const themeStyles = {
     provider: {
       flex: 1,
       backgroundColor: theme.colors.background  // Theme Background Color
@@ -30,15 +30,22 @@ export default function App() {
   }
 
   return (
-    <SafeAreaProvider style={styles.provider}>
+    <SafeAreaProvider style={themeStyles.provider}>
       <PaperProvider theme={theme}>
 
         <ProfileLoaderProvider>
-          <View style={styles.container}>
+          <View style={[styles.container, styles.row]}>
             {/* <DoubleSpinBox right={<TextInput.Affix text="Inch" />}/> */}
-            <A7PFileUploader />
-            <WeaponCard />
-            <TrajectoryData EXAMPLE_A7P={EXAMPLE_A7P} />
+
+              <View style={{...styles.column, flex: 1}}>
+                <A7PFileUploader />
+                <WeaponCard />
+              </View>
+
+              <View style={{...styles.column, flex: 3}}>
+                <TrajectoryData EXAMPLE_A7P={EXAMPLE_A7P} />
+              </View>
+
             {/* <StatusBar style="auto" /> */}
           </View>
         </ProfileLoaderProvider>
@@ -50,9 +57,17 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    // display: "flex",
+    // backgroundColor: '#fff',
+    // alignItems: 'center',
+    // justifyContent: 'center',
   },
+  row: {
+    flex: 1,
+    flexDirection: "row",
+  },
+  column: {
+    flex: 1,
+    flexDirection: "column"
+  }
 });

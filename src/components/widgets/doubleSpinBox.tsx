@@ -9,6 +9,7 @@ interface DoubleSpinBoxProps {
     min?: number; // Minimum value
     max?: number; // Maximum value
     step?: number;
+    style?: any;
     inputProps?: any;
 }
 
@@ -19,11 +20,12 @@ const DoubleSpinBox: React.FC<DoubleSpinBoxProps> = ({
     min = 0, // Default min value
     max = 100, // Default max value
     step = 1,
+    style = null,
     inputProps = null
 }: DoubleSpinBoxProps) => {
     const [currentValue, setCurrentValue] = useState<string>(value.toFixed(fixedPoints));
     const [error, setError] = useState<string | null>(null);
-    const inputRef = useRef<NativeTextInput>(null); // To hold reference to the TextInput
+    // const inputRef = useRef<NativeTextInput>(null); // To hold reference to the TextInput
 
     // Handle digit input from keyboard
     const handleInputChange = (text: string) => {
@@ -93,36 +95,13 @@ const DoubleSpinBox: React.FC<DoubleSpinBoxProps> = ({
     };
 
     return (
-        <View style={styles.container}>
+        <View style={style} >
             <TextInput
-                // right={affix ? <TextInput.Affix text={affix} /> : null}
-                // left={icon ? <TextInput.Icon icon={icon} /> : null}
                 {...inputProps}
-                mode="flat"
-                dense={true}
                 keyboardType="numeric"
-                //label={error ? error : null}
                 error={!!error}
                 value={currentValue} // Display the current value
                 onKeyPress={processKeyPress} // Handle key press for input and backspace
-                style={styles.input}
-                render={(props) => (
-                    <NativeTextInput
-                        {...props}
-                        ref={inputRef} // Bind the reference to the TextInput
-                        onFocus={() => {
-                            // Move cursor to the end when the input is focused
-                            if (inputRef.current) {
-                                inputRef.current.setNativeProps({
-                                    selection: {
-                                        start: currentValue.length,
-                                        end: currentValue.length,
-                                    },
-                                });
-                            }
-                        }}
-                    />
-                )}
             />
             <HelperText type="error" visible={!!error}>
                 {error}
@@ -131,18 +110,5 @@ const DoubleSpinBox: React.FC<DoubleSpinBoxProps> = ({
         </View>
     );
 };
-
-const styles = StyleSheet.create({
-    container: {
-        alignItems: 'center',
-        justifyContent: 'center',
-        margin: 0
-    },
-    input: {
-        width: 200,
-        textAlign: 'center',
-        fontSize: 16,
-    },
-});
 
 export default DoubleSpinBox;
