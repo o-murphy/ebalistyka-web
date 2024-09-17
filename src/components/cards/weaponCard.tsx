@@ -7,7 +7,7 @@ import DoubleSpinBox from "../widgets/doubleSpinBox";
 import { StyleSheet, View } from "react-native";
 
 
-export default function WeaponCard() {
+export default function WeaponCard({expanded = true}) {
 
     const theme = useTheme()
 
@@ -51,7 +51,7 @@ export default function WeaponCard() {
     }
 
     return (
-        <InputCard title={"Weapon"}>
+        <InputCard title={"Weapon"} expanded={expanded}>
             {/* <View style={{...styles.row, flex: 1}}> */}
             <SimpleDialog
                 style={styles.nameContainer}
@@ -68,7 +68,7 @@ export default function WeaponCard() {
 
             {fields.map(field => (
                 <View style={styles.row}>
-                    <Text style={[styles.column, styles.label]}>{field.label}</Text>
+                    <Text style={[styles.column, {flex: 1}, styles.label]}>{field.label}</Text>
                     <DoubleSpinBox
                         value={field.initialValue}
                         onValueChange={value => console.log(value)}
@@ -76,22 +76,22 @@ export default function WeaponCard() {
                         min={field.minValue}
                         max={field.maxValue}
                         step={1}
-                        style={[styles.inputContainer]}
+                        style={[styles.inputContainer, {flex: 2}]}
                         inputProps={{
                             mode: "outlined",
                             dense: true,
                             style: styles.input,
-                            contentStyle: styles.inputContent,
+                            contentStyle: [styles.inputContent, {width: "70%"}],
                             right: <TextInput.Affix text={field.suffix} />,
-                            left: <TextInput.Icon icon={field.icon} />
+                            left: <TextInput.Icon icon={field.icon} size={16} />
                         }}
                     />
                 </View>
             ))}
             
             <View style={styles.row}>
-                <Text style={[styles.column, styles.label]}>{"Twist direction"}</Text>
-                <SegmentedButtons style={[styles.column, { justifyContent: "flex-end" }]}
+                <Text style={[styles.column, {flex: 1}, styles.label]}>{"Twist direction"}</Text>
+                <SegmentedButtons style={[styles.column, { flex: 2, justifyContent: "flex-end" }]}
                     buttons={twistStates} value={twistDir} onValueChange={setTwistDir} />
             </View>
         </InputCard>
@@ -150,6 +150,7 @@ const styles = StyleSheet.create({
     inputContainer: {
         flex: 1, // Input takes up 1 portions of the width
         justifyContent: 'center',
+        // height: 20,
     },
     input: {
         width: '100%',

@@ -10,6 +10,8 @@ import WeaponCard from './src/components/cards/weaponCard';
 import InputCard from './src/components/cards/inputCard';
 import ProjectileCard from './src/components/cards/projectileCard';
 import BulletCard from './src/components/cards/bulletCard';
+import AtmoCard from './src/components/cards/atmoCard';
+import WindCard from './src/components/cards/windCard';
 // import { isMobile } from 'react-device-detect';
 
 const PROTO_URL = '/src/proto/profedit.proto'; // Adjust the path to your .proto file
@@ -33,27 +35,27 @@ export default function App() {
 
   return (
     <SafeAreaProvider style={themeStyles.provider}>
-      <PaperProvider theme={theme}>
+      <PaperProvider theme={theme} >
 
         <ProfileLoaderProvider>
-          <View style={styles.row}>
+          <View style={{...styles.row}}>
             {/* <DoubleSpinBox right={<TextInput.Affix text="Inch" />}/> */}
 
             <ScrollView
-              style={{ ...styles.column, flex: 1, minWidth: 400 }}
+              style={{ ...styles.column, flex: 1, minWidth: 350, }}
               keyboardShouldPersistTaps="always"
               alwaysBounceVertical={false}
               showsVerticalScrollIndicator={false}
             >
               <InputCard title={"Open ballistic profile"}>
                 <A7PFileUploader />
-              </InputCard>
-              <WeaponCard />
-              <ProjectileCard />
-              <BulletCard />
+              </InputCard >
+              <WeaponCard expanded={true}/>
+              <ProjectileCard expanded={true}/>
+              <BulletCard expanded={true}/>
             </ScrollView>
 
-            <ScrollView style={{ ...styles.column, flex: 4, minWidth: 640, }}
+            <ScrollView style={{ ...styles.column, flex: 4, minWidth: 350, }}
               keyboardShouldPersistTaps="always"
               alwaysBounceVertical={false}
               showsVerticalScrollIndicator={false}
@@ -62,18 +64,16 @@ export default function App() {
             </ScrollView>
             
             <ScrollView
-              style={{ ...styles.column, flex: 1, minWidth: 400 }}
+              style={{ ...styles.column, flex: 1, minWidth: 400}}
               keyboardShouldPersistTaps="always"
               alwaysBounceVertical={false}
               showsVerticalScrollIndicator={false}
             >
-                <Text variant="headlineLarge" style={{alignSelf: "center"}}>Placeholder</Text>
-              {/* <InputCard title={"Open ballistic profile"}>
-                <A7PFileUploader />
-              </InputCard>
-              <WeaponCard />
-              <ProjectileCard />
-              <BulletCard /> */}
+              <AtmoCard expanded={false}/>
+              <WindCard expanded={false}/>
+              <AtmoCard expanded={true} label='Current atmosphere'/>
+              <WindCard expanded={true} label='Current wind'/>
+
             </ScrollView>
 
             {/* <StatusBar style="auto" /> */}
@@ -92,6 +92,6 @@ const styles = StyleSheet.create({
   },
   column: {
     flex: 1,
-    flexDirection: "column"
+    flexDirection: "column",
   }
 });

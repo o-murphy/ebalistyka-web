@@ -1,11 +1,11 @@
-import {Card} from "react-native-paper";
-import React, {useState} from "react";
+import { Card } from "react-native-paper";
+import React, { useState } from "react";
 import { StyleSheet } from "react-native";
-import {IconButton, Text} from "react-native-paper";
+import { IconButton, Text } from "react-native-paper";
 
 
 
-const InputCard = ({children, title, expanded = true}) => {
+const InputCard = ({ children, title, expanded = true }) => {
 
     const [isExpanded, setIsExpanded] = useState(expanded);
 
@@ -15,24 +15,25 @@ const InputCard = ({children, title, expanded = true}) => {
 
     return (
         <Card mode="elevated" elevation={1}
-              style={styles.card}
+            style={{ ...styles.card }}
         >
-            <Card.Title 
+            <Card.Title
+                style={styles.title}
                 titleStyle={styles.titleFont}
-                titleVariant={"titleLarge"} 
+                titleVariant={"titleLarge"}
                 title={title}
-                right={(props) => 
-                <IconButton {...props} 
-                    style={styles.iconButton}
-                    size={20}
-                    icon={isExpanded ? "chevron-up" : "chevron-down"} 
-                    onPress={toggleExpansion} 
-                />}
+                right={(props) =>
+                    <IconButton {...props}
+                        style={styles.iconButton}
+                        size={20}
+                        icon={isExpanded ? "chevron-up" : "chevron-down"}
+                        onPress={toggleExpansion}
+                    />}
             />
-                
+
             {isExpanded && (
-            <Card.Content 
-                style={styles.content}
+                <Card.Content
+                    style={styles.content}
                 >
                     {children}
                 </Card.Content>
@@ -46,9 +47,14 @@ const InputCard = ({children, title, expanded = true}) => {
 const styles = StyleSheet.create({
     card: {
         margin: 15,
-        padding: 10
+        padding: 10,
+        flexGrow: 0
     },
     iconButton: {
+        marginVertical: 0,  // Reduce vertical margin of the IconButton
+        paddingVertical: 0,  // Remove extra padding
+    },
+    title: {
         marginVertical: 0,  // Reduce vertical margin of the IconButton
         paddingVertical: 0,  // Remove extra padding
     },
@@ -56,8 +62,6 @@ const styles = StyleSheet.create({
         fontSize: 20
     },
     content: {
-        marginHorizontal: 0,
-        paddingHorizontal: 10
     },
 })
 

@@ -1,18 +1,17 @@
-import { Text, TextInput, useTheme } from "react-native-paper";
-import React, { useState } from "react";
+import React from "react";
 import InputCard from "./inputCard";
-import SimpleDialog from "../dialogs/simpleDialog";
-import { Unit, UnitProps } from "js-ballistics/dist/v2";
+import {Unit, UnitProps} from "js-ballistics/dist/v2";
+import {StyleSheet, View, } from 'react-native'
+import { TextInput, Text } from "react-native-paper";
 import DoubleSpinBox from "../widgets/doubleSpinBox";
-import { StyleSheet, View } from "react-native";
+import SimpleDialog from "../dialogs/simpleDialog";
 
-export default function ProjectileCard({expanded = true}) {
 
-    const me = ProjectileCard.name
+export default function AtmoCard({label = "Zero atmosphere", expanded = true}) {
 
-    const theme = useTheme()
+    const me = AtmoCard.name
 
-    const [curName, setCurName] = React.useState("My projectile");
+    const [curName, setCurName] = React.useState("My rifle");
     const [name, setName] = React.useState(curName);
 
     const acceptName = () => {
@@ -24,19 +23,7 @@ export default function ProjectileCard({expanded = true}) {
     }
 
     return (
-
-        <InputCard title={"Projectile"} expanded={expanded}>
-
-            <SimpleDialog
-                style={styles.nameContainer}
-                label={"Name"}
-                icon={"card-bulleted-outline"}
-                text={curName}
-                onAccept={acceptName}
-                onDecline={declineName}
-            >
-                <TextInput value={name} onChangeText={setName} />
-            </SimpleDialog>
+        <InputCard title={label} expanded={expanded}>
 
             {fields.map(field => (
                 <View style={styles.row}>
@@ -48,7 +35,7 @@ export default function ProjectileCard({expanded = true}) {
                         min={field.minValue}
                         max={field.maxValue}
                         step={1}
-                        style={[styles.inputContainer, {flex: 2}]}
+                        style={[styles.inputContainer, {flex: 2}, ]}
                         inputProps={{
                             mode: "outlined",
                             dense: true,
@@ -60,49 +47,58 @@ export default function ProjectileCard({expanded = true}) {
                     />
                 </View>
             ))}
-
+            
         </InputCard>
 
     )
 }
 
-
 const fields = [
     {
-        key: "mv",
-        label: "Muzzle velocity",
-        suffix: UnitProps[Unit.MPS].symbol,
+        key: "temp",
+        label: "Temperature",
+        suffix: UnitProps[Unit.Celsius].symbol,
+        icon: "thermometer",
+        mode: "int" as const,
+        initialValue: 15,
+        maxValue: 50,
+        minValue: -50,
+        decimals: 0
+    },
+    {
+        key: "pressure",
+        label: "Pressure",
+        suffix: UnitProps[Unit.MmHg].symbol,
         icon: "speedometer",
         mode: "int" as const,
-        initialValue: 805,
-        maxValue: 2000,
-        minValue: 10,
+        initialValue: 760,
+        maxValue: 1000,
+        minValue: 700,
+        decimals: 0
+    },
+    {
+        key: "humidity",
+        label: "Humidity",
+        suffix: "%",
+        icon: "water",
+        mode: "int" as const,
+        initialValue: 78,
+        maxValue: 100,
+        minValue: 0,
+        decimals: 0
+    },
+    {
+        key: "altitude",
+        label: "Altitude",
+        suffix: UnitProps[Unit.Meter].symbol,
+        icon: "ruler",
+        mode: "int" as const,
+        initialValue: 150,
+        maxValue: 3000,
+        minValue: 0,
         decimals: 0,
     },
-    // {
-    //     key: "powder_temp",
-    //     label: "Powder temperature",
-    //     suffix: UnitProps[Unit.Celsius].symbol,
-    //     icon: "thermometer",
-    //     mode: "int" as const,
-    //     initialValue: 15,
-    //     maxValue: 50,
-    //     minValue: -50,
-    //     decimals: 0,
-    // },
-    {
-        key: "powder_sens",
-        label: "Temperature sens.",
-        suffix: "/15°C",
-        icon: "percent",
-        mode: "float" as const,
-        initialValue: 1,
-        maxValue: 5,
-        minValue: 0,
-        decimals: 2,
-    },
 ]
-
 
 const styles = StyleSheet.create({
     column: {

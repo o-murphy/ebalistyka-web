@@ -7,7 +7,7 @@ import { StyleSheet, View } from "react-native";
 import DoubleSpinBox from "../widgets/doubleSpinBox";
 
 
-export default function BulletCard() {
+export default function BulletCard({expanded = true}) {
 
     const me = BulletCard.name
 
@@ -29,7 +29,7 @@ export default function BulletCard() {
 
     return (
 
-        <InputCard title={"Bullet"}>
+        <InputCard title={"Bullet"} expanded={expanded}>
 
             <SimpleDialog 
                 style={styles.nameContainer}
@@ -44,7 +44,7 @@ export default function BulletCard() {
 
             {fields.map(field => (
                 <View style={styles.row}>
-                    <Text style={[styles.column, styles.label]}>{field.label}</Text>
+                    <Text style={[styles.column, {flex: 1}, styles.label]}>{field.label}</Text>
                     <DoubleSpinBox
                         value={field.initialValue}
                         onValueChange={value => console.log(value)}
@@ -52,25 +52,25 @@ export default function BulletCard() {
                         min={field.minValue}
                         max={field.maxValue}
                         step={1}
-                        style={[styles.inputContainer]}
+                        style={[styles.inputContainer, {flex: 2}]}
                         inputProps={{
                             mode: "outlined",
                             dense: true,
                             style: styles.input,
                             contentStyle: styles.inputContent,
                             right: <TextInput.Affix text={field.suffix} />,
-                            left: <TextInput.Icon icon={field.icon}/>
+                            left: <TextInput.Icon icon={field.icon} size={16} />
                         }}
                     />
                 </View>
             ))}
 
             <View style={styles.row}>
-                <Text style={[styles.column, styles.label]}>{"Drag model"}</Text>
+                <Text style={[styles.column, {flex: 1}, styles.label]}>{"Drag model"}</Text>
                 <Chip 
                 icon={"function"} 
                 closeIcon="square-edit-outline" 
-                style={styles.column} 
+                style={[styles.column, {flex: 2}]} 
                 textStyle={{fontSize: 16}}
                         onPress={editDragModel}
                         onClose={editDragModel}
@@ -137,6 +137,7 @@ const styles = StyleSheet.create({
     inputContainer: {
         flex: 1, // Input takes up 1 portions of the width
         justifyContent: 'center',
+        // height: 20,
     },
     input: {
         width: '100%',
