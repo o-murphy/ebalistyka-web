@@ -1,46 +1,18 @@
-import { Text, SegmentedButtons, TextInput, useTheme } from "react-native-paper";
-import React, { useState } from "react";
+import {Text, TextInput, Chip} from "react-native-paper";
+import React from "react";
 import InputCard from "./inputCard";
 import SimpleDialog from "../dialogs/simpleDialog";
-import { Unit, UnitProps } from "js-ballistics/dist/v2";
-import DoubleSpinBox from "../widgets/doubleSpinBox";
+import {Unit, UnitProps} from "js-ballistics/dist/v2";
 import { StyleSheet, View } from "react-native";
+import DoubleSpinBox from "../widgets/doubleSpinBox";
 
 
-export default function WeaponCard() {
+export default function BulletCard() {
 
-    const theme = useTheme()
+    const me = BulletCard.name
 
-    const twistStates = [
-        {
-            value: 'Right',
-            label: 'Right',
-            icon: "rotate-right",
-            showSelectedCheck: true,
-            checkedColor: theme.colors.primary
-        },
-        {
-            value: 'Left',
-            label: 'Left',
-            icon: "rotate-left",
-            showSelectedCheck: true,
-            checkedColor: theme.colors.primary
-        }
-    ]
-
-    const [curTwistDir, setCurTwistDir] = useState("Right");
-    const [twistDir, setTwistDir] = useState(curTwistDir);
-
-    const [curName, setCurName] = React.useState("My rifle");
+    const [curName, setCurName] = React.useState("My bullet");
     const [name, setName] = React.useState(curName);
-
-    const acceptTwistDir = (): void => {
-        setCurTwistDir(twistDir)
-    }
-
-    const declineTwistDir = (): void => {
-        setTwistDir(curTwistDir)
-    }
 
     const acceptName = () => {
         setCurName(name)
@@ -50,21 +22,25 @@ export default function WeaponCard() {
         setName(curName)
     }
 
+    const editDragModel = () => {
+        // navigate("DragModelScreen")
+        console.log("Edit drag model")
+    }
+
     return (
-        <InputCard title={"Weapon"}>
-            {/* <View style={{...styles.row, flex: 1}}> */}
-            <SimpleDialog
+
+        <InputCard title={"Bullet"}>
+
+            <SimpleDialog 
                 style={styles.nameContainer}
-                label={"Name"}
+                label={"Name"} 
                 icon={"card-bulleted-outline"}
                 text={curName}
                 onAccept={acceptName}
                 onDecline={declineName}
             >
-                <TextInput value={name} onChangeText={setName} />
+                <TextInput value={name} onChangeText={setName}/>
             </SimpleDialog>
-
-            {/* </View> */}
 
             {fields.map(field => (
                 <View style={styles.row}>
@@ -83,57 +59,68 @@ export default function WeaponCard() {
                             style: styles.input,
                             contentStyle: styles.inputContent,
                             right: <TextInput.Affix text={field.suffix} />,
-                            left: <TextInput.Icon icon={field.icon} />
+                            left: <TextInput.Icon icon={field.icon}/>
                         }}
                     />
                 </View>
             ))}
-            
+
             <View style={styles.row}>
-                <Text style={[styles.column, styles.label]}>{"Twist direction"}</Text>
-                <SegmentedButtons style={[styles.column, { justifyContent: "flex-end" }]}
-                    buttons={twistStates} value={twistDir} onValueChange={setTwistDir} />
+                <Text style={[styles.column, styles.label]}>{"Drag model"}</Text>
+                <Chip 
+                icon={"function"} 
+                closeIcon="square-edit-outline" 
+                style={styles.column} 
+                textStyle={{fontSize: 16}}
+                        onPress={editDragModel}
+                        onClose={editDragModel}
+                >
+                    {`0.318 G7`}
+                </Chip>
             </View>
+
         </InputCard>
 
     )
 }
 
+
 const fields = [
+    // {
+    //     key: "diameter",
+    //     label: "Diameter",
+    //     suffix: UnitProps[Unit.Inch].symbol,
+    //     icon: "diameter-variant",
+    //     mode: "float" as const,
+    //     initialValue: 0.308,
+    //     maxValue: 22,
+    //     minValue: 0.001,
+    //     decimals: 3,
+    // },
     {
-        key: "diameter",
-        label: "Caliber",
-        suffix: UnitProps[Unit.Inch].symbol,
-        icon: "diameter-variant",
+        key: "weight",
+        label: "Weight",
+        suffix: UnitProps[Unit.Grain].symbol,
+        icon: "weight",
         mode: "float" as const,
-        initialValue: 0.308,
-        maxValue: 22,
-        minValue: 0.001,
-        decimals: 3,
-    },
-    {
-        key: "sight_height",
-        label: "Sight height",
-        suffix: UnitProps[Unit.Inch].symbol,
-        icon: "crosshairs",
-        mode: "float" as const,
-        initialValue: 3,
-        maxValue: 5,
-        minValue: 0,
+        initialValue: 15,
+        maxValue: 50,
+        minValue: -50,
         decimals: 1,
     },
     {
-        key: "twist",
-        label: "Twist",
+        key: "length",
+        label: "Length",
         suffix: UnitProps[Unit.Inch].symbol,
-        icon: "screw-flat-top",
+        icon: "arrow-expand-horizontal",
         mode: "float" as const,
-        initialValue: 11,
-        maxValue: 20,
+        initialValue: 1.7,
+        maxValue: 5,
         minValue: 0,
         decimals: 2,
     },
 ]
+
 
 const styles = StyleSheet.create({
     column: {

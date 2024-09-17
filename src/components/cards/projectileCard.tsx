@@ -1,4 +1,4 @@
-import { Text, SegmentedButtons, TextInput, useTheme } from "react-native-paper";
+import { Text, TextInput, useTheme } from "react-native-paper";
 import React, { useState } from "react";
 import InputCard from "./inputCard";
 import SimpleDialog from "../dialogs/simpleDialog";
@@ -6,41 +6,14 @@ import { Unit, UnitProps } from "js-ballistics/dist/v2";
 import DoubleSpinBox from "../widgets/doubleSpinBox";
 import { StyleSheet, View } from "react-native";
 
+export default function ProjectileCard() {
 
-export default function WeaponCard() {
+    const me = ProjectileCard.name
 
     const theme = useTheme()
 
-    const twistStates = [
-        {
-            value: 'Right',
-            label: 'Right',
-            icon: "rotate-right",
-            showSelectedCheck: true,
-            checkedColor: theme.colors.primary
-        },
-        {
-            value: 'Left',
-            label: 'Left',
-            icon: "rotate-left",
-            showSelectedCheck: true,
-            checkedColor: theme.colors.primary
-        }
-    ]
-
-    const [curTwistDir, setCurTwistDir] = useState("Right");
-    const [twistDir, setTwistDir] = useState(curTwistDir);
-
-    const [curName, setCurName] = React.useState("My rifle");
+    const [curName, setCurName] = React.useState("My projectile");
     const [name, setName] = React.useState(curName);
-
-    const acceptTwistDir = (): void => {
-        setCurTwistDir(twistDir)
-    }
-
-    const declineTwistDir = (): void => {
-        setTwistDir(curTwistDir)
-    }
 
     const acceptName = () => {
         setCurName(name)
@@ -51,8 +24,9 @@ export default function WeaponCard() {
     }
 
     return (
-        <InputCard title={"Weapon"}>
-            {/* <View style={{...styles.row, flex: 1}}> */}
+
+        <InputCard title={"Projectile"}>
+
             <SimpleDialog
                 style={styles.nameContainer}
                 label={"Name"}
@@ -63,8 +37,6 @@ export default function WeaponCard() {
             >
                 <TextInput value={name} onChangeText={setName} />
             </SimpleDialog>
-
-            {/* </View> */}
 
             {fields.map(field => (
                 <View style={styles.row}>
@@ -88,52 +60,49 @@ export default function WeaponCard() {
                     />
                 </View>
             ))}
-            
-            <View style={styles.row}>
-                <Text style={[styles.column, styles.label]}>{"Twist direction"}</Text>
-                <SegmentedButtons style={[styles.column, { justifyContent: "flex-end" }]}
-                    buttons={twistStates} value={twistDir} onValueChange={setTwistDir} />
-            </View>
+
         </InputCard>
 
     )
 }
 
+
 const fields = [
     {
-        key: "diameter",
-        label: "Caliber",
-        suffix: UnitProps[Unit.Inch].symbol,
-        icon: "diameter-variant",
-        mode: "float" as const,
-        initialValue: 0.308,
-        maxValue: 22,
-        minValue: 0.001,
-        decimals: 3,
+        key: "mv",
+        label: "Muzzle velocity",
+        suffix: UnitProps[Unit.MPS].symbol,
+        icon: "speedometer",
+        mode: "int" as const,
+        initialValue: 805,
+        maxValue: 2000,
+        minValue: 10,
+        decimals: 0,
     },
+    // {
+    //     key: "powder_temp",
+    //     label: "Powder temperature",
+    //     suffix: UnitProps[Unit.Celsius].symbol,
+    //     icon: "thermometer",
+    //     mode: "int" as const,
+    //     initialValue: 15,
+    //     maxValue: 50,
+    //     minValue: -50,
+    //     decimals: 0,
+    // },
     {
-        key: "sight_height",
-        label: "Sight height",
-        suffix: UnitProps[Unit.Inch].symbol,
-        icon: "crosshairs",
+        key: "powder_sens",
+        label: "Temperature coefficient",
+        suffix: "/15°C",
+        icon: "percent",
         mode: "float" as const,
-        initialValue: 3,
+        initialValue: 1,
         maxValue: 5,
-        minValue: 0,
-        decimals: 1,
-    },
-    {
-        key: "twist",
-        label: "Twist",
-        suffix: UnitProps[Unit.Inch].symbol,
-        icon: "screw-flat-top",
-        mode: "float" as const,
-        initialValue: 11,
-        maxValue: 20,
         minValue: 0,
         decimals: 2,
     },
 ]
+
 
 const styles = StyleSheet.create({
     column: {

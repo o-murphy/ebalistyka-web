@@ -1,13 +1,15 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import TrajectoryData from './src/components/widgets/trajectoryData';
 import { ProfileLoaderProvider } from './src/providers/profileLoaderProvider';
 import A7PFileUploader from './src/components/widgets/fileDrop';
-import DoubleSpinBox from './src/components/widgets/doubleSpinBox';
-import { TextInput, PaperProvider, MD3LightTheme, MD3DarkTheme } from 'react-native-paper';
+import { Text, PaperProvider, MD3LightTheme, MD3DarkTheme } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import WeaponCard from './src/components/cards/weaponCard';
+import InputCard from './src/components/cards/inputCard';
+import ProjectileCard from './src/components/cards/projectileCard';
+import BulletCard from './src/components/cards/bulletCard';
 // import { isMobile } from 'react-device-detect';
 
 const PROTO_URL = '/src/proto/profedit.proto'; // Adjust the path to your .proto file
@@ -34,17 +36,45 @@ export default function App() {
       <PaperProvider theme={theme}>
 
         <ProfileLoaderProvider>
-          <View style={[styles.container, styles.row]}>
+          <View style={styles.row}>
             {/* <DoubleSpinBox right={<TextInput.Affix text="Inch" />}/> */}
 
-              <View style={{...styles.column, flex: 1}}>
+            <ScrollView
+              style={{ ...styles.column, flex: 1, minWidth: 400 }}
+              keyboardShouldPersistTaps="always"
+              alwaysBounceVertical={false}
+              showsVerticalScrollIndicator={false}
+            >
+              <InputCard title={"Open ballistic profile"}>
                 <A7PFileUploader />
-                <WeaponCard />
-              </View>
+              </InputCard>
+              <WeaponCard />
+              <ProjectileCard />
+              <BulletCard />
+            </ScrollView>
 
-              <View style={{...styles.column, flex: 3}}>
-                <TrajectoryData EXAMPLE_A7P={EXAMPLE_A7P} />
-              </View>
+            <ScrollView style={{ ...styles.column, flex: 4, minWidth: 640, }}
+              keyboardShouldPersistTaps="always"
+              alwaysBounceVertical={false}
+              showsVerticalScrollIndicator={false}
+            >
+              <TrajectoryData EXAMPLE_A7P={EXAMPLE_A7P} />
+            </ScrollView>
+            
+            <ScrollView
+              style={{ ...styles.column, flex: 1, minWidth: 400 }}
+              keyboardShouldPersistTaps="always"
+              alwaysBounceVertical={false}
+              showsVerticalScrollIndicator={false}
+            >
+                <Text variant="headlineLarge" style={{alignSelf: "center"}}>Placeholder</Text>
+              {/* <InputCard title={"Open ballistic profile"}>
+                <A7PFileUploader />
+              </InputCard>
+              <WeaponCard />
+              <ProjectileCard />
+              <BulletCard /> */}
+            </ScrollView>
 
             {/* <StatusBar style="auto" /> */}
           </View>
@@ -56,12 +86,6 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    // display: "flex",
-    // backgroundColor: '#fff',
-    // alignItems: 'center',
-    // justifyContent: 'center',
-  },
   row: {
     flex: 1,
     flexDirection: "row",

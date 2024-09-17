@@ -1,24 +1,64 @@
 import {Card} from "react-native-paper";
-import React from "react";
-import styleSheet from "../../stylesheet";
+import React, {useState} from "react";
+import { StyleSheet } from "react-native";
+import {IconButton, Text} from "react-native-paper";
 
 
 
-const InputCard = ({children, title}) => {
+const InputCard = ({children, title, expanded = true}) => {
+
+    const [isExpanded, setIsExpanded] = useState(expanded);
+
+    const toggleExpansion = () => {
+        setIsExpanded(!isExpanded)
+    }
 
     return (
         <Card mode="elevated" elevation={1}
-              style={[styleSheet.card.card]}
+              style={styles.card}
         >
-            <Card.Title titleVariant={"titleLarge"} title={title}></Card.Title>
+            <Card.Title 
+                titleStyle={styles.titleFont}
+                titleVariant={"titleLarge"} 
+                title={title}
+                right={(props) => 
+                <IconButton {...props} 
+                    style={styles.iconButton}
+                    size={20}
+                    icon={isExpanded ? "chevron-up" : "chevron-down"} 
+                    onPress={toggleExpansion} 
+                />}
+            />
+                
+            {isExpanded && (
             <Card.Content 
-            style={styleSheet.card.content}
-            >
-                {children}
-            </Card.Content>
+                style={styles.content}
+                >
+                    {children}
+                </Card.Content>
+            )}
+
         </Card>
     )
 }
 
+
+const styles = StyleSheet.create({
+    card: {
+        margin: 15,
+        padding: 10
+    },
+    iconButton: {
+        marginVertical: 0,  // Reduce vertical margin of the IconButton
+        paddingVertical: 0,  // Remove extra padding
+    },
+    titleFont: {
+        fontSize: 20
+    },
+    content: {
+        marginHorizontal: 0,
+        paddingHorizontal: 10
+    },
+})
 
 export default InputCard;

@@ -8,7 +8,7 @@ const fileTypes = ["A7P"];
 function A7PFileUploader({onSuccess = null}: {onSuccess?: (profile: ProfileProps) => void}) {
   const [error, setError] = useState(null);
 
-  
+
   const handleChange = (file) => {
 
     // Create a FileReader instance
@@ -31,8 +31,11 @@ function A7PFileUploader({onSuccess = null}: {onSuccess?: (profile: ProfileProps
     reader.readAsArrayBuffer(file);
   };
 
+    // TODO: Custom children style
   return (
-    <FileUploader error={error} handleChange={handleChange} name="file" types={fileTypes} />
+    <FileUploader error={error} handleChange={handleChange} name="file" types={fileTypes} >
+      {/* <View /> */}
+    </FileUploader>
   );
 }
 
