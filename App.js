@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
-import { StatusBar } from 'expo-status-bar';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import TrajectoryData from './src/components/widgets/trajectoryData';
 import { ProfileLoaderProvider } from './src/providers/profileLoaderProvider';
 import A7PFileUploader from './src/components/widgets/fileDrop';
-import { Text, PaperProvider, MD3LightTheme, MD3DarkTheme } from 'react-native-paper';
+import { Appbar, PaperProvider, MD3LightTheme, MD3DarkTheme } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import WeaponCard from './src/components/cards/weaponCard';
-import InputCard from './src/components/cards/inputCard';
 import ProjectileCard from './src/components/cards/projectileCard';
 import BulletCard from './src/components/cards/bulletCard';
 import AtmoCard from './src/components/cards/atmoCard';
@@ -38,45 +36,52 @@ export default function App() {
       <PaperProvider theme={theme} >
 
         <ProfileLoaderProvider>
-          <View style={{...styles.row}}>
-            {/* <DoubleSpinBox right={<TextInput.Affix text="Inch" />}/> */}
+
+          <Appbar.Header mode={"center-aligned"} style={{
+            height: 48,
+            backgroundColor: theme.colors.elevation.level2
+          }}>
+
+            <Appbar.Content title="E-Balistyka" />
+            <A7PFileUploader />
+
+          </Appbar.Header>
+
+
+          <View style={{ ...styles.row }}>
 
             <ScrollView
-              style={{ ...styles.column, flex: 1, minWidth: 350, }}
+              style={{ ...styles.column, flex: 1, minWidth: 300, }}
               keyboardShouldPersistTaps="always"
               alwaysBounceVertical={false}
               showsVerticalScrollIndicator={false}
             >
-              <InputCard title={"Open ballistic profile"}>
-                <A7PFileUploader />
-              </InputCard >
-              <WeaponCard expanded={true}/>
-              <ProjectileCard expanded={true}/>
-              <BulletCard expanded={true}/>
+              <WeaponCard expanded={true} />
+              <ProjectileCard expanded={true} />
+              <BulletCard expanded={true} />
             </ScrollView>
 
-            <ScrollView style={{ ...styles.column, flex: 4, minWidth: 350, }}
+            <ScrollView style={{ ...styles.column, flex: 3, minWidth: 600, }}
               keyboardShouldPersistTaps="always"
               alwaysBounceVertical={false}
               showsVerticalScrollIndicator={false}
             >
               <TrajectoryData EXAMPLE_A7P={EXAMPLE_A7P} />
             </ScrollView>
-            
+
             <ScrollView
-              style={{ ...styles.column, flex: 1, minWidth: 400}}
+              style={{ ...styles.column, flex: 1, minWidth: 300 }}
               keyboardShouldPersistTaps="always"
               alwaysBounceVertical={false}
               showsVerticalScrollIndicator={false}
             >
-              <AtmoCard expanded={false}/>
-              <WindCard expanded={false}/>
-              <AtmoCard expanded={true} label='Current atmosphere'/>
-              <WindCard expanded={true} label='Current wind'/>
+              <AtmoCard expanded={false} />
+              <WindCard expanded={false} />
+              <AtmoCard expanded={true} label='Current atmosphere' />
+              <WindCard expanded={true} label='Current wind' />
 
             </ScrollView>
 
-            {/* <StatusBar style="auto" /> */}
           </View>
         </ProfileLoaderProvider>
 

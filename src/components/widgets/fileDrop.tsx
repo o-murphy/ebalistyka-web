@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import { FileUploader } from "react-drag-drop-files";
 import parseA7P from "../../utils/parseA7P";
 import { ProfileProps } from '../../utils/parseA7P';
+import { StyleProp, ViewProps } from "react-native";
 
 const fileTypes = ["A7P"];
 
-function A7PFileUploader({onSuccess = null}: {onSuccess?: (profile: ProfileProps) => void}) {
+function A7PFileUploader({onSuccess = null, style = null}: {onSuccess?: (profile: ProfileProps) => void, style: StyleProp<ViewProps>}) {
   const [error, setError] = useState(null);
 
 
@@ -33,7 +34,7 @@ function A7PFileUploader({onSuccess = null}: {onSuccess?: (profile: ProfileProps
 
     // TODO: Custom children style
   return (
-    <FileUploader error={error} handleChange={handleChange} name="file" types={fileTypes} >
+    <FileUploader error={error} handleChange={handleChange} name="file" types={fileTypes} style={style}>
       {/* <View /> */}
     </FileUploader>
   );

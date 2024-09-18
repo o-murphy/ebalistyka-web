@@ -18,10 +18,10 @@ const InputCard = ({ children, title, expanded = true }) => {
             style={{ ...styles.card }}
         >
             <Card.Title
-                style={styles.title}
-                titleStyle={styles.titleFont}
-                titleVariant={"titleLarge"}
                 title={title}
+                // style={styles.title}
+                // titleVariant={"bodyLarge"}
+                // titleStyle={styles.titleStyle}
                 right={(props) =>
                     <IconButton {...props}
                         style={styles.iconButton}
@@ -47,19 +47,14 @@ const InputCard = ({ children, title, expanded = true }) => {
 const styles = StyleSheet.create({
     card: {
         margin: 15,
-        padding: 10,
-        flexGrow: 0
     },
     iconButton: {
-        marginVertical: 0,  // Reduce vertical margin of the IconButton
-        paddingVertical: 0,  // Remove extra padding
     },
     title: {
-        marginVertical: 0,  // Reduce vertical margin of the IconButton
-        paddingVertical: 0,  // Remove extra padding
+    },
+    titleStyle: {
     },
     titleFont: {
-        fontSize: 20
     },
     content: {
     },

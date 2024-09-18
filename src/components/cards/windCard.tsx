@@ -1,11 +1,10 @@
-import { Text, TextInput } from "react-native-paper";
+import { TextInput } from "react-native-paper";
 import React, { useState } from "react";
 import InputCard from "./inputCard";
-import SimpleDialog from "../dialogs/simpleDialog";
 import { Unit, UnitProps } from "js-ballistics/dist/v2";
-import { StyleSheet, View } from "react-native";
 import DoubleSpinBox from "../widgets/doubleSpinBox";
 import WindDirectionPicker from "../widgets/windDirectionPicker";
+import {MeasureFormFieldProps, inputStyles, iconSize, inputSideStyles, styles as measureFormFieldStyles} from "../widgets/measureField";
 
 
 export default function WindCard({label = "Zero wind direction and speed", expanded=true}) {
@@ -70,19 +69,18 @@ export default function WindCard({label = "Zero wind direction and speed", expan
 
             <DoubleSpinBox
                 value={fields[0].initialValue}
-                onValueChange={value => console.log(value)}
+                onValueChange={value => console.log(value)}  // TODO:
                 fixedPoints={fields[0].decimals}
                 min={fields[0].minValue}
                 max={fields[0].maxValue}
                 step={1}
-                style={{...styles.inputContainer, alignItems: 'center' }}
+                style={{...measureFormFieldStyles.doubleSpinBox, width: "70%", alignSelf: "center"}}
                 inputProps={{
                     mode: "outlined",
                     dense: true,
-                    style: styles.input,
-                    contentStyle: styles.inputContent,
-                    right: <TextInput.Affix text={fields[0].suffix} />,
-                    left: <TextInput.Icon icon={fields[0].icon} size={16} />
+                    ...inputStyles,
+                    right: <TextInput.Affix text={fields[0].suffix} textStyle={inputSideStyles.affix} />,
+                    left: <TextInput.Icon icon={fields[0].icon} size={iconSize} style={inputSideStyles.icon}/>
                 }}
             />
 
@@ -90,46 +88,15 @@ export default function WindCard({label = "Zero wind direction and speed", expan
     )
 }
 
-const fields = [
+const fields: MeasureFormFieldProps[] = [
     {
         key: "windSpeed",
         label: "Wind speed",
         suffix: UnitProps[Unit.MPS].symbol,
         icon: "windsock",
-        mode: "float" as const,
         initialValue: 0,
         maxValue: 100,
         minValue: 0,
         decimals: 1,
     }
 ]
-
-const styles = StyleSheet.create({
-    column: {
-        flex: 1,
-        flexDirection: "row",
-        marginHorizontal: 8
-    },
-    row: {
-        flex: 1,
-        flexDirection: "row",
-        marginVertical: 8,
-        alignItems: 'center',
-    },
-    inputContainer: {
-        flex: 1, // Input takes up 1 portions of the width
-        justifyContent: 'center',
-    },
-    input: {
-        width: '80%',
-        height: 32,
-    },
-    inputContent: {
-        fontSize: 14
-    },
-    nameContainer: {
-        flex: 1,
-        marginVertical: 8,
-    },
-    label: { fontSize: 16 }
-})

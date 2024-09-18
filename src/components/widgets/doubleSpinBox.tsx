@@ -1,6 +1,8 @@
 import React, { useState, useRef } from 'react';
-import { View, StyleSheet, TextInput as NativeTextInput, NativeSyntheticEvent, TextInputKeyPressEventData, TextInputScrollEventData } from 'react-native';
+import { View, NativeSyntheticEvent, TextInputKeyPressEventData, TextInputScrollEventData } from 'react-native';
 import { TextInput, HelperText } from 'react-native-paper';
+import {Props as TextInputProps} from "react-native-paper/src/components/TextInput/TextInput"
+import { StyleProp, ViewStyle } from 'react-native';
 
 interface DoubleSpinBoxProps {
     value?: number;
@@ -9,8 +11,8 @@ interface DoubleSpinBoxProps {
     min?: number; // Minimum value
     max?: number; // Maximum value
     step?: number;
-    style?: any;
-    inputProps?: any;
+    style?: StyleProp<ViewStyle> | undefined;
+    inputProps?: TextInputProps | undefined;
 }
 
 const DoubleSpinBox: React.FC<DoubleSpinBoxProps> = ({
@@ -21,7 +23,7 @@ const DoubleSpinBox: React.FC<DoubleSpinBoxProps> = ({
     max = 100, // Default max value
     step = 1,
     style = null,
-    inputProps = null
+    inputProps = null,
 }: DoubleSpinBoxProps) => {
     const [currentValue, setCurrentValue] = useState<string>(value.toFixed(fixedPoints));
     const [error, setError] = useState<string | null>(null);
@@ -48,11 +50,11 @@ const DoubleSpinBox: React.FC<DoubleSpinBoxProps> = ({
 
         // Validation
         if (numericValue < min) {
-            setError(`Value must be at least ${min}`);
+            setError(`Value must be at least ${min}`)
         } else if (numericValue > max) {
-            setError(`Value must be at most ${max}`);
+            setError(`Value must be at most ${max}`)
         } else {
-            setError(null);
+            setError(null)
         }
 
         setCurrentValue(isNegative && numericValue == 0 ? "-" + newValue : newValue);
@@ -66,7 +68,6 @@ const DoubleSpinBox: React.FC<DoubleSpinBoxProps> = ({
         if (key === '-' || key === '+') {
             // Handle negative sign
             if (!currentValue.includes('-')) {
-                // console.log(currentValue)
                 handleInputChange('-' + currentValue);
             } else {
                 handleInputChange(currentValue.slice(1))
