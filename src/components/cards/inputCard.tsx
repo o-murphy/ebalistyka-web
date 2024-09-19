@@ -46,7 +46,8 @@ const InputCard = ({ children, title, expanded = true }) => {
 
 const styles = StyleSheet.create({
     card: {
-        margin: 15,
+        marginTop: 15,
+        marginHorizontal: 15
     },
     iconButton: {
     },

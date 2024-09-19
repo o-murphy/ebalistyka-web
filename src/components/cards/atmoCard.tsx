@@ -40,10 +40,10 @@ const fields: MeasureFormFieldProps[] = [
     {
         key: "pressure",
         label: "Pressure",
-        suffix: UnitProps[Unit.MmHg].symbol,
+        suffix: UnitProps[Unit.hPa].symbol,
         icon: "speedometer",
-        initialValue: 760,
-        maxValue: 1000,
+        initialValue: 1000,
+        maxValue: 1300,
         minValue: 700,
         decimals: 0
     },

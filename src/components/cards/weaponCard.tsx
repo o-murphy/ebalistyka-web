@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import InputCard from "./inputCard";
 import SimpleDialog from "../dialogs/simpleDialog";
 import { Unit, UnitProps } from "js-ballistics/dist/v2";
-import { View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import MeasureFormField, {MeasureFormFieldProps, styles as measureFormFieldStyles} from "../widgets/measureField";
 
 
@@ -18,13 +18,15 @@ export default function WeaponCard({expanded = true}) {
             icon: "rotate-right",
             showSelectedCheck: true,
             checkedColor: theme.colors.primary,
+            style: styles.buttons
         },
         {
             value: 'Left',
             label: 'Left',
             icon: "rotate-left",
             showSelectedCheck: true,
-            checkedColor: theme.colors.primary
+            checkedColor: theme.colors.primary,
+            style: styles.buttons
         }
     ]
 
@@ -69,13 +71,23 @@ export default function WeaponCard({expanded = true}) {
             <View style={{...measureFormFieldStyles.row, }}>
                 <Text style={[measureFormFieldStyles.column,  measureFormFieldStyles.label]}>{"Twist direction"}</Text>
                 <SegmentedButtons 
-                    style={[measureFormFieldStyles.column, { flex: 2, justifyContent: "center" }, ]}
+                    style={[measureFormFieldStyles.column, styles.segment]}
                     buttons={twistStates} value={twistDir} onValueChange={setTwistDir} />
             </View>
         </InputCard>
 
     )
 }
+
+const styles = StyleSheet.create({
+    segment: {
+        flex: 2, 
+        justifyContent: "center"
+    },
+    buttons: {
+
+    }
+})
 
 const fields: MeasureFormFieldProps[] = [
     {

@@ -7,7 +7,6 @@ import TrajectoryTable from './trajectoryTable';
 import {
   preferredUnits, Unit
 } from 'js-ballistics/dist/v2';
-import { ProfileProps } from '../../utils/parseA7P';
 
 preferredUnits.distance = Unit.Meter
 preferredUnits.velocity = Unit.MPS

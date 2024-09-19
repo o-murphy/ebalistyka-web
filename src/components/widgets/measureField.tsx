@@ -46,7 +46,7 @@ export const inputStyles = StyleSheet.create({
     },
     contentStyle: {  // value
         fontSize: 14,
-        textAlign: "center"
+        textAlign: "left"
     },
     outlineStyle: {  // background
     },

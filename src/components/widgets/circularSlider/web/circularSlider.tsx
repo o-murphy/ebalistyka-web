@@ -150,10 +150,10 @@ export default function CircularSlider({...props}: Props) {
             curSvgRef.getScreenCTM()?.inverse()
         );
 
-        console.log(svgPoint, coordsInSvg)
+        // console.log(svgPoint, coordsInSvg)
 
         const angle = positionToAngle(coordsInSvg, dialDiameter, angleType);
-        console.log(angle)
+        // console.log(angle)
 
         let _value = angleToValue({
             angle,
