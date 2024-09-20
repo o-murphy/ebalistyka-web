@@ -12,10 +12,10 @@ export default function WindDirectionPicker({value, onChange, style}) {
         coerceToInt: true,
         // capMode: "triangle",
 
-        handleSize: 10,
-        arcWidth: 20,
-        strokeWidth: 20,
-        meterTextSize: 20,
+        handleSize: 8,
+        arcWidth: 16,
+        strokeWidth: 16,
+        meterTextSize: 14,
 
         handleColor: theme.colors.outline,
         arcColor: theme.colors.secondaryContainer,
@@ -41,7 +41,7 @@ export default function WindDirectionPicker({value, onChange, style}) {
                 {...sliderProps}
                 {...sliderValues}
                 // style={styles.slider}
-                dialDiameter={240}
+                dialDiameter={160}
                 angleType={{
                     direction: "cw",
                     axis: "+y"

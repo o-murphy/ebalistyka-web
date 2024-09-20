@@ -51,7 +51,7 @@ export default function App() {
           <View style={{ ...styles.row }}>
 
             <ScrollView
-              style={{ ...styles.column, flex: 1, minWidth: 300, }}
+              style={{ ...styles.column, flex: 1, minWidth: 280, }}
               keyboardShouldPersistTaps="always"
               alwaysBounceVertical={false}
               showsVerticalScrollIndicator={false}
@@ -70,7 +70,7 @@ export default function App() {
             </ScrollView>
 
             <ScrollView
-              style={{ ...styles.column, flex: 1, minWidth: 300 }}
+              style={{ ...styles.column, flex: 1, minWidth: 280 }}
               keyboardShouldPersistTaps="always"
               alwaysBounceVertical={false}
               showsVerticalScrollIndicator={false}

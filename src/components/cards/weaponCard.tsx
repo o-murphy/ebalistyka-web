@@ -4,12 +4,14 @@ import InputCard from "./inputCard";
 import SimpleDialog from "../dialogs/simpleDialog";
 import { Unit, UnitProps } from "js-ballistics/dist/v2";
 import { StyleSheet, View } from "react-native";
-import MeasureFormField, {MeasureFormFieldProps, styles as measureFormFieldStyles} from "../widgets/measureField";
+import MeasureFormField, { MeasureFormFieldProps, styles as measureFormFieldStyles } from "../widgets/measureField";
 
+interface WeaponCardProps {
+    expanded?: boolean;
+}
 
-export default function WeaponCard({expanded = true}) {
-
-    const theme = useTheme()
+const WeaponCard: React.FC<WeaponCardProps> = ({ expanded = true }) => {
+    const theme = useTheme();
 
     const twistStates = [
         {
@@ -18,7 +20,7 @@ export default function WeaponCard({expanded = true}) {
             icon: "rotate-right",
             showSelectedCheck: true,
             checkedColor: theme.colors.primary,
-            style: styles.buttons
+            style: styles.buttons,
         },
         {
             value: 'Left',
@@ -26,35 +28,33 @@ export default function WeaponCard({expanded = true}) {
             icon: "rotate-left",
             showSelectedCheck: true,
             checkedColor: theme.colors.primary,
-            style: styles.buttons
-        }
-    ]
+            style: styles.buttons,
+        },
+    ];
 
-    const [curTwistDir, setCurTwistDir] = useState("Right");
-    const [twistDir, setTwistDir] = useState(curTwistDir);
-
-    const [curName, setCurName] = React.useState("My rifle");
-    const [name, setName] = React.useState(curName);
+    const [curTwistDir, setCurTwistDir] = useState<string>("Right");
+    const [twistDir, setTwistDir] = useState<string>(curTwistDir);
+    const [curName, setCurName] = useState<string>("My rifle");
+    const [name, setName] = useState<string>(curName);
 
     const acceptTwistDir = (): void => {
-        setCurTwistDir(twistDir)
-    }
+        setCurTwistDir(twistDir);
+    };
 
     const declineTwistDir = (): void => {
-        setTwistDir(curTwistDir)
-    }
+        setTwistDir(curTwistDir);
+    };
 
-    const acceptName = () => {
-        setCurName(name)
-    }
+    const acceptName = (): void => {
+        setCurName(name);
+    };
 
-    const declineName = () => {
-        setName(curName)
-    }
+    const declineName = (): void => {
+        setName(curName);
+    };
 
     return (
         <InputCard title={"Weapon"} expanded={expanded}>
-
             <SimpleDialog
                 style={measureFormFieldStyles.nameContainer}
                 label={"Name"}
@@ -67,27 +67,27 @@ export default function WeaponCard({expanded = true}) {
             </SimpleDialog>
 
             {fields.map(field => <MeasureFormField key={field.key} field={field} />)}
-            
-            <View style={{...measureFormFieldStyles.row, }}>
-                <Text style={[measureFormFieldStyles.column,  measureFormFieldStyles.label]}>{"Twist direction"}</Text>
-                <SegmentedButtons 
+
+            <View style={{ ...measureFormFieldStyles.row }}>
+                <Text style={[measureFormFieldStyles.column, measureFormFieldStyles.label]}>{"Twist direction"}</Text>
+                <SegmentedButtons
                     style={[measureFormFieldStyles.column, styles.segment]}
-                    buttons={twistStates} value={twistDir} onValueChange={setTwistDir} />
+                    buttons={twistStates}
+                    value={twistDir}
+                    onValueChange={setTwistDir}
+                />
             </View>
         </InputCard>
-
-    )
-}
+    );
+};
 
 const styles = StyleSheet.create({
     segment: {
-        flex: 2, 
-        justifyContent: "center"
+        flex: 2,
+        justifyContent: "center",
     },
-    buttons: {
-
-    }
-})
+    buttons: {},
+});
 
 const fields: MeasureFormFieldProps[] = [
     {
@@ -120,4 +120,6 @@ const fields: MeasureFormFieldProps[] = [
         minValue: 0,
         decimals: 2,
     },
-]
+];
+
+export default WeaponCard;

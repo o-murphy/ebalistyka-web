@@ -3,27 +3,26 @@ import React from "react";
 import InputCard from "./inputCard";
 import SimpleDialog from "../dialogs/simpleDialog";
 import { Unit, UnitProps } from "js-ballistics/dist/v2";
-import MeasureFormField, {MeasureFormFieldProps, styles as measureFormFieldStyles} from "../widgets/measureField";
+import MeasureFormField, { MeasureFormFieldProps, styles as measureFormFieldStyles } from "../widgets/measureField";
 
-export default function ProjectileCard({expanded = true}) {
+interface ProjectileCardProps {
+    expanded?: boolean;
+}
 
-    const me = ProjectileCard.name
-
-    const [curName, setCurName] = React.useState("My projectile");
-    const [name, setName] = React.useState(curName);
+const ProjectileCard: React.FC<ProjectileCardProps> = ({ expanded = true }) => {
+    const [curName, setCurName] = React.useState<string>("My projectile");
+    const [name, setName] = React.useState<string>(curName);
 
     const acceptName = () => {
-        setCurName(name)
-    }
+        setCurName(name);
+    };
 
     const declineName = () => {
-        setName(curName)
-    }
+        setName(curName);
+    };
 
     return (
-
         <InputCard title={"Projectile"} expanded={expanded}>
-
             <SimpleDialog
                 style={measureFormFieldStyles.nameContainer}
                 label={"Name"}
@@ -36,12 +35,9 @@ export default function ProjectileCard({expanded = true}) {
             </SimpleDialog>
 
             {fields.map(field => <MeasureFormField key={field.key} field={field} />)}
-
         </InputCard>
-
-    )
-}
-
+    );
+};
 
 const fields: MeasureFormFieldProps[] = [
     {
@@ -64,4 +60,6 @@ const fields: MeasureFormFieldProps[] = [
         minValue: 0,
         decimals: 2,
     },
-]
+];
+
+export default ProjectileCard;

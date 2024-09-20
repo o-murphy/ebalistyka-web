@@ -1,30 +1,35 @@
 import React from "react";
 import InputCard from "./inputCard";
-import {Unit, UnitProps} from "js-ballistics/dist/v2";
+import { Unit, UnitProps } from "js-ballistics/dist/v2";
 import MeasureFormField, { MeasureFormFieldProps } from "../widgets/measureField";
 
+interface AtmoCardProps {
+    label?: string;
+    expanded?: boolean;
+}
 
-export default function AtmoCard({label = "Zero atmosphere", expanded = true}) {
+const AtmoCard: React.FC<AtmoCardProps> = ({ label = "Zero atmosphere", expanded = true }) => {
+    const me = AtmoCard.name;
 
-    const me = AtmoCard.name
-
-    const [curName, setCurName] = React.useState("My rifle");
-    const [name, setName] = React.useState(curName);
+    const [curName, setCurName] = React.useState<string>("My rifle");
+    const [name, setName] = React.useState<string>(curName);
 
     const acceptName = () => {
-        setCurName(name)
-    }
+        setCurName(name);
+    };
 
     const declineName = () => {
-        setName(curName)
-    }
+        setName(curName);
+    };
 
     return (
         <InputCard title={label} expanded={expanded}>
-            {fields.map(field => <MeasureFormField key={field.key} field={field} />)}
+            {fields.map(field => (
+                <MeasureFormField key={field.key} field={field} />
+            ))}
         </InputCard>
-    )
-}
+    );
+};
 
 const fields: MeasureFormFieldProps[] = [
     {
@@ -67,4 +72,6 @@ const fields: MeasureFormFieldProps[] = [
         minValue: 0,
         decimals: 0,
     },
-]
+];
+
+export default AtmoCard;

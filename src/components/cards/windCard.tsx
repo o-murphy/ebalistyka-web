@@ -4,29 +4,30 @@ import InputCard from "./inputCard";
 import { Unit, UnitProps } from "js-ballistics/dist/v2";
 import DoubleSpinBox from "../widgets/doubleSpinBox";
 import WindDirectionPicker from "../widgets/windDirectionPicker";
-import {MeasureFormFieldProps, inputStyles, iconSize, inputSideStyles, styles as measureFormFieldStyles} from "../widgets/measureField";
+import { MeasureFormFieldProps, inputStyles, iconSize, inputSideStyles, styles as measureFormFieldStyles } from "../widgets/measureField";
 
+interface WindCardProps {
+    label?: string;
+    expanded?: boolean;
+}
 
-export default function WindCard({label = "Zero wind direction and speed", expanded=true}) {
+const WindCard: React.FC<WindCardProps> = ({ label = "Zero wind direction and speed", expanded = true }) => {
+    const [curWindDir, setCurWindDir] = useState<number>(0);
+    const [windDir, setWindDir] = useState<number>(curWindDir / 30);
 
-    const me = WindCard.name
+    const onWindDirChange = (value: number) => {
+        setWindDir(value === 12 ? 0 : value);
+    };
 
-    const [curWindDir, setCurWindDir] = useState(0)
-    const [windDir, setWindDir] = useState(curWindDir / 30)
+    const onWindAccept = (): void => {
+        setCurWindDir(windDir * 30);
+    };
 
-    const onWindDirChange = (value) => {
-        setWindDir(value === 12 ? 0 : value)
-    }
+    const onWindDecline = (): void => {
+        setWindDir(curWindDir / 30);
+    };
 
-    const onWindAccept = () => {
-        setCurWindDir(windDir * 30)
-    }
-
-    const onWindDecline = () => {
-        setWindDir(curWindDir / 30)
-    }
-
-    const getWindIcon = () => {
+    const getWindIcon = (): string => {
         switch (curWindDir / 30) {
             case 12:
                 return "clock-time-twelve-outline";
@@ -54,39 +55,38 @@ export default function WindCard({label = "Zero wind direction and speed", expan
                 return "clock-time-one-outline";
             case 0:
                 return "clock-time-twelve-outline";
-
+            default:
+                return "clock-time-twelve-outline"; // Fallback
         }
-    }
+    };
 
     return (
-
         <InputCard title={label} expanded={expanded}>
-            
             <WindDirectionPicker
                 style={{ alignItems: 'center' }}
                 value={windDir}
-                onChange={onWindDirChange} />
+                onChange={onWindDirChange}
+            />
 
             <DoubleSpinBox
                 value={fields[0].initialValue}
-                onValueChange={value => console.log(value)}  // TODO:
+                onValueChange={(value) => console.log(value)} // TODO:
                 fixedPoints={fields[0].decimals}
                 min={fields[0].minValue}
                 max={fields[0].maxValue}
                 step={1}
-                style={{...measureFormFieldStyles.doubleSpinBox, width: "70%", alignSelf: "center"}}
+                style={{ ...measureFormFieldStyles.doubleSpinBox, width: "70%", alignSelf: "center" }}
                 inputProps={{
                     mode: "outlined",
                     dense: true,
                     ...inputStyles,
                     right: <TextInput.Affix text={fields[0].suffix} textStyle={inputSideStyles.affix} />,
-                    left: <TextInput.Icon icon={fields[0].icon} size={iconSize} style={inputSideStyles.icon}/>
+                    left: <TextInput.Icon icon={fields[0].icon} size={iconSize} style={inputSideStyles.icon} />
                 }}
             />
-
         </InputCard>
-    )
-}
+    );
+};
 
 const fields: MeasureFormFieldProps[] = [
     {
@@ -98,5 +98,7 @@ const fields: MeasureFormFieldProps[] = [
         maxValue: 100,
         minValue: 0,
         decimals: 1,
-    }
-]
+    },
+];
+
+export default WindCard;
