@@ -12,24 +12,26 @@ export interface MeasureFormFieldProps {
   maxValue: number;
   minValue: number;
   decimals: number;
+  step?: number;
 }
 
 interface MeasureFormFieldComponentProps {
   field: MeasureFormFieldProps;
+  onValueChange?: (value: any) => void; 
 }
 
-const MeasureFormField: React.FC<MeasureFormFieldComponentProps> = ({ field }) => {
+const MeasureFormField: React.FC<MeasureFormFieldComponentProps> = ({ field, onValueChange }) => {
   return (
     <View style={styles.row}>
       <Text style={[styles.column, { flex: 1 }, styles.label]}>{field.label}</Text>
       <DoubleSpinBox
         key={field.key}
         value={field.initialValue}
-        onValueChange={(value: number) => console.log(value)}
+        onValueChange={onValueChange ? onValueChange : null}
         fixedPoints={field.decimals}
         min={field.minValue}
         max={field.maxValue}
-        step={1}
+        step={field.step ?? 1}
         style={styles.doubleSpinBox}
         inputProps={{
           mode: "outlined",

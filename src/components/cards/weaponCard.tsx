@@ -1,10 +1,11 @@
 import { Text, SegmentedButtons, TextInput, useTheme } from "react-native-paper";
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import InputCard from "./inputCard";
 import SimpleDialog from "../dialogs/simpleDialog";
 import { Unit, UnitProps } from "js-ballistics/dist/v2";
 import { StyleSheet, View } from "react-native";
 import MeasureFormField, { MeasureFormFieldProps, styles as measureFormFieldStyles } from "../widgets/measureField";
+import { ProfileLoaderContext } from "../../providers/profileLoaderProvider";
 
 interface WeaponCardProps {
     expanded?: boolean;
@@ -15,7 +16,7 @@ const WeaponCard: React.FC<WeaponCardProps> = ({ expanded = true }) => {
 
     const twistStates = [
         {
-            value: 'Right',
+            value: 'RIGHT',
             label: 'Right',
             icon: "rotate-right",
             showSelectedCheck: true,
@@ -23,7 +24,7 @@ const WeaponCard: React.FC<WeaponCardProps> = ({ expanded = true }) => {
             style: styles.buttons,
         },
         {
-            value: 'Left',
+            value: 'LEFT',
             label: 'Left',
             icon: "rotate-left",
             showSelectedCheck: true,
@@ -32,25 +33,20 @@ const WeaponCard: React.FC<WeaponCardProps> = ({ expanded = true }) => {
         },
     ];
 
-    const [curTwistDir, setCurTwistDir] = useState<string>("Right");
-    const [twistDir, setTwistDir] = useState<string>(curTwistDir);
-    const [curName, setCurName] = useState<string>("My rifle");
-    const [name, setName] = useState<string>(curName);
+    const { fileContent, updateProfileProperties } = useContext(ProfileLoaderContext);
 
-    const acceptTwistDir = (): void => {
-        setCurTwistDir(twistDir);
-    };
+    const [curName, setCurName] = useState<string>("My Rifle");
 
-    const declineTwistDir = (): void => {
-        setTwistDir(curTwistDir);
-    };
+    useEffect(() => {
+        setCurName(fileContent?.profileName)
+    }, [fileContent])
 
     const acceptName = (): void => {
-        setCurName(name);
+        updateProfileProperties({ profileName: curName })
     };
 
     const declineName = (): void => {
-        setName(curName);
+        setCurName(fileContent?.profileName)
     };
 
     return (
@@ -59,22 +55,31 @@ const WeaponCard: React.FC<WeaponCardProps> = ({ expanded = true }) => {
                 style={measureFormFieldStyles.nameContainer}
                 label={"Name"}
                 icon={"card-bulleted-outline"}
-                text={curName}
+                text={fileContent?.profileName}
                 onAccept={acceptName}
                 onDecline={declineName}
             >
-                <TextInput value={name} onChangeText={setName} />
+                <TextInput
+                    value={curName}
+                    onChangeText={setCurName}
+                />
             </SimpleDialog>
 
-            {fields.map(field => <MeasureFormField key={field.key} field={field} />)}
+            {fields.map(field =>
+                <MeasureFormField
+                    key={field.key}
+                    field={field}
+                    onValueChange={value => updateProfileProperties({ [field.key]: (value * 1000).toFixed(0) })} // Corrected line
+                />
+            )}
 
             <View style={{ ...measureFormFieldStyles.row }}>
                 <Text style={[measureFormFieldStyles.column, measureFormFieldStyles.label]}>{"Twist direction"}</Text>
                 <SegmentedButtons
                     style={[measureFormFieldStyles.column, styles.segment]}
                     buttons={twistStates}
-                    value={twistDir}
-                    onValueChange={setTwistDir}
+                    value={fileContent?.twistDir}
+                    onValueChange={value => updateProfileProperties({ twistDir: value })}
                 />
             </View>
         </InputCard>
@@ -91,7 +96,7 @@ const styles = StyleSheet.create({
 
 const fields: MeasureFormFieldProps[] = [
     {
-        key: "diameter",
+        key: "bDiameter",
         label: "Caliber",
         suffix: UnitProps[Unit.Inch].symbol,
         icon: "diameter-variant",
@@ -99,6 +104,7 @@ const fields: MeasureFormFieldProps[] = [
         maxValue: 22,
         minValue: 0.001,
         decimals: 3,
+        step: 0.001
     },
     {
         key: "sight_height",

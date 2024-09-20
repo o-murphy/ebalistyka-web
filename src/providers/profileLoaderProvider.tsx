@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useState } from 'react';
 import parseA7P from '../utils/parseA7P';
 
 // Create the context
@@ -25,9 +25,18 @@ export const ProfileLoaderProvider = ({ children }) => {
     }
   };
 
+  const updateProfileProperties = (props: Object) => {
+    if (fileContent) {
+      setFileContent((prevContent) => ({
+        ...prevContent,
+        ...props,
+      }));
+    }
+  };
+
   // Provide both the file content and loading function to the context consumers
   return (
-    <ProfileLoaderContext.Provider value={{ fileContent, fetchBinaryFile }}>
+    <ProfileLoaderContext.Provider value={{ fileContent, fetchBinaryFile, updateProfileProperties }}>
       {children}
     </ProfileLoaderContext.Provider>
   );
