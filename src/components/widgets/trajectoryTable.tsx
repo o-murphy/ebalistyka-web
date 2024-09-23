@@ -19,7 +19,7 @@ const TrajectoryTable = () => {
     const isZero = (row: TrajectoryData): Object => {
         return {
             textStyle: {
-                color: row.distance.In(preferredUnits.distance).toFixed(0) === '100' ? "red" : 'white',
+                ...row.distance.In(preferredUnits.distance).toFixed(0) === '100' && {color: "red"},
                 fontSize: 12
             },
         }
