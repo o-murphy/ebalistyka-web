@@ -4,7 +4,7 @@ import parseA7P from "../../utils/parseA7P";
 import { ProfileProps } from '../../utils/parseA7P';
 import { StyleSheet, StyleProp, ViewProps } from "react-native";
 import { Button } from "react-native-paper";
-import { ProfileContext } from "../../providers/profileLoaderProvider";
+import { ProfileContext } from "../../providers/profileProvider";
 
 // Define the allowed file types for upload
 const fileTypes = ["A7P"];

@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import TrajectoryData from './src/components/widgets/trajectoryData';
-import { ProfileProvider } from './src/providers/profileLoaderProvider';
+import { ProfileProvider } from './src/providers/profileProvider';
 import A7PFileUploader from './src/components/widgets/fileDrop';
 import { Appbar, PaperProvider, MD3LightTheme, MD3DarkTheme } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import WeaponCard from './src/components/cards/weaponCard';
 import ProjectileCard from './src/components/cards/projectileCard';
 import BulletCard from './src/components/cards/bulletCard';
-import AtmoCard from './src/components/cards/atmoCard';
-import WindCard from './src/components/cards/windCard';
+import ZeroAtmoCard from './src/components/cards/zeroAtmoCard';
+import CurrentWindCard from './src/components/cards/currentWindCard';
+import CurrentAtmoCard from './src/components/cards/currentAtmoCard';
 // import { isMobile } from 'react-device-detect';
 
-const PROTO_URL = '/src/proto/profedit.proto'; // Adjust the path to your .proto file
 const EXAMPLE_A7P = '/assets/example.a7p'
 
 export default function App() {
@@ -24,26 +24,22 @@ export default function App() {
     setNightMode((prevNightMode) => !prevNightMode);
   };
 
-  const themeStyles = {
-    provider: {
-      flex: 1,
-      backgroundColor: theme.colors.background  // Theme Background Color
-    },
-  }
-
   return (
-    <SafeAreaProvider style={themeStyles.provider}>
+    <SafeAreaProvider style={{ backgroundColor: theme.colors.background }}>
       <PaperProvider theme={theme} >
 
         <ProfileProvider>
-
           <Appbar.Header mode={"center-aligned"} style={{
             height: 48,
             backgroundColor: theme.colors.elevation.level2
           }}>
-
+            <Appbar.Action
+              icon={nightMode ? "brightness-7" : "brightness-3"}
+              onPress={() => toggleNightMode(!nightMode)}
+            />
             <Appbar.Content title="E-Balistyka" />
             <A7PFileUploader />
+            <Appbar.Action icon="cog-outline" onPress={() => { }} />
 
           </Appbar.Header>
 
@@ -75,10 +71,10 @@ export default function App() {
               alwaysBounceVertical={false}
               showsVerticalScrollIndicator={false}
             >
-              <AtmoCard expanded={false} />
-              <WindCard expanded={false} />
-              <AtmoCard expanded={true} label='Current atmosphere' />
-              <WindCard expanded={true} label='Current wind' />
+              <ZeroAtmoCard expanded={false} />
+              {/* <WindCard expanded={false} /> */}
+              <CurrentAtmoCard expanded={true} label='Current atmosphere' />
+              <CurrentWindCard expanded={true} label='Current wind' />
 
             </ScrollView>
 

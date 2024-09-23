@@ -2,38 +2,44 @@ import React, { useContext, useEffect } from "react";
 import InputCard from "./inputCard";
 import { Unit, UnitProps } from "js-ballistics/dist/v2";
 import MeasureFormField, { MeasureFormFieldProps } from "../widgets/measureField";
-import { ProfileContext as ProfileContext } from "../../providers/profileLoaderProvider";
+import { ProfileContext as ProfileContext } from "../../providers/profileProvider";
+import { ActivityIndicator } from "react-native-paper";
 
 interface AtmoCardProps {
     label?: string;
     expanded?: boolean;
 }
 
-const AtmoCard: React.FC<AtmoCardProps> = ({ label = "Zero atmosphere", expanded = true }) => {
+const ZeroAtmoCard: React.FC<AtmoCardProps> = ({ label = "Zero atmosphere", expanded = true }) => {
 
-    const { fileContent, updateProfileProperties } = useContext(ProfileContext);
+    const { profileProperties, updateProfileProperties } = useContext(ProfileContext);
+
+    if (!profileProperties) {
+        return (
+            <InputCard title={"Weapon"} expanded={expanded}>
+                <ActivityIndicator animating={true} />
+            </InputCard>                
+        )
+    }
 
     return (
         <InputCard title={label} expanded={expanded}>
-            {/* {fields.map(field => (
-                <MeasureFormField key={field.key} field={field} />
-            ))} */}
 
             <MeasureFormField
                 {...fields.temp}
-                value={fileContent ? fileContent.cZeroAirTemperature : 0}
+                value={profileProperties ? profileProperties.cZeroAirTemperature : 0}
                 onValueChange={value => updateProfileProperties({ cZeroAirTemperature: Math.round(value) })}
             />
 
             <MeasureFormField
                 {...fields.pressure}
-                value={fileContent ? fileContent.cZeroAirPressure / 10 : 0}
+                value={profileProperties ? profileProperties.cZeroAirPressure / 10 : 0}
                 onValueChange={value => updateProfileProperties({ cZeroAirPressure: Math.round(value * 10) })}
             />
 
             <MeasureFormField
                 {...fields.humidity}
-                value={fileContent ? fileContent.cZeroAirHumidity : 0}
+                value={profileProperties ? profileProperties.cZeroAirHumidity : 0}
                 onValueChange={value => updateProfileProperties({ cZeroAirHumidity: Math.round(value) })}
             />
 
@@ -49,7 +55,7 @@ const fields: Record<string, MeasureFormFieldProps> = {
         icon: "thermometer",
         maxValue: 50,
         minValue: -50,
-        decimals: 0,
+        fractionDigits: 0,
         value: 15,
     },
     pressure: {
@@ -59,7 +65,7 @@ const fields: Record<string, MeasureFormFieldProps> = {
         icon: "speedometer",
         maxValue: 1300,
         minValue: 700,
-        decimals: 0,
+        fractionDigits: 0,
         value: 1000,
     },
     humidity: {
@@ -69,7 +75,7 @@ const fields: Record<string, MeasureFormFieldProps> = {
         icon: "water",
         maxValue: 100,
         minValue: 0,
-        decimals: 0,
+        fractionDigits: 0,
         value: 78,
     },
     // altitude: {
@@ -84,4 +90,4 @@ const fields: Record<string, MeasureFormFieldProps> = {
     // },
 };
 
-export default AtmoCard;
+export default ZeroAtmoCard;

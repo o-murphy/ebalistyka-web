@@ -5,31 +5,31 @@ import SimpleDialog from "../dialogs/simpleDialog";
 import { Unit, UnitProps } from "js-ballistics/dist/v2";
 import { View } from "react-native";
 import MeasureFormField, { MeasureFormFieldProps, styles as measureFormFieldStyles } from "../widgets/measureField";
-import { ProfileContext } from "../../providers/profileLoaderProvider";
+import { ProfileContext } from "../../providers/profileProvider";
 
 interface BulletCardProps {
     expanded?: boolean;
 }
 
 const BulletCard: React.FC<BulletCardProps> = ({ expanded = true }) => {
-    const { fileContent, updateProfileProperties } = useContext(ProfileContext);
+    const { profileProperties, updateProfileProperties } = useContext(ProfileContext);
     const [curName, setCurName] = useState<string>("My Bullet");
 
     useEffect(() => {
-        if (fileContent) {
-            setCurName(fileContent.profileName);
+        if (profileProperties) {
+            setCurName(profileProperties.profileName);
         }
-    }, [fileContent]);
+    }, [profileProperties]);
 
     const acceptName = (): void => updateProfileProperties({ bulletName: curName });
-    const declineName = (): void => setCurName(fileContent?.bulletName);
+    const declineName = (): void => setCurName(profileProperties?.bulletName);
 
     const editDragModel = () => {
         // navigate("DragModelScreen")
         console.log("Edit drag model");
     };
 
-    if (!fileContent) {
+    if (!profileProperties) {
         return (
             <InputCard title={"Weapon"} expanded={expanded}>
                 <ActivityIndicator animating={true} />
@@ -43,7 +43,7 @@ const BulletCard: React.FC<BulletCardProps> = ({ expanded = true }) => {
                 style={measureFormFieldStyles.nameContainer}
                 label={"Name"}
                 icon={"card-bulleted-outline"}
-                text={fileContent?.bulletName}
+                text={profileProperties?.bulletName}
                 onAccept={acceptName}
                 onDecline={declineName}
             >
@@ -55,13 +55,13 @@ const BulletCard: React.FC<BulletCardProps> = ({ expanded = true }) => {
 
             <MeasureFormField
                 {...fields.weight}
-                value={fileContent ? fileContent.bWeight / 10 : 0}
+                value={profileProperties ? profileProperties.bWeight / 10 : 0}
                 onValueChange={value => updateProfileProperties({ bWeight: Math.round(value * 10) })}
             />
 
             <MeasureFormField
                 {...fields.length}
-                value={fileContent ? fileContent.bLength / 10 : 0}
+                value={profileProperties ? profileProperties.bLength / 10 : 0}
                 onValueChange={value => updateProfileProperties({ bLength: Math.round(value * 10) })}
             />
 
@@ -92,7 +92,7 @@ const fields: Record<string, MeasureFormFieldProps> = {
         icon: "weight",
         maxValue: 50,
         minValue: -50,
-        decimals: 1,
+        fractionDigits: 1,
         value: 15,
     },
     length: {
@@ -102,7 +102,7 @@ const fields: Record<string, MeasureFormFieldProps> = {
         icon: "arrow-expand-horizontal",
         maxValue: 5,
         minValue: 0,
-        decimals: 2,
+        fractionDigits: 2,
         value: 1.7,
     },
 };

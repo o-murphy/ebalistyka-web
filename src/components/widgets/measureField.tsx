@@ -11,7 +11,7 @@ export interface MeasureFormFieldProps {
   value: number;
   maxValue: number;
   minValue: number;
-  decimals: number;
+  fractionDigits: number;
   step?: number;
   onValueChange?: (value: any) => void;
 }
@@ -21,7 +21,7 @@ export interface MeasureFormFieldProps {
 //   onValueChange?: (value: any) => void; 
 // }
 
-const MeasureFormField: React.FC<MeasureFormFieldProps> = ({ 
+const MeasureFormField: React.FC<MeasureFormFieldProps> = ({
   key,
   label,
   suffix,
@@ -29,10 +29,10 @@ const MeasureFormField: React.FC<MeasureFormFieldProps> = ({
   value,
   maxValue,
   minValue,
-  decimals,
+  fractionDigits: decimals,
   step,
   onValueChange,
- }) => {
+}) => {
 
   return (
     <View style={styles.row}>
@@ -41,9 +41,9 @@ const MeasureFormField: React.FC<MeasureFormFieldProps> = ({
         key={key}
         value={value}
         onValueChange={onValueChange ? onValueChange : null}
-        fixedPoints={decimals}
-        min={minValue}
-        max={maxValue}
+        fractionDigits={decimals}
+        minValue={minValue}
+        maxValue={maxValue}
         step={step ?? 1}
         style={styles.doubleSpinBox}
         inputProps={{

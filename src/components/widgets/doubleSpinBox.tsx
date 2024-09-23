@@ -11,9 +11,9 @@ import { StyleProp, ViewStyle } from 'react-native';
 interface DoubleSpinBoxProps {
   value?: number;
   onValueChange?: (newValue: number) => void;
-  fixedPoints?: number; // Number of decimal places
-  min?: number; // Minimum value
-  max?: number; // Maximum value
+  fractionDigits?: number; // Number of decimal places
+  minValue?: number; // Minimum value
+  maxValue?: number; // Maximum value
   step?: number; // Step increment/decrement value
   style?: StyleProp<ViewStyle>; // Style for the container
   inputProps?: TextInputProps; // Additional props for the TextInput
@@ -22,9 +22,9 @@ interface DoubleSpinBoxProps {
 const DoubleSpinBox: React.FC<DoubleSpinBoxProps> = ({
   value = 0,
   onValueChange,
-  fixedPoints = 3, // Default to 3 decimal places
-  min = 0, // Default min value
-  max = 100, // Default max value
+  fractionDigits: fixedPoints = 3, // Default to 3 decimal places
+  minValue: min = 0, // Default min value
+  maxValue: max = 100, // Default max value
   step = 1,
   style,
   inputProps

@@ -5,7 +5,7 @@ import SimpleDialog from "../dialogs/simpleDialog";
 import { Unit, UnitProps } from "js-ballistics/dist/v2";
 import { StyleSheet, View } from "react-native";
 import MeasureFormField, { MeasureFormFieldProps, styles as measureFormFieldStyles } from "../widgets/measureField";
-import { ProfileContext } from "../../providers/profileLoaderProvider";
+import { ProfileContext } from "../../providers/profileProvider";
 import { UNew } from "js-ballistics";
 
 interface WeaponCardProps {
@@ -14,19 +14,19 @@ interface WeaponCardProps {
 
 const WeaponCard: React.FC<WeaponCardProps> = ({ expanded = true }) => {
 
-    const { fileContent, updateProfileProperties } = useContext(ProfileContext);
+    const { profileProperties, updateProfileProperties } = useContext(ProfileContext);
     const [curName, setCurName] = useState<string>("My Rifle");
 
     useEffect(() => {
-        if (fileContent) {
-            setCurName(fileContent.profileName);
+        if (profileProperties) {
+            setCurName(profileProperties.profileName);
         }
-    }, [fileContent]);
+    }, [profileProperties]);
 
     const acceptName = (): void => updateProfileProperties({ profileName: curName });
-    const declineName = (): void => setCurName(fileContent?.profileName);
+    const declineName = (): void => setCurName(profileProperties?.profileName);
 
-    if (!fileContent) {
+    if (!profileProperties) {
         return (
             <InputCard title={"Weapon"} expanded={expanded}>
                 <ActivityIndicator animating={true} />
@@ -41,7 +41,7 @@ const WeaponCard: React.FC<WeaponCardProps> = ({ expanded = true }) => {
                 style={measureFormFieldStyles.nameContainer}
                 label={"Name"}
                 icon={"card-bulleted-outline"}
-                text={fileContent?.profileName}
+                text={profileProperties?.profileName}
                 onAccept={acceptName}
                 onDecline={declineName}
             >
@@ -53,19 +53,19 @@ const WeaponCard: React.FC<WeaponCardProps> = ({ expanded = true }) => {
 
             <MeasureFormField
                 {...fields.caliber}
-                value={fileContent ? fileContent.bDiameter / 1000 : 0}
+                value={profileProperties ? profileProperties.bDiameter / 1000 : 0}
                 onValueChange={value => updateProfileProperties({ bDiameter: Math.round(value * 1000) })}
             />
 
             <MeasureFormField
                 {...fields.sightHeight}
-                value={fileContent ? UNew.Millimeter(fileContent.scHeight).In(Unit.Inch) : 0}
+                value={profileProperties ? UNew.Millimeter(profileProperties.scHeight).In(Unit.Inch) : 0}
                 onValueChange={value => updateProfileProperties({ scHeight: Math.round(value) })}
             />
 
             <MeasureFormField
                 {...fields.twist}
-                value={fileContent ? fileContent.rTwist / 100 : 0}
+                value={profileProperties ? profileProperties.rTwist / 100 : 0}
                 onValueChange={value => updateProfileProperties({ twist: Math.round(value * 10) })}
             />
 
@@ -74,7 +74,7 @@ const WeaponCard: React.FC<WeaponCardProps> = ({ expanded = true }) => {
                 <SegmentedButtons
                     style={[measureFormFieldStyles.column, styles.segment]}
                     buttons={twistStates}
-                    value={fileContent?.twistDir}
+                    value={profileProperties?.twistDir}
                     onValueChange={value => updateProfileProperties({ twistDir: value })}
                 />
             </View>
@@ -117,7 +117,7 @@ const fields: Record<string, MeasureFormFieldProps> = {
         icon: "diameter-variant",
         maxValue: 22,
         minValue: 0.001,
-        decimals: 3,
+        fractionDigits: 3,
         step: 0.001,
         value: 0,
     },
@@ -128,7 +128,7 @@ const fields: Record<string, MeasureFormFieldProps> = {
         icon: "crosshairs",
         maxValue: 5,
         minValue: 0,
-        decimals: 1,
+        fractionDigits: 1,
         value: 0,
     },
     twist: {
@@ -138,7 +138,7 @@ const fields: Record<string, MeasureFormFieldProps> = {
         icon: "screw-flat-top",
         maxValue: 20,
         minValue: 0,
-        decimals: 2,
+        fractionDigits: 2,
         value: 0,
     }
 }

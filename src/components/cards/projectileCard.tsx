@@ -4,7 +4,7 @@ import InputCard from "./inputCard";
 import SimpleDialog from "../dialogs/simpleDialog";
 import { Unit, UnitProps } from "js-ballistics/dist/v2";
 import MeasureFormField, { MeasureFormFieldProps, styles as measureFormFieldStyles } from "../widgets/measureField";
-import { ProfileContext } from "../../providers/profileLoaderProvider";
+import { ProfileContext } from "../../providers/profileProvider";
 
 interface ProjectileCardProps {
     expanded?: boolean;
@@ -12,19 +12,19 @@ interface ProjectileCardProps {
 
 const ProjectileCard: React.FC<ProjectileCardProps> = ({ expanded = true }) => {
 
-    const { fileContent, updateProfileProperties } = useContext(ProfileContext);
+    const { profileProperties, updateProfileProperties } = useContext(ProfileContext);
     const [curName, setCurName] = useState<string>("My Cartridge");
 
     useEffect(() => {
-        if (fileContent) {
-            setCurName(fileContent.profileName);
+        if (profileProperties) {
+            setCurName(profileProperties.profileName);
         }
-    }, [fileContent]);
+    }, [profileProperties]);
 
     const acceptName = (): void => updateProfileProperties({ cartridgeName: curName });
-    const declineName = (): void => setCurName(fileContent?.cartridgeName);
+    const declineName = (): void => setCurName(profileProperties?.cartridgeName);
 
-    if (!fileContent) {
+    if (!profileProperties) {
         return (
             <InputCard title={"Weapon"} expanded={expanded}>
                 <ActivityIndicator animating={true} />
@@ -38,7 +38,7 @@ const ProjectileCard: React.FC<ProjectileCardProps> = ({ expanded = true }) => {
                 style={measureFormFieldStyles.nameContainer}
                 label={"Name"}
                 icon={"card-bulleted-outline"}
-                text={fileContent?.cartridgeName}
+                text={profileProperties?.cartridgeName}
                 onAccept={acceptName}
                 onDecline={declineName}
             >
@@ -50,13 +50,13 @@ const ProjectileCard: React.FC<ProjectileCardProps> = ({ expanded = true }) => {
 
             <MeasureFormField
                 {...fields.muzzleVelocity}
-                value={fileContent ? fileContent.cMuzzleVelocity / 10 : 0}
+                value={profileProperties ? profileProperties.cMuzzleVelocity / 10 : 0}
                 onValueChange={value => updateProfileProperties({ cMuzzleVelocity: Math.round(value * 10) })}
             />
 
             <MeasureFormField
                 {...fields.powderSens}
-                value={fileContent ? fileContent.cTCoeff / 1000 : 0}
+                value={profileProperties ? profileProperties.cTCoeff / 1000 : 0}
                 onValueChange={value => updateProfileProperties({ cTCoeff: Math.round(value * 1000) })}
             />
 
@@ -73,7 +73,7 @@ const fields: Record<string, MeasureFormFieldProps> = {
         value: 0,
         maxValue: 2000,
         minValue: 10,
-        decimals: 0,
+        fractionDigits: 0,
     },
     powderSens: {
         key: "cTCoeff",
@@ -83,7 +83,7 @@ const fields: Record<string, MeasureFormFieldProps> = {
         value: 0,
         maxValue: 5,
         minValue: 0,
-        decimals: 2,
+        fractionDigits: 2,
     }
 }
 
