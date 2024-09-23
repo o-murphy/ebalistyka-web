@@ -1,7 +1,7 @@
 import { useContext, useState, useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useProfile } from '../../context/profileContext'; // Path to where you created the context
-import { prepareCalculator } from '../../utils/prepareCalculator';
+import { prepareCalculator } from '../../utils/ballisticsCalculator';
 import TrajectoryChart from './trajectoryChart';
 import TrajectoryTable from './trajectoryTable';
 import {
@@ -17,8 +17,8 @@ preferredUnits.adjustment = Unit.MIL
 preferredUnits.drop = Unit.Centimeter
 
 export default function TrajectoryData({ EXAMPLE_A7P = null }) {
-  const { profileProperties, fetchBinaryFile } = useProfile();
-  const [calculatorData, setCalculatorData] = useState(null);
+  const { calculator, profileProperties, fetchBinaryFile } = useProfile();
+  // const [calculatorData, setCalculatorData] = useState(null);
 
   // TODO: remove spinners if no file loaded
   // useEffect(() => {
@@ -26,18 +26,18 @@ export default function TrajectoryData({ EXAMPLE_A7P = null }) {
   //   fetchBinaryFile(EXAMPLE_A7P);
   // }, [EXAMPLE_A7P]);
 
-  useEffect(() => {
-    if (profileProperties) {
-      const preparedCalculator = prepareCalculator(profileProperties);
-      setCalculatorData(preparedCalculator);
-    }
-  }, [profileProperties]);
+  // useEffect(() => {
+  //   if (profileProperties) {
+  //     const preparedCalculator = prepareCalculator(profileProperties);
+  //     setCalculatorData(preparedCalculator);
+  //   }
+  // }, [profileProperties]);
 
   return (
-    (profileProperties && calculatorData) ? (
+    (profileProperties && calculator) ? (
       <View style={styles.container}>
-        <TrajectoryTable calculatorData={calculatorData} />
-        <TrajectoryChart calculatorData={calculatorData} />
+        <TrajectoryTable />
+        <TrajectoryChart />
       </View>
     ) : (
       <View style={[styles.container, {padding: 15}]}>

@@ -1,19 +1,51 @@
-import React, { createContext, useState, useRef, useContext } from 'react';
-import parseA7P from '../utils/parseA7P';
+import React, { createContext, useState, useRef, useContext, useEffect } from 'react';
+import parseA7P, { ProfileProps } from '../utils/parseA7P';
+import { CurrentConditions, makeShot, prepareCalculator, PreparedZeroData } from '../utils/ballisticsCalculator';
+import { Atmo, Shot, UNew, HitResult} from 'js-ballistics/dist/v2';
+
+interface ProfileContextType {
+  profileProperties: ProfileProps | null;
+  fetchBinaryFile: (file: string) => Promise<void>;
+  setProfileProperties: React.Dispatch<React.SetStateAction<ProfileProps | null>>;
+  updateProfileProperties: (props: Partial<ProfileProps>) => void;
+  currentConditions: CurrentConditions;
+  updateCurrentConditions: (props: Partial<CurrentConditions>) => void;
+  calculator: PreparedZeroData | null;
+  hitResult: HitResult | null;
+}
 
 // Create the context
-export const ProfileContext = createContext(null);
+export const ProfileContext = createContext<ProfileContextType | null>(null);
 
 // Create a provider component
 export const ProfileProvider = ({ children }) => {
-  const [profileProperties, setProfileProperties] = useState(null);
-  const [currentConditions, setCurrentConditions] = useState({
+  const [profileProperties, setProfileProperties] = useState<ProfileProps>(null);
+  const [currentConditions, setCurrentConditions] = useState<CurrentConditions>({
     temperature: 15,
     pressure: 1000,
     humidity: 50,
     windSpeed: 0,
     windDirection: 0,
   });
+
+  const [calculator, setCalculator] = useState<PreparedZeroData>(null)
+  
+  const [hitResult, setHitResult] = useState<HitResult>(null)
+
+  useEffect(() => {
+    if (profileProperties) {
+      console.log("preparing calculator")
+      const preparedCalculator = prepareCalculator(profileProperties);
+      setCalculator(preparedCalculator);
+    }
+  }, [profileProperties]);
+
+  useEffect(() => {
+    if (currentConditions && calculator) {
+      const result = makeShot(calculator, currentConditions)
+      setHitResult(result);
+    }
+  }, [currentConditions, calculator]); // Add dependencies here
 
   const fetchBinaryFile = async (EXAMPLE_A7P) => {
     try {
@@ -32,7 +64,7 @@ export const ProfileProvider = ({ children }) => {
     }
   };
 
-  const updateProfileProperties = (props) => {
+  const updateProfileProperties = (props: Partial<ProfileProps>) => {
     if (profileProperties) {
       console.log(props)
       setProfileProperties((prev) => ({
@@ -42,7 +74,7 @@ export const ProfileProvider = ({ children }) => {
     }
   };
 
-  const updateCurrentConditions = (props) => {
+  const updateCurrentConditions = (props: Partial<CurrentConditions>) => {
     if (currentConditions) {
       setCurrentConditions((prev) => ({
         ...prev,
@@ -60,6 +92,8 @@ export const ProfileProvider = ({ children }) => {
       updateProfileProperties,
       currentConditions,
       updateCurrentConditions,
+      calculator,
+      hitResult
     }}>
       {children}
     </ProfileContext.Provider>

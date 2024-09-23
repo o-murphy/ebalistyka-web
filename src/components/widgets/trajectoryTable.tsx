@@ -4,30 +4,17 @@ import Calculator, {
     UnitProps
 } from 'js-ballistics/dist/v2';
 import { StyleSheet } from 'react-native';
+import { useProfile } from '../../context/profileContext';
 
 
 // Arrow function component
-const TrajectoryTable = ({ calculatorData }: {calculatorData: {weapon: Weapon, ammo: Ammo, calc: Calculator}}) => {
-    if (!calculatorData) return (
+const TrajectoryTable = () => {
+
+    const {hitResult} = useProfile()
+
+    if (!hitResult) return (
         <Text>Can't display table</Text>
     );
-
-    const { weapon, ammo, calc } = calculatorData;
-    const atmo = Atmo.icao({});
-    const targetShot = new Shot({
-        weapon: weapon,
-        ammo: ammo,
-        atmo: atmo,
-        lookAngle: UNew.MIL(5),
-    });
-
-    const hit = calc.fire({
-        shot: targetShot,
-        trajectoryRange: UNew.Meter(1001),
-        trajectoryStep: UNew.Meter(100),
-    });
-
-    const result: TrajectoryData[] = hit.trajectory
 
     const isZero = (row: TrajectoryData): Object => {
         return {
@@ -59,7 +46,7 @@ const TrajectoryTable = ({ calculatorData }: {calculatorData: {weapon: Weapon, a
                 {/* <DataTable.Title>Flag</DataTable.Title> */}
             </DataTable.Header>
 
-            {result.map((row, index) => (
+            {hitResult.trajectory.map((row, index) => (
                 <DataTable.Row key={index} >
                     {/* <DataTable.Cell>{row.name}</DataTable.Cell> */}
                     <DataTable.Cell {...isZero(row)}>{row.time.toFixed(3)}</DataTable.Cell>

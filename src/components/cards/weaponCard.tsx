@@ -65,13 +65,13 @@ const WeaponCard: React.FC<WeaponCardProps> = ({ expanded = true }) => {
             <MeasureFormField
                 {...fields.sightHeight}
                 value={profileProperties ? UNew.Millimeter(profileProperties.scHeight).In(Unit.Inch) : 0}
-                onValueChange={value => debouncedUpdateProfileProperties({ scHeight: Math.round(value) })}
+                onValueChange={value => debouncedUpdateProfileProperties({ scHeight: Math.round(UNew.Inch(value).In(Unit.Millimeter)) })}
             />
 
             <MeasureFormField
                 {...fields.twist}
                 value={profileProperties ? profileProperties.rTwist / 100 : 0}
-                onValueChange={value => debouncedUpdateProfileProperties({ twist: Math.round(value * 10) })}
+                onValueChange={value => debouncedUpdateProfileProperties({ rTwist: Math.round(value * 100) })}
             />
 
             {/* Twist direction with immediate update */}

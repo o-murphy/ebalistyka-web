@@ -3,31 +3,28 @@ import { LineChart } from 'react-native-chart-kit';
 import {
     preferredUnits, Unit, Atmo, Shot, UNew
 } from 'js-ballistics/dist/v2';
+import { useProfile } from '../../context/profileContext';
+import { Text } from 'react-native-paper';
 
+
+function findOppositeCathetus(hypotenuse, angleInDegrees) {
+    // Переводимо кут у градусах у радіани
+    const angleInRadians = angleInDegrees * (Math.PI / 180);
+    // Обчислюємо протилежний катет
+    const oppositeCathetus = hypotenuse * Math.sin(angleInRadians);
+    return oppositeCathetus;
+}
 
 // Arrow function component
-const TrajectoryChart = ({ calculatorData }) => {
-    if (!calculatorData) {
-        return null;
-    }
+const TrajectoryChart = () => {
 
-    const { calc } = calculatorData;
-    const atmo = Atmo.icao({});
-    const lookAngle = UNew.MIL(5);
-    const targetShot = new Shot({
-        weapon: calculatorData.weapon,
-        ammo: calculatorData.ammo,
-        atmo: atmo,
-        lookAngle: lookAngle,
-    });
+    const {hitResult} = useProfile()
 
-    const hit = calc.fire({
-        shot: targetShot,
-        trajectoryRange: UNew.Meter(1001),
-        trajectoryStep: UNew.Meter(100),
-    });
-
-    const result = hit.trajectory.map((row) => row);
+    if (!hitResult) return (
+        <Text>Can't display chart</Text>
+    );
+    console.log("res", hitResult.trajectory)
+    const result = hitResult.trajectory;
     const data = {
         labels: result.map((row) => row.distance.In(preferredUnits.distance).toFixed(0)),
         datasets: [
@@ -39,11 +36,14 @@ const TrajectoryChart = ({ calculatorData }) => {
                 color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`,
             },
             {
-                data: result.map((row) => row.distance.In(preferredUnits.distance) * Math.cos(lookAngle.In(Unit.Degree))),
+                data: result.map(row => findOppositeCathetus(
+                    row.lookDistance.In(preferredUnits.distance),
+                    result[0].angle.In(Unit.Degree)
+                )),
                 color: (opacity = 1) => `rgba(134, 0, 0, ${opacity})`,
             },
         ],
-        legend: ["Trajectory", "Velocity"],
+        legend: ["Trajectory", "Velocity", "Barrel line"],
     };
 
     return (

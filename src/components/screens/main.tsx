@@ -34,6 +34,7 @@ export default function MainScreen() {
                         <WeaponCard expanded={true} />
                         <ProjectileCard expanded={true} />
                         <BulletCard expanded={true} />
+                        <ZeroAtmoCard expanded={false} />
                     </ScrollView>
 
                     <ScrollView style={{ ...styles.column, flex: 3, minWidth: 600, }}
@@ -50,11 +51,8 @@ export default function MainScreen() {
                         alwaysBounceVertical={false}
                         showsVerticalScrollIndicator={false}
                     >
-                        <ZeroAtmoCard expanded={false} />
-                        {/* <WindCard expanded={false} /> */}
                         <CurrentAtmoCard expanded={true} label='Current atmosphere' />
                         <CurrentWindCard expanded={true} label='Current wind' />
-
                     </ScrollView>
 
                 </View>
