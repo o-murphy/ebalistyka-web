@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import TrajectoryData from './src/components/widgets/trajectoryData';
-import { ProfileLoaderProvider } from './src/providers/profileLoaderProvider';
+import { ProfileProvider } from './src/providers/profileLoaderProvider';
 import A7PFileUploader from './src/components/widgets/fileDrop';
 import { Appbar, PaperProvider, MD3LightTheme, MD3DarkTheme } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -35,7 +35,7 @@ export default function App() {
     <SafeAreaProvider style={themeStyles.provider}>
       <PaperProvider theme={theme} >
 
-        <ProfileLoaderProvider>
+        <ProfileProvider>
 
           <Appbar.Header mode={"center-aligned"} style={{
             height: 48,
@@ -83,7 +83,7 @@ export default function App() {
             </ScrollView>
 
           </View>
-        </ProfileLoaderProvider>
+        </ProfileProvider>
 
       </PaperProvider>
     </SafeAreaProvider>

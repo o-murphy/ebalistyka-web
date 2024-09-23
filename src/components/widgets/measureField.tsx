@@ -8,36 +8,49 @@ export interface MeasureFormFieldProps {
   label: string;
   suffix: string;
   icon: string;
-  initialValue: number;
+  value: number;
   maxValue: number;
   minValue: number;
   decimals: number;
   step?: number;
+  onValueChange?: (value: any) => void;
 }
 
-interface MeasureFormFieldComponentProps {
-  field: MeasureFormFieldProps;
-  onValueChange?: (value: any) => void; 
-}
+// interface MeasureFormFieldComponentProps {
+//   field: MeasureFormFieldProps;
+//   onValueChange?: (value: any) => void; 
+// }
 
-const MeasureFormField: React.FC<MeasureFormFieldComponentProps> = ({ field, onValueChange }) => {
+const MeasureFormField: React.FC<MeasureFormFieldProps> = ({ 
+  key,
+  label,
+  suffix,
+  icon,
+  value,
+  maxValue,
+  minValue,
+  decimals,
+  step,
+  onValueChange,
+ }) => {
+
   return (
     <View style={styles.row}>
-      <Text style={[styles.column, { flex: 1 }, styles.label]}>{field.label}</Text>
+      <Text style={[styles.column, { flex: 1 }, styles.label]}>{label}</Text>
       <DoubleSpinBox
-        key={field.key}
-        value={field.initialValue}
+        key={key}
+        value={value}
         onValueChange={onValueChange ? onValueChange : null}
-        fixedPoints={field.decimals}
-        min={field.minValue}
-        max={field.maxValue}
-        step={field.step ?? 1}
+        fixedPoints={decimals}
+        min={minValue}
+        max={maxValue}
+        step={step ?? 1}
         style={styles.doubleSpinBox}
         inputProps={{
           mode: "outlined",
           dense: true,
           ...inputStyles,
-          right: <TextInput.Affix text={field.suffix} textStyle={inputSideStyles.affix} />,
+          right: <TextInput.Affix text={suffix} textStyle={inputSideStyles.affix} />,
           // left: <TextInput.Icon icon={field.icon} size={iconSize} style={inputSideStyles.icon} />,
         }}
       />

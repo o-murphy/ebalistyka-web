@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   NativeSyntheticEvent,
@@ -31,6 +31,10 @@ const DoubleSpinBox: React.FC<DoubleSpinBoxProps> = ({
 }) => {
   const [currentValue, setCurrentValue] = useState<string>(value.toFixed(fixedPoints));
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    setCurrentValue(value.toFixed(fixedPoints))
+  }, [value])
 
   // Handle digit input from keyboard
   const handleInputChange = (text: string) => {

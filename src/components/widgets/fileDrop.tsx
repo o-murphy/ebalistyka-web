@@ -1,21 +1,27 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { FileUploader } from "react-drag-drop-files";
 import parseA7P from "../../utils/parseA7P";
 import { ProfileProps } from '../../utils/parseA7P';
 import { StyleSheet, StyleProp, ViewProps } from "react-native";
 import { Button } from "react-native-paper";
+import { ProfileContext } from "../../providers/profileLoaderProvider";
 
 // Define the allowed file types for upload
 const fileTypes = ["A7P"];
 
 interface A7PFileUploaderProps {
-  onSuccess?: (profile: ProfileProps) => void;
   style?: StyleProp<ViewProps>;
 }
 
-function A7PFileUploader({ onSuccess = null, style = null }: A7PFileUploaderProps) {
+function A7PFileUploader({ style = null }: A7PFileUploaderProps) {
   const [error, setError] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
+
+  const {updateProfileProperties} = useContext(ProfileContext);
+
+  const onSuccess = (data) => {
+    updateProfileProperties({...data})
+  }
 
   // Handle file change
   const handleChange = (file: File) => {

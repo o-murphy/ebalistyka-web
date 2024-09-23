@@ -2,12 +2,18 @@ import React, { createContext, useState } from 'react';
 import parseA7P from '../utils/parseA7P';
 
 // Create the context
-export const ProfileLoaderContext = createContext(null);
+export const ProfileContext = createContext(null);
 
 
 // Create a provider component
-export const ProfileLoaderProvider = ({ children }) => {
+export const ProfileProvider = ({ children }) => {
   const [fileContent, setFileContent] = useState(null);
+
+  const [currentConditions, setCurrentConditions] = useState({
+    temperature: 15,
+    pressure: 1000,
+    humidity: 50
+  })
 
   const fetchBinaryFile = async (EXAMPLE_A7P) => {
     try {
@@ -27,18 +33,33 @@ export const ProfileLoaderProvider = ({ children }) => {
 
   const updateProfileProperties = (props: Object) => {
     if (fileContent) {
-      setFileContent((prevContent) => ({
-        ...prevContent,
+      setFileContent({
+        ...fileContent,
         ...props,
-      }));
+      });
     }
   };
 
+  const updateCurrentConditions = (props: Object) => {
+    if (currentConditions) {
+      setCurrentConditions({
+        ...currentConditions,
+        ...props,
+      })
+    }
+  }
+
   // Provide both the file content and loading function to the context consumers
   return (
-    <ProfileLoaderContext.Provider value={{ fileContent, fetchBinaryFile, updateProfileProperties }}>
+    <ProfileContext.Provider value={{
+      fileContent,
+      fetchBinaryFile,
+      updateProfileProperties,
+      currentConditions,
+      updateCurrentConditions
+    }}>
       {children}
-    </ProfileLoaderContext.Provider>
+    </ProfileContext.Provider>
   );
 };
 

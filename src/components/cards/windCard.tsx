@@ -69,7 +69,7 @@ const WindCard: React.FC<WindCardProps> = ({ label = "Zero wind direction and sp
             />
 
             <DoubleSpinBox
-                value={fields[0].initialValue}
+                value={fields[0].value}
                 onValueChange={(value) => console.log(value)} // TODO:
                 fixedPoints={fields[0].decimals}
                 min={fields[0].minValue}
@@ -94,7 +94,7 @@ const fields: MeasureFormFieldProps[] = [
         label: "Wind speed",
         suffix: UnitProps[Unit.MPS].symbol,
         icon: "windsock",
-        initialValue: 0,
+        value: 0,
         maxValue: 100,
         minValue: 0,
         decimals: 1,

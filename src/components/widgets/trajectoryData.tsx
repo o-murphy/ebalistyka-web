@@ -1,6 +1,6 @@
 import { useContext, useState, useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { ProfileLoaderContext } from '../../providers/profileLoaderProvider'; // Path to where you created the context
+import { ProfileContext } from '../../providers/profileLoaderProvider'; // Path to where you created the context
 import { prepareCalculator } from '../../utils/prepareCalculator';
 import TrajectoryChart from './trajectoryChart';
 import TrajectoryTable from './trajectoryTable';
@@ -15,7 +15,7 @@ preferredUnits.adjustment = Unit.MIL
 preferredUnits.drop = Unit.Centimeter
 
 export default function TrajectoryData({ EXAMPLE_A7P }) {
-  const { fileContent, fetchBinaryFile } = useContext(ProfileLoaderContext);
+  const { fileContent, fetchBinaryFile } = useContext(ProfileContext);
   const [calculatorData, setCalculatorData] = useState(null);
 
   useEffect(() => {
