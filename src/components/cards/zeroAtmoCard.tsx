@@ -1,9 +1,10 @@
-import React, { useContext, useEffect } from "react";
+import React, { useCallback, useContext, useEffect } from "react";
 import InputCard from "./inputCard";
 import { Unit, UnitProps } from "js-ballistics/dist/v2";
 import MeasureFormField, { MeasureFormFieldProps } from "../widgets/measureField";
-import { ProfileContext as ProfileContext } from "../../providers/profileProvider";
+import { useProfile } from "../../context/profileContext";
 import { ActivityIndicator } from "react-native-paper";
+import debounce from "../../utils/debounce";
 
 interface AtmoCardProps {
     label?: string;
@@ -12,12 +13,13 @@ interface AtmoCardProps {
 
 const ZeroAtmoCard: React.FC<AtmoCardProps> = ({ label = "Zero atmosphere", expanded = true }) => {
 
-    const { profileProperties, updateProfileProperties } = useContext(ProfileContext);
+    const { profileProperties, updateProfileProperties } = useProfile();
+    const debouncedUpdateProfileProperties = useCallback(debounce(updateProfileProperties, 300), [updateProfileProperties]);
 
     if (!profileProperties) {
         return (
-            <InputCard title={"Weapon"} expanded={expanded}>
-                <ActivityIndicator animating={true} />
+            <InputCard title={"Zero atmosphere"} expanded={expanded}>
+                {/* <ActivityIndicator animating={true} /> */}
             </InputCard>                
         )
     }
@@ -28,19 +30,19 @@ const ZeroAtmoCard: React.FC<AtmoCardProps> = ({ label = "Zero atmosphere", expa
             <MeasureFormField
                 {...fields.temp}
                 value={profileProperties ? profileProperties.cZeroAirTemperature : 0}
-                onValueChange={value => updateProfileProperties({ cZeroAirTemperature: Math.round(value) })}
+                onValueChange={value => debouncedUpdateProfileProperties({ cZeroAirTemperature: Math.round(value) })}
             />
 
             <MeasureFormField
                 {...fields.pressure}
                 value={profileProperties ? profileProperties.cZeroAirPressure / 10 : 0}
-                onValueChange={value => updateProfileProperties({ cZeroAirPressure: Math.round(value * 10) })}
+                onValueChange={value => debouncedUpdateProfileProperties({ cZeroAirPressure: Math.round(value * 10) })}
             />
 
             <MeasureFormField
                 {...fields.humidity}
                 value={profileProperties ? profileProperties.cZeroAirHumidity : 0}
-                onValueChange={value => updateProfileProperties({ cZeroAirHumidity: Math.round(value) })}
+                onValueChange={value => debouncedUpdateProfileProperties({ cZeroAirHumidity: Math.round(value) })}
             />
 
         </InputCard>

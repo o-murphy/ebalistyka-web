@@ -4,12 +4,12 @@ import { StyleSheet } from "react-native";
 import { IconButton, Text } from "react-native-paper";
 
 interface InputCardProps {
-    children: ReactNode;
-    title: string;
+    children?: ReactNode;
+    title?: string;
     expanded?: boolean;
 }
 
-const InputCard: React.FC<InputCardProps> = ({ children, title, expanded = true }) => {
+const InputCard: React.FC<InputCardProps> = ({ children = null, title = null, expanded = true }) => {
     const [isExpanded, setIsExpanded] = useState<boolean>(expanded);
 
     const toggleExpansion = () => {
@@ -24,7 +24,7 @@ const InputCard: React.FC<InputCardProps> = ({ children, title, expanded = true 
                         {title}
                     </Text>
                 }
-                right={(props) => (
+                right={children ? (props) => (
                     <IconButton
                         {...props}
                         style={styles.iconButton}
@@ -32,7 +32,7 @@ const InputCard: React.FC<InputCardProps> = ({ children, title, expanded = true 
                         icon={isExpanded ? "chevron-up" : "chevron-down"}
                         onPress={toggleExpansion}
                     />
-                )}
+                ) : null}
             />
 
             {isExpanded && (

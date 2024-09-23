@@ -1,11 +1,12 @@
 import { TextInput } from "react-native-paper";
-import React, { useContext } from "react";
+import React, { useCallback, useContext } from "react";
 import InputCard from "./inputCard";
 import { Unit, UnitProps } from "js-ballistics/dist/v2";
 import DoubleSpinBox from "../widgets/doubleSpinBox";
 import WindDirectionPicker from "../widgets/windDirectionPicker";
 import { MeasureFormFieldProps, inputStyles, iconSize, inputSideStyles, styles as measureFormFieldStyles } from "../widgets/measureField";
-import { ProfileContext } from "../../providers/profileProvider";
+import { useProfile } from "../../context/profileContext";
+import debounce from "../../utils/debounce";
 
 interface WindCardProps {
     label?: string;
@@ -13,8 +14,9 @@ interface WindCardProps {
 }
 
 const CurrentWindCard: React.FC<WindCardProps> = ({ label = "Zero wind direction and speed", expanded = true }) => {
-    const { currentConditions, updateCurrentConditions } = useContext(ProfileContext);
-    
+    const { currentConditions, updateCurrentConditions } = useProfile();
+    const debouncedUpdateConditions = useCallback(debounce(updateCurrentConditions, 300), [updateCurrentConditions]);
+
     return (
         <InputCard title={label} expanded={expanded}>
             <WindDirectionPicker
@@ -25,7 +27,7 @@ const CurrentWindCard: React.FC<WindCardProps> = ({ label = "Zero wind direction
 
             <DoubleSpinBox
                 value={fields.windSpeed.value}
-                onValueChange={(value) => console.log(value)} // TODO:
+                onValueChange={value => debouncedUpdateConditions({windSpeed: value})} // TODO:
                 fractionDigits={fields.windSpeed.fractionDigits}
                 minValue={fields.windSpeed.minValue}
                 maxValue={fields.windSpeed.maxValue}

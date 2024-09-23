@@ -1,9 +1,10 @@
-import React, { useContext, useEffect } from "react";
+import React, { useCallback, useContext, useEffect } from "react";
 import InputCard from "./inputCard";
 import { Unit, UnitProps } from "js-ballistics/dist/v2";
 import MeasureFormField, { MeasureFormFieldProps } from "../widgets/measureField";
-import { ProfileContext as ProfileContext } from "../../providers/profileProvider";
+import { useProfile } from "../../context/profileContext";
 import { ActivityIndicator } from "react-native-paper";
+import debounce from "../../utils/debounce";
 
 interface AtmoCardProps {
     label?: string;
@@ -12,12 +13,13 @@ interface AtmoCardProps {
 
 const CurrentAtmoCard: React.FC<AtmoCardProps> = ({ label = "Zero atmosphere", expanded = true }) => {
 
-    const { currentConditions, updateCurrentConditions } = useContext(ProfileContext);
-    
+    const { currentConditions, updateCurrentConditions } = useProfile();
+    const debouncedUpdateConditions = useCallback(debounce(updateCurrentConditions, 300), [updateCurrentConditions]);
+
     if (!currentConditions) {
         return (
             <InputCard title={"Weapon"} expanded={expanded}>
-                <ActivityIndicator animating={true} />
+                {/* <ActivityIndicator animating={true} /> */}
             </InputCard>                
         )
     }
@@ -28,19 +30,19 @@ const CurrentAtmoCard: React.FC<AtmoCardProps> = ({ label = "Zero atmosphere", e
             <MeasureFormField
                 {...fields.temp}
                 value={currentConditions ? currentConditions.temperature : 0}
-                onValueChange={value => updateCurrentConditions({ cZeroAirTemperature: Math.round(value) })}
+                onValueChange={value => debouncedUpdateConditions({ cZeroAirTemperature: Math.round(value) })}
             />
 
             <MeasureFormField
                 {...fields.pressure}
                 value={currentConditions ? currentConditions.pressure : 0}
-                onValueChange={value => updateCurrentConditions({ cZeroAirPressure: Math.round(value) })}
+                onValueChange={value => debouncedUpdateConditions({ cZeroAirPressure: Math.round(value) })}
             />
 
             <MeasureFormField
                 {...fields.humidity}
                 value={currentConditions ? currentConditions.humidity : 0}
-                onValueChange={value => updateCurrentConditions({ cZeroAirHumidity: Math.round(value) })}
+                onValueChange={value => debouncedUpdateConditions({ cZeroAirHumidity: Math.round(value) })}
             />
 
         </InputCard>

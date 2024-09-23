@@ -4,7 +4,7 @@ import parseA7P from "../../utils/parseA7P";
 import { ProfileProps } from '../../utils/parseA7P';
 import { StyleSheet, StyleProp, ViewProps } from "react-native";
 import { Button } from "react-native-paper";
-import { ProfileContext } from "../../providers/profileProvider";
+import { ProfileContext } from "../../context/profileContext";
 
 // Define the allowed file types for upload
 const fileTypes = ["A7P"];
@@ -17,10 +17,14 @@ function A7PFileUploader({ style = null }: A7PFileUploaderProps) {
   const [error, setError] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
 
-  const {updateProfileProperties} = useContext(ProfileContext);
+  const {profileProperties, setProfileProperties, updateProfileProperties} = useContext(ProfileContext);
 
   const onSuccess = (data) => {
-    updateProfileProperties({...data})
+    if (profileProperties) {
+      updateProfileProperties(data)
+    } else {
+      setProfileProperties(data)
+    }
   }
 
   // Handle file change
@@ -29,6 +33,7 @@ function A7PFileUploader({ style = null }: A7PFileUploaderProps) {
 
     reader.onload = (event: ProgressEvent<FileReader>) => {
       if (event.target?.result) {
+        console.log("GOT PROFILE")
         parseA7P(event.target.result as ArrayBuffer)
           .then((parsedData) => {
             setError(null);
@@ -38,7 +43,7 @@ function A7PFileUploader({ style = null }: A7PFileUploaderProps) {
             }
           })
           .catch((error: any) => {
-            console.log(error);
+            console.error(error);
             setError(error);
             setFileName(null);
           });

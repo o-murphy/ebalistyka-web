@@ -1,19 +1,22 @@
 import { Text, TextInput, Chip, ActivityIndicator } from "react-native-paper";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import InputCard from "./inputCard";
 import SimpleDialog from "../dialogs/simpleDialog";
 import { Unit, UnitProps } from "js-ballistics/dist/v2";
 import { View } from "react-native";
 import MeasureFormField, { MeasureFormFieldProps, styles as measureFormFieldStyles } from "../widgets/measureField";
-import { ProfileContext } from "../../providers/profileProvider";
+import { useProfile } from "../../context/profileContext";
+import debounce from "../../utils/debounce";
 
 interface BulletCardProps {
     expanded?: boolean;
 }
 
 const BulletCard: React.FC<BulletCardProps> = ({ expanded = true }) => {
-    const { profileProperties, updateProfileProperties } = useContext(ProfileContext);
+    const { profileProperties, updateProfileProperties } = useProfile();
     const [curName, setCurName] = useState<string>("My Bullet");
+
+    const debouncedUpdateProfileProperties = useCallback(debounce(updateProfileProperties, 300), [updateProfileProperties]);
 
     useEffect(() => {
         if (profileProperties) {
@@ -21,7 +24,7 @@ const BulletCard: React.FC<BulletCardProps> = ({ expanded = true }) => {
         }
     }, [profileProperties]);
 
-    const acceptName = (): void => updateProfileProperties({ bulletName: curName });
+    const acceptName = (): void => debouncedUpdateProfileProperties({ bulletName: curName });
     const declineName = (): void => setCurName(profileProperties?.bulletName);
 
     const editDragModel = () => {
@@ -31,8 +34,8 @@ const BulletCard: React.FC<BulletCardProps> = ({ expanded = true }) => {
 
     if (!profileProperties) {
         return (
-            <InputCard title={"Weapon"} expanded={expanded}>
-                <ActivityIndicator animating={true} />
+            <InputCard title={"Bullet"} expanded={expanded}>
+                {/* <ActivityIndicator animating={true} /> */}
             </InputCard>
         )
     }
@@ -56,13 +59,13 @@ const BulletCard: React.FC<BulletCardProps> = ({ expanded = true }) => {
             <MeasureFormField
                 {...fields.weight}
                 value={profileProperties ? profileProperties.bWeight / 10 : 0}
-                onValueChange={value => updateProfileProperties({ bWeight: Math.round(value * 10) })}
+                onValueChange={value => debouncedUpdateProfileProperties({ bWeight: Math.round(value * 10) })}
             />
 
             <MeasureFormField
                 {...fields.length}
                 value={profileProperties ? profileProperties.bLength / 10 : 0}
-                onValueChange={value => updateProfileProperties({ bLength: Math.round(value * 10) })}
+                onValueChange={value => debouncedUpdateProfileProperties({ bLength: Math.round(value * 10) })}
             />
 
             <View style={measureFormFieldStyles.row}>

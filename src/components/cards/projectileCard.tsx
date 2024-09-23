@@ -1,10 +1,11 @@
 import { ActivityIndicator, TextInput } from "react-native-paper";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import InputCard from "./inputCard";
 import SimpleDialog from "../dialogs/simpleDialog";
 import { Unit, UnitProps } from "js-ballistics/dist/v2";
 import MeasureFormField, { MeasureFormFieldProps, styles as measureFormFieldStyles } from "../widgets/measureField";
-import { ProfileContext } from "../../providers/profileProvider";
+import { useProfile } from "../../context/profileContext";
+import debounce from "../../utils/debounce";
 
 interface ProjectileCardProps {
     expanded?: boolean;
@@ -12,8 +13,10 @@ interface ProjectileCardProps {
 
 const ProjectileCard: React.FC<ProjectileCardProps> = ({ expanded = true }) => {
 
-    const { profileProperties, updateProfileProperties } = useContext(ProfileContext);
+    const { profileProperties, updateProfileProperties } = useProfile();
     const [curName, setCurName] = useState<string>("My Cartridge");
+
+    const debouncedUpdateProfileProperties = useCallback(debounce(updateProfileProperties, 300), [updateProfileProperties]);
 
     useEffect(() => {
         if (profileProperties) {
@@ -21,13 +24,13 @@ const ProjectileCard: React.FC<ProjectileCardProps> = ({ expanded = true }) => {
         }
     }, [profileProperties]);
 
-    const acceptName = (): void => updateProfileProperties({ cartridgeName: curName });
+    const acceptName = (): void => debouncedUpdateProfileProperties({ cartridgeName: curName });
     const declineName = (): void => setCurName(profileProperties?.cartridgeName);
 
     if (!profileProperties) {
         return (
-            <InputCard title={"Weapon"} expanded={expanded}>
-                <ActivityIndicator animating={true} />
+            <InputCard title={"Projectile"} expanded={expanded}>
+                {/* <ActivityIndicator animating={true} /> */}
             </InputCard>                
         )
     }
@@ -51,13 +54,13 @@ const ProjectileCard: React.FC<ProjectileCardProps> = ({ expanded = true }) => {
             <MeasureFormField
                 {...fields.muzzleVelocity}
                 value={profileProperties ? profileProperties.cMuzzleVelocity / 10 : 0}
-                onValueChange={value => updateProfileProperties({ cMuzzleVelocity: Math.round(value * 10) })}
+                onValueChange={value => debouncedUpdateProfileProperties({ cMuzzleVelocity: Math.round(value * 10) })}
             />
 
             <MeasureFormField
                 {...fields.powderSens}
                 value={profileProperties ? profileProperties.cTCoeff / 1000 : 0}
-                onValueChange={value => updateProfileProperties({ cTCoeff: Math.round(value * 1000) })}
+                onValueChange={value => debouncedUpdateProfileProperties({ cTCoeff: Math.round(value * 1000) })}
             />
 
         </InputCard>
