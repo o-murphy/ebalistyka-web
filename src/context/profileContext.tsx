@@ -26,6 +26,7 @@ export const ProfileProvider = ({ children }) => {
     humidity: 50,
     windSpeed: 0,
     windDirection: 0,
+    lookAngle: 0
   });
 
   const [calculator, setCalculator] = useState<PreparedZeroData>(null)

@@ -45,6 +45,12 @@ const CurrentAtmoCard: React.FC<AtmoCardProps> = ({ label = "Zero atmosphere", e
                 onValueChange={value => debouncedUpdateConditions({ cZeroAirHumidity: Math.round(value) })}
             />
 
+<MeasureFormField
+                {...fields.lookAngle}
+                value={currentConditions ? currentConditions.lookAngle : 0}
+                onValueChange={value => debouncedUpdateConditions({ lookAngle: value })}
+            />
+
         </InputCard>
     );
 };
@@ -90,6 +96,16 @@ const fields: Record<string, MeasureFormFieldProps> = {
     //     decimals: 0,
     //     value: 150,
     // },
+    lookAngle: {
+        key: "cZeroWPitch",
+        label: "Look angle",
+        suffix: UnitProps[Unit.Degree].symbol,
+        icon: "angle-acute",
+        maxValue: 90,
+        minValue: -90,
+        fractionDigits: 1,
+        value: 0,
+    },
 };
 
 export default CurrentAtmoCard;

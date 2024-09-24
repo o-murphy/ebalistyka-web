@@ -25,33 +25,42 @@ const TrajectoryChart = () => {
     );
     console.log("res", hitResult.trajectory)
     const result = hitResult.trajectory;
+
     const data = {
         labels: result.map((row) => row.distance.In(preferredUnits.distance).toFixed(0)),
         datasets: [
-            {
-                data: result.map((row) => row.height.In(preferredUnits.drop)),
-            },
             {
                 data: result.map((row) => row.velocity.In(preferredUnits.velocity)),
                 color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`,
             },
             {
                 data: result.map(row => findOppositeCathetus(
-                    row.lookDistance.In(preferredUnits.distance),
-                    result[0].angle.In(Unit.Degree)
+                    row.lookDistance.In(preferredUnits.drop),
+                    hitResult.shot.lookAngle.In(Unit.Degree)
                 )),
                 color: (opacity = 1) => `rgba(134, 0, 0, ${opacity})`,
             },
+            {
+                data: result.map(row => findOppositeCathetus(
+                    row.lookDistance.In(preferredUnits.drop),
+                    hitResult.shot.barrelElevation.In(Unit.Degree)
+                )),
+                color: (opacity = 1) => `rgba(0, 134, 0, ${opacity})`,
+            },
+            {
+                data: result.map((row) => row.height.In(preferredUnits.drop)),
+            },
         ],
-        legend: ["Trajectory", "Velocity", "Barrel line"],
+        legend: ["Velocity", "Sight line", "Barrel line", "Trajectory"],
     };
 
     return (
         <LineChart
             data={data}
-            width={640}
+            width={720}
             height={480}
             chartConfig={chartConfig}
+            fromZero={true}
         />
     );
 };
@@ -62,10 +71,22 @@ const chartConfig = {
     // backgroundGradientFromOpacity: 0,
     // backgroundGradientTo: "#08130D",
     // backgroundGradientToOpacity: 0.5,
-    color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
+
+    backgroundGradientFrom: "#000000",
+    backgroundGradientFromOpacity: 0,
+    backgroundGradientTo: "#000000",
+    backgroundGradientToOpacity: 0,
+
+    // backgroundColor: "#FFFFFF",
+
+    color: (opacity = 0.5) => `rgba(26, 255, 146, ${opacity})`,
     strokeWidth: 2, // optional, default 3
     barPercentage: 0.5,
-    useShadowColorFromDataset: false // optional
+    useShadowColorFromDataset: true, // optional
+
+    style: {
+        borderRadius: 16
+    },
 };
 
 

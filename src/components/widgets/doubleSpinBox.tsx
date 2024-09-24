@@ -97,7 +97,8 @@ const DoubleSpinBox: React.FC<DoubleSpinBoxProps> = ({
     <View style={style}>
       <TextInput
         {...inputProps}
-        keyboardType="numeric"
+        // keyboardType="numeric"
+        keyboardType="default"
         error={!!error}
         value={currentValue}
         onKeyPress={processKeyPress}

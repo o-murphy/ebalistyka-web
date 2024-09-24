@@ -90,12 +90,18 @@ const WeaponCard: React.FC<WeaponCardProps> = ({ expanded = true }) => {
                 />
             </View>
 
+            <MeasureFormField
+                {...fields.lookAngle}
+                value={profileProperties ? profileProperties.cZeroWPitch : 0}
+                onValueChange={value => debouncedUpdateProfileProperties({ cZeroWPitch: value })}
+            />
+
             <Dropdown 
                 label={"Zero distance"}
-                // placeholder={""}
                 mode={"outlined"}
-                dense={true}
-                left={<TextInput.Icon icon={"arrow-left-right-bold"} size={iconSize} style={inputSideStyles.icon} />}
+                // TODO: FUture fix
+                // dense={true}
+                // left={<TextInput.Icon icon={"arrow-left-right-bold"} size={iconSize} style={inputSideStyles.icon} />}
                 options={OPTIONS}
                 value={VALUE}
                 onSelect={value => debouncedUpdateProfileProperties({
@@ -174,6 +180,16 @@ const fields: Record<string, MeasureFormFieldProps> = {
         maxValue: 20,
         minValue: 0,
         fractionDigits: 2,
+        value: 0,
+    },
+    lookAngle: {
+        key: "cZeroWPitch",
+        label: "Look angle",
+        suffix: UnitProps[Unit.Degree].symbol,
+        icon: "angle-acute",
+        maxValue: 90,
+        minValue: -90,
+        fractionDigits: 1,
         value: 0,
     },
 }
