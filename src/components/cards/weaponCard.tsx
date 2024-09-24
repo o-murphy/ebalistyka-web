@@ -40,7 +40,7 @@ const WeaponCard: React.FC<WeaponCardProps> = ({ expanded = true }) => {
         );
     }
 
-    const OPTIONS = profileProperties.distances.map((value, index) => {return {label: (value / 100).toFixed(0), value: index.toFixed(0)} })
+    const OPTIONS = profileProperties.distances.map((value, index) => { return { label: (value / 100).toFixed(0), value: index.toFixed(0) } })
     const VALUE = profileProperties.cZeroDistanceIdx.toFixed(0)
 
     return (
@@ -97,7 +97,7 @@ const WeaponCard: React.FC<WeaponCardProps> = ({ expanded = true }) => {
                 onValueChange={value => debouncedUpdateProfileProperties({ cZeroWPitch: Math.round(value * 10) })}
             />
 
-            <Dropdown 
+            <Dropdown
                 label={"Zero distance"}
                 mode={"outlined"}
                 // TODO: FUture fix
@@ -106,7 +106,7 @@ const WeaponCard: React.FC<WeaponCardProps> = ({ expanded = true }) => {
                 options={OPTIONS}
                 value={VALUE}
                 onSelect={value => debouncedUpdateProfileProperties({
-                    cZeroDistanceIdx: (() => {console.log(OPTIONS, value); return parseFloat(value)})()
+                    cZeroDistanceIdx: (() => { console.log(OPTIONS, value); return parseFloat(value) })()
                 })}
             />
 
@@ -116,15 +116,15 @@ const WeaponCard: React.FC<WeaponCardProps> = ({ expanded = true }) => {
 
 export const inputStyles = StyleSheet.create({
     style: {
-      height: 24,
+        height: 24,
     },
     contentStyle: {
-      fontSize: 14,
-      textAlign: "left",
+        fontSize: 14,
+        textAlign: "left",
     },
     outlineStyle: {},
     underlineStyle: {},
-  });
+});
 
 const styles = StyleSheet.create({
     segment: {

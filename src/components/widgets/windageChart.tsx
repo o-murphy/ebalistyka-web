@@ -1,7 +1,7 @@
 import { LineChart } from 'react-native-chart-kit';
 
 import {
-    preferredUnits, Unit, Atmo, Shot, UNew
+    preferredUnits
 } from 'js-ballistics/dist/v2';
 import { useProfile } from '../../context/profileContext';
 import { Text } from 'react-native-paper';
@@ -18,7 +18,7 @@ function findOppositeCathetus(hypotenuse, angleInDegrees) {
 // Arrow function component
 const WindageChart = () => {
 
-    const {hitResult} = useProfile()
+    const { hitResult } = useProfile()
 
     if (!hitResult) return (
         <Text>Can't display chart</Text>
@@ -29,29 +29,11 @@ const WindageChart = () => {
     const data = {
         labels: result.map((row) => row.distance.In(preferredUnits.distance).toFixed(0)),
         datasets: [
-            // {
-            //     data: result.map((row) => row.velocity.In(preferredUnits.velocity)),
-            //     color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`,
-            // },
-            // {
-            //     data: result.map(row => findOppositeCathetus(
-            //         row.lookDistance.In(preferredUnits.drop),
-            //         hitResult.shot.lookAngle.In(Unit.Degree)
-            //     )),
-            //     color: (opacity = 1) => `rgba(134, 0, 0, ${opacity})`,
-            // },
-            // {
-            //     data: result.map(row => findOppositeCathetus(
-            //         row.lookDistance.In(preferredUnits.drop),
-            //         hitResult.shot.barrelElevation.In(Unit.Degree)
-            //     )),
-            //     color: (opacity = 1) => `rgba(0, 134, 0, ${opacity})`,
-            // },
             {
                 data: result.map((row) => row.windage.In(preferredUnits.drop)),
             },
         ],
-        legend: ["Windage", ],
+        legend: ["Windage",],
     };
 
     return (

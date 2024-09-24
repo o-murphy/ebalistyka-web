@@ -1,7 +1,7 @@
-import React, { createContext, useState, useRef, useContext, useEffect } from 'react';
+import { createContext, useState, useContext, useEffect } from 'react';
 import parseA7P, { ProfileProps } from '../utils/parseA7P';
 import { CurrentConditions, makeShot, prepareCalculator, PreparedZeroData } from '../utils/ballisticsCalculator';
-import { Atmo, Shot, UNew, HitResult} from 'js-ballistics/dist/v2';
+import { HitResult } from 'js-ballistics/dist/v2';
 
 interface ProfileContextType {
   profileProperties: ProfileProps | null;
@@ -30,7 +30,7 @@ export const ProfileProvider = ({ children }) => {
   });
 
   const [calculator, setCalculator] = useState<PreparedZeroData>(null)
-  
+
   const [hitResult, setHitResult] = useState<HitResult>(null)
 
   useEffect(() => {

@@ -1,7 +1,7 @@
 import { LineChart } from 'react-native-chart-kit';
 
 import {
-    preferredUnits, Unit, Atmo, Shot, UNew
+    preferredUnits, Unit
 } from 'js-ballistics/dist/v2';
 import { useProfile } from '../../context/profileContext';
 import { Text } from 'react-native-paper';
@@ -18,7 +18,7 @@ function findOppositeCathetus(hypotenuse, angleInDegrees) {
 // Arrow function component
 const TrajectoryChart = () => {
 
-    const {hitResult} = useProfile()
+    const { hitResult } = useProfile()
 
     if (!hitResult) return (
         <Text>Can't display chart</Text>

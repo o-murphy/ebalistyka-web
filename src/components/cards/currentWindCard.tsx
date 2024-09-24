@@ -22,12 +22,12 @@ const CurrentWindCard: React.FC<WindCardProps> = ({ label = "Zero wind direction
             <WindDirectionPicker
                 style={{ alignItems: 'center' }}
                 value={currentConditions ? currentConditions.windDirection : 0}
-                onChange={value => updateCurrentConditions({windDirection: value === 12 ? 0 : value})}
+                onChange={value => updateCurrentConditions({ windDirection: value === 12 ? 0 : value })}
             />
 
             <DoubleSpinBox
                 value={measureFieldsProps.windSpeed.value}
-                onValueChange={value => debouncedUpdateConditions({windSpeed: value})} // TODO:
+                onValueChange={value => debouncedUpdateConditions({ windSpeed: value })} // TODO:
                 fractionDigits={measureFieldsProps.windSpeed.fractionDigits}
                 minValue={measureFieldsProps.windSpeed.minValue}
                 maxValue={measureFieldsProps.windSpeed.maxValue}

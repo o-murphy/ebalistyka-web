@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import TrajectoryData from '../widgets/trajectoryData';
 import WeaponCard from '../cards/weaponCard';
@@ -12,7 +12,6 @@ import { useTheme } from '../../context/themeContext';
 import { PaperProvider } from 'react-native-paper';
 import TopAppBar from '../widgets/topAppBar';
 
-const EXAMPLE_A7P = '/assets/example.a7p'
 
 export default function MainScreen() {
 
@@ -42,7 +41,7 @@ export default function MainScreen() {
                         alwaysBounceVertical={false}
                         showsVerticalScrollIndicator={false}
                     >
-                        <TrajectoryData EXAMPLE_A7P={EXAMPLE_A7P} />
+                        <TrajectoryData />
                     </ScrollView>
 
                     <ScrollView

@@ -31,7 +31,7 @@ const ProjectileCard: React.FC<ProjectileCardProps> = ({ expanded = true }) => {
         return (
             <InputCard title={"Projectile"} expanded={expanded}>
                 {/* <ActivityIndicator animating={true} /> */}
-            </InputCard>                
+            </InputCard>
         )
     }
 

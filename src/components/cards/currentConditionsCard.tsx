@@ -19,10 +19,10 @@ const CurrentConditionsCard: React.FC<AtmoCardProps> = ({ label = "Zero atmosphe
         return (
             <InputCard title={"Weapon"} expanded={expanded}>
                 {/* <ActivityIndicator animating={true} /> */}
-            </InputCard>                
+            </InputCard>
         )
     }
-    
+
     return (
         <InputCard title={label} expanded={expanded}>
 
@@ -44,7 +44,7 @@ const CurrentConditionsCard: React.FC<AtmoCardProps> = ({ label = "Zero atmosphe
                 onValueChange={value => debouncedUpdateConditions({ cZeroAirHumidity: Math.round(value) })}
             />
 
-        <MeasureFormField
+            <MeasureFormField
                 {...measureFieldsProps.lookAngle}
                 value={currentConditions ? currentConditions.lookAngle / 10 : 0}
                 onValueChange={value => debouncedUpdateConditions({ lookAngle: Math.round(value * 10) })}

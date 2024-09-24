@@ -19,7 +19,7 @@ const ZeroAtmoCard: React.FC<AtmoCardProps> = ({ label = "Zero atmosphere", expa
         return (
             <InputCard title={"Zero atmosphere"} expanded={expanded}>
                 {/* <ActivityIndicator animating={true} /> */}
-            </InputCard>                
+            </InputCard>
         )
     }
 

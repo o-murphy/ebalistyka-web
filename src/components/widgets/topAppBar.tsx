@@ -5,7 +5,7 @@ import { useTheme } from "../../context/themeContext"
 
 const TopAppBar = () => {
 
-    const {theme, toggleNightMode} = useTheme()
+    const { theme, toggleNightMode } = useTheme()
 
     return (
         <Appbar.Header mode={"center-aligned"} style={{

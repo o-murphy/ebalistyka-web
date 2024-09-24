@@ -8,10 +8,10 @@ import Calculator, {
 } from 'js-ballistics/dist/v2';
 import { ProfileProps } from './parseA7P';
 
-export interface PreparedZeroData { 
-    weapon: Weapon; 
+export interface PreparedZeroData {
+    weapon: Weapon;
     ammo: Ammo;
-    calc: Calculator; 
+    calc: Calculator;
 }
 
 export interface CurrentConditions {
@@ -55,7 +55,7 @@ export const prepareCalculator = (profile: ProfileProps): PreparedZeroData => {
         atmo: {
             pressure: UNew.hPa(profile.cZeroAirPressure / 10),
             temperature: UNew.Celsius(profile.cZeroAirTemperature),
-            humidity: profile.cZeroAirHumidity, 
+            humidity: profile.cZeroAirHumidity,
         },
         weapon: {
             sightHeight: UNew.Millimeter(profile.scHeight),
@@ -137,7 +137,7 @@ export const makeShot = (calculator: PreparedZeroData, currentConditions: Curren
     }
 
     const atmo = new Atmo(shotData.atmo);
-  
+
     const targetShot = new Shot({
         weapon: weapon,
         ammo: ammo,
@@ -145,11 +145,11 @@ export const makeShot = (calculator: PreparedZeroData, currentConditions: Curren
         lookAngle: shotData.lookAngle,  // TODO: add look angle 
         winds: [new Wind(shotData.wind)]
     });
-  
-      const hit = calc.fire({
+
+    const hit = calc.fire({
         shot: targetShot,
         ...shotData.trajectoryProps
-      });
-  
-      return hit;
+    });
+
+    return hit;
 }

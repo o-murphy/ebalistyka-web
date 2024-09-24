@@ -1,16 +1,14 @@
 import { DataTable, Text } from 'react-native-paper';
-import Calculator, {
-    Weapon, Ammo, Atmo, preferredUnits, Shot, TrajectoryData, UNew,
-    UnitProps
+import {
+    preferredUnits, TrajectoryData, UnitProps
 } from 'js-ballistics/dist/v2';
-import { StyleSheet } from 'react-native';
 import { useProfile } from '../../context/profileContext';
 
 
 // Arrow function component
 const TrajectoryTable = () => {
 
-    const {hitResult} = useProfile()
+    const { hitResult } = useProfile()
 
     if (!hitResult) return (
         <Text>Can't display table</Text>
@@ -20,7 +18,7 @@ const TrajectoryTable = () => {
         const rawAdj = parseFloat(row.dropAdjustment.rawValue.toFixed(4))
         return {
             textStyle: {
-                ...(rawAdj === 0) && {color: "red"},
+                ...(rawAdj === 0) && { color: "red" },
                 fontSize: 12
             },
         }
