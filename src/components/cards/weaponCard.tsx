@@ -4,10 +4,12 @@ import InputCard from "./inputCard";
 import SimpleDialog from "../dialogs/simpleDialog";
 import { Unit, UnitProps } from "js-ballistics/dist/v2";
 import { StyleSheet, View } from "react-native";
-import MeasureFormField, { MeasureFormFieldProps, styles as measureFormFieldStyles } from "../widgets/measureField";
+import MeasureFormField, { iconSize, inputSideStyles, MeasureFormFieldProps, styles as measureFormFieldStyles } from "../widgets/measureField";
 import { useProfile } from "../../context/profileContext";
 import { UNew } from "js-ballistics";
 import debounce from "../../utils/debounce";
+import { Dropdown, DropdownInput } from "react-native-paper-dropdown";
+import { PaperSelect } from "react-native-paper-select";
 
 interface WeaponCardProps {
     expanded?: boolean;
@@ -36,6 +38,9 @@ const WeaponCard: React.FC<WeaponCardProps> = ({ expanded = true }) => {
             </InputCard>
         );
     }
+
+    const OPTIONS = profileProperties.distances.map((value, index) => {return {label: (value / 100).toFixed(0), value: index.toFixed(0)} })
+    const VALUE = profileProperties.cZeroDistanceIdx.toFixed(0)
 
     return (
         <InputCard title={"Weapon"} expanded={expanded}>
@@ -76,7 +81,7 @@ const WeaponCard: React.FC<WeaponCardProps> = ({ expanded = true }) => {
 
             {/* Twist direction with immediate update */}
             <View style={{ ...measureFormFieldStyles.row }}>
-                <Text style={[measureFormFieldStyles.column, measureFormFieldStyles.label]}>{"Twist direction"}</Text>
+                {/* <Text style={[measureFormFieldStyles.column, measureFormFieldStyles.label]}>{"Twist direction"}</Text> */}
                 <SegmentedButtons
                     style={[measureFormFieldStyles.column, styles.segment]}
                     buttons={twistStates}
@@ -85,9 +90,34 @@ const WeaponCard: React.FC<WeaponCardProps> = ({ expanded = true }) => {
                 />
             </View>
 
+            <Dropdown 
+                label={"Zero distance"}
+                // placeholder={""}
+                mode={"outlined"}
+                dense={true}
+                left={<TextInput.Icon icon={"arrow-left-right-bold"} size={iconSize} style={inputSideStyles.icon} />}
+                options={OPTIONS}
+                value={VALUE}
+                onSelect={value => debouncedUpdateProfileProperties({
+                    cZeroDistanceIdx: (() => {console.log(OPTIONS, value); return parseFloat(value)})()
+                })}
+            />
+
         </InputCard>
     );
 };
+
+export const inputStyles = StyleSheet.create({
+    style: {
+      height: 24,
+    },
+    contentStyle: {
+      fontSize: 14,
+      textAlign: "left",
+    },
+    outlineStyle: {},
+    underlineStyle: {},
+  });
 
 const styles = StyleSheet.create({
     segment: {
@@ -145,7 +175,7 @@ const fields: Record<string, MeasureFormFieldProps> = {
         minValue: 0,
         fractionDigits: 2,
         value: 0,
-    }
+    },
 }
 
 

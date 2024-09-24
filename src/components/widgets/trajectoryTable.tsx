@@ -17,9 +17,10 @@ const TrajectoryTable = () => {
     );
 
     const isZero = (row: TrajectoryData): Object => {
+        const rawAdj = parseFloat(row.dropAdjustment.rawValue.toFixed(4))
         return {
             textStyle: {
-                ...row.distance.In(preferredUnits.distance).toFixed(0) === '100' && {color: "red"},
+                ...(rawAdj === 0) && {color: "red"},
                 fontSize: 12
             },
         }

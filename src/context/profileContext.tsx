@@ -34,7 +34,6 @@ export const ProfileProvider = ({ children }) => {
 
   useEffect(() => {
     if (profileProperties) {
-      console.log("preparing calculator")
       const preparedCalculator = prepareCalculator(profileProperties);
       setCalculator(preparedCalculator);
     }
@@ -66,7 +65,6 @@ export const ProfileProvider = ({ children }) => {
 
   const updateProfileProperties = (props: Partial<ProfileProps>) => {
     if (profileProperties) {
-      console.log(props)
       setProfileProperties((prev) => ({
         ...prev,
         ...props,

@@ -17,6 +17,7 @@ interface DoubleSpinBoxProps {
   step?: number; // Step increment/decrement value
   style?: StyleProp<ViewStyle>; // Style for the container
   inputProps?: TextInputProps; // Additional props for the TextInput
+  strict?: boolean;
 }
 
 const DoubleSpinBox: React.FC<DoubleSpinBoxProps> = ({
@@ -27,7 +28,8 @@ const DoubleSpinBox: React.FC<DoubleSpinBoxProps> = ({
   maxValue: max = 100, // Default max value
   step = 1,
   style,
-  inputProps
+  inputProps,
+  strict = false
 }) => {
   const [currentValue, setCurrentValue] = useState<string>(value.toFixed(fixedPoints));
   const [error, setError] = useState<string | null>(null);
@@ -51,16 +53,22 @@ const DoubleSpinBox: React.FC<DoubleSpinBoxProps> = ({
     const newValue = (parsedValue / Math.pow(10, fixedPoints)).toFixed(fixedPoints);
     const numericValue = parseFloat(newValue);
 
+    let _error = null;
     // Validation
     if (numericValue < min) {
-      setError(`Value must be at least ${min}`);
+      _error = `Value must be at least ${min}`;
     } else if (numericValue > max) {
-      setError(`Value must be at most ${max}`);
+      _error = `Value must be at most ${max}`;
     } else {
-      setError(null);
+      _error = null
     }
 
+    setError(_error)
     setCurrentValue(isNegative && numericValue === 0 ? "-" + newValue : newValue);
+
+    if (strict && _error) {
+      return;
+    }
     onValueChange?.(numericValue);
   };
 

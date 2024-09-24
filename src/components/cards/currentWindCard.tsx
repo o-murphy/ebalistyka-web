@@ -32,11 +32,12 @@ const CurrentWindCard: React.FC<WindCardProps> = ({ label = "Zero wind direction
                 minValue={fields.windSpeed.minValue}
                 maxValue={fields.windSpeed.maxValue}
                 step={fields.windSpeed.step}
-                style={{ ...measureFormFieldStyles.doubleSpinBox, width: "70%", alignSelf: "center" }}
+                // style={{ ...measureFormFieldStyles.doubleSpinBox, width: "70%", alignSelf: "center" }}
                 inputProps={{
+                    label: "Wind speed",
                     mode: "outlined",
                     dense: true,
-                    ...inputStyles,
+                    // ...inputStyles,
                     right: <TextInput.Affix text={fields.windSpeed.suffix} textStyle={inputSideStyles.affix} />,
                     left: <TextInput.Icon icon={fields.windSpeed.icon} size={iconSize} style={inputSideStyles.icon} />
                 }}

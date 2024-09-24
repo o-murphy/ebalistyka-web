@@ -138,7 +138,7 @@ const MeasureFormField: React.FC<MeasureFormFieldProps> = ({
 
   return (
     <View style={styles.row}>
-      <Text style={[styles.column, { flex: 1 }, styles.label]}>{label}</Text>
+      {/* <Text style={[styles.column, { flex: 1 }, styles.label]}>{label}</Text> */}
       <DoubleSpinBox
         value={value}
         onValueChange={onValueChange ? onValueChange : null}
@@ -146,13 +146,16 @@ const MeasureFormField: React.FC<MeasureFormFieldProps> = ({
         minValue={minValue}
         maxValue={maxValue}
         step={step ?? 1}
-        style={styles.doubleSpinBox}
+        style={[styles.doubleSpinBox]}
         inputProps={{
+          label: label,
           mode: "outlined",
           dense: true,
-          ...inputStyles,
+          // ...inputStyles,
           right: <TextInput.Affix text={suffix} textStyle={inputSideStyles.affix} />,
+          left: <TextInput.Icon icon={icon} size={iconSize} style={inputSideStyles.icon} />,
         }}
+        strict={true}
       />
     </View>
   );
@@ -176,7 +179,7 @@ export const inputStyles = StyleSheet.create({
     height: 24,
   },
   contentStyle: {
-    fontSize: 14,
+    // fontSize: 14,
     textAlign: "left",
   },
   outlineStyle: {},
@@ -185,12 +188,13 @@ export const inputStyles = StyleSheet.create({
 
 export const inputSideStyles = StyleSheet.create({
   affix: {
-    fontSize: 14,
+    // fontSize: 14,
   },
   icon: {},
 });
 
-export const iconSize = 12;
+// export const iconSize = 12;
+export const iconSize = null;
 
 export const styles = StyleSheet.create({
   column: {
@@ -205,14 +209,14 @@ export const styles = StyleSheet.create({
     alignItems: "center",
   },
   doubleSpinBox: {
-    justifyContent: "center",
-    flex: 2,
+    // justifyContent: "center",
+    flex: 1,
   },
   nameContainer: {
     flex: 1,
     marginVertical: 4,
   },
   label: {
-    fontSize: 14,
+    // fontSize: 14,
   },
 });
