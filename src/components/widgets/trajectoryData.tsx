@@ -9,6 +9,7 @@ import {
 } from 'js-ballistics/dist/v2';
 import { ActivityIndicator } from 'react-native-paper';
 import A7PFileUploader from './fileDrop';
+import WindageChart from './windageChart';
 
 preferredUnits.distance = Unit.Meter
 preferredUnits.velocity = Unit.MPS
@@ -38,6 +39,7 @@ export default function TrajectoryData({ EXAMPLE_A7P = null }) {
       <View style={styles.container}>
         <TrajectoryTable />
         <TrajectoryChart />
+        <WindageChart />
       </View>
     ) : (
       <View style={[styles.container, {padding: 15}]}>

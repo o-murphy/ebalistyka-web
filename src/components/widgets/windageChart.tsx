@@ -16,7 +16,7 @@ function findOppositeCathetus(hypotenuse, angleInDegrees) {
 }
 
 // Arrow function component
-const TrajectoryChart = () => {
+const WindageChart = () => {
 
     const {hitResult} = useProfile()
 
@@ -29,36 +29,36 @@ const TrajectoryChart = () => {
     const data = {
         labels: result.map((row) => row.distance.In(preferredUnits.distance).toFixed(0)),
         datasets: [
+            // {
+            //     data: result.map((row) => row.velocity.In(preferredUnits.velocity)),
+            //     color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`,
+            // },
+            // {
+            //     data: result.map(row => findOppositeCathetus(
+            //         row.lookDistance.In(preferredUnits.drop),
+            //         hitResult.shot.lookAngle.In(Unit.Degree)
+            //     )),
+            //     color: (opacity = 1) => `rgba(134, 0, 0, ${opacity})`,
+            // },
+            // {
+            //     data: result.map(row => findOppositeCathetus(
+            //         row.lookDistance.In(preferredUnits.drop),
+            //         hitResult.shot.barrelElevation.In(Unit.Degree)
+            //     )),
+            //     color: (opacity = 1) => `rgba(0, 134, 0, ${opacity})`,
+            // },
             {
-                data: result.map((row) => row.velocity.In(preferredUnits.velocity)),
-                color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`,
-            },
-            {
-                data: result.map(row => findOppositeCathetus(
-                    row.lookDistance.In(preferredUnits.drop),
-                    hitResult.shot.lookAngle.In(Unit.Degree)
-                )),
-                color: (opacity = 1) => `rgba(134, 0, 0, ${opacity})`,
-            },
-            {
-                data: result.map(row => findOppositeCathetus(
-                    row.lookDistance.In(preferredUnits.drop),
-                    hitResult.shot.barrelElevation.In(Unit.Degree)
-                )),
-                color: (opacity = 1) => `rgba(0, 134, 0, ${opacity})`,
-            },
-            {
-                data: result.map((row) => row.height.In(preferredUnits.drop)),
+                data: result.map((row) => row.windage.In(preferredUnits.drop)),
             },
         ],
-        legend: ["Velocity", "Sight line", "Barrel line", "Drop"],
+        legend: ["Windage", ],
     };
 
     return (
         <LineChart
             data={data}
             width={720}
-            height={480}
+            height={240}
             chartConfig={chartConfig}
             fromZero={true}
         />
@@ -90,4 +90,4 @@ const chartConfig = {
 };
 
 
-export default TrajectoryChart;
+export default WindageChart;

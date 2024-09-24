@@ -6,7 +6,7 @@ import ProjectileCard from '../cards/projectileCard';
 import BulletCard from '../cards/bulletCard';
 import ZeroAtmoCard from '../cards/zeroAtmoCard';
 import CurrentWindCard from '../cards/currentWindCard';
-import CurrentAtmoCard from '../cards/currentAtmoCard';
+import CurrentConditionsCard from '../cards/currentConditionsCard';
 // import { isMobile } from 'react-device-detect';
 import { useTheme } from '../../context/themeContext';
 import { PaperProvider } from 'react-native-paper';
@@ -51,7 +51,7 @@ export default function MainScreen() {
                         alwaysBounceVertical={false}
                         showsVerticalScrollIndicator={false}
                     >
-                        <CurrentAtmoCard expanded={true} label='Current atmosphere' />
+                        <CurrentConditionsCard expanded={true} label='Current atmosphere' />
                         <CurrentWindCard expanded={true} label='Current wind' />
                     </ScrollView>
 

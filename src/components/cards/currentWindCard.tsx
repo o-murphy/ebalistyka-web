@@ -1,12 +1,12 @@
 import { TextInput } from "react-native-paper";
-import React, { useCallback, useContext } from "react";
+import React, { useCallback } from "react";
 import InputCard from "./inputCard";
-import { Unit, UnitProps } from "js-ballistics/dist/v2";
 import DoubleSpinBox from "../widgets/doubleSpinBox";
 import WindDirectionPicker from "../widgets/windDirectionPicker";
-import { MeasureFormFieldProps, inputStyles, iconSize, inputSideStyles, styles as measureFormFieldStyles } from "../widgets/measureField";
+import { iconSize, inputSideStyles } from "../widgets/measureField";
 import { useProfile } from "../../context/profileContext";
 import debounce from "../../utils/debounce";
+import { measureFieldsProps } from "../widgets/measureFieldsProperties";
 
 interface WindCardProps {
     label?: string;
@@ -26,38 +26,24 @@ const CurrentWindCard: React.FC<WindCardProps> = ({ label = "Zero wind direction
             />
 
             <DoubleSpinBox
-                value={fields.windSpeed.value}
+                value={measureFieldsProps.windSpeed.value}
                 onValueChange={value => debouncedUpdateConditions({windSpeed: value})} // TODO:
-                fractionDigits={fields.windSpeed.fractionDigits}
-                minValue={fields.windSpeed.minValue}
-                maxValue={fields.windSpeed.maxValue}
-                step={fields.windSpeed.step}
+                fractionDigits={measureFieldsProps.windSpeed.fractionDigits}
+                minValue={measureFieldsProps.windSpeed.minValue}
+                maxValue={measureFieldsProps.windSpeed.maxValue}
+                step={measureFieldsProps.windSpeed.step}
                 // style={{ ...measureFormFieldStyles.doubleSpinBox, width: "70%", alignSelf: "center" }}
                 inputProps={{
                     label: "Wind speed",
                     mode: "outlined",
                     dense: true,
                     // ...inputStyles,
-                    right: <TextInput.Affix text={fields.windSpeed.suffix} textStyle={inputSideStyles.affix} />,
-                    left: <TextInput.Icon icon={fields.windSpeed.icon} size={iconSize} style={inputSideStyles.icon} />
+                    right: <TextInput.Affix text={measureFieldsProps.windSpeed.suffix} textStyle={inputSideStyles.affix} />,
+                    left: <TextInput.Icon icon={measureFieldsProps.windSpeed.icon} size={iconSize} style={inputSideStyles.icon} />
                 }}
             />
         </InputCard>
     );
 };
-
-const fields: Record<string, MeasureFormFieldProps> = {
-    windSpeed: {
-        key: "windSpeed",
-        label: "Wind speed",
-        suffix: UnitProps[Unit.MPS].symbol,
-        icon: "windsock",
-        value: 0,
-        maxValue: 100,
-        minValue: 0,
-        fractionDigits: 1,
-        step: 0.1
-    },
-}
 
 export default CurrentWindCard;

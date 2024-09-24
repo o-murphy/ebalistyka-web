@@ -2,7 +2,7 @@ import bufferToBase64 from "./bufferToBase64";
 import md5 from "./md5";
 import protobuf from 'protobufjs';
 
-const PROTO_URL = '/src/proto/profedit.proto';
+const PROTO_URL = __DEV__ ? '/public/proto/profedit.proto' : '/proto/profedit.proto';
 const MD5_LENGTH = 32;
 
 export interface ProfileProps {

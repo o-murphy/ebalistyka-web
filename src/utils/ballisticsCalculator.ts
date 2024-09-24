@@ -50,8 +50,7 @@ const dragModel = (profile: ProfileProps) => {
 };
 
 export const prepareCalculator = (profile: ProfileProps): PreparedZeroData => {
-    console.log(profile)
-    console.log(profile.rTwist / 100)
+
     const zeroData = {
         atmo: {
             pressure: UNew.hPa(profile.cZeroAirPressure / 10),
@@ -68,7 +67,7 @@ export const prepareCalculator = (profile: ProfileProps): PreparedZeroData => {
             powderTemp: UNew.Celsius(profile.cZeroPTemperature),
             tempModifier: profile.cTCoeff / 1000,
         },
-        lookAngle: UNew.Degree(profile.cZeroWPitch)
+        lookAngle: UNew.Degree(profile.cZeroWPitch / 10)
     }
 
     const atmo = new Atmo(zeroData.atmo);
@@ -119,7 +118,7 @@ export const prepareCalculator = (profile: ProfileProps): PreparedZeroData => {
 
 export const makeShot = (calculator: PreparedZeroData, currentConditions: CurrentConditions): HitResult => {
     const { weapon, ammo, calc } = calculator;
-    console.log("Angle", currentConditions.lookAngle)
+
     const shotData = {
         atmo: {
             pressure: UNew.hPa(currentConditions.pressure),
@@ -134,7 +133,7 @@ export const makeShot = (calculator: PreparedZeroData, currentConditions: Curren
             trajectoryRange: UNew.Meter(1001),
             trajectoryStep: UNew.Meter(100),
         },
-        lookAngle: UNew.Degree(currentConditions.lookAngle)
+        lookAngle: UNew.Degree(currentConditions.lookAngle / 10)
     }
 
     const atmo = new Atmo(shotData.atmo);

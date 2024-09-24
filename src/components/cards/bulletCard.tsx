@@ -1,12 +1,12 @@
-import { Text, TextInput, Chip, ActivityIndicator } from "react-native-paper";
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import { Text, TextInput, Chip } from "react-native-paper";
+import React, { useCallback, useEffect, useState } from "react";
 import InputCard from "./inputCard";
 import SimpleDialog from "../dialogs/simpleDialog";
-import { Unit, UnitProps } from "js-ballistics/dist/v2";
 import { View } from "react-native";
-import MeasureFormField, { MeasureFormFieldProps, styles as measureFormFieldStyles } from "../widgets/measureField";
+import MeasureFormField, { styles as measureFormFieldStyles } from "../widgets/measureField";
 import { useProfile } from "../../context/profileContext";
 import debounce from "../../utils/debounce";
+import { measureFieldsProps } from "../widgets/measureFieldsProperties";
 
 interface BulletCardProps {
     expanded?: boolean;
@@ -57,13 +57,13 @@ const BulletCard: React.FC<BulletCardProps> = ({ expanded = true }) => {
             </SimpleDialog>
 
             <MeasureFormField
-                {...fields.weight}
+                {...measureFieldsProps.weight}
                 value={profileProperties ? profileProperties.bWeight / 10 : 0}
                 onValueChange={value => debouncedUpdateProfileProperties({ bWeight: Math.round(value * 10) })}
             />
 
             <MeasureFormField
-                {...fields.length}
+                {...measureFieldsProps.length}
                 value={profileProperties ? profileProperties.bLength / 10 : 0}
                 onValueChange={value => debouncedUpdateProfileProperties({ bLength: Math.round(value * 10) })}
             />
@@ -85,29 +85,6 @@ const BulletCard: React.FC<BulletCardProps> = ({ expanded = true }) => {
             </View>
         </InputCard>
     );
-};
-
-const fields: Record<string, MeasureFormFieldProps> = {
-    weight: {
-        key: "weight",
-        label: "Weight",
-        suffix: UnitProps[Unit.Grain].symbol,
-        icon: "weight",
-        maxValue: 50,
-        minValue: -50,
-        fractionDigits: 1,
-        value: 15,
-    },
-    length: {
-        key: "length",
-        label: "Length",
-        suffix: UnitProps[Unit.Inch].symbol,
-        icon: "arrow-expand-horizontal",
-        maxValue: 5,
-        minValue: 0,
-        fractionDigits: 2,
-        value: 1.7,
-    },
 };
 
 export default BulletCard;

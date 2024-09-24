@@ -1,17 +1,18 @@
 {
-  "name": "ebc",
-  "version": "1.0.0",
+  "name": "ebalistyka-web",
+  "version": "0.1.1-alpha.4",
   "main": "expo/AppEntry.js",
+  "homepage": "https://o-murphy.github.io/ebalistyka-web",
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "deploy": "gh-pages -d web-build",
+    "predeploy": "expo export:web"
   },
   "dependencies": {
-    "@archerlink/protocol": "^1.0.0",
     "@expo/metro-runtime": "~3.2.3",
-    "@preact/signals-react": "^2.2.0",
     "@types/react": "~18.2.79",
     "crypto-js": "^4.2.0",
     "expo": "~51.0.28",
@@ -36,7 +37,8 @@
     "typescript": "~5.3.3"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.0"
+    "@babel/core": "^7.20.0",
+    "gh-pages": "^6.1.1"
   },
   "private": true
 }
