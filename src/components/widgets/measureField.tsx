@@ -40,6 +40,7 @@ const MeasureFormField: React.FC<MeasureFormFieldProps> = ({
         step={step ?? 1}
         style={[styles.doubleSpinBox]}
         inputProps={{
+          // label: `${label}, ${suffix}`,
           label: label,
           mode: "outlined",
           dense: true,
