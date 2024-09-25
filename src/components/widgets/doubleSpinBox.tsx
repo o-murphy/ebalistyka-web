@@ -66,9 +66,9 @@ const DoubleSpinBox: React.FC<DoubleSpinBoxProps> = ({
     setError(_error)
     setCurrentValue(isNegative && numericValue === 0 ? "-" + newValue : newValue);
 
-    // if (strict && _error) {
-    //   return;
-    // }
+    if (strict && _error) {
+      return;
+    }
     onValueChange?.(numericValue);
   };
 
