@@ -5,6 +5,7 @@ import {
 } from 'js-ballistics/dist/v2';
 import { useProfile } from '../../context/profileContext';
 import { Text } from 'react-native-paper';
+import InputCard from '../cards/inputCard';
 
 
 function findOppositeCathetus(hypotenuse, angleInDegrees) {
@@ -51,17 +52,23 @@ const TrajectoryChart = () => {
                 data: result.map((row) => row.height.In(preferredUnits.drop)),
             },
         ],
-        legend: ["Velocity", "Sight line", "Barrel line", "Drop"],
+        legend: [
+            "Velocity", 
+            "Sight line", 
+            "Barrel line", 
+            "Drop",
+        ],
     };
 
     return (
-        <LineChart
-            data={data}
-            width={720}
-            height={480}
-            chartConfig={chartConfig}
-            fromZero={true}
-        />
+            <LineChart
+                style={{alignSelf: "center"}}
+                data={data}
+                width={720}
+                height={480}
+                chartConfig={chartConfig}
+                fromZero={true}
+            />
     );
 };
 

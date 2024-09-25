@@ -1,5 +1,5 @@
 import { TextInput } from "react-native-paper";
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import InputCard from "./inputCard";
 import DoubleSpinBox from "../widgets/doubleSpinBox";
 import WindDirectionPicker from "../widgets/windDirectionPicker";
@@ -17,17 +17,26 @@ const CurrentWindCard: React.FC<WindCardProps> = ({ label = "Zero wind direction
     const { currentConditions, updateCurrentConditions } = useProfile();
     const debouncedUpdateConditions = useCallback(debounce(updateCurrentConditions, 300), [updateCurrentConditions]);
 
+    const [windDir, setWindDir] = useState(currentConditions.windDirection)
+    const [windSpeed, setWindSpeed] = useState(currentConditions.windSpeed)
+
+    useEffect(() => {
+        if (windSpeed != 0) {
+            debouncedUpdateConditions({windDirection: windDir, windSpeed: windSpeed})
+        }
+    }, [windDir, windSpeed])
+
     return (
         <InputCard title={label} expanded={expanded}>
             <WindDirectionPicker
                 style={{ alignItems: 'center' }}
-                value={currentConditions ? currentConditions.windDirection : 0}
-                onChange={value => updateCurrentConditions({ windDirection: value === 12 ? 0 : value })}
+                value={windDir}
+                onChange={setWindDir}
             />
 
             <DoubleSpinBox
-                value={measureFieldsProps.windSpeed.value}
-                onValueChange={value => debouncedUpdateConditions({ windSpeed: value })} // TODO:
+                value={windSpeed}
+                onValueChange={setWindSpeed} // TODO:
                 fractionDigits={measureFieldsProps.windSpeed.fractionDigits}
                 minValue={measureFieldsProps.windSpeed.minValue}
                 maxValue={measureFieldsProps.windSpeed.maxValue}

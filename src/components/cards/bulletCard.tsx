@@ -80,7 +80,8 @@ const BulletCard: React.FC<BulletCardProps> = ({ expanded = true }) => {
                     onPress={editDragModel}
                     onClose={editDragModel}
                 >
-                    {`0.318 G7`}
+                    {"<PlaceHolder>"}
+                    {/* {`0.318 G7`} */}
                 </Chip>
             </View>
         </InputCard>

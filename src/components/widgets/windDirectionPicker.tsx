@@ -12,10 +12,10 @@ export default function WindDirectionPicker({value, onChange, style}) {
         coerceToInt: true,
         // capMode: "triangle",
 
-        handleSize: 8,
-        arcWidth: 16,
-        strokeWidth: 16,
-        meterTextSize: 14,
+        handleSize: 9,
+        arcWidth: 18,
+        strokeWidth: 18,
+        meterTextSize: 18,
 
         handleColor: theme.colors.outline,
         arcColor: theme.colors.secondaryContainer,
@@ -35,13 +35,13 @@ export default function WindDirectionPicker({value, onChange, style}) {
     }
 
     return (
-        <View style={style}>
+        <View style={[style, styles.noSelect]}>
             <CircularSlider
                 {...sliderValueHandler}
                 {...sliderProps}
                 {...sliderValues}
                 // style={styles.slider}
-                dialDiameter={160}
+                dialDiameter={200}
                 angleType={{
                     direction: "cw",
                     axis: "+y"
@@ -66,5 +66,8 @@ const styles = StyleSheet.create({
     },
     slider: {
         padding: 5
+    },
+    noSelect: {
+        userSelect: 'none', // This will prevent text selection on web
     },
 })

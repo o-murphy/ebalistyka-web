@@ -38,6 +38,7 @@ const WindageChart = () => {
 
     return (
         <LineChart
+            style={{alignSelf: "center"}}
             data={data}
             width={720}
             height={240}

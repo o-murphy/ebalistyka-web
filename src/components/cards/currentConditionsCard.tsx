@@ -17,7 +17,7 @@ const CurrentConditionsCard: React.FC<AtmoCardProps> = ({ label = "Zero atmosphe
 
     if (!currentConditions) {
         return (
-            <InputCard title={"Weapon"} expanded={expanded}>
+            <InputCard title={label} expanded={expanded}>
                 {/* <ActivityIndicator animating={true} /> */}
             </InputCard>
         )

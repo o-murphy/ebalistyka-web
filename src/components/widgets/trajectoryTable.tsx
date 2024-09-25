@@ -3,72 +3,120 @@ import {
     preferredUnits, TrajectoryData, UnitProps
 } from 'js-ballistics/dist/v2';
 import { useProfile } from '../../context/profileContext';
+import { StyleSheet, View } from 'react-native';
+import { useTheme } from '../../context/themeContext';
+import InputCard from '../cards/inputCard';
 
 
 // Arrow function component
 const TrajectoryTable = () => {
 
     const { hitResult } = useProfile()
+    const { theme } = useTheme()
 
-    if (!hitResult) return (
-        <Text>Can't display table</Text>
-    );
+    // if (!hitResult) return (
+    //     <Text>Can't display table</Text>
+    // );
 
-    const isZero = (row: TrajectoryData): Object => {
+    const headerStyle = {
+        textStyle: tableStyles.cellText,
+        style: theme?.dark ? tableStyles.cellDark : tableStyles.cellLight,
+    }
+
+    const dataRowStyle = (row: TrajectoryData): Object => {
         const rawAdj = parseFloat(row.dropAdjustment.rawValue.toFixed(4))
         return {
-            textStyle: {
-                ...(rawAdj === 0) && { color: "red" },
-                fontSize: 12
-            },
+            textStyle: rawAdj === 0 ? tableStyles.cellZeroText : tableStyles.cellText,
+            style: theme?.dark ? tableStyles.cellDark : tableStyles.cellLight,
         }
     }
 
+    const HeaderText = ({ children }: { children: React.ReactNode }) => {
+        return (
+            <DataTable.Title {...headerStyle}>
+                {/* <View style={tableStyles.headerTextContainer}> */}
+                <Text style={tableStyles.cellText}>
+                    {children}
+                </Text>
+                {/* </View> */}
+            </DataTable.Title>
+        )
+    }
+
     return (
-        <DataTable>
-            <DataTable.Header>
-                <DataTable.Title>Time, s</DataTable.Title>
-                <DataTable.Title>Range, {UnitProps[preferredUnits.distance].symbol}</DataTable.Title>
-                <DataTable.Title>V, {UnitProps[preferredUnits.velocity].symbol}</DataTable.Title>
-                <DataTable.Title>Mach</DataTable.Title>
-                <DataTable.Title>Height, {UnitProps[preferredUnits.drop].symbol}</DataTable.Title>
-                <DataTable.Title>Drop, {UnitProps[preferredUnits.drop].symbol}</DataTable.Title>
-                <DataTable.Title>Drop adj., {UnitProps[preferredUnits.adjustment].symbol}</DataTable.Title>
-                <DataTable.Title>Windage, {UnitProps[preferredUnits.drop].symbol}</DataTable.Title>
-                <DataTable.Title>Wind. adj., {UnitProps[preferredUnits.adjustment].symbol}</DataTable.Title>
-                <DataTable.Title>Look dst., {UnitProps[preferredUnits.distance].symbol}</DataTable.Title>
-                <DataTable.Title>Angle, {UnitProps[preferredUnits.angular].symbol}</DataTable.Title>
-                <DataTable.Title>Density</DataTable.Title>
-                <DataTable.Title>Drag</DataTable.Title>
-                <DataTable.Title>Energy, {UnitProps[preferredUnits.energy].symbol}</DataTable.Title>
-                <DataTable.Title>OGW, {UnitProps[preferredUnits.ogw].symbol}</DataTable.Title>
-                {/* <DataTable.Title>Flag</DataTable.Title> */}
-            </DataTable.Header>
+        <InputCard title='Trajectory' >
+            <DataTable >
+                <DataTable.Header style={tableStyles.row}>
+                    <HeaderText >Time, s</HeaderText>
+                    <HeaderText >Range, {UnitProps[preferredUnits.distance].symbol}</HeaderText>
+                    <HeaderText >V, {UnitProps[preferredUnits.velocity].symbol}</HeaderText>
+                    <HeaderText >Mach</HeaderText>
+                    <HeaderText >Height, {UnitProps[preferredUnits.drop].symbol}</HeaderText>
+                    <HeaderText >Drop, {UnitProps[preferredUnits.drop].symbol}</HeaderText>
+                    <HeaderText >Drop adj., {UnitProps[preferredUnits.adjustment].symbol}</HeaderText>
+                    <HeaderText >Windage, {UnitProps[preferredUnits.drop].symbol}</HeaderText>
+                    <HeaderText >Wind. adj., {UnitProps[preferredUnits.adjustment].symbol}</HeaderText>
+                    <HeaderText >Look dst., {UnitProps[preferredUnits.distance].symbol}</HeaderText>
+                    <HeaderText >Angle, {UnitProps[preferredUnits.angular].symbol}</HeaderText>
+                    <HeaderText >Density</HeaderText>
+                    <HeaderText >Drag</HeaderText>
+                    <HeaderText >Energy, {UnitProps[preferredUnits.energy].symbol}</HeaderText>
+                    <HeaderText >OGW, {UnitProps[preferredUnits.ogw].symbol}</HeaderText>
+                </DataTable.Header>
 
-            {hitResult.trajectory.map((row, index) => (
-                <DataTable.Row key={index} >
-                    {/* <DataTable.Cell>{row.name}</DataTable.Cell> */}
-                    <DataTable.Cell {...isZero(row)}>{row.time.toFixed(3)}</DataTable.Cell>
-                    <DataTable.Cell {...isZero(row)}>{(row.distance).In(preferredUnits.distance).toFixed(0)}</DataTable.Cell>
-                    <DataTable.Cell {...isZero(row)}>{row.velocity.In(preferredUnits.velocity).toFixed(0)}</DataTable.Cell>
-                    <DataTable.Cell {...isZero(row)}>{row.mach.toFixed(2)}</DataTable.Cell>
-                    <DataTable.Cell {...isZero(row)}>{row.height.In(preferredUnits.drop).toFixed(1)}</DataTable.Cell>
-                    <DataTable.Cell {...isZero(row)}>{row.targetDrop.In(preferredUnits.drop).toFixed(1)}</DataTable.Cell>
-                    <DataTable.Cell {...isZero(row)}>{row.dropAdjustment.In(preferredUnits.adjustment).toFixed(2)}</DataTable.Cell>
-                    <DataTable.Cell {...isZero(row)}>{row.windage.In(preferredUnits.drop).toFixed(1)}</DataTable.Cell>
-                    <DataTable.Cell {...isZero(row)}>{row.windageAdjustment.In(preferredUnits.adjustment).toFixed(2)}</DataTable.Cell>
-                    <DataTable.Cell {...isZero(row)}>{row.lookDistance.In(preferredUnits.distance).toFixed(0)}</DataTable.Cell>
-                    <DataTable.Cell {...isZero(row)}>{row.angle.In(preferredUnits.angular).toFixed(2)}</DataTable.Cell>
-                    <DataTable.Cell {...isZero(row)}>{row.densityFactor.toFixed(2)}</DataTable.Cell>
-                    <DataTable.Cell {...isZero(row)}>{row.drag.toFixed(3)}</DataTable.Cell>
-                    <DataTable.Cell {...isZero(row)}>{row.energy.In(preferredUnits.energy).toFixed(0)}</DataTable.Cell>
-                    <DataTable.Cell {...isZero(row)}>{row.ogw.In(preferredUnits.ogw).toFixed(0)}</DataTable.Cell>
-                    {/* <DataTable.Cell {...isZero(row)}>{row.flag}</DataTable.Cell> */}
-                </DataTable.Row>
-            ))}
+                {hitResult?.trajectory.map((row, index) => (
+                    <DataTable.Row key={index} style={tableStyles.row}>
+                        <DataTable.Cell {...dataRowStyle(row)}>{row.time.toFixed(3)}</DataTable.Cell>
+                        <DataTable.Cell {...dataRowStyle(row)}>{(row.distance).In(preferredUnits.distance).toFixed(0)}</DataTable.Cell>
+                        <DataTable.Cell {...dataRowStyle(row)}>{row.velocity.In(preferredUnits.velocity).toFixed(0)}</DataTable.Cell>
+                        <DataTable.Cell {...dataRowStyle(row)}>{row.mach.toFixed(2)}</DataTable.Cell>
+                        <DataTable.Cell {...dataRowStyle(row)}>{row.height.In(preferredUnits.drop).toFixed(1)}</DataTable.Cell>
+                        <DataTable.Cell {...dataRowStyle(row)}>{row.targetDrop.In(preferredUnits.drop).toFixed(1)}</DataTable.Cell>
+                        <DataTable.Cell {...dataRowStyle(row)}>{row.dropAdjustment.In(preferredUnits.adjustment).toFixed(2)}</DataTable.Cell>
+                        <DataTable.Cell {...dataRowStyle(row)}>{row.windage.In(preferredUnits.drop).toFixed(1)}</DataTable.Cell>
+                        <DataTable.Cell {...dataRowStyle(row)}>{row.windageAdjustment.In(preferredUnits.adjustment).toFixed(2)}</DataTable.Cell>
+                        <DataTable.Cell {...dataRowStyle(row)}>{row.lookDistance.In(preferredUnits.distance).toFixed(0)}</DataTable.Cell>
+                        <DataTable.Cell {...dataRowStyle(row)}>{row.angle.In(preferredUnits.angular).toFixed(2)}</DataTable.Cell>
+                        <DataTable.Cell {...dataRowStyle(row)}>{row.densityFactor.toFixed(2)}</DataTable.Cell>
+                        <DataTable.Cell {...dataRowStyle(row)}>{row.drag.toFixed(3)}</DataTable.Cell>
+                        <DataTable.Cell {...dataRowStyle(row)}>{row.energy.In(preferredUnits.energy).toFixed(0)}</DataTable.Cell>
+                        <DataTable.Cell {...dataRowStyle(row)}>{row.ogw.In(preferredUnits.ogw).toFixed(0)}</DataTable.Cell>
+                    </DataTable.Row>
+                ))}
 
-        </DataTable>
+            </DataTable>
+        </InputCard>
     )
 };
+
+const tableStyles = StyleSheet.create({
+    cellText: {
+        fontSize: 14,
+    },
+    cellZeroText: {
+        fontSize: 14,
+        color: "red",
+    },
+    row: {
+        paddingVertical: 0,
+        minHeight: 20,
+        paddingHorizontal: 0
+    },
+    cellDark: {
+        borderLeftWidth: 1,
+        borderRightWidth: 1,
+        borderColor: "#49454f", // rgb(73, 69, 79) #49454f / rgb(231, 224, 236) #e7e0ec
+        justifyContent: "center",
+    },
+    cellLight: {
+        borderLeftWidth: 1,
+        borderRightWidth: 1,
+        borderColor: "#e7e0ec", // rgb(73, 69, 79) #49454f / rgb(231, 224, 236) #e7e0ec
+        justifyContent: "center",
+    },
+    headerTextContainer: {
+        transform: [{ rotate: '-90deg' }],
+    },
+})
 
 export default TrajectoryTable;

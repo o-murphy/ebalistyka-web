@@ -130,7 +130,7 @@ export const makeShot = (calculator: PreparedZeroData, currentConditions: Curren
             directionFrom: UNew.Degree(currentConditions.windDirection)
         },
         trajectoryProps: {
-            trajectoryRange: UNew.Meter(1001),
+            trajectoryRange: UNew.Meter(2001),
             trajectoryStep: UNew.Meter(100),
         },
         lookAngle: UNew.Degree(currentConditions.lookAngle / 10)
