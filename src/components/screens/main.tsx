@@ -55,7 +55,7 @@ export default function MainScreen() {
                         <ZeroAtmoCard expanded={false} />
                     </ScrollView>
 
-                    <ScrollView style={{ ...styles.column, flex: 4, minWidth: 600, }}
+                    <ScrollView style={{ ...styles.column, flex: 4, minWidth: 240, }}
                         keyboardShouldPersistTaps="always"
                         alwaysBounceVertical={false}
                         showsVerticalScrollIndicator={false}
