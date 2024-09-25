@@ -39,7 +39,7 @@ const ProjectileCard: React.FC<ProjectileCardProps> = ({ expanded = true }) => {
         <InputCard title={"Projectile"} expanded={expanded}>
             <SimpleDialog
                 style={measureFormFieldStyles.nameContainer}
-                label={"Name"}
+                label={"Projectile name"}
                 icon={"card-bulleted-outline"}
                 text={profileProperties?.cartridgeName}
                 onAccept={acceptName}

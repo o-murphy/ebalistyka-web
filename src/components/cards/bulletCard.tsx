@@ -44,7 +44,7 @@ const BulletCard: React.FC<BulletCardProps> = ({ expanded = true }) => {
         <InputCard title={"Bullet"} expanded={expanded}>
             <SimpleDialog
                 style={measureFormFieldStyles.nameContainer}
-                label={"Name"}
+                label={"Bullet name"}
                 icon={"card-bulleted-outline"}
                 text={profileProperties?.bulletName}
                 onAccept={acceptName}

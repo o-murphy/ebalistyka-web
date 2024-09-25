@@ -106,7 +106,7 @@ export const styles = StyleSheet.create({
   },
   nameContainer: {
     flex: 1,
-    marginVertical: 4,
+    // marginVertical: 4,
   },
   label: {
     // fontSize: 14,

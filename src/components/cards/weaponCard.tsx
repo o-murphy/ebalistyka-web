@@ -48,7 +48,7 @@ const WeaponCard: React.FC<WeaponCardProps> = ({ expanded = true }) => {
 
             <SimpleDialog
                 style={measureFormFieldStyles.nameContainer}
-                label={"Name"}
+                label={"Weapon name"}
                 icon={"card-bulleted-outline"}
                 text={profileProperties?.profileName}
                 onAccept={acceptName}
