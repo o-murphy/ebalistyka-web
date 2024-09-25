@@ -14,9 +14,11 @@ import TopAppBar from '../widgets/topAppBar';
 import TrajectoryTable from '../widgets/trajectoryTable';
 import TrajectoryChart from '../widgets/trajectoryChart';
 import WindageChart from '../widgets/windageChart';
-import InputCard from '../cards/inputCard';
+import CustomCard from '../cards/customCard';
 import { preferredUnits } from 'js-ballistics/dist/v2';
 import { Unit } from 'js-ballistics';
+import { useProfile } from '../../context/profileContext';
+import CalculationErrorCard from '../cards/calculationErrorCard';
 
 preferredUnits.distance = Unit.Meter
 preferredUnits.velocity = Unit.MPS
@@ -28,6 +30,10 @@ preferredUnits.drop = Unit.Centimeter
 export default function MainScreen() {
 
     const { theme } = useTheme();
+    const { hitResult } = useProfile();
+
+    const hitResultError = hitResult instanceof Error;
+
 
     return (
         <PaperProvider theme={theme}>
@@ -53,11 +59,22 @@ export default function MainScreen() {
                         alwaysBounceVertical={false}
                         showsVerticalScrollIndicator={false}
                     >
+
+                        {hitResultError && <CalculationErrorCard title='Calculation error' details={hitResult?.message || undefined} />}
+
                         <TrajectoryTable />
-                        <InputCard title='Chart'>
-                            <TrajectoryChart />
-                            <WindageChart />
-                        </InputCard>
+
+                        {!hitResultError && hitResult ? (
+                            <CustomCard title='Chart'>
+                                <TrajectoryChart />
+                                <WindageChart />
+                            </CustomCard>
+
+                        ) : (
+                            <CustomCard title='Chart'>
+
+                            </CustomCard>
+                        )}
 
                     </ScrollView>
 

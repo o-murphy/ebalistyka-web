@@ -1,29 +1,35 @@
 import { Card } from "react-native-paper";
-import React, { useState, ReactNode } from "react";
+import { useState, ReactNode, isValidElement } from "react";
 import { StyleSheet } from "react-native";
 import { IconButton, Text } from "react-native-paper";
 
-interface InputCardProps {
+interface CustomCardProps {
     children?: ReactNode;
-    title?: string;
+    title?: string|ReactNode;
     expanded?: boolean;
 }
 
-const InputCard: React.FC<InputCardProps> = ({ children = null, title = null, expanded = true }) => {
+const CustomCard: React.FC<CustomCardProps> = ({ children = null, title = null, expanded = true }) => {
     const [isExpanded, setIsExpanded] = useState<boolean>(expanded);
 
     const toggleExpansion = () => {
         setIsExpanded(!isExpanded);
     };
 
+    const _title = isValidElement(title) ? (
+        title
+    ) : (
+        <Text variant="bodyLarge" onPress={toggleExpansion}>
+            {title}
+        </Text>
+    )
+
+    console.log(isValidElement(title))
+
     return (
         <Card mode="elevated" elevation={1} style={styles.card}>
             <Card.Title
-                title={
-                    <Text variant="bodyLarge" onPress={toggleExpansion}>
-                        {title}
-                    </Text>
-                }
+                title={_title}
                 right={children ? (props) => (
                     <IconButton
                         {...props}
@@ -56,4 +62,4 @@ const styles = StyleSheet.create({
     content: {},
 });
 
-export default InputCard;
+export default CustomCard;

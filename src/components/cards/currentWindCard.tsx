@@ -1,6 +1,6 @@
 import { TextInput } from "react-native-paper";
 import React, { useCallback, useEffect, useState } from "react";
-import InputCard from "./inputCard";
+import CustomCard from "./customCard";
 import DoubleSpinBox from "../widgets/doubleSpinBox";
 import WindDirectionPicker from "../widgets/windDirectionPicker";
 import { iconSize, inputSideStyles } from "../widgets/measureField";
@@ -27,7 +27,7 @@ const CurrentWindCard: React.FC<WindCardProps> = ({ label = "Zero wind direction
     }, [windDir, windSpeed])
 
     return (
-        <InputCard title={label} expanded={expanded}>
+        <CustomCard title={label} expanded={expanded}>
             <WindDirectionPicker
                 style={{ alignItems: 'center' }}
                 value={windDir}
@@ -51,7 +51,7 @@ const CurrentWindCard: React.FC<WindCardProps> = ({ label = "Zero wind direction
                     left: <TextInput.Icon icon={measureFieldsProps.windSpeed.icon} size={iconSize} style={inputSideStyles.icon} />
                 }}
             />
-        </InputCard>
+        </CustomCard>
     );
 };
 

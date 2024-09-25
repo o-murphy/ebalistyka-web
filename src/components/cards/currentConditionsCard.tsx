@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import InputCard from "./inputCard";
+import CustomCard from "./customCard";
 import MeasureFormField from "../widgets/measureField";
 import { useProfile } from "../../context/profileContext";
 import debounce from "../../utils/debounce";
@@ -17,14 +17,14 @@ const CurrentConditionsCard: React.FC<AtmoCardProps> = ({ label = "Zero atmosphe
 
     if (!currentConditions) {
         return (
-            <InputCard title={label} expanded={expanded}>
+            <CustomCard title={label} expanded={expanded}>
                 {/* <ActivityIndicator animating={true} /> */}
-            </InputCard>
+            </CustomCard>
         )
     }
 
     return (
-        <InputCard title={label} expanded={expanded}>
+        <CustomCard title={label} expanded={expanded}>
 
             <MeasureFormField
                 {...measureFieldsProps.temp}
@@ -50,7 +50,7 @@ const CurrentConditionsCard: React.FC<AtmoCardProps> = ({ label = "Zero atmosphe
                 onValueChange={value => debouncedUpdateConditions({ lookAngle: Math.round(value * 10) })}
             />
 
-        </InputCard>
+        </CustomCard>
     );
 };
 

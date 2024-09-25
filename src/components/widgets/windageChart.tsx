@@ -20,7 +20,7 @@ const WindageChart = () => {
 
     const { hitResult } = useProfile()
 
-    if (!hitResult) return (
+    if (hitResult instanceof Error) return (
         <Text>Can't display chart</Text>
     );
 

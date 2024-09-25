@@ -1,6 +1,6 @@
 import { SegmentedButtons, TextInput } from "react-native-paper";
 import React, { useState, useEffect, useCallback } from "react";
-import InputCard from "./inputCard";
+import CustomCard from "./customCard";
 import SimpleDialog from "../dialogs/simpleDialog";
 import { Unit } from "js-ballistics/dist/v2";
 import { StyleSheet, View } from "react-native";
@@ -34,9 +34,9 @@ const WeaponCard: React.FC<WeaponCardProps> = ({ expanded = true }) => {
 
     if (!profileProperties) {
         return (
-            <InputCard title={"Weapon"} expanded={expanded}>
+            <CustomCard title={"Weapon"} expanded={expanded}>
                 {/* <ActivityIndicator animating={true} /> */}
-            </InputCard>
+            </CustomCard>
         );
     }
 
@@ -44,7 +44,7 @@ const WeaponCard: React.FC<WeaponCardProps> = ({ expanded = true }) => {
     const VALUE = profileProperties.cZeroDistanceIdx.toFixed(0)
 
     return (
-        <InputCard title={"Weapon"} expanded={expanded}>
+        <CustomCard title={"Weapon"} expanded={expanded}>
 
             <SimpleDialog
                 style={measureFormFieldStyles.nameContainer}
@@ -110,7 +110,7 @@ const WeaponCard: React.FC<WeaponCardProps> = ({ expanded = true }) => {
                 })}
             />
 
-        </InputCard>
+        </CustomCard>
     );
 };
 

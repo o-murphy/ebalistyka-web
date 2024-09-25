@@ -1,11 +1,11 @@
-import { DataTable, Text } from 'react-native-paper';
+import { DataTable, HelperText, Text } from 'react-native-paper';
 import {
     preferredUnits, TrajectoryData, UnitProps
 } from 'js-ballistics/dist/v2';
 import { useProfile } from '../../context/profileContext';
 import { StyleSheet, View } from 'react-native';
 import { useTheme } from '../../context/themeContext';
-import InputCard from '../cards/inputCard';
+import CustomCard from '../cards/customCard';
 
 
 // Arrow function component
@@ -13,10 +13,7 @@ const TrajectoryTable = () => {
 
     const { hitResult } = useProfile()
     const { theme } = useTheme()
-
-    // if (!hitResult) return (
-    //     <Text>Can't display table</Text>
-    // );
+    const hitResultError = hitResult instanceof Error;
 
     const headerStyle = {
         textStyle: tableStyles.cellText,
@@ -34,17 +31,15 @@ const TrajectoryTable = () => {
     const HeaderText = ({ children }: { children: React.ReactNode }) => {
         return (
             <DataTable.Title {...headerStyle}>
-                {/* <View style={tableStyles.headerTextContainer}> */}
                 <Text style={tableStyles.cellText}>
                     {children}
                 </Text>
-                {/* </View> */}
             </DataTable.Title>
         )
     }
 
     return (
-        <InputCard title='Trajectory' >
+        <CustomCard title='Trajectory' >
             <DataTable >
                 <DataTable.Header style={tableStyles.row}>
                     <HeaderText >Time, s</HeaderText>
@@ -64,7 +59,7 @@ const TrajectoryTable = () => {
                     <HeaderText >OGW, {UnitProps[preferredUnits.ogw].symbol}</HeaderText>
                 </DataTable.Header>
 
-                {hitResult?.trajectory.map((row, index) => (
+                {!hitResultError && hitResult?.trajectory.map((row, index) => (
                     <DataTable.Row key={index} style={tableStyles.row}>
                         <DataTable.Cell {...dataRowStyle(row)}>{row.time.toFixed(3)}</DataTable.Cell>
                         <DataTable.Cell {...dataRowStyle(row)}>{(row.distance).In(preferredUnits.distance).toFixed(0)}</DataTable.Cell>
@@ -85,7 +80,7 @@ const TrajectoryTable = () => {
                 ))}
 
             </DataTable>
-        </InputCard>
+        </CustomCard>
     )
 };
 

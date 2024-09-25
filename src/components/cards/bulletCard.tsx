@@ -1,6 +1,6 @@
 import { Text, TextInput, Chip } from "react-native-paper";
 import React, { useCallback, useEffect, useState } from "react";
-import InputCard from "./inputCard";
+import CustomCard from "./customCard";
 import SimpleDialog from "../dialogs/simpleDialog";
 import { View } from "react-native";
 import MeasureFormField, { styles as measureFormFieldStyles } from "../widgets/measureField";
@@ -34,14 +34,14 @@ const BulletCard: React.FC<BulletCardProps> = ({ expanded = true }) => {
 
     if (!profileProperties) {
         return (
-            <InputCard title={"Bullet"} expanded={expanded}>
+            <CustomCard title={"Bullet"} expanded={expanded}>
                 {/* <ActivityIndicator animating={true} /> */}
-            </InputCard>
+            </CustomCard>
         )
     }
 
     return (
-        <InputCard title={"Bullet"} expanded={expanded}>
+        <CustomCard title={"Bullet"} expanded={expanded}>
             <SimpleDialog
                 style={measureFormFieldStyles.nameContainer}
                 label={"Bullet name"}
@@ -84,7 +84,7 @@ const BulletCard: React.FC<BulletCardProps> = ({ expanded = true }) => {
                     {/* {`0.318 G7`} */}
                 </Chip>
             </View>
-        </InputCard>
+        </CustomCard>
     );
 };
 

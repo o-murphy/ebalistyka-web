@@ -5,7 +5,8 @@ import {
 } from 'js-ballistics/dist/v2';
 import { useProfile } from '../../context/profileContext';
 import { Text } from 'react-native-paper';
-import InputCard from '../cards/inputCard';
+import CustomCard from '../cards/customCard';
+import { useTheme } from '../../context/themeContext';
 
 
 function findOppositeCathetus(hypotenuse, angleInDegrees) {
@@ -19,9 +20,11 @@ function findOppositeCathetus(hypotenuse, angleInDegrees) {
 // Arrow function component
 const TrajectoryChart = () => {
 
+    const { theme } = useTheme()
+    console.log(theme.colors)
     const { hitResult } = useProfile()
 
-    if (!hitResult) return (
+    if (hitResult instanceof Error) return (
         <Text>Can't display chart</Text>
     );
 
@@ -50,6 +53,7 @@ const TrajectoryChart = () => {
             },
             {
                 data: result.map((row) => row.height.In(preferredUnits.drop)),
+                color: (opacity = 0.5) => `rgba(26, 255, 146, ${opacity})`
             },
         ],
         legend: [
@@ -66,7 +70,7 @@ const TrajectoryChart = () => {
                 data={data}
                 width={720}
                 height={480}
-                chartConfig={chartConfig}
+                chartConfig={{...chartConfig, color: () => theme.colors.onSurface}}
                 fromZero={true}
             />
     );
@@ -86,7 +90,7 @@ const chartConfig = {
 
     // backgroundColor: "#FFFFFF",
 
-    color: (opacity = 0.5) => `rgba(26, 255, 146, ${opacity})`,
+    // color: (opacity = 0.5) => `rgba(26, 255, 146, ${opacity})`,
     strokeWidth: 2, // optional, default 3
     barPercentage: 0.5,
     useShadowColorFromDataset: true, // optional

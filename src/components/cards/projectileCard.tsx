@@ -1,6 +1,6 @@
 import { TextInput } from "react-native-paper";
 import React, { useCallback, useEffect, useState } from "react";
-import InputCard from "./inputCard";
+import CustomCard from "./customCard";
 import SimpleDialog from "../dialogs/simpleDialog";
 import MeasureFormField, { styles as measureFormFieldStyles } from "../widgets/measureField";
 import { useProfile } from "../../context/profileContext";
@@ -29,14 +29,14 @@ const ProjectileCard: React.FC<ProjectileCardProps> = ({ expanded = true }) => {
 
     if (!profileProperties) {
         return (
-            <InputCard title={"Projectile"} expanded={expanded}>
+            <CustomCard title={"Projectile"} expanded={expanded}>
                 {/* <ActivityIndicator animating={true} /> */}
-            </InputCard>
+            </CustomCard>
         )
     }
 
     return (
-        <InputCard title={"Projectile"} expanded={expanded}>
+        <CustomCard title={"Projectile"} expanded={expanded}>
             <SimpleDialog
                 style={measureFormFieldStyles.nameContainer}
                 label={"Projectile name"}
@@ -63,7 +63,7 @@ const ProjectileCard: React.FC<ProjectileCardProps> = ({ expanded = true }) => {
                 onValueChange={value => debouncedUpdateProfileProperties({ cTCoeff: Math.round(value * 1000) })}
             />
 
-        </InputCard>
+        </CustomCard>
     );
 };
 

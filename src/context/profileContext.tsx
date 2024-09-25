@@ -11,7 +11,7 @@ interface ProfileContextType {
   currentConditions: CurrentConditions;
   updateCurrentConditions: (props: Partial<CurrentConditions>) => void;
   calculator: PreparedZeroData | null;
-  hitResult: HitResult | null;
+  hitResult: HitResult | null | Error;
 }
 
 // Create the context
@@ -31,7 +31,7 @@ export const ProfileProvider = ({ children }) => {
 
   const [calculator, setCalculator] = useState<PreparedZeroData>(null)
 
-  const [hitResult, setHitResult] = useState<HitResult>(null)
+  const [hitResult, setHitResult] = useState<HitResult|Error>(null)
 
   useEffect(() => {
     if (profileProperties) {
@@ -42,8 +42,12 @@ export const ProfileProvider = ({ children }) => {
 
   useEffect(() => {
     if (currentConditions && calculator) {
-      const result = makeShot(calculator, currentConditions)
-      setHitResult(result);
+      if (!calculator.error) {
+        const result = makeShot(calculator, currentConditions)
+        setHitResult(result);  
+      } else {
+        setHitResult(calculator.error)
+      }
     }
   }, [currentConditions, calculator]); // Add dependencies here
 
