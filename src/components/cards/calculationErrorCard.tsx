@@ -1,4 +1,4 @@
-import { Text, HelperText } from "react-native-paper"
+import { Text } from "react-native-paper"
 import CustomCard from "./customCard";
 import { useTheme } from "../../context/themeContext";
 
@@ -9,13 +9,25 @@ interface CalculationErrorProps {
 }
 
 
-const CalculationErrorCard = ({title = "Error", details = "Undefined"}: CalculationErrorProps) => {
+const CalculationErrorCard = ({ title = "Error", details = "Undefined" }: CalculationErrorProps) => {
 
-    const {theme} = useTheme();
+    const { theme } = useTheme();
+
+    const fontStyle = {
+        color: theme.colors.error
+    }
 
     return (
-        <CustomCard title={<Text variant="bodyLarge" style={{color: theme.colors.error}} >{title}</Text>}>
-            <HelperText type={"error"} visible={true}>{details || undefined}</HelperText>
+        <CustomCard
+            style={{ backgroundColor: theme.colors.errorContainer, ...fontStyle }}
+            title={
+                <Text variant="bodyLarge" >
+                    {title}
+                </Text>
+            }>
+            <Text style={{ alignSelf: "center", ...fontStyle }} variant="bodyMedium">
+                {details || undefined}
+            </Text>
         </CustomCard>
     )
 }

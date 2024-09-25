@@ -1,21 +1,10 @@
-import { LineChart } from 'react-native-chart-kit';
-
-import {
-    preferredUnits
-} from 'js-ballistics/dist/v2';
+import { preferredUnits } from 'js-ballistics/dist/v2';
 import { useProfile } from '../../context/profileContext';
 import { Text } from 'react-native-paper';
+import CustomChart from './adaptiveChart';
+import { StyleSheet } from 'react-native';
 
 
-function findOppositeCathetus(hypotenuse, angleInDegrees) {
-    // Переводимо кут у градусах у радіани
-    const angleInRadians = angleInDegrees * (Math.PI / 180);
-    // Обчислюємо протилежний катет
-    const oppositeCathetus = hypotenuse * Math.sin(angleInRadians);
-    return oppositeCathetus;
-}
-
-// Arrow function component
 const WindageChart = () => {
 
     const { hitResult } = useProfile()
@@ -37,40 +26,20 @@ const WindageChart = () => {
     };
 
     return (
-        <LineChart
-            style={{alignSelf: "center"}}
-            data={data}
-            width={720}
-            height={240}
-            chartConfig={chartConfig}
-            fromZero={true}
+        <CustomChart containerStyle={styles.customChart} data={data} 
+            chartProps={{
+                height: 240,
+                verticalLabelRotation: -90,
+                xLabelsOffset: 20,
+            }}
         />
-    );
+    )
 };
 
-
-const chartConfig = {
-    // backgroundGradientFrom: "#1E2923",
-    // backgroundGradientFromOpacity: 0,
-    // backgroundGradientTo: "#08130D",
-    // backgroundGradientToOpacity: 0.5,
-
-    backgroundGradientFrom: "#000000",
-    backgroundGradientFromOpacity: 0,
-    backgroundGradientTo: "#000000",
-    backgroundGradientToOpacity: 0,
-
-    // backgroundColor: "#FFFFFF",
-
-    color: (opacity = 0.5) => `rgba(26, 255, 146, ${opacity})`,
-    strokeWidth: 2, // optional, default 3
-    barPercentage: 0.5,
-    useShadowColorFromDataset: true, // optional
-
-    style: {
-        borderRadius: 16
-    },
-};
-
+const styles = StyleSheet.create({
+    customChart: {
+        // flex: 1, justifyContent: "center"
+    }
+})
 
 export default WindageChart;

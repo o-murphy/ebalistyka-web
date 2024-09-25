@@ -19,6 +19,7 @@ import { preferredUnits } from 'js-ballistics/dist/v2';
 import { Unit } from 'js-ballistics';
 import { useProfile } from '../../context/profileContext';
 import CalculationErrorCard from '../cards/calculationErrorCard';
+import DragChart from '../widgets/dragChart';
 
 preferredUnits.distance = Unit.Meter
 preferredUnits.velocity = Unit.MPS
@@ -60,7 +61,7 @@ export default function MainScreen() {
                         showsVerticalScrollIndicator={false}
                     >
 
-                        {hitResultError && <CalculationErrorCard title='Calculation error' details={hitResult?.message || undefined} />}
+                        {hitResultError && <CalculationErrorCard title='Calculation Error!' details={hitResult?.message || undefined} />}
 
                         <TrajectoryTable />
 
@@ -68,6 +69,7 @@ export default function MainScreen() {
                             <CustomCard title='Chart'>
                                 <TrajectoryChart />
                                 <WindageChart />
+                                <DragChart />
                             </CustomCard>
 
                         ) : (

@@ -1,15 +1,16 @@
 import { Card } from "react-native-paper";
 import { useState, ReactNode, isValidElement } from "react";
-import { StyleSheet } from "react-native";
+import { StyleProp, StyleSheet, ViewStyle } from "react-native";
 import { IconButton, Text } from "react-native-paper";
 
 interface CustomCardProps {
     children?: ReactNode;
     title?: string|ReactNode;
+    style?: StyleProp<ViewStyle>
     expanded?: boolean;
 }
 
-const CustomCard: React.FC<CustomCardProps> = ({ children = null, title = null, expanded = true }) => {
+const CustomCard: React.FC<CustomCardProps> = ({ children = null, title = null, style = null, expanded = true }) => {
     const [isExpanded, setIsExpanded] = useState<boolean>(expanded);
 
     const toggleExpansion = () => {
@@ -27,7 +28,7 @@ const CustomCard: React.FC<CustomCardProps> = ({ children = null, title = null, 
     console.log(isValidElement(title))
 
     return (
-        <Card mode="elevated" elevation={1} style={styles.card}>
+        <Card mode="elevated" elevation={1} style={[styles.card, style]}>
             <Card.Title
                 title={_title}
                 right={children ? (props) => (
