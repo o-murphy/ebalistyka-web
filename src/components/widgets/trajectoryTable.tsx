@@ -37,7 +37,7 @@ const TrajectoryTable = () => {
     const HeaderText = ({ children }: { children: React.ReactNode }) => {
         return (
             <DataTable.Title {...headerStyle}>
-                <Text style={tableStyles.cellText}>
+                <Text style={{...tableStyles.cellText}}>
                     {children}
                 </Text>
             </DataTable.Title>

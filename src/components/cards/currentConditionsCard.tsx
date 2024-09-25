@@ -29,19 +29,19 @@ const CurrentConditionsCard: React.FC<AtmoCardProps> = ({ label = "Zero atmosphe
             <MeasureFormField
                 {...measureFieldsProps.temp}
                 value={currentConditions ? currentConditions.temperature : 0}
-                onValueChange={value => debouncedUpdateConditions({ cZeroAirTemperature: Math.round(value) })}
+                onValueChange={value => debouncedUpdateConditions({ temperature: Math.round(value) })}
             />
 
             <MeasureFormField
                 {...measureFieldsProps.pressure}
                 value={currentConditions ? currentConditions.pressure : 0}
-                onValueChange={value => debouncedUpdateConditions({ cZeroAirPressure: Math.round(value) })}
+                onValueChange={value => debouncedUpdateConditions({ pressure: Math.round(value) })}
             />
 
             <MeasureFormField
                 {...measureFieldsProps.humidity}
                 value={currentConditions ? currentConditions.humidity : 0}
-                onValueChange={value => debouncedUpdateConditions({ cZeroAirHumidity: Math.round(value) })}
+                onValueChange={value => debouncedUpdateConditions({ humidity: Math.round(value) })}
             />
 
             <MeasureFormField
