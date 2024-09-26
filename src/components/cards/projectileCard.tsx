@@ -16,7 +16,7 @@ const ProjectileCard: React.FC<ProjectileCardProps> = ({ expanded = true }) => {
     const { profileProperties, updateProfileProperties } = useProfile();
     const [curName, setCurName] = useState<string>("My Cartridge");
 
-    const debouncedUpdateProfileProperties = useCallback(debounce(updateProfileProperties, 300), [updateProfileProperties]);
+    const debouncedUpdateProfileProperties = useCallback(debounce(updateProfileProperties, 350), [updateProfileProperties]);
 
     useEffect(() => {
         if (profileProperties) {

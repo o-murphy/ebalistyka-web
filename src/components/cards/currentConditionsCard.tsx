@@ -13,7 +13,7 @@ interface AtmoCardProps {
 const CurrentConditionsCard: React.FC<AtmoCardProps> = ({ label = "Zero atmosphere", expanded = true }) => {
 
     const { currentConditions, updateCurrentConditions } = useProfile();
-    const debouncedUpdateConditions = useCallback(debounce(updateCurrentConditions, 300), [updateCurrentConditions]);
+    const debouncedUpdateConditions = useCallback(debounce(updateCurrentConditions, 350), [updateCurrentConditions]);
 
     if (!currentConditions) {
         return (

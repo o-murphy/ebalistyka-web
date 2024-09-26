@@ -15,7 +15,7 @@ interface WindCardProps {
 
 const CurrentWindCard: React.FC<WindCardProps> = ({ label = "Zero wind direction and speed", expanded = true }) => {
     const { currentConditions, updateCurrentConditions } = useProfile();
-    const debouncedUpdateConditions = useCallback(debounce(updateCurrentConditions, 300), [updateCurrentConditions]);
+    const debouncedUpdateConditions = useCallback(debounce(updateCurrentConditions, 350), [updateCurrentConditions]);
 
     const [windDir, setWindDir] = useState(currentConditions.windDirection)
     const [windSpeed, setWindSpeed] = useState(currentConditions.windSpeed)

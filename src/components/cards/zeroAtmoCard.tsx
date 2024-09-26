@@ -13,7 +13,7 @@ interface AtmoCardProps {
 const ZeroAtmoCard: React.FC<AtmoCardProps> = ({ label = "Zero atmosphere", expanded = true }) => {
 
     const { profileProperties, updateProfileProperties } = useProfile();
-    const debouncedUpdateProfileProperties = useCallback(debounce(updateProfileProperties, 300), [updateProfileProperties]);
+    const debouncedUpdateProfileProperties = useCallback(debounce(updateProfileProperties, 350), [updateProfileProperties]);
 
     if (!profileProperties) {
         return (

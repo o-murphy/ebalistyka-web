@@ -25,8 +25,6 @@ const CustomCard: React.FC<CustomCardProps> = ({ children = null, title = null, 
         </Text>
     )
 
-    console.log(isValidElement(title))
-
     return (
         <Card mode="elevated" elevation={1} style={[styles.card, style]}>
             <Card.Title

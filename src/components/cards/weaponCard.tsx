@@ -21,7 +21,7 @@ const WeaponCard: React.FC<WeaponCardProps> = ({ expanded = true }) => {
     const [curName, setCurName] = useState<string>("My Rifle");
 
     // Use debounce for the profile name update to avoid excessive updates
-    const debouncedUpdateProfileProperties = useCallback(debounce(updateProfileProperties, 300), [updateProfileProperties]);
+    const debouncedUpdateProfileProperties = useCallback(debounce(updateProfileProperties, 350), [updateProfileProperties]);
 
     useEffect(() => {
         if (profileProperties) {
