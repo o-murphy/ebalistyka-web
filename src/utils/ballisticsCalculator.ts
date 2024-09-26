@@ -123,7 +123,7 @@ export const prepareCalculator = (profile: ProfileProps): PreparedZeroData => {
     }
 };
 
-export const makeShot = (calculator: PreparedZeroData, currentConditions: CurrentConditions): HitResult => {
+export const makeShot = (calculator: PreparedZeroData, currentConditions: CurrentConditions): HitResult | Error => {
 
     try {
 

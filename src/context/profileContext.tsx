@@ -12,6 +12,11 @@ interface ProfileContextType {
   updateCurrentConditions: (props: Partial<CurrentConditions>) => void;
   calculator: PreparedZeroData | null;
   hitResult: HitResult | null | Error;
+  calcState: any;
+  setCalcState: any;
+  autoRefresh: any;
+  setAutoRefresh: any;
+  fire: any
 }
 
 // Create the context
@@ -29,6 +34,9 @@ export const ProfileProvider = ({ children }) => {
     lookAngle: 0
   });
 
+  const [calcState, setCalcState] = useState(0)
+  const [autoRefresh, setAutoRefresh] = useState(true)
+
   const [calculator, setCalculator] = useState<PreparedZeroData>(null)
 
   const [hitResult, setHitResult] = useState<HitResult|Error>(null)
@@ -41,15 +49,21 @@ export const ProfileProvider = ({ children }) => {
   }, [profileProperties]);
 
   useEffect(() => {
-    if (currentConditions && calculator) {
-      if (!calculator.error) {
-        const result = makeShot(calculator, currentConditions)
-        setHitResult(result);  
-      } else {
-        setHitResult(calculator.error)
-      }
+    if (currentConditions && calculator && autoRefresh) {
+      fire()
     }
-  }, [currentConditions, calculator]); // Add dependencies here
+  }, [currentConditions, calculator, autoRefresh]); // Add dependencies here
+
+  const fire = () => {
+    if (!calculator.error) {
+      const result = makeShot(calculator, currentConditions)
+      setHitResult(result);
+      setCalcState(result instanceof Error ? -1 : 3)  
+    } else {
+      setHitResult(calculator.error)
+      setCalcState(-1)
+    }
+  }
 
   const fetchBinaryFile = async (EXAMPLE_A7P) => {
     try {
@@ -74,6 +88,7 @@ export const ProfileProvider = ({ children }) => {
         ...prev,
         ...props,
       }));
+      setCalcState(1)
     }
   };
 
@@ -83,6 +98,7 @@ export const ProfileProvider = ({ children }) => {
         ...prev,
         ...props,
       }));
+      setCalcState(2)
     }
   };
 
@@ -96,7 +112,12 @@ export const ProfileProvider = ({ children }) => {
       currentConditions,
       updateCurrentConditions,
       calculator,
-      hitResult
+      hitResult,
+      calcState, 
+      setCalcState,
+      autoRefresh,
+      setAutoRefresh,
+      fire
     }}>
       {children}
     </ProfileContext.Provider>

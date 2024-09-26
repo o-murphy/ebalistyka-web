@@ -20,6 +20,7 @@ import { Unit } from 'js-ballistics';
 import { useProfile } from '../../context/profileContext';
 import CalculationErrorCard from '../cards/calculationErrorCard';
 import DragChart from '../widgets/dragChart';
+import CalculationStateCard from '../cards/calculationStateCard';
 
 preferredUnits.distance = Unit.Meter
 preferredUnits.velocity = Unit.MPS
@@ -55,30 +56,36 @@ export default function MainScreen() {
                         <ZeroAtmoCard expanded={false} />
                     </ScrollView>
 
-                    <ScrollView style={{ ...styles.column, flex: 4, minWidth: 240, }}
-                        keyboardShouldPersistTaps="always"
-                        alwaysBounceVertical={false}
-                        showsVerticalScrollIndicator={false}
-                    >
+                    <View style={{...styles.column, flex: 4, backgroundColor: "transparent"}}>
+                        <CalculationStateCard cardStyle={{...styles.column, }}/>
 
-                        {hitResultError && <CalculationErrorCard title='Calculation Error!' details={hitResult?.message || undefined} />}
+                        <ScrollView style={{ ...styles.column, minWidth: 240, marginTop: 8}}
+                            keyboardShouldPersistTaps="always"
+                            alwaysBounceVertical={false}
+                            showsVerticalScrollIndicator={false}
+                        >
 
-                        <TrajectoryTable />
+                            {/* {hitResultError && <CalculationErrorCard title='Calculation Error!' details={hitResult?.message || undefined} />} */}
+                            <TrajectoryTable />
 
-                        {!hitResultError && hitResult ? (
-                            <CustomCard title='Chart'>
-                                <TrajectoryChart />
-                                <WindageChart />
-                                <DragChart />
-                            </CustomCard>
+                            {!hitResultError && hitResult ? (
+                                <CustomCard title='Chart'>
+                                    <TrajectoryChart />
+                                    <WindageChart />
+                                    <DragChart />
+                                </CustomCard>
 
-                        ) : (
-                            <CustomCard title='Chart'>
+                            ) : (
+                                <CustomCard title='Chart'>
 
-                            </CustomCard>
-                        )}
+                                </CustomCard>
+                            )}
 
-                    </ScrollView>
+                        </ScrollView>
+
+
+                    </View>
+
 
                     <ScrollView
                         style={{ ...styles.column, flex: 1, minWidth: 240 }}
