@@ -22,11 +22,7 @@ import CalculationErrorCard from '../cards/calculationErrorCard';
 import DragChart from '../widgets/dragChart';
 import CalculationStateCard from '../cards/calculationStateCard';
 
-preferredUnits.distance = Unit.Meter
-preferredUnits.velocity = Unit.MPS
-preferredUnits.angular = Unit.Degree
-preferredUnits.adjustment = Unit.MIL
-preferredUnits.drop = Unit.Centimeter
+
 
 
 export default function MainScreen() {
@@ -39,6 +35,7 @@ export default function MainScreen() {
 
     return (
         <PaperProvider theme={theme}>
+            
             <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
                 <TopAppBar />
 

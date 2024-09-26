@@ -100,8 +100,8 @@ const CalculationStateCard = (cardStyle) => {
                 </Text>
             }>
             <View style={styles.row}>
-                <Text style={{...styles.column, color: fontColor}} >Auto refresh</Text>
-                <Switch style={styles.column} value={autoRefresh} onValueChange={() => setAutoRefresh(!autoRefresh)}/>
+                {/* <Text style={{...styles.column, color: fontColor}} >Auto refresh</Text>
+                <Switch style={styles.column} value={autoRefresh} onValueChange={() => setAutoRefresh(!autoRefresh)}/> */}
                 {showButton && <Button mode="contained" icon={"reload"} style={{
                         ...styles.column, 
                         backgroundColor: theme.colors.onPrimaryContainer, 
