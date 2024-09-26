@@ -57,7 +57,7 @@ export default function SettingsUnitCard({ visibility }) {
     const [visible, setVisible] = visibility
 
     const { 
-        autoRefresh, setAutoRefresh,
+        fire, autoRefresh, setAutoRefresh, calculator
     } = useProfile()
 
     // Initialize curAutoRefresh based on the current autoRefresh value
@@ -102,7 +102,12 @@ export default function SettingsUnitCard({ visibility }) {
 
         setAutoRefresh(curAutoRefresh)
 
+        if (curAutoRefresh && calculator) {
+            fire()
+        }
+
         setVisible(false)
+
     }
 
     const onDismiss = () => {

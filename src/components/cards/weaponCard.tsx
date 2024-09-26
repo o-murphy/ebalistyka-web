@@ -2,11 +2,11 @@ import { SegmentedButtons, TextInput } from "react-native-paper";
 import React, { useState, useEffect, useCallback } from "react";
 import CustomCard from "./customCard";
 import SimpleDialog from "../dialogs/simpleDialog";
-import { Unit } from "js-ballistics/dist/v2";
+import { Measure, preferredUnits, Unit } from "js-ballistics/dist/v2";
 import { StyleSheet, View } from "react-native";
 import MeasureFormField, { styles as measureFormFieldStyles } from "../widgets/measureField";
 import { useProfile } from "../../context/profileContext";
-import { UNew } from "js-ballistics";
+import { UNew, UnitProps } from "js-ballistics";
 import debounce from "../../utils/debounce";
 import { Dropdown } from "react-native-paper-dropdown";
 import { measureFieldsProps } from "../widgets/measureFieldsProperties";
@@ -40,7 +40,7 @@ const WeaponCard: React.FC<WeaponCardProps> = ({ expanded = true }) => {
         );
     }
 
-    const OPTIONS = profileProperties.distances.map((value, index) => { return { label: (value / 100).toFixed(0), value: index.toFixed(0) } })
+    const OPTIONS = profileProperties.distances.map((value, index) => { return { label: UNew.Meter(value / 100).In(preferredUnits.distance).toFixed(0), value: index.toFixed(0) } })
     const VALUE = profileProperties.cZeroDistanceIdx.toFixed(0)
 
     return (
@@ -64,20 +64,23 @@ const WeaponCard: React.FC<WeaponCardProps> = ({ expanded = true }) => {
             {/* Debounce the update for each profile property change */}
             <MeasureFormField
                 {...measureFieldsProps.caliber}
-                value={profileProperties ? profileProperties.bDiameter / 1000 : 0}
-                onValueChange={value => debouncedUpdateProfileProperties({ bDiameter: Math.round(value * 1000) })}
+                suffix={UnitProps[preferredUnits.diameter].symbol}
+                value={profileProperties ? UNew.Inch(profileProperties.bDiameter / 1000).In(preferredUnits.diameter) : 0}
+                onValueChange={value => debouncedUpdateProfileProperties({ bDiameter: Math.round(new Measure.Distance(value, preferredUnits.diameter).In(Unit.Inch) * 1000) })}
             />
 
             <MeasureFormField
                 {...measureFieldsProps.sightHeight}
-                value={profileProperties ? UNew.Millimeter(profileProperties.scHeight).In(Unit.Inch) : 0}
-                onValueChange={value => debouncedUpdateProfileProperties({ scHeight: Math.round(UNew.Inch(value).In(Unit.Millimeter)) })}
+                suffix={UnitProps[preferredUnits.sight_height].symbol}
+                value={profileProperties ? UNew.Millimeter(profileProperties.scHeight).In(preferredUnits.sight_height) : 0}
+                onValueChange={value => debouncedUpdateProfileProperties({ scHeight: Math.round(new Measure.Distance(value, preferredUnits.sight_height).In(Unit.Millimeter)) })}
             />
 
             <MeasureFormField
                 {...measureFieldsProps.twist}
-                value={profileProperties ? profileProperties.rTwist / 100 : 0}
-                onValueChange={value => debouncedUpdateProfileProperties({ rTwist: Math.round(value * 100) })}
+                suffix={UnitProps[preferredUnits.twist].symbol}
+                value={profileProperties ? UNew.Inch(profileProperties.rTwist / 100).In(preferredUnits.twist) : 0}
+                onValueChange={value => debouncedUpdateProfileProperties({ rTwist: Math.round(new Measure.Distance(value, preferredUnits.twist).In(Unit.Inch) * 100) })}
             />
 
             {/* Twist direction with immediate update */}
@@ -93,8 +96,9 @@ const WeaponCard: React.FC<WeaponCardProps> = ({ expanded = true }) => {
 
             <MeasureFormField
                 {...measureFieldsProps.lookAngle}
-                value={profileProperties ? profileProperties.cZeroWPitch / 10 : 0}
-                onValueChange={value => debouncedUpdateProfileProperties({ cZeroWPitch: Math.round(value * 10) })}
+                suffix={UnitProps[preferredUnits.angular].symbol}
+                value={profileProperties ? UNew.Degree(profileProperties.cZeroWPitch / 10).In(preferredUnits.angular) : 0}
+                onValueChange={value => debouncedUpdateProfileProperties({ cZeroWPitch: Math.round(new Measure.Angular(value, preferredUnits.angular).In(Unit.Degree) * 10) })}
             />
 
             <Dropdown

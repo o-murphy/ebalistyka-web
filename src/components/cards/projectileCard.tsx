@@ -6,6 +6,7 @@ import MeasureFormField, { styles as measureFormFieldStyles } from "../widgets/m
 import { useProfile } from "../../context/profileContext";
 import debounce from "../../utils/debounce";
 import { measureFieldsProps } from "../widgets/measureFieldsProperties";
+import { Measure, preferredUnits, Unit, UNew, UnitProps } from "js-ballistics/dist/v2";
 
 interface ProjectileCardProps {
     expanded?: boolean;
@@ -53,8 +54,9 @@ const ProjectileCard: React.FC<ProjectileCardProps> = ({ expanded = true }) => {
 
             <MeasureFormField
                 {...measureFieldsProps.muzzleVelocity}
-                value={profileProperties ? profileProperties.cMuzzleVelocity / 10 : 0}
-                onValueChange={value => debouncedUpdateProfileProperties({ cMuzzleVelocity: Math.round(value * 10) })}
+                suffix={UnitProps[preferredUnits.velocity].symbol}
+                value={profileProperties ? UNew.MPS(profileProperties.cMuzzleVelocity / 10).In(preferredUnits.velocity) : 0}
+                onValueChange={value => debouncedUpdateProfileProperties({ cMuzzleVelocity: Math.round(new Measure.Velocity(value, preferredUnits.velocity).In(Unit.MPS) * 10) })}
             />
 
             <MeasureFormField

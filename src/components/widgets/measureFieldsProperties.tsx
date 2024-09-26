@@ -107,7 +107,7 @@ export const measureFieldsProps: Record<string, MeasureFormFieldProps> = {
     caliber: {
         key: "bDiameter",
         label: "Caliber",
-        suffix: UnitProps[Unit.Inch].symbol,
+        // suffix: UnitProps[Unit.Inch].symbol,
         icon: "diameter-variant",
         maxValue: 22,
         minValue: 0.001,
@@ -118,7 +118,7 @@ export const measureFieldsProps: Record<string, MeasureFormFieldProps> = {
     sightHeight: {
         key: "scHeight",
         label: "Sight height",
-        suffix: UnitProps[Unit.Inch].symbol,
+        // suffix: UnitProps[Unit.Inch].symbol,
         icon: "crosshairs",
         maxValue: 5,
         minValue: 0,
@@ -128,7 +128,7 @@ export const measureFieldsProps: Record<string, MeasureFormFieldProps> = {
     twist: {
         key: "rTwist",
         label: "Twist",
-        suffix: UnitProps[Unit.Inch].symbol,
+        // suffix: UnitProps[Unit.Inch].symbol,
         icon: "screw-flat-top",
         maxValue: 20,
         minValue: 0,

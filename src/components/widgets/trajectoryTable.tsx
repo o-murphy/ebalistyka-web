@@ -65,7 +65,7 @@ const TrajectoryTable = () => {
                     <HeaderText>Density</HeaderText>
                     <HeaderText>Drag</HeaderText>
                     <HeaderText>Energy, {UnitProps[preferredUnits.energy].symbol}</HeaderText>
-                    <HeaderText>OGW, {UnitProps[preferredUnits.ogw].symbol}</HeaderText>
+                    {/* <HeaderText>OGW, {UnitProps[preferredUnits.ogw].symbol}</HeaderText> */}
                   </DataTable.Header>
     
                   {!hitResultError && hitResult?.trajectory.map((row, index) => (
@@ -84,7 +84,7 @@ const TrajectoryTable = () => {
                       <DataTable.Cell {...dataRowStyle(row)}>{row.densityFactor.toFixed(2)}</DataTable.Cell>
                       <DataTable.Cell {...dataRowStyle(row)}>{row.drag.toFixed(3)}</DataTable.Cell>
                       <DataTable.Cell {...dataRowStyle(row)}>{row.energy.In(preferredUnits.energy).toFixed(0)}</DataTable.Cell>
-                      <DataTable.Cell {...dataRowStyle(row)}>{row.ogw.In(preferredUnits.ogw).toFixed(0)}</DataTable.Cell>
+                      {/* <DataTable.Cell {...dataRowStyle(row)}>{row.ogw.In(preferredUnits.ogw).toFixed(0)}</DataTable.Cell> */}
                     </DataTable.Row>
                   ))}
     

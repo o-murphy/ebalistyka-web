@@ -7,6 +7,7 @@ import MeasureFormField, { styles as measureFormFieldStyles } from "../widgets/m
 import { useProfile } from "../../context/profileContext";
 import debounce from "../../utils/debounce";
 import { measureFieldsProps } from "../widgets/measureFieldsProperties";
+import { Measure, preferredUnits, UNew, UnitProps, Unit } from "js-ballistics/dist/v2";
 
 interface BulletCardProps {
     expanded?: boolean;
@@ -58,14 +59,17 @@ const BulletCard: React.FC<BulletCardProps> = ({ expanded = true }) => {
 
             <MeasureFormField
                 {...measureFieldsProps.weight}
-                value={profileProperties ? profileProperties.bWeight / 10 : 0}
-                onValueChange={value => debouncedUpdateProfileProperties({ bWeight: Math.round(value * 10) })}
+                suffix={UnitProps[preferredUnits.weight].symbol}
+                value={profileProperties ? UNew.Grain(profileProperties.bWeight / 10).In(preferredUnits.weight) : 0}
+                onValueChange={value => debouncedUpdateProfileProperties({ bWeight: Math.round(new Measure.Weight(value, preferredUnits.weight).In(Unit.Grain) * 10) })}
             />
 
             <MeasureFormField
                 {...measureFieldsProps.length}
-                value={profileProperties ? profileProperties.bLength / 10 : 0}
-                onValueChange={value => debouncedUpdateProfileProperties({ bLength: Math.round(value * 10) })}
+                suffix={UnitProps[preferredUnits.length].symbol}
+                value={profileProperties ? UNew.Inch(profileProperties.bLength / 1000).In(preferredUnits.length) : 0}
+                onValueChange={value => debouncedUpdateProfileProperties({ bLength: Math.round(new Measure.Distance(value, preferredUnits.length).In(Unit.Inch) * 1000) })}
+
             />
 
             <View style={measureFormFieldStyles.row}>

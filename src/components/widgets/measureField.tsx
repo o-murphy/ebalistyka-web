@@ -6,7 +6,7 @@ import DoubleSpinBox from "./doubleSpinBox";
 export interface MeasureFormFieldProps {
   key: string;
   label: string;
-  suffix: string;
+  suffix?: string;
   icon: string;
   value: number;
   maxValue: number;
