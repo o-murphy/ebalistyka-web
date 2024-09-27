@@ -3,10 +3,10 @@ import React, { useCallback, useEffect, useState } from "react";
 import CustomCard from "./customCard";
 import SimpleDialog from "../dialogs/simpleDialog";
 import { View } from "react-native";
-import MeasureFormField, { styles as measureFormFieldStyles } from "../widgets/measureField";
+import MeasureFormField, { styles as measureFormFieldStyles } from "../widgets/measureFields/measureField/measureField";
 import { useProfile } from "../../context/profileContext";
 import debounce from "../../utils/debounce";
-import { measureFieldsProps } from "../widgets/measureFieldsProperties";
+import { measureFieldsProps } from "../widgets/measureFields/measureField/measureFieldsProperties";
 import { Measure, preferredUnits, UNew, UnitProps, Unit } from "js-ballistics/dist/v2";
 
 interface BulletCardProps {
@@ -54,6 +54,7 @@ const BulletCard: React.FC<BulletCardProps> = ({ expanded = true }) => {
                 <TextInput
                     value={curName}
                     onChangeText={setCurName}
+                    maxLength={50}
                 />
             </SimpleDialog>
 

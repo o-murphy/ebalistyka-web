@@ -1,9 +1,9 @@
 import React, { useCallback } from "react";
 import CustomCard from "./customCard";
-import MeasureFormField from "../widgets/measureField";
+import MeasureFormField from "../widgets/measureFields/measureField/measureField";
 import { useProfile } from "../../context/profileContext";
 import debounce from "../../utils/debounce";
-import { measureFieldsProps } from "../widgets/measureFieldsProperties";
+import { measureFieldsProps } from "../widgets/measureFields/measureField/measureFieldsProperties";
 import { Measure, UNew, Unit, UnitProps } from "js-ballistics";
 import { preferredUnits } from "js-ballistics/dist/v2";
 
@@ -47,24 +47,6 @@ const CurrentConditionsCard: React.FC<AtmoCardProps> = ({ label = "Zero atmosphe
                 value={currentConditions ? currentConditions.humidity : 0}
                 onValueChange={value => debouncedUpdateConditions({ humidity: Math.round(value) })}            
             />
-
-            {/* <MeasureFormField
-                {...measureFieldsProps.temp}
-                value={currentConditions ? currentConditions.temperature : 0}
-                onValueChange={value => debouncedUpdateConditions({ temperature: Math.round(value) })}
-            />
-
-            <MeasureFormField
-                {...measureFieldsProps.pressure}
-                value={currentConditions ? currentConditions.pressure : 0}
-                onValueChange={value => debouncedUpdateConditions({ pressure: Math.round(value) })}
-            />
-
-            <MeasureFormField
-                {...measureFieldsProps.humidity}
-                value={currentConditions ? currentConditions.humidity : 0}
-                onValueChange={value => debouncedUpdateConditions({ humidity: Math.round(value) })}
-            /> */}
 
             <MeasureFormField
                 {...measureFieldsProps.lookAngle}

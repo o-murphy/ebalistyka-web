@@ -10,13 +10,13 @@ import CustomChart from './adaptiveChart';
 
 const DragChart = () => {
 
-    const { hitResult } = useProfile()
+    const { calculator } = useProfile()
 
-    if (hitResult instanceof Error) return (
+    const dragTable = calculator?.ammo?.dm?.dragTable
+
+    if (!dragTable) return (
         <Text>Can't display chart</Text>
     );
-
-    const dragTable = hitResult.shot.ammo.dm.dragTable
 
     const data = {
         labels: dragTable.map(row => row.Mach),

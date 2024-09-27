@@ -1,44 +1,42 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
 import { TextInput } from "react-native-paper";
-import DoubleSpinBox from "./doubleSpinBox";
+import DoubleSpinBox from "../../doubleSpinBox";
 
 export interface MeasureFormFieldProps {
-  key: string;
-  label: string;
+  key?: string;
+  label?: string;
   suffix?: string;
-  icon: string;
-  value: number;
-  maxValue: number;
-  minValue: number;
-  fractionDigits: number;
+  icon?: string;
+  value?: number;
+  maxValue?: number;
+  minValue?: number;
+  fractionDigits?: number;
   step?: number;
   onValueChange?: (value: any) => void;
 }
 
 const MeasureFormField: React.FC<MeasureFormFieldProps> = ({
-  label,
-  suffix,
-  icon,
-  value,
-  maxValue,
-  minValue,
-  fractionDigits: decimals,
+  label = "",
+  suffix = "",
+  icon = "",
+  value = 0,
+  minValue = -65535,
+  maxValue = 65535,
+  fractionDigits = 1,
   step,
   onValueChange,
 }) => {
 
   return (
-    <View style={styles.row}>
-      {/* <Text style={[styles.column, { flex: 1 }, styles.label]}>{label}</Text> */}
       <DoubleSpinBox
         value={value}
         onValueChange={onValueChange ? onValueChange : null}
-        fractionDigits={decimals}
+        fractionDigits={fractionDigits}
         minValue={minValue}
         maxValue={maxValue}
         step={step ?? 1}
-        style={[styles.doubleSpinBox]}
+        style={[styles.doubleSpinBox, {marginVertical: 4}]}
         inputProps={{
           // label: `${label}, ${suffix}`,
           label: label,
@@ -50,7 +48,6 @@ const MeasureFormField: React.FC<MeasureFormFieldProps> = ({
         }}
         strict={true}
       />
-    </View>
   );
 };
 

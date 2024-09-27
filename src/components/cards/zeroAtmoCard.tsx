@@ -1,9 +1,9 @@
 import React, { useCallback } from "react";
 import CustomCard from "./customCard";
-import MeasureFormField from "../widgets/measureField";
+import MeasureFormField from "../widgets/measureFields/measureField/measureField";
 import { useProfile } from "../../context/profileContext";
 import debounce from "../../utils/debounce";
-import { measureFieldsProps } from "../widgets/measureFieldsProperties";
+import { measureFieldsProps } from "../widgets/measureFields/measureField/measureFieldsProperties";
 import { UNew, UnitProps, Measure, preferredUnits, Unit } from "js-ballistics/dist/v2";
 
 interface AtmoCardProps {

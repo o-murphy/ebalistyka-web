@@ -1,7 +1,7 @@
 import { Unit, UnitProps } from "js-ballistics/dist/v2";
 import { MeasureFormFieldProps } from "./measureField";
 
-export const measureFieldsProps: Record<string, MeasureFormFieldProps> = {
+export const measureFieldsProps: Record<string, Partial<MeasureFormFieldProps>> = {
     weight: {
         key: "weight",
         label: "Weight",
@@ -97,7 +97,7 @@ export const measureFieldsProps: Record<string, MeasureFormFieldProps> = {
     powderSens: {
         key: "cTCoeff",
         label: "Temperature sens.",
-        suffix: "/15°C",
+        suffix: "%/15°C",
         icon: "percent",
         value: 0,
         maxValue: 5,
@@ -118,10 +118,7 @@ export const measureFieldsProps: Record<string, MeasureFormFieldProps> = {
     sightHeight: {
         key: "scHeight",
         label: "Sight height",
-        // suffix: UnitProps[Unit.Inch].symbol,
         icon: "crosshairs",
-        maxValue: 5,
-        minValue: 0,
         fractionDigits: 1,
         value: 0,
     },
@@ -130,9 +127,5 @@ export const measureFieldsProps: Record<string, MeasureFormFieldProps> = {
         label: "Twist",
         // suffix: UnitProps[Unit.Inch].symbol,
         icon: "screw-flat-top",
-        maxValue: 20,
-        minValue: 0,
-        fractionDigits: 2,
-        value: 0,
     },
 };

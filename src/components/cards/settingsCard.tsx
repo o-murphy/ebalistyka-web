@@ -2,21 +2,24 @@
 import { Dialog, FAB, Portal, Switch, Text } from "react-native-paper"
 
 
-import {
-    preferredUnits,
-    Unit,
-    UnitProps,
-    Measure
-} from "js-ballistics/dist/v2"
 import { useEffect, useState } from "react";
 import { StyleProp, StyleSheet, View, ViewStyle } from "react-native";
 import { Dropdown } from "react-native-paper-dropdown";
 import { useProfile } from "../../context/profileContext";
+import { preferredUnits, Unit, UnitProps, Measure } from "js-ballistics/dist/v2"
 
-const get_unit_list = (measure: Object) =>
-    Object.keys(measure).map((key: string): { label: string, value: Unit } => {
-        return { label: UnitProps[measure[key]].name, value: measure[key] }
-    })
+const getUnitList = (measure: Object) =>
+    Object.keys(measure).map(
+        (key: string): {
+            label: string,
+            value: Unit
+        } => {
+            return {
+                label: UnitProps[measure[key]].name,
+                value: measure[key]
+            }
+        }
+    );
 
 
 interface UnitSelectorProps {
@@ -56,7 +59,7 @@ export default function SettingsUnitCard({ visibility }) {
 
     const [visible, setVisible] = visibility
 
-    const { 
+    const {
         fire, autoRefresh, setAutoRefresh, calculator
     } = useProfile()
 
@@ -126,7 +129,7 @@ export default function SettingsUnitCard({ visibility }) {
 
                         <View style={styles.row}>
                             <Text style={styles.column}> Auto refresh</Text>
-                            <Switch  value={curAutoRefresh} onValueChange={() => setCurAutoRefresh((prev) => !prev)}/>
+                            <Switch value={curAutoRefresh} onValueChange={() => setCurAutoRefresh((prev) => !prev)} />
 
                         </View>
 
@@ -182,7 +185,7 @@ export default function SettingsUnitCard({ visibility }) {
                             label="Angular units"
                             value={units.angular}
                             defaultValue={units.angular}
-                            options={get_unit_list(Measure.Angular)}
+                            options={getUnitList(Measure.Angular)}
                             onValueChange={value => { onUnitChange({ angular: value }) }}
                         />
 
@@ -193,7 +196,7 @@ export default function SettingsUnitCard({ visibility }) {
                             label="Adjustment units"
                             value={units.adjustment}
                             defaultValue={units.adjustment}
-                            options={get_unit_list(Measure.Angular)}
+                            options={getUnitList(Measure.Angular)}
                             onValueChange={value => { onUnitChange({ adjustment: value }) }}
                         />
 
@@ -204,7 +207,7 @@ export default function SettingsUnitCard({ visibility }) {
                             label="Weight units"
                             value={units.weight}
                             defaultValue={units.weight}
-                            options={get_unit_list(Measure.Weight)}
+                            options={getUnitList(Measure.Weight)}
                             onValueChange={value => { onUnitChange({ weight: value }) }}
                         />
 
@@ -215,7 +218,7 @@ export default function SettingsUnitCard({ visibility }) {
                             label="Temperature units"
                             value={units.temperature}
                             defaultValue={units.temperature}
-                            options={get_unit_list(Measure.Temperature)}
+                            options={getUnitList(Measure.Temperature)}
                             onValueChange={value => { onUnitChange({ temperature: value }) }}
                         />
 
@@ -226,7 +229,7 @@ export default function SettingsUnitCard({ visibility }) {
                             label="Pressure units"
                             value={preferredUnits.pressure}
                             defaultValue={preferredUnits.pressure}
-                            options={get_unit_list(Measure.Pressure)}
+                            options={getUnitList(Measure.Pressure)}
                             onValueChange={value => { onUnitChange({ pressure: value }) }}
                         />
 
@@ -237,7 +240,7 @@ export default function SettingsUnitCard({ visibility }) {
                             label="Pressure units"
                             value={preferredUnits.energy}
                             defaultValue={preferredUnits.energy}
-                            options={get_unit_list(Measure.Energy)}
+                            options={getUnitList(Measure.Energy)}
                             onValueChange={value => { onUnitChange({ energy: value }) }}
                         />
 
