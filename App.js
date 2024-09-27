@@ -11,9 +11,9 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <ThemeProvider>
-        <ProfileProvider>
-          <MainScreen />
-        </ProfileProvider>
+          <ProfileProvider>
+            <MainScreen />
+          </ProfileProvider>
       </ThemeProvider>
     </SafeAreaProvider>
   );

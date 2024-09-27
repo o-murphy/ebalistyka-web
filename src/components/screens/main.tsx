@@ -17,7 +17,6 @@ import CalculationStateCard from '../cards/calculationStateCard';
 
 
 
-
 export default function MainScreen() {
 
     const { theme } = useTheme();
@@ -27,70 +26,70 @@ export default function MainScreen() {
 
 
     return (
-        <PaperProvider theme={theme}>
-            
-            <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
-                <TopAppBar />
+            <PaperProvider theme={theme}>
 
-                <View style={{ ...styles.row }}>
+                <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
+                    <TopAppBar />
 
-                    <ScrollView
-                        style={{ ...styles.column, flex: 1, minWidth: 240, }}
-                        keyboardShouldPersistTaps="always"
-                        alwaysBounceVertical={false}
-                        showsVerticalScrollIndicator={false}
-                    >
-                        <WeaponCard expanded={true} />
-                        <ProjectileCard expanded={true} />
-                        <BulletCard expanded={true} />
-                        <ZeroAtmoCard expanded={false} />
-                    </ScrollView>
+                    <View style={{ ...styles.row }}>
 
-                    <View style={{...styles.column, flex: 4, minWidth: 240, }}>
-                        <CalculationStateCard cardStyle={{...styles.column, }}/>
-
-                        <ScrollView style={{ ...styles.column, }}
+                        <ScrollView
+                            style={{ ...styles.column, flex: 1, minWidth: 240, }}
                             keyboardShouldPersistTaps="always"
                             alwaysBounceVertical={false}
                             showsVerticalScrollIndicator={false}
                         >
-
-                            <TrajectoryTable />
-
-                            {!hitResultError && hitResult ? (
-                                <CustomCard title='Chart'>
-                                    <TrajectoryChart />
-                                    <WindageChart />
-                                    <DragChart />
-                                </CustomCard>
-
-                            ) : (
-                                <CustomCard title='Chart'>
-
-                                </CustomCard>
-                            )}
-
+                            <WeaponCard expanded={true} />
+                            <ProjectileCard expanded={true} />
+                            <BulletCard expanded={true} />
+                            <ZeroAtmoCard expanded={false} />
                         </ScrollView>
 
+                        <View style={{ ...styles.column, flex: 4, minWidth: 240, }}>
+                            <CalculationStateCard cardStyle={{ ...styles.column, }} />
+
+                            <ScrollView style={{ ...styles.column, }}
+                                keyboardShouldPersistTaps="always"
+                                alwaysBounceVertical={false}
+                                showsVerticalScrollIndicator={false}
+                            >
+
+                                <TrajectoryTable />
+
+                                {!hitResultError && hitResult ? (
+                                    <CustomCard title='Chart'>
+                                        <TrajectoryChart />
+                                        <WindageChart />
+                                        <DragChart />
+                                    </CustomCard>
+
+                                ) : (
+                                    <CustomCard title='Chart'>
+
+                                    </CustomCard>
+                                )}
+
+                            </ScrollView>
+
+
+                        </View>
+
+
+                        <ScrollView
+                            style={{ ...styles.column, flex: 1, minWidth: 240 }}
+                            keyboardShouldPersistTaps="always"
+                            alwaysBounceVertical={false}
+                            showsVerticalScrollIndicator={false}
+                        >
+                            <CurrentConditionsCard expanded={true} label='Current conditions' />
+                            <CurrentWindCard expanded={true} label='Current wind' />
+                        </ScrollView>
 
                     </View>
 
-
-                    <ScrollView
-                        style={{ ...styles.column, flex: 1, minWidth: 240 }}
-                        keyboardShouldPersistTaps="always"
-                        alwaysBounceVertical={false}
-                        showsVerticalScrollIndicator={false}
-                    >
-                        <CurrentConditionsCard expanded={true} label='Current conditions' />
-                        <CurrentWindCard expanded={true} label='Current wind' />
-                    </ScrollView>
-
                 </View>
 
-            </View>
-
-        </PaperProvider>
+            </PaperProvider>
     );
 }
 

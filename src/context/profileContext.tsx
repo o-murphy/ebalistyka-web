@@ -1,4 +1,5 @@
-import { createContext, useState, useContext, useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { createContext, useState, useContext, useEffect, ReactNode } from 'react';
 import parseA7P, { ProfileProps } from '../utils/parseA7P';
 import { CurrentConditions, makeShot, prepareCalculator, PreparedZeroData } from '../utils/ballisticsCalculator';
 import { HitResult } from 'js-ballistics/dist/v2';
@@ -12,62 +13,67 @@ interface ProfileContextType {
   updateCurrentConditions: (props: Partial<CurrentConditions>) => void;
   calculator: PreparedZeroData | null;
   hitResult: HitResult | null | Error;
-  calcState: any;
-  setCalcState: any;
-  autoRefresh: any;
-  setAutoRefresh: any;
-  fire: any
+  calcState: number;
+  setCalcState: React.Dispatch<React.SetStateAction<number>>;
+  autoRefresh: boolean;
+  setAutoRefresh: React.Dispatch<React.SetStateAction<boolean>>;
+  fire: () => void;
 }
 
-// Create the context
 export const ProfileContext = createContext<ProfileContextType | null>(null);
 
-// Create a provider component
-export const ProfileProvider = ({ children }) => {
-  const [profileProperties, setProfileProperties] = useState<ProfileProps>(null);
+export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+
+  const [profileProperties, setProfileProperties] = useState<ProfileProps | null>(null);
   const [currentConditions, setCurrentConditions] = useState<CurrentConditions>({
     temperature: 15,
     pressure: 1000,
     humidity: 50,
     windSpeed: 0,
     windDirection: 0,
-    lookAngle: 0
+    lookAngle: 0,
   });
 
-  const [calcState, setCalcState] = useState(0)
-  const [autoRefresh, setAutoRefresh] = useState(true)
+  const [calcState, setCalcState] = useState<number>(0);
+  const [autoRefresh, setAutoRefresh] = useState<boolean>(true);
+  const [calculator, setCalculator] = useState<PreparedZeroData | null>(null);
+  const [hitResult, setHitResult] = useState<HitResult | Error | null>(null);
 
-  const [calculator, setCalculator] = useState<PreparedZeroData>(null)
-
-  const [hitResult, setHitResult] = useState<HitResult|Error>(null)
+  useEffect(() => {
+    loadUserData(); // Load data on mount
+  }, []);
 
   useEffect(() => {
     if (profileProperties) {
       const preparedCalculator = prepareCalculator(profileProperties);
       setCalculator(preparedCalculator);
+      saveProfileProperties(); // Save profile properties whenever it changes
     }
   }, [profileProperties]);
 
   useEffect(() => {
     if (currentConditions && calculator && autoRefresh) {
-      fire()
+      fire();
+      saveCurrentConditions(); // Save current conditions whenever they change
     }
-  }, [currentConditions, calculator, autoRefresh]); // Add dependencies here
+  }, [currentConditions, calculator, autoRefresh]);
 
   const fire = () => {
-    if (!calculator.error) {
-      const result = makeShot(calculator, currentConditions)
-      setHitResult(result);
-      setCalcState(result instanceof Error ? -1 : 3)  
-    } else {
-      setHitResult(calculator.error)
-      setCalcState(-1)
+    if (calculator) {
+      if (!calculator.error) {
+        const result = makeShot(calculator, currentConditions);
+        setHitResult(result);
+        setCalcState(result instanceof Error ? -1 : 3);
+      } else {
+        setHitResult(calculator.error);
+        setCalcState(-1);
+      }
     }
-  }
+  };
 
-  const fetchBinaryFile = async (EXAMPLE_A7P) => {
+  const fetchBinaryFile = async (file: string) => {
     try {
-      const response = await fetch(EXAMPLE_A7P);
+      const response = await fetch(file);
       const arrayBuffer = await response.arrayBuffer();
 
       parseA7P(arrayBuffer)
@@ -75,7 +81,7 @@ export const ProfileProvider = ({ children }) => {
           setProfileProperties(parsedData);
         })
         .catch(error => {
-          console.error(error);
+          console.error('Error parsing A7P file:', error);
         });
     } catch (error) {
       console.error('Error fetching or processing binary file:', error);
@@ -88,21 +94,53 @@ export const ProfileProvider = ({ children }) => {
         ...prev,
         ...props,
       }));
-      setCalcState(1)
+      setCalcState(1);
     }
   };
 
   const updateCurrentConditions = (props: Partial<CurrentConditions>) => {
-    if (currentConditions) {
-      setCurrentConditions((prev) => ({
-        ...prev,
-        ...props,
-      }));
-      setCalcState(2)
+    setCurrentConditions((prev) => ({
+      ...prev,
+      ...props,
+    }));
+    setCalcState(2);
+  };
+
+  const saveProfileProperties = async () => {
+    try {
+      const jsonValue = JSON.stringify(profileProperties);
+      await AsyncStorage.setItem('profileProperties', jsonValue);
+    } catch (error) {
+      console.error('Failed to save profile properties:', error);
     }
   };
 
-  // Provide both the file content and loading function to the context consumers
+  const saveCurrentConditions = async () => {
+    try {
+      const jsonValue = JSON.stringify(currentConditions);
+      await AsyncStorage.setItem('currentConditions', jsonValue);
+    } catch (error) {
+      console.error('Failed to save current conditions:', error);
+    }
+  };
+
+  const loadUserData = async () => {
+    try {
+      const profileValue = await AsyncStorage.getItem('profileProperties');
+      const conditionsValue = await AsyncStorage.getItem('currentConditions');
+
+      if (profileValue !== null) {
+        setProfileProperties(JSON.parse(profileValue));
+      }
+
+      if (conditionsValue !== null) {
+        setCurrentConditions(JSON.parse(conditionsValue));
+      }
+    } catch (error) {
+      console.error('Failed to load user data:', error);
+    }
+  };
+
   return (
     <ProfileContext.Provider value={{
       profileProperties,
@@ -113,16 +151,21 @@ export const ProfileProvider = ({ children }) => {
       updateCurrentConditions,
       calculator,
       hitResult,
-      calcState, 
+      calcState,
       setCalcState,
       autoRefresh,
       setAutoRefresh,
-      fire
+      fire,
     }}>
       {children}
     </ProfileContext.Provider>
   );
 };
 
-export const useProfile = () => useContext(ProfileContext);
-
+export const useProfile = () => {
+  const context = useContext(ProfileContext);
+  if (!context) {
+    throw new Error('useProfile must be used within a ProfileProvider');
+  }
+  return context;
+};

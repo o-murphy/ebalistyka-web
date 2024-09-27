@@ -8,7 +8,7 @@ import { styles as measureFormFieldStyles } from "../widgets/measureFields/measu
 import { useProfile } from "../../context/profileContext";
 import debounce from "../../utils/debounce";
 import { Dropdown } from "react-native-paper-dropdown";
-import { CaliberField, SightHeightField, TwistField, ZeroLookAngleField } from "../widgets/measureFields";
+import { SightHeightField, TwistField, ZeroLookAngleField } from "../widgets/measureFields";
 
 
 interface WeaponCardProps {
@@ -58,7 +58,6 @@ const WeaponCard: React.FC<WeaponCardProps> = ({ expanded = true }) => {
                 />
             </SimpleDialog>
 
-            <CaliberField />
             <SightHeightField />
             <TwistField />
 

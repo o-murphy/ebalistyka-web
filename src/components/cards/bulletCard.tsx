@@ -6,7 +6,7 @@ import { View } from "react-native";
 import { styles as measureFormFieldStyles } from "../widgets/measureFields/measureField/measureField";
 import { useProfile } from "../../context/profileContext";
 import debounce from "../../utils/debounce";
-import { BulletLengthField, BulletWeightField } from "../widgets/measureFields";
+import { BulletLengthField, BulletWeightField, CaliberField } from "../widgets/measureFields";
 
 interface BulletCardProps {
     expanded?: boolean;
@@ -55,6 +55,7 @@ const BulletCard: React.FC<BulletCardProps> = ({ expanded = true }) => {
                 />
             </SimpleDialog>
 
+            <CaliberField />
             <BulletWeightField />
             <BulletLengthField />
 
