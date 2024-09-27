@@ -36,7 +36,7 @@ const MeasureFormField: React.FC<MeasureFormFieldProps> = ({
         minValue={minValue}
         maxValue={maxValue}
         step={step ?? 1}
-        style={[styles.doubleSpinBox, {marginVertical: 4}]}
+        style={[styles.doubleSpinBox, {marginVertical: 8}]}
         inputProps={{
           // label: `${label}, ${suffix}`,
           label: label,

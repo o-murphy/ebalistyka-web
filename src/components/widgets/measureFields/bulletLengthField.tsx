@@ -10,7 +10,7 @@ export interface BulletLengthFieldProps extends Omit<MeasureFormFieldProps, 'val
 
 export const BulletLengthField: React.FC<BulletLengthFieldProps> = () => {
     const { profileProperties, updateProfileProperties } = useProfile();
-    const debouncedProfileUpdate = useCallback(debounce(updateProfileProperties, 350), [updateProfileProperties]);
+    const debouncedProfileUpdate = useCallback(debounce(updateProfileProperties, 300), [updateProfileProperties]);
 
     const unitProps = UnitProps[preferredUnits.length]
 

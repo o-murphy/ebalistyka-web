@@ -1,7 +1,6 @@
 
 import { Dialog, FAB, Portal, Switch, Text } from "react-native-paper"
 
-
 import { useEffect, useState } from "react";
 import { StyleProp, StyleSheet, View, ViewStyle } from "react-native";
 import { Dropdown } from "react-native-paper-dropdown";

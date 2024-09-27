@@ -10,7 +10,7 @@ export interface CaliberFieldProps extends Omit<MeasureFormFieldProps, 'value' |
 
 export const CaliberField: React.FC<CaliberFieldProps> = () => {
     const { profileProperties, updateProfileProperties } = useProfile();
-    const debouncedProfileUpdate = useCallback(debounce(updateProfileProperties, 350), [updateProfileProperties]);
+    const debouncedProfileUpdate = useCallback(debounce(updateProfileProperties, 300), [updateProfileProperties]);
 
     const unitProps = UnitProps[preferredUnits.diameter]
 

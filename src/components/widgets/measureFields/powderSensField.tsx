@@ -9,7 +9,7 @@ export interface PowderSensFieldProps extends Omit<MeasureFormFieldProps, 'value
 
 export const PowderSensField: React.FC<PowderSensFieldProps> = () => {
     const { profileProperties, updateProfileProperties } = useProfile();
-    const debouncedProfileUpdate = useCallback(debounce(updateProfileProperties, 350), [updateProfileProperties]);
+    const debouncedProfileUpdate = useCallback(debounce(updateProfileProperties, 300), [updateProfileProperties]);
 
     const fieldProps: Partial<MeasureFormFieldProps> = {
         key: "cTCoeff",

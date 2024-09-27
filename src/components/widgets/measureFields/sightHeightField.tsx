@@ -10,7 +10,7 @@ export interface SightHeightFieldProps extends Omit<MeasureFormFieldProps, 'valu
 
 export const SightHeightField: React.FC<SightHeightFieldProps> = () => {
     const { profileProperties, updateProfileProperties } = useProfile();
-    const debouncedProfileUpdate = useCallback(debounce(updateProfileProperties, 350), [updateProfileProperties]);
+    const debouncedProfileUpdate = useCallback(debounce(updateProfileProperties, 300), [updateProfileProperties]);
 
     const unitProps = UnitProps[preferredUnits.sight_height]
 

@@ -10,7 +10,7 @@ export interface MuzzleVelocityFieldProps extends Omit<MeasureFormFieldProps, 'v
 
 export const MuzzleVelocityField: React.FC<MuzzleVelocityFieldProps> = () => {
     const { profileProperties, updateProfileProperties } = useProfile();
-    const debouncedProfileUpdate = useCallback(debounce(updateProfileProperties, 350), [updateProfileProperties]);
+    const debouncedProfileUpdate = useCallback(debounce(updateProfileProperties, 300), [updateProfileProperties]);
 
     const unitProps = UnitProps[preferredUnits.velocity]
 

@@ -5,17 +5,17 @@ import { UNew, Unit, UnitProps, preferredUnits, Measure } from "js-ballistics/di
 import debounce from "../../../utils/debounce";
 
 
-export interface ZeroLookAngleFieldProps extends Omit<MeasureFormFieldProps, 'value' | 'suffix' | 'onValueChange'> { }
+export interface CurrentLookAngleFieldProps extends Omit<MeasureFormFieldProps, 'value' | 'suffix' | 'onValueChange'> { }
 
 
-export const ZeroLookAngleField: React.FC<ZeroLookAngleFieldProps> = () => {
-    const { profileProperties, updateProfileProperties } = useProfile();
-    const debouncedProfileUpdate = useCallback(debounce(updateProfileProperties, 300), [updateProfileProperties]);
+export const CurrentLookAngleField: React.FC<CurrentLookAngleFieldProps> = () => {
+    const { currentConditions, updateCurrentConditions } = useProfile();
+    const debouncedUpdateConditions = useCallback(debounce(updateCurrentConditions, 350), [updateCurrentConditions]);
 
     const unitProps = UnitProps[preferredUnits.angular]
 
     const fieldProps: Partial<MeasureFormFieldProps> = {
-        key: "cZeroWPitch",
+        key: "lookAngle",
         label: "Look angle",
         icon: "angle-acute",
         fractionDigits: unitProps.accuracy,
@@ -25,10 +25,10 @@ export const ZeroLookAngleField: React.FC<ZeroLookAngleFieldProps> = () => {
         maxValue: UNew.Degree(90).In(preferredUnits.angular),
     }
 
-    const value: number = profileProperties ? UNew.Degree(profileProperties[fieldProps.key] / 10).In(preferredUnits.angular) : 0
+    const value: number = currentConditions ? UNew.Degree(currentConditions[fieldProps.key] / 10).In(preferredUnits.angular) : 0
 
     const onValueChange = (value: number): void => {
-        return debouncedProfileUpdate({
+        return debouncedUpdateConditions({
             [fieldProps.key]: Math.round(new Measure.Angular(value, preferredUnits.angular).In(Unit.Degree) * 10)
         })
     }

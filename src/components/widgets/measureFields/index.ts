@@ -6,6 +6,10 @@ import { BulletLengthField, BulletLengthFieldProps } from "./bulletLengthField";
 import { BulletWeightField, BulletWeightFieldProps } from "./bulletWeightField";
 import { MuzzleVelocityField, MuzzleVelocityFieldProps } from "./muzzleVelocityField";
 import { PowderSensField, PowderSensFieldProps } from "./powderSensField";
+import { CurrentLookAngleField, CurrentLookAngleFieldProps } from "./currentLookAngleField";
+import { CurrentTemperatureField, CurrentTemperatureFieldProps } from "./currentTemperatureField";
+import { CurrentPressureField, CurrentPressureFieldProps } from "./currentPressureField";
+import { CurrentHumidityField, CurrentHumidityFieldProps } from "./currentHumidityField";
 
 
 export {
@@ -16,5 +20,9 @@ export {
     BulletLengthField, BulletLengthFieldProps,
     BulletWeightField, BulletWeightFieldProps,
     MuzzleVelocityField, MuzzleVelocityFieldProps,
-    PowderSensField, PowderSensFieldProps
+    PowderSensField, PowderSensFieldProps,
+    CurrentLookAngleField, CurrentLookAngleFieldProps,
+    CurrentTemperatureField, CurrentTemperatureFieldProps,
+    CurrentPressureField, CurrentPressureFieldProps,
+    CurrentHumidityField, CurrentHumidityFieldProps,
 };
