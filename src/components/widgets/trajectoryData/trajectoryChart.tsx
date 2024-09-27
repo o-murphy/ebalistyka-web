@@ -1,9 +1,9 @@
 import { preferredUnits, Unit } from 'js-ballistics/dist/v2';
 import { StyleSheet } from 'react-native';
-import { useProfile } from '../../context/profileContext';
+import { useProfile } from '../../../context/profileContext';
 import { Text } from 'react-native-paper';
-import { useTheme } from '../../context/themeContext';
-import CustomChart from './adaptiveChart';
+import { useTheme } from '../../../context/themeContext';
+import CustomChart from '../adaptiveChart';
 
 
 function findOppositeCathetus(hypotenuse, angleInDegrees) {

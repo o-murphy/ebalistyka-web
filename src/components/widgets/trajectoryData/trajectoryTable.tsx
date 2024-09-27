@@ -2,10 +2,10 @@ import { DataTable, Text } from 'react-native-paper';
 import {
     preferredUnits, TrajectoryData, UnitProps
 } from 'js-ballistics/dist/v2';
-import { useProfile } from '../../context/profileContext';
+import { useProfile } from '../../../context/profileContext';
 import { StyleSheet, ScrollView, View } from 'react-native';
-import { useTheme } from '../../context/themeContext';
-import CustomCard from '../cards/customCard';
+import { useTheme } from '../../../context/themeContext';
+import CustomCard from '../../cards/customCard';
 import { useState } from 'react';
 
 

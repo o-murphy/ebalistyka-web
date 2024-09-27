@@ -1,7 +1,7 @@
 import { preferredUnits } from 'js-ballistics/dist/v2';
-import { useProfile } from '../../context/profileContext';
+import { useProfile } from '../../../context/profileContext';
 import { Text } from 'react-native-paper';
-import CustomChart from './adaptiveChart';
+import CustomChart from '../adaptiveChart';
 import { StyleSheet } from 'react-native';
 
 

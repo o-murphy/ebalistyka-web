@@ -1,6 +1,5 @@
 import React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import TrajectoryData from '../widgets/trajectoryData';
 import WeaponCard from '../cards/weaponCard';
 import ProjectileCard from '../cards/projectileCard';
 import BulletCard from '../cards/bulletCard';
@@ -11,15 +10,9 @@ import CurrentConditionsCard from '../cards/currentConditionsCard';
 import { useTheme } from '../../context/themeContext';
 import { PaperProvider } from 'react-native-paper';
 import TopAppBar from '../widgets/topAppBar';
-import TrajectoryTable from '../widgets/trajectoryTable';
-import TrajectoryChart from '../widgets/trajectoryChart';
-import WindageChart from '../widgets/windageChart';
+import { TrajectoryTable, TrajectoryChart, WindageChart, DragChart } from '../widgets/trajectoryData';
 import CustomCard from '../cards/customCard';
-import { preferredUnits } from 'js-ballistics/dist/v2';
-import { Unit } from 'js-ballistics';
 import { useProfile } from '../../context/profileContext';
-import CalculationErrorCard from '../cards/calculationErrorCard';
-import DragChart from '../widgets/dragChart';
 import CalculationStateCard from '../cards/calculationStateCard';
 
 
@@ -62,7 +55,6 @@ export default function MainScreen() {
                             showsVerticalScrollIndicator={false}
                         >
 
-                            {/* {hitResultError && <CalculationErrorCard title='Calculation Error!' details={hitResult?.message || undefined} />} */}
                             <TrajectoryTable />
 
                             {!hitResultError && hitResult ? (

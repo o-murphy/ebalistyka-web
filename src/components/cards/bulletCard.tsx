@@ -3,11 +3,10 @@ import React, { useCallback, useEffect, useState } from "react";
 import CustomCard from "./customCard";
 import SimpleDialog from "../dialogs/simpleDialog";
 import { View } from "react-native";
-import MeasureFormField, { styles as measureFormFieldStyles } from "../widgets/measureFields/measureField/measureField";
+import { styles as measureFormFieldStyles } from "../widgets/measureFields/measureField/measureField";
 import { useProfile } from "../../context/profileContext";
 import debounce from "../../utils/debounce";
-import { measureFieldsProps } from "../widgets/measureFields/measureField/measureFieldsProperties";
-import { Measure, preferredUnits, UNew, UnitProps, Unit } from "js-ballistics/dist/v2";
+import { BulletLengthField, BulletWeightField } from "../widgets/measureFields";
 
 interface BulletCardProps {
     expanded?: boolean;
@@ -35,9 +34,7 @@ const BulletCard: React.FC<BulletCardProps> = ({ expanded = true }) => {
 
     if (!profileProperties) {
         return (
-            <CustomCard title={"Bullet"} expanded={expanded}>
-                {/* <ActivityIndicator animating={true} /> */}
-            </CustomCard>
+            <CustomCard title={"Bullet"} expanded={expanded} />
         )
     }
 
@@ -58,20 +55,8 @@ const BulletCard: React.FC<BulletCardProps> = ({ expanded = true }) => {
                 />
             </SimpleDialog>
 
-            <MeasureFormField
-                {...measureFieldsProps.weight}
-                suffix={UnitProps[preferredUnits.weight].symbol}
-                value={profileProperties ? UNew.Grain(profileProperties.bWeight / 10).In(preferredUnits.weight) : 0}
-                onValueChange={value => debouncedUpdateProfileProperties({ bWeight: Math.round(new Measure.Weight(value, preferredUnits.weight).In(Unit.Grain) * 10) })}
-            />
-
-            <MeasureFormField
-                {...measureFieldsProps.length}
-                suffix={UnitProps[preferredUnits.length].symbol}
-                value={profileProperties ? UNew.Inch(profileProperties.bLength / 1000).In(preferredUnits.length) : 0}
-                onValueChange={value => debouncedUpdateProfileProperties({ bLength: Math.round(new Measure.Distance(value, preferredUnits.length).In(Unit.Inch) * 1000) })}
-
-            />
+            <BulletWeightField />
+            <BulletLengthField />
 
             <View style={measureFormFieldStyles.row}>
                 <Text style={[measureFormFieldStyles.column, { flex: 1 }, measureFormFieldStyles.label]}>
