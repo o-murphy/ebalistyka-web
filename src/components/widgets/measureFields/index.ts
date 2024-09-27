@@ -11,6 +11,7 @@ import { CurrentTemperatureField, CurrentTemperatureFieldProps } from "./current
 import { CurrentPressureField, CurrentPressureFieldProps } from "./currentPressureField";
 import { CurrentHumidityField, CurrentHumidityFieldProps } from "./currentHumidityField";
 import { ZeroTemperatureField, ZeroTemperatureFieldProps } from "./zeroTemperatureField";
+import { WindSpeedField, WindSpeedFieldProps } from "./currentWindSpeedField";
 
 
 export {
@@ -26,5 +27,6 @@ export {
     CurrentTemperatureField, CurrentTemperatureFieldProps,
     CurrentPressureField, CurrentPressureFieldProps,
     CurrentHumidityField, CurrentHumidityFieldProps,
-    ZeroTemperatureField, ZeroTemperatureFieldProps
+    ZeroTemperatureField, ZeroTemperatureFieldProps,
+    WindSpeedField, WindSpeedFieldProps,
 };
