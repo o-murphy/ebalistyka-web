@@ -5,6 +5,7 @@ import { useProfile } from "../../context/profileContext";
 import debounce from "../../utils/debounce";
 import { measureFieldsProps } from "../widgets/measureFields/measureField/measureFieldsProperties";
 import { UNew, UnitProps, Measure, preferredUnits, Unit } from "js-ballistics/dist/v2";
+import { ZeroTemperatureField } from "../widgets/measureFields";
 
 interface AtmoCardProps {
     label?: string;
@@ -27,12 +28,7 @@ const ZeroAtmoCard: React.FC<AtmoCardProps> = ({ label = "Zero atmosphere", expa
     return (
         <CustomCard title={label} expanded={expanded}>
 
-            <MeasureFormField
-                {...measureFieldsProps.temp}
-                suffix={UnitProps[preferredUnits.temperature].symbol}
-                value={profileProperties ? UNew.Celsius(profileProperties.cZeroAirTemperature).In(preferredUnits.temperature) : 0}
-                onValueChange={value => debouncedUpdateProfileProperties({ cZeroAirTemperature: Math.round(new Measure.Temperature(value, preferredUnits.temperature).In(Unit.Celsius)) })}
-            />
+            <ZeroTemperatureField />
 
             <MeasureFormField
                 {...measureFieldsProps.pressure}

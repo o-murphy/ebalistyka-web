@@ -10,6 +10,7 @@ import { CurrentLookAngleField, CurrentLookAngleFieldProps } from "./currentLook
 import { CurrentTemperatureField, CurrentTemperatureFieldProps } from "./currentTemperatureField";
 import { CurrentPressureField, CurrentPressureFieldProps } from "./currentPressureField";
 import { CurrentHumidityField, CurrentHumidityFieldProps } from "./currentHumidityField";
+import { ZeroTemperatureField, ZeroTemperatureFieldProps } from "./zeroTemperatureField";
 
 
 export {
@@ -25,4 +26,5 @@ export {
     CurrentTemperatureField, CurrentTemperatureFieldProps,
     CurrentPressureField, CurrentPressureFieldProps,
     CurrentHumidityField, CurrentHumidityFieldProps,
+    ZeroTemperatureField, ZeroTemperatureFieldProps
 };
