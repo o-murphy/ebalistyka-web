@@ -1,9 +1,10 @@
-import { preferredUnits, Unit } from 'js-ballistics/dist/v2';
+import { Unit } from 'js-ballistics/dist/v2';
 import { StyleSheet } from 'react-native';
 import { useProfile } from '../../../context/profileContext';
 import { Text } from 'react-native-paper';
 import { useTheme } from '../../../context/themeContext';
 import CustomChart from '../adaptiveChart';
+import { usePreferredUnits } from '../../../context/preferredUnitsContext';
 
 
 function findOppositeCathetus(hypotenuse, angleInDegrees) {
@@ -18,6 +19,8 @@ const TrajectoryChart = () => {
 
     const { theme } = useTheme()
     const { hitResult } = useProfile()
+    const { preferredUnits } = usePreferredUnits()
+
 
     if (hitResult instanceof Error) return (
         <Text>Can't display chart</Text>

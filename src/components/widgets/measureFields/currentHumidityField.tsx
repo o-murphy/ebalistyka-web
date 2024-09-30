@@ -26,7 +26,7 @@ export const CurrentHumidityField: React.FC<CurrentHumidityFieldProps> = () => {
 
     const onValueChange = (value: number): void => {
         return debouncedUpdateConditions({
-            [fieldProps.key]: Math.round(value)
+            [fieldProps.key]: value
         })
     }
 

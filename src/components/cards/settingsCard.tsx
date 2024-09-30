@@ -5,7 +5,8 @@ import { useEffect, useState } from "react";
 import { StyleProp, StyleSheet, View, ViewStyle } from "react-native";
 import { Dropdown } from "react-native-paper-dropdown";
 import { useProfile } from "../../context/profileContext";
-import { preferredUnits, Unit, UnitProps, Measure } from "js-ballistics/dist/v2"
+import { Unit, UnitProps, Measure } from "js-ballistics/dist/v2"
+import { usePreferredUnits } from "../../context/preferredUnitsContext";
 
 const getUnitList = (measure: Object) =>
     Object.keys(measure).map(
@@ -58,6 +59,9 @@ export default function SettingsUnitCard({ visibility }) {
 
     const [visible, setVisible] = visibility
 
+    const {preferredUnits, setPreferredUnits} = usePreferredUnits()
+
+
     const {
         fire, autoRefresh, setAutoRefresh, calculator
     } = useProfile()
@@ -73,11 +77,12 @@ export default function SettingsUnitCard({ visibility }) {
     const [units, setUnits] = useState({
         distance: preferredUnits.distance,
         velocity: preferredUnits.velocity,
-        length: preferredUnits.length,
+        sizes: preferredUnits.sizes,
         temperature: preferredUnits.temperature,
         pressure: preferredUnits.pressure,
         energy: preferredUnits.energy,
         adjustment: preferredUnits.adjustment,
+        drop: preferredUnits.drop,
         angular: preferredUnits.angular,
         weight: preferredUnits.weight,
     })
@@ -87,20 +92,32 @@ export default function SettingsUnitCard({ visibility }) {
     }
 
     const onAccept = () => {
+        setPreferredUnits({
+            distance: units.distance,
+            velocity: units.velocity,
+            sizes: units.sizes,
+            temperature: units.temperature,
+            pressure: units.pressure,
+            energy: units.energy,
+            adjustment: units.adjustment,
+            drop: units.drop,
+            angular: units.angular,
+            weight: units.weight,
+        })
 
-        preferredUnits.distance = units.distance
-        preferredUnits.velocity = units.velocity
-        preferredUnits.temperature = units.temperature
-        preferredUnits.pressure = units.pressure
-        preferredUnits.energy = units.energy
-        preferredUnits.adjustment = units.adjustment
-        preferredUnits.angular = units.angular
-        preferredUnits.weight = units.weight
+        // preferredUnits.distance = units.distance
+        // preferredUnits.velocity = units.velocity
+        // preferredUnits.temperature = units.temperature
+        // preferredUnits.pressure = units.pressure
+        // preferredUnits.energy = units.energy
+        // preferredUnits.adjustment = units.adjustment
+        // preferredUnits.angular = units.angular
+        // preferredUnits.weight = units.weight
 
-        preferredUnits.length = units.length
-        preferredUnits.diameter = units.length
-        preferredUnits.sight_height = units.length
-        preferredUnits.twist = units.length
+        // preferredUnits.length = units.length
+        // preferredUnits.diameter = units.length
+        // preferredUnits.sight_height = units.length
+        // preferredUnits.twist = units.length
 
         setAutoRefresh(curAutoRefresh)
 
@@ -166,15 +183,15 @@ export default function SettingsUnitCard({ visibility }) {
 
                             key="sizes"
                             label="Sizes units"
-                            value={preferredUnits.length}
-                            defaultValue={preferredUnits.length}
+                            value={units.sizes}
+                            defaultValue={units.sizes}
                             options={[
                                 { label: UnitProps[Unit.Inch].name, value: Unit.Inch },
                                 { label: UnitProps[Unit.Millimeter].name, value: Unit.Millimeter },
                                 { label: UnitProps[Unit.Centimeter].name, value: Unit.Centimeter },
-                                { label: UnitProps[Unit.Centimeter].name, value: Unit.Line },
+                                { label: UnitProps[Unit.Line].name, value: Unit.Line },
                             ]}
-                            onValueChange={value => { onUnitChange({ length: value }) }}
+                            onValueChange={value => { onUnitChange({ sizes: value }) }}
                         />
 
                         <UnitSelector
@@ -197,6 +214,17 @@ export default function SettingsUnitCard({ visibility }) {
                             defaultValue={units.adjustment}
                             options={getUnitList(Measure.Angular)}
                             onValueChange={value => { onUnitChange({ adjustment: value }) }}
+                        />
+
+                        <UnitSelector
+                            containerStyle={styles.row}
+
+                            key="drop"
+                            label="Drop units"
+                            value={units.drop}
+                            defaultValue={units.drop}
+                            options={getUnitList(Measure.Distance)}
+                            onValueChange={value => { onUnitChange({ drop: value }) }}
                         />
 
                         <UnitSelector

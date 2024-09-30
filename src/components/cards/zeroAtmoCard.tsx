@@ -6,6 +6,8 @@ import debounce from "../../utils/debounce";
 import { measureFieldsProps } from "../widgets/measureFields/measureField/measureFieldsProperties";
 import { UNew, UnitProps, Measure, preferredUnits, Unit } from "js-ballistics/dist/v2";
 import { ZeroTemperatureField } from "../widgets/measureFields";
+import { ZeroPressureField } from "../widgets/measureFields/zeroPressureField";
+import { ZeroHumidityField } from "../widgets/measureFields/zeroHumidityField";
 
 interface AtmoCardProps {
     label?: string;
@@ -29,19 +31,8 @@ const ZeroAtmoCard: React.FC<AtmoCardProps> = ({ label = "Zero atmosphere", expa
         <CustomCard title={label} expanded={expanded}>
 
             <ZeroTemperatureField />
-
-            <MeasureFormField
-                {...measureFieldsProps.pressure}
-                suffix={UnitProps[preferredUnits.pressure].symbol}
-                value={profileProperties ? UNew.hPa(profileProperties.cZeroAirPressure / 10).In(preferredUnits.pressure) : 0}
-                onValueChange={value => debouncedUpdateProfileProperties({ cZeroAirPressure: Math.round(new Measure.Pressure(value, preferredUnits.pressure).In(Unit.hPa) * 10) })}            
-            />
-
-            <MeasureFormField
-                {...measureFieldsProps.humidity}
-                value={profileProperties ? profileProperties.cZeroAirHumidity : 0}
-                onValueChange={value => debouncedUpdateProfileProperties({ cZeroAirHumidity: Math.round(value) })}            
-            />
+            <ZeroPressureField />
+            <ZeroHumidityField />
 
         </CustomCard>
     );

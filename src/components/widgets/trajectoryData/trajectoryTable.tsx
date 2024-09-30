@@ -1,17 +1,18 @@
 import { DataTable, Text } from 'react-native-paper';
-import {
-    preferredUnits, TrajectoryData, UnitProps
-} from 'js-ballistics/dist/v2';
+import { TrajectoryData, UnitProps } from 'js-ballistics/dist/v2';
 import { useProfile } from '../../../context/profileContext';
 import { StyleSheet, ScrollView, View } from 'react-native';
 import { useTheme } from '../../../context/themeContext';
 import CustomCard from '../../cards/customCard';
 import { useState } from 'react';
+import { usePreferredUnits } from '../../../context/preferredUnitsContext';
 
 
 // Arrow function component
 const TrajectoryTable = () => {
     const [containerWidth, setContainerWidth] = useState(0); // State for container width
+
+    const { preferredUnits } = usePreferredUnits()
 
     const tableWidth = 800;
     const isScrollable = containerWidth < tableWidth;
@@ -44,6 +45,30 @@ const TrajectoryTable = () => {
         )
     }
 
+    const headerTitles = ["Time", "Range", "V", "Mach", "Height", 
+      "Drop", "Drop adjustment", 
+      "Windage", "Wind. adjustment", 
+      "Look distance", "Angle",
+      "Density", "Drag", "Energy"
+    ]
+
+    const headerUnits = [
+      "s",
+      preferredUnits.distance,
+      preferredUnits.velocity,
+      "",
+      preferredUnits.drop,
+      preferredUnits.drop,
+      preferredUnits.adjustment,
+      preferredUnits.drop,
+      preferredUnits.adjustment,
+      preferredUnits.distance,
+      preferredUnits.angular,
+      "",
+      "",
+      preferredUnits.energy,
+    ]
+
     return (
         <CustomCard title='Trajectory'>
           <View onLayout={(event) => setContainerWidth(event.nativeEvent.layout.width)}>
@@ -51,21 +76,11 @@ const TrajectoryTable = () => {
               <View style={isScrollable ? styles.tableScrollable : styles.tableFullWidth}>
                 <DataTable>
                   <DataTable.Header style={tableStyles.row}>
-                    <HeaderText>Time, s</HeaderText>
-                    <HeaderText>Range, {UnitProps[preferredUnits.distance].symbol}</HeaderText>
-                    <HeaderText>V, {UnitProps[preferredUnits.velocity].symbol}</HeaderText>
-                    <HeaderText>Mach</HeaderText>
-                    <HeaderText>Height, {UnitProps[preferredUnits.drop].symbol}</HeaderText>
-                    <HeaderText>Drop, {UnitProps[preferredUnits.drop].symbol}</HeaderText>
-                    <HeaderText>Drop adj., {UnitProps[preferredUnits.adjustment].symbol}</HeaderText>
-                    <HeaderText>Windage, {UnitProps[preferredUnits.drop].symbol}</HeaderText>
-                    <HeaderText>Wind. adj., {UnitProps[preferredUnits.adjustment].symbol}</HeaderText>
-                    <HeaderText>Look dst., {UnitProps[preferredUnits.distance].symbol}</HeaderText>
-                    <HeaderText>Angle, {UnitProps[preferredUnits.angular].symbol}</HeaderText>
-                    <HeaderText>Density</HeaderText>
-                    <HeaderText>Drag</HeaderText>
-                    <HeaderText>Energy, {UnitProps[preferredUnits.energy].symbol}</HeaderText>
-                    {/* <HeaderText>OGW, {UnitProps[preferredUnits.ogw].symbol}</HeaderText> */}
+                    {headerTitles.map(item => <HeaderText>{item}</HeaderText>)}
+                  </DataTable.Header>
+
+                  <DataTable.Header style={tableStyles.row}>
+                    {headerUnits.map(item => <HeaderText>{UnitProps[item] ? UnitProps[item].symbol : item}</HeaderText>)}
                   </DataTable.Header>
     
                   {!hitResultError && hitResult?.trajectory.map((row, index) => (
@@ -84,7 +99,6 @@ const TrajectoryTable = () => {
                       <DataTable.Cell {...dataRowStyle(row)}>{row.densityFactor.toFixed(2)}</DataTable.Cell>
                       <DataTable.Cell {...dataRowStyle(row)}>{row.drag.toFixed(3)}</DataTable.Cell>
                       <DataTable.Cell {...dataRowStyle(row)}>{row.energy.In(preferredUnits.energy).toFixed(0)}</DataTable.Cell>
-                      {/* <DataTable.Cell {...dataRowStyle(row)}>{row.ogw.In(preferredUnits.ogw).toFixed(0)}</DataTable.Cell> */}
                     </DataTable.Row>
                   ))}
     

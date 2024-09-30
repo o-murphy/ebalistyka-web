@@ -42,14 +42,13 @@ const CurrentWindCard: React.FC<WindCardProps> = ({ label = "Zero wind direction
     const windValue: number = currentConditions ? UNew.MPS(windSpeed).In(preferredUnits.velocity) : 0
     const onWindValueChange = (value: number): void => {
         return setWindSpeed(
-            Math.round(new Measure.Velocity(value, preferredUnits.velocity).In(Unit.MPS))
+            new Measure.Velocity(value, preferredUnits.velocity).In(Unit.MPS)
         )
     }
 
 
     useEffect(() => {
         if (windSpeed != 0) {
-            console.log("Wind SET")
             debouncedUpdateConditions({ windDirection: windDir, windSpeed: windSpeed })
         }
     }, [windDir, windSpeed])

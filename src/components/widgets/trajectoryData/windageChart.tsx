@@ -1,13 +1,14 @@
-import { preferredUnits } from 'js-ballistics/dist/v2';
 import { useProfile } from '../../../context/profileContext';
 import { Text } from 'react-native-paper';
 import CustomChart from '../adaptiveChart';
 import { StyleSheet } from 'react-native';
+import { usePreferredUnits } from '../../../context/preferredUnitsContext';
 
 
 const WindageChart = () => {
 
     const { hitResult } = useProfile()
+    const { preferredUnits } = usePreferredUnits()
 
     if (hitResult instanceof Error) return (
         <Text>Can't display chart</Text>
