@@ -29,16 +29,12 @@ export const TrajectoryStepField: React.FC<TrajectoryStepFieldProps> = () => {
         maxValue: UNew.Meter(500).In(prefUnit),
     }
 
-    console.log("Range", currentConditions)
-
-
     const value: number = UNew.Meter(
         currentConditions?.[fieldProps.key] ? 
         currentConditions[fieldProps.key] : 100
     ).In(prefUnit)
-    
+
     const onValueChange = (value: number): void => {
-        console.log("On Range", value)
         return debouncedUpdateConditions({
             [fieldProps.key]: new Measure.Distance(value, prefUnit).In(Unit.Meter)
         })
