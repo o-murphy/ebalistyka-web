@@ -1,20 +1,28 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createContext, useState, useContext, useEffect, ReactNode } from 'react';
 import parseA7P, { ProfileProps } from '../utils/parseA7P';
-import { CurrentConditions, makeShot, prepareCalculator, PreparedZeroData } from '../utils/ballisticsCalculator';
+import { CurrentConditionsProps, makeShot, prepareCalculator, PreparedZeroData } from '../utils/ballisticsCalculator';
 import { HitResult } from 'js-ballistics/dist/v2';
+
+export enum CalculationState {
+  Error = -1,
+  NoData = 0,
+  ZeroUpdated = 1,
+  ConditionsUpdated = 2,
+  Complete = 3,
+}
 
 interface ProfileContextType {
   profileProperties: ProfileProps | null;
   fetchBinaryFile: (file: string) => Promise<void>;
   setProfileProperties: React.Dispatch<React.SetStateAction<ProfileProps | null>>;
   updateProfileProperties: (props: Partial<ProfileProps>) => void;
-  currentConditions: CurrentConditions;
-  updateCurrentConditions: (props: Partial<CurrentConditions>) => void;
+  currentConditions: CurrentConditionsProps;
+  updateCurrentConditions: (props: Partial<CurrentConditionsProps>) => void;
   calculator: PreparedZeroData | null;
   hitResult: HitResult | null | Error;
-  calcState: number;
-  setCalcState: React.Dispatch<React.SetStateAction<number>>;
+  calcState: CalculationState;
+  setCalcState: React.Dispatch<React.SetStateAction<CalculationState>>;
   autoRefresh: boolean;
   setAutoRefresh: React.Dispatch<React.SetStateAction<boolean>>;
   fire: () => void;
@@ -25,7 +33,7 @@ export const ProfileContext = createContext<ProfileContextType | null>(null);
 export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
   const [profileProperties, setProfileProperties] = useState<ProfileProps | null>(null);
-  const [currentConditions, setCurrentConditions] = useState<CurrentConditions>({
+  const [currentConditions, setCurrentConditions] = useState<CurrentConditionsProps>({
     temperature: 15,
     pressure: 1000,
     humidity: 50,
@@ -37,8 +45,9 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
     trajectoryRange: 2000
   });
 
-  const [calcState, setCalcState] = useState<number>(0);
-  const [autoRefresh, setAutoRefresh] = useState<boolean>(true);
+  const [calcState, setCalcState] = useState<CalculationState>(CalculationState.NoData);
+  // const [autoRefresh, setAutoRefresh] = useState<boolean>(true);
+  const [autoRefresh, setAutoRefresh] = useState<boolean>(false);
   const [calculator, setCalculator] = useState<PreparedZeroData | null>(null);
   const [hitResult, setHitResult] = useState<HitResult | Error | null>(null);
 
@@ -66,10 +75,10 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
       if (!calculator.error) {
         const result = makeShot(calculator, currentConditions);
         setHitResult(result);
-        setCalcState(result instanceof Error ? -1 : 3);
+        setCalcState(result instanceof Error ? CalculationState.Error : CalculationState.Complete);
       } else {
         setHitResult(calculator.error);
-        setCalcState(-1);
+        setCalcState(CalculationState.Error);
       }
     }
   };
@@ -97,16 +106,16 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
         ...prev,
         ...props,
       }));
-      setCalcState(1);
+      setCalcState(CalculationState.ZeroUpdated);
     }
   };
 
-  const updateCurrentConditions = (props: Partial<CurrentConditions>) => {
+  const updateCurrentConditions = (props: Partial<CurrentConditionsProps>) => {
     setCurrentConditions((prev) => ({
       ...prev,
       ...props,
     }));
-    setCalcState(2);
+    setCalcState(CalculationState.ConditionsUpdated);
   };
 
   const saveProfileProperties = async () => {

@@ -105,20 +105,6 @@ export default function SettingsUnitCard({ visibility }) {
             weight: units.weight,
         })
 
-        // preferredUnits.distance = units.distance
-        // preferredUnits.velocity = units.velocity
-        // preferredUnits.temperature = units.temperature
-        // preferredUnits.pressure = units.pressure
-        // preferredUnits.energy = units.energy
-        // preferredUnits.adjustment = units.adjustment
-        // preferredUnits.angular = units.angular
-        // preferredUnits.weight = units.weight
-
-        // preferredUnits.length = units.length
-        // preferredUnits.diameter = units.length
-        // preferredUnits.sight_height = units.length
-        // preferredUnits.twist = units.length
-
         setAutoRefresh(curAutoRefresh)
 
         if (curAutoRefresh && calculator) {

@@ -1,5 +1,5 @@
-import { SegmentedButtons, TextInput } from "react-native-paper";
-import React, { useState, useEffect, useCallback } from "react";
+import { SegmentedButtons, Text, TextInput } from "react-native-paper";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import CustomCard from "./customCard";
 import SimpleDialog from "../dialogs/simpleDialog";
 import { preferredUnits, UNew } from "js-ballistics/dist/v2";
@@ -18,6 +18,7 @@ interface WeaponCardProps {
 const WeaponCard: React.FC<WeaponCardProps> = ({ expanded = true }) => {
     const { profileProperties, updateProfileProperties } = useProfile();
     const [curName, setCurName] = useState<string>("My Rifle");
+
 
     // Use debounce for the profile name update to avoid excessive updates
     const debouncedProfileUpdate = useCallback(debounce(updateProfileProperties, 350), [updateProfileProperties]);
@@ -41,7 +42,15 @@ const WeaponCard: React.FC<WeaponCardProps> = ({ expanded = true }) => {
     const VALUE = profileProperties.cZeroDistanceIdx.toFixed(0)
 
     return (
-        <CustomCard title={"Weapon"} expanded={expanded}>
+        <CustomCard title={
+            "Weapon"
+            // <View
+            //     style={measureFormFieldStyles.row}
+            // >
+            //     <Text>Weapon</Text>
+            //     {/* <RecalculateChip visible={refreshable} style={{ marginHorizontal: 4 }} /> */}
+            // </View>
+        } expanded={expanded}>
 
             <SimpleDialog
                 style={measureFormFieldStyles.nameContainer}

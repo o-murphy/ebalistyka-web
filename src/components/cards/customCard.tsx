@@ -8,9 +8,10 @@ interface CustomCardProps {
     title?: string|ReactNode;
     style?: StyleProp<ViewStyle>
     expanded?: boolean;
+    iconButton?: ReactNode;
 }
 
-const CustomCard: React.FC<CustomCardProps> = ({ children = null, title = null, style = null, expanded = true }) => {
+const CustomCard: React.FC<CustomCardProps> = ({ children = null, title = null, style = null, expanded = true, iconButton = null }) => {
     const [isExpanded, setIsExpanded] = useState<boolean>(expanded);
 
     const toggleExpansion = () => {
@@ -30,7 +31,7 @@ const CustomCard: React.FC<CustomCardProps> = ({ children = null, title = null, 
             <Card.Title
                 title={_title}
                 right={children ? (props) => (
-                    <IconButton
+                    iconButton ?? <IconButton
                         {...props}
                         style={styles.iconButton}
                         size={20}

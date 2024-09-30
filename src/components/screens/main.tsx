@@ -35,7 +35,7 @@ export default function MainScreen() {
                     <View style={{ ...styles.row }}>
 
                         <ScrollView
-                            style={{ ...styles.column, flex: 1, minWidth: 240, }}
+                            style={{ ...styles.column, flex: 1, minWidth: 280, }}
                             keyboardShouldPersistTaps="always"
                             alwaysBounceVertical={false}
                             showsVerticalScrollIndicator={false}
@@ -77,7 +77,7 @@ export default function MainScreen() {
 
 
                         <ScrollView
-                            style={{ ...styles.column, flex: 1, minWidth: 240 }}
+                            style={{ ...styles.column, flex: 1, minWidth: 280 }}
                             keyboardShouldPersistTaps="always"
                             alwaysBounceVertical={false}
                             showsVerticalScrollIndicator={false}

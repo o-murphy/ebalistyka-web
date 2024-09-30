@@ -15,7 +15,7 @@ export interface PreparedZeroData {
     error: Error|null;
 }
 
-export interface CurrentConditions {
+export interface CurrentConditionsProps {
     temperature: number;
     pressure: number;
     humidity: number;
@@ -127,7 +127,7 @@ export const prepareCalculator = (profile: ProfileProps): PreparedZeroData => {
     }
 };
 
-export const makeShot = (calculator: PreparedZeroData, currentConditions: CurrentConditions): HitResult | Error => {
+export const makeShot = (calculator: PreparedZeroData, currentConditions: CurrentConditionsProps): HitResult | Error => {
 
     try {
 

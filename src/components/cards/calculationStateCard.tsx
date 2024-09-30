@@ -1,7 +1,7 @@
 import { Button, Switch, Text } from "react-native-paper"
 import CustomCard from "./customCard";
 import { useTheme } from "../../context/themeContext";
-import { useProfile } from "../../context/profileContext";
+import { CalculationState, useProfile } from "../../context/profileContext";
 import { ColorValue, StyleSheet, View } from "react-native";
 
 
@@ -22,19 +22,19 @@ const CalculationStateCard = (cardStyle) => {
     let showButton: boolean = false;
 
     if (!autoRefresh) {
-        if (calcState === 0 && profileProperties) {
-            setCalcState(1)
+        if (calcState === CalculationState.NoData && profileProperties) {
+            setCalcState(CalculationState.ZeroUpdated)
         }
 
         switch (calcState) {
-            case 3:
+            case CalculationState.Complete:
                 title = "INFO"
                 details = "Shot trajectory calculation success"
                 backgroundColor = "#00AA8D"
                 fontColor = theme.colors.onPrimary
                 showButton = true
                 break;
-            case 2:
+            case CalculationState.ConditionsUpdated:
                 title = "WARNING!"
                 details = "Current conditions updated! Trajectory data not actual"
                 backgroundColor = theme.colors.primaryContainer
@@ -42,7 +42,7 @@ const CalculationStateCard = (cardStyle) => {
                 reloadAlert = true
                 showButton = true
                 break;
-            case 1:
+            case CalculationState.ZeroUpdated:
                 title = "WARNING!"
                 details = "Zero data updated! Trajectory data not actual"
                 backgroundColor = theme.colors.primaryContainer
@@ -50,13 +50,13 @@ const CalculationStateCard = (cardStyle) => {
                 reloadAlert = true
                 showButton = true
                 break;
-            case 0:
+            case CalculationState.NoData:
                 title = "WARNING! Zero data not initialized"
                 details = "Open .a7p file to start calculations"
                 backgroundColor = theme.colors.primaryContainer
                 fontColor = theme.colors.onPrimaryContainer
                 break;
-            case -1:
+            case CalculationState.Error:
                 title = "ERROR!"
                 details = hitResult instanceof Error ? hitResult?.message : "Undefined"
                 backgroundColor = theme.colors.errorContainer
@@ -67,13 +67,13 @@ const CalculationStateCard = (cardStyle) => {
         }
     } else {
         switch (calcState) {
-            case 0:
+            case CalculationState.NoData:
                 title = "WARNING! Zero data not initialized"
                 details = "Open .a7p file to start calculations"
                 backgroundColor = theme.colors.primaryContainer
                 fontColor = theme.colors.onPrimaryContainer
                 break;
-            case -1:
+            case CalculationState.Error:
                 title = "ERROR!"
                 details = hitResult instanceof Error ? hitResult?.message : "Undefined"
                 backgroundColor = theme.colors.errorContainer

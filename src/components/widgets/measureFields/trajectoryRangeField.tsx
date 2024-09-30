@@ -29,17 +29,13 @@ export const TrajectoryRangeField: React.FC<TrajectoryRangeFieldProps> = () => {
         maxValue: UNew.Meter(3000).In(prefUnit),
     }
 
-    console.log("Range", currentConditions)
-
-
     const value: number = UNew.Meter(
         currentConditions?.[fieldProps.key] ? 
         currentConditions[fieldProps.key] : 2000
     ).In(prefUnit)
     
     const onValueChange = (value: number): void => {
-        console.log("On Range", value)
-        return debouncedUpdateConditions({
+        debouncedUpdateConditions({
             [fieldProps.key]: new Measure.Distance(value, prefUnit).In(Unit.Meter)
         })
     }
