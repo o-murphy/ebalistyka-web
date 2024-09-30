@@ -3,16 +3,52 @@ import CustomCard from "./customCard";
 import { useTheme } from "../../context/themeContext";
 import { CalculationState, useProfile } from "../../context/profileContext";
 import { ColorValue, StyleSheet, View } from "react-native";
+import { useEffect, useRef, useState } from "react";
+import { ProfileProps } from "../../utils/parseA7P";
+import { CurrentConditionsProps } from "../../utils/ballisticsCalculator";
+import RecalculateChip from "../widgets/recalculateChip";
 
 
 const CalculationStateCard = (cardStyle) => {
 
     const { theme } = useTheme();
     const {
-        hitResult, calcState, setCalcState,
+        calcState, currentConditions,
         autoRefresh,
-        profileProperties, fire
+        profileProperties, hitResult, setCalcState
     } = useProfile();
+
+    const [refreshable, setRefreshable] = useState(false)
+
+    const prevProfilePropertiesRef = useRef<ProfileProps | null>(null);
+    const prevCurrentConditionsRef = useRef<CurrentConditionsProps | null>(null);
+
+    useEffect(() => {
+
+        if (autoRefresh) {
+            setRefreshable(false)
+            return
+        } 
+
+        if ([CalculationState.ConditionsUpdated, CalculationState.ZeroUpdated].includes(calcState)) {
+
+            const conChange = prevCurrentConditionsRef.current != currentConditions;
+            const profChange = prevProfilePropertiesRef.current != profileProperties;
+    
+            if (conChange || profChange) {
+                setRefreshable(true)
+            } else {
+                setRefreshable(false)
+            }
+    
+        } else {
+            setRefreshable(false)
+        }
+
+        // Update the ref with the current profileProperties
+        prevProfilePropertiesRef.current = profileProperties;
+        prevCurrentConditionsRef.current = currentConditions;
+    }, [profileProperties, calcState]);
 
     let title: string;
     let details: string;
@@ -32,7 +68,7 @@ const CalculationStateCard = (cardStyle) => {
                 details = "Shot trajectory calculation success"
                 backgroundColor = "#00AA8D"
                 fontColor = theme.colors.onPrimary
-                showButton = true
+                showButton = false
                 break;
             case CalculationState.ConditionsUpdated:
                 title = "WARNING!"
@@ -98,10 +134,12 @@ const CalculationStateCard = (cardStyle) => {
                     <Text variant="bodyLarge" style={{ ...styles.column, color: fontColor }}>
                         {title}: {details}
                     </Text>
-                    {showButton && <Button mode="contained" icon={"reload"} style={{
+                    <RecalculateChip visible={showButton} style={{  }} />
+
+                    {/* {showButton && <Button mode="contained" icon={"reload"} style={{
                         ...styles.column,
                         backgroundColor: theme.colors.onPrimaryContainer,
-                    }} textColor={theme.colors.primaryContainer} onPress={fire} >Refresh</Button>}
+                    }} textColor={theme.colors.primaryContainer} onPress={fire} >Refresh</Button>} */}
                 </View>
             }>
 
