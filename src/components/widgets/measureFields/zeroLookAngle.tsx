@@ -36,7 +36,7 @@ export const ZeroLookAngleField: React.FC<ZeroLookAngleFieldProps> = () => {
 
     const onValueChange = (value: number): void => {
         return debouncedProfileUpdate({
-            [fieldProps.key]: Math.round(new Measure.Angular(value, prefUnit).In(Unit.Degree) * 10)
+            [fieldProps.key]: new Measure.Angular(value, prefUnit).In(Unit.Degree) * 10 // FIXME: Math.round ??
         })
     }
 

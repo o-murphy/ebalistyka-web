@@ -1,11 +1,13 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import CustomCard from "./customCard";
 import WindDirectionPicker from "../widgets/windDirectionPicker";
 import { MeasureFormFieldProps } from "../widgets/measureFields/measureField/measureField";
-import { useProfile } from "../../context/profileContext";
+import { CalculationState, useProfile } from "../../context/profileContext";
 import debounce from "../../utils/debounce";
 import { preferredUnits, UNew, UnitProps, Unit, Measure } from "js-ballistics/dist/v2";
 import MeasureFormField from "../widgets/measureFields/measureField";
+import RecalculateChip from "../widgets/recalculateChip";
+import { CurrentConditionsProps } from "../../utils/ballisticsCalculator";
 
 
 interface WindCardProps {
@@ -14,17 +16,35 @@ interface WindCardProps {
 }
 
 const CurrentWindCard: React.FC<WindCardProps> = ({ label = "Zero wind direction and speed", expanded = true }) => {
-    const { currentConditions, updateCurrentConditions } = useProfile();
+    const { currentConditions, updateCurrentConditions, calcState, autoRefresh } = useProfile();
     const debouncedUpdateConditions = useCallback(debounce(updateCurrentConditions, 350), [updateCurrentConditions]);
 
     const [windDir, setWindDir] = useState(currentConditions.windDirection)
     const [windSpeed, setWindSpeed] = useState(currentConditions.windSpeed)
 
-    // const windSpeedValue = UNew.MPS(windSpeed).In(preferredUnits.velocity)
+    const [refreshable, setRefreshable] = useState(false)
 
-    // const setWindSpeedValue = (value) => {
-    //     setWindSpeed(new Measure.Velocity(value, currentConditions.windSpeed).In(Unit.Meter))
-    // }
+    const prevCurrentConditionsRef = useRef<CurrentConditionsProps | null>(null);
+
+    useEffect(() => {
+
+        if ([CalculationState.ConditionsUpdated].includes(calcState) && !autoRefresh) {
+            const windDirection = prevCurrentConditionsRef.current?.windDirection !== currentConditions.windDirection;
+            const stepSpeed = prevCurrentConditionsRef.current?.windSpeed !== currentConditions.windSpeed;
+    
+            if (windDirection || stepSpeed) {
+                setRefreshable(true)
+            } else {
+                setRefreshable(false)
+            }
+    
+        } else {
+            setRefreshable(false)
+        }
+
+        // Update the ref with the current profileProperties
+        prevCurrentConditionsRef.current = currentConditions;
+    }, [currentConditions, calcState]);
 
     const unitProps = UnitProps[preferredUnits.velocity]
 
@@ -55,6 +75,7 @@ const CurrentWindCard: React.FC<WindCardProps> = ({ label = "Zero wind direction
 
     return (
         <CustomCard title={label} expanded={expanded}>
+            <RecalculateChip visible={refreshable} style={{  }} />
             <WindDirectionPicker
                 style={{ alignItems: 'center' }}
                 value={windDir}

@@ -25,6 +25,7 @@ interface ProfileContextType {
   setCalcState: React.Dispatch<React.SetStateAction<CalculationState>>;
   autoRefresh: boolean;
   setAutoRefresh: React.Dispatch<React.SetStateAction<boolean>>;
+  zero: () => void;
   fire: () => void;
 }
 
@@ -56,9 +57,8 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
   }, []);
 
   useEffect(() => {
-    if (profileProperties) {
-      const preparedCalculator = prepareCalculator(profileProperties);
-      setCalculator(preparedCalculator);
+    if (profileProperties && autoRefresh) {
+      zero()
       saveProfileProperties(); // Save profile properties whenever it changes
     }
   }, [profileProperties]);
@@ -70,14 +70,22 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
     }
   }, [currentConditions, calculator, autoRefresh]);
 
+  const zero = () => {
+    const preparedCalculator = prepareCalculator(profileProperties);
+    setCalculator(preparedCalculator);
+    return preparedCalculator
+  }
+
   const fire = () => {
-    if (calculator) {
-      if (!calculator.error) {
-        const result = makeShot(calculator, currentConditions);
+    const currentCalc: PreparedZeroData = autoRefresh ? calculator : zero()
+
+    if (currentCalc) {
+      if (!currentCalc.error) {
+        const result = makeShot(currentCalc, currentConditions);
         setHitResult(result);
         setCalcState(result instanceof Error ? CalculationState.Error : CalculationState.Complete);
       } else {
-        setHitResult(calculator.error);
+        setHitResult(currentCalc.error);
         setCalcState(CalculationState.Error);
       }
     }
@@ -167,6 +175,7 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
       setCalcState,
       autoRefresh,
       setAutoRefresh,
+      zero,
       fire,
     }}>
       {children}

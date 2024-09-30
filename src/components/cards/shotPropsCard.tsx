@@ -17,14 +17,14 @@ interface ShotParamsCardProps {
 
 const ShotParamsCard: React.FC<ShotParamsCardProps> = ({ label = "Shot properties", expanded = true }) => {
 
-    const { calcState, currentConditions } = useProfile()
+    const { calcState, currentConditions, autoRefresh } = useProfile()
     const [refreshable, setRefreshable] = useState(false)
 
     const prevCurrentConditionsRef = useRef<CurrentConditionsProps | null>(null);
 
     useEffect(() => {
 
-        if ([CalculationState.ConditionsUpdated].includes(calcState)) {
+        if ([CalculationState.ConditionsUpdated].includes(calcState) && !autoRefresh) {
             const rangeUpd = prevCurrentConditionsRef.current?.trajectoryRange !== currentConditions.trajectoryRange;
             const stepUpd = prevCurrentConditionsRef.current?.trajectoryStep !== currentConditions.trajectoryStep;
     
@@ -48,7 +48,7 @@ const ShotParamsCard: React.FC<ShotParamsCardProps> = ({ label = "Shot propertie
             expanded={expanded}
             iconButton={null}
         >
-            <RecalculateChip visible={refreshable} style={{ marginHorizontal: 4 }} />
+            <RecalculateChip visible={refreshable} style={{  }} />
             <TrajectoryRangeField />
             <TrajectoryStepField />
         </CustomCard>

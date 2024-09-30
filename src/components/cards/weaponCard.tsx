@@ -5,10 +5,12 @@ import SimpleDialog from "../dialogs/simpleDialog";
 import { preferredUnits, UNew } from "js-ballistics/dist/v2";
 import { StyleSheet, View } from "react-native";
 import { styles as measureFormFieldStyles } from "../widgets/measureFields/measureField/measureField";
-import { useProfile } from "../../context/profileContext";
+import { CalculationState, useProfile } from "../../context/profileContext";
 import debounce from "../../utils/debounce";
 import { Dropdown } from "react-native-paper-dropdown";
 import { SightHeightField, TwistField, ZeroLookAngleField } from "../widgets/measureFields";
+import { ProfileProps } from "../../utils/parseA7P";
+import RecalculateChip from "../widgets/recalculateChip";
 
 
 interface WeaponCardProps {
@@ -16,12 +18,39 @@ interface WeaponCardProps {
 }
 
 const WeaponCard: React.FC<WeaponCardProps> = ({ expanded = true }) => {
-    const { profileProperties, updateProfileProperties } = useProfile();
+    const { profileProperties, updateProfileProperties, calcState, autoRefresh } = useProfile();
     const [curName, setCurName] = useState<string>("My Rifle");
 
 
     // Use debounce for the profile name update to avoid excessive updates
     const debouncedProfileUpdate = useCallback(debounce(updateProfileProperties, 350), [updateProfileProperties]);
+
+    const [refreshable, setRefreshable] = useState(false)
+
+    const prevProfilePropertiesRef = useRef<ProfileProps | null>(null);
+
+    useEffect(() => {
+
+        if ([CalculationState.ZeroUpdated].includes(calcState) && !autoRefresh) {
+            const sh = prevProfilePropertiesRef.current?.scHeight !== profileProperties.scHeight;
+            const twist = prevProfilePropertiesRef.current?.rTwist !== profileProperties.rTwist;
+            const twDir = prevProfilePropertiesRef.current?.twistDir !== profileProperties.twistDir;
+            const look = prevProfilePropertiesRef.current?.cZeroWPitch !== profileProperties.cZeroWPitch;
+            const zeroD = prevProfilePropertiesRef.current?.cZeroDistanceIdx !== profileProperties.cZeroDistanceIdx;
+    
+            if (sh || twist || twDir || look || zeroD) {
+                setRefreshable(true)
+            } else {
+                setRefreshable(false)
+            }
+    
+        } else {
+            setRefreshable(false)
+        }
+
+        // Update the ref with the current profileProperties
+        prevProfilePropertiesRef.current = profileProperties;
+    }, [profileProperties, calcState]);
 
     useEffect(() => {
         if (profileProperties) {
@@ -51,6 +80,7 @@ const WeaponCard: React.FC<WeaponCardProps> = ({ expanded = true }) => {
             //     {/* <RecalculateChip visible={refreshable} style={{ marginHorizontal: 4 }} /> */}
             // </View>
         } expanded={expanded}>
+            <RecalculateChip visible={refreshable} style={{ marginVertical: 8 }} />
 
             <SimpleDialog
                 style={measureFormFieldStyles.nameContainer}
