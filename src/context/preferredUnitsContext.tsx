@@ -1,5 +1,6 @@
 import { Unit } from 'js-ballistics/dist/v2';
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Define the type for the preferred units state
 interface PreferredUnits {
@@ -28,6 +29,29 @@ interface PreferredUnitsProviderProps {
   children: ReactNode;
 }
 
+const STORAGE_KEY = '@preferred_units';
+
+// Function to save preferredUnits to AsyncStorage
+const savePreferredUnitsToStorage = async (units: PreferredUnits) => {
+  try {
+    const jsonValue = JSON.stringify(units);
+    await AsyncStorage.setItem(STORAGE_KEY, jsonValue);
+  } catch (e) {
+    console.error('Failed to save preferred units to AsyncStorage', e);
+  }
+};
+
+// Function to load preferredUnits from AsyncStorage
+const loadPreferredUnitsFromStorage = async (): Promise<PreferredUnits | null> => {
+  try {
+    const jsonValue = await AsyncStorage.getItem(STORAGE_KEY);
+    return jsonValue != null ? JSON.parse(jsonValue) : null;
+  } catch (e) {
+    console.error('Failed to load preferred units from AsyncStorage', e);
+    return null;
+  }
+};
+
 export const PreferredUnitsProvider: React.FC<PreferredUnitsProviderProps> = ({ children }) => {
   const [preferredUnits, setPreferredUnits] = useState<PreferredUnits>({
     distance: Unit.Yard,
@@ -41,6 +65,22 @@ export const PreferredUnitsProvider: React.FC<PreferredUnitsProviderProps> = ({ 
     angular: Unit.Degree,
     weight: Unit.Grain,
   });
+
+  // Load preferred units from AsyncStorage on component mount
+  useEffect(() => {
+    const loadUnits = async () => {
+      const storedUnits = await loadPreferredUnitsFromStorage();
+      if (storedUnits) {
+        setPreferredUnits(storedUnits);
+      }
+    };
+    loadUnits();
+  }, []);
+
+  // Store preferred units to AsyncStorage whenever they are updated
+  useEffect(() => {
+    savePreferredUnitsToStorage(preferredUnits);
+  }, [preferredUnits]);
 
   return (
     <PreferredUnitsContext.Provider value={{ preferredUnits, setPreferredUnits }}>
