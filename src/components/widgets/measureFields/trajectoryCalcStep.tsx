@@ -6,37 +6,41 @@ import debounce from "../../../utils/debounce";
 import { usePreferredUnits } from "../../../context/preferredUnitsContext";
 import getFractionDigits from "../../../utils/fractionConvertor";
 
-export interface CurrentPressureFieldProps extends Omit<MeasureFormFieldProps, 'value' | 'suffix' | 'onValueChange'> { }
+export interface TrajectoryStepFieldProps extends Omit<MeasureFormFieldProps, 'value' | 'suffix' | 'onValueChange'> { }
 
 
-export const CurrentPressureField: React.FC<CurrentPressureFieldProps> = () => {
+export const TrajectoryStepField: React.FC<TrajectoryStepFieldProps> = () => {
     const { currentConditions, updateCurrentConditions } = useProfile();
     const debouncedUpdateConditions = useCallback(debounce(updateCurrentConditions, 350), [updateCurrentConditions]);
 
     const { preferredUnits } = usePreferredUnits()
 
-    const prefUnit = preferredUnits.pressure
-    const accuracy = getFractionDigits(1, UNew.hPa(1).In(prefUnit))
+    const prefUnit = preferredUnits.distance
+    const accuracy = getFractionDigits(1, UNew.Meter(1).In(prefUnit))
 
     const fieldProps: Partial<MeasureFormFieldProps> = {
-        key: "pressure",
-        label: "Pressure",
-        icon: "speedometer",
+        key: "trajectoryStep",
+        label: "Trajectory step",
+        icon: "",
         fractionDigits: accuracy,
         step: 1 / (10 ** accuracy),
         suffix: UnitProps[prefUnit].symbol,
-        minValue: UNew.hPa(500).In(prefUnit),
-        maxValue:UNew.hPa(1300).In(prefUnit),
+        minValue: UNew.Meter(10).In(prefUnit),
+        maxValue: UNew.Meter(500).In(prefUnit),
     }
 
-    const value: number = UNew.hPa(
-        currentConditions?.[fieldProps.key] ? 
-        currentConditions[fieldProps.key] : 1000
-    ).In(prefUnit)
+    console.log("Range", currentConditions)
 
+
+    const value: number = UNew.Meter(
+        currentConditions?.[fieldProps.key] ? 
+        currentConditions[fieldProps.key] : 100
+    ).In(prefUnit)
+    
     const onValueChange = (value: number): void => {
+        console.log("On Range", value)
         return debouncedUpdateConditions({
-            [fieldProps.key]: new Measure.Pressure(value, prefUnit).In(Unit.hPa)
+            [fieldProps.key]: new Measure.Distance(value, prefUnit).In(Unit.Meter)
         })
     }
 

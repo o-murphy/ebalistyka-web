@@ -30,8 +30,12 @@ export const BulletWeightField: React.FC<BulletWeightFieldProps> = () => {
         maxValue: UNew.Grain(6.5535).In(prefUnit),
     }
 
-    const value: number = profileProperties ? UNew.Grain(profileProperties[fieldProps.key] / 10).In(prefUnit) : 0
-
+    const value: number = UNew.Grain(
+        profileProperties?.[fieldProps.key] ? 
+        profileProperties[fieldProps.key] / 10 : 
+        300
+    ).In(prefUnit)
+    
     const onValueChange = (value: number): void => {
         return debouncedProfileUpdate({
             [fieldProps.key]: Math.round(new Measure.Weight(value, prefUnit).In(Unit.Grain) * 10)

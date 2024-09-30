@@ -29,7 +29,10 @@ export const TwistField: React.FC<TwistFieldProps> = () => {
         maxValue: UNew.Inch(100).In(prefUnit),
     }
 
-    const value: number = profileProperties ? UNew.Inch(profileProperties[fieldProps.key] / 100).In(prefUnit) : 0
+    const value: number = UNew.Inch(
+        profileProperties?.[fieldProps.key] ? 
+        profileProperties[fieldProps.key] / 100 : 10
+    ).In(prefUnit)
 
     const onValueChange = (value: number): void => {
         return debouncedProfileUpdate({

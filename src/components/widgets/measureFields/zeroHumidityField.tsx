@@ -23,7 +23,7 @@ export const ZeroHumidityField: React.FC<ZeroHumidityFieldProps> = () => {
         maxValue: 100,
     }
 
-    const value: number = profileProperties ? profileProperties[fieldProps.key] : 0
+    const value: number = profileProperties?.[fieldProps.key] ? profileProperties[fieldProps.key] : 0
 
     const onValueChange = (value: number): void => {
         return debouncedProfileUpdate({

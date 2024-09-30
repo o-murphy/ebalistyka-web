@@ -32,6 +32,9 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
     windSpeed: 0,
     windDirection: 0,
     lookAngle: 0,
+    targetDistance: 100,
+    trajectoryStep: 100,
+    trajectoryRange: 2000
   });
 
   const [calcState, setCalcState] = useState<number>(0);

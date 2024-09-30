@@ -29,7 +29,10 @@ export const ZeroTemperatureField: React.FC<ZeroTemperatureFieldProps> = () => {
         maxValue: UNew.Celsius(50).In(prefUnit),
     }
 
-    const value: number = profileProperties ? UNew.Celsius(profileProperties[fieldProps.key]).In(prefUnit) : 0
+    const value: number = UNew.Celsius(
+        profileProperties?.[fieldProps.key] ? 
+        profileProperties[fieldProps.key] : 15
+    ).In(prefUnit)
 
     const onValueChange = (value: number): void => {
         return debouncedProfileUpdate({

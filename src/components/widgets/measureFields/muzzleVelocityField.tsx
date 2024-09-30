@@ -30,7 +30,10 @@ export const MuzzleVelocityField: React.FC<MuzzleVelocityFieldProps> = () => {
         maxValue: UNew.MPS(3000.0).In(prefUnit),
     }
 
-    const value: number = profileProperties ? UNew.MPS(profileProperties[fieldProps.key] / 10).In(prefUnit) : 0
+    const value: number = UNew.MPS(
+        profileProperties?.[fieldProps.key] ? 
+        profileProperties[fieldProps.key] / 10 : 800
+    ).In(prefUnit)
 
     const onValueChange = (value: number): void => {
         return debouncedProfileUpdate({

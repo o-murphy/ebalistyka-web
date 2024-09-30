@@ -29,7 +29,10 @@ export const ZeroLookAngleField: React.FC<ZeroLookAngleFieldProps> = () => {
         maxValue: UNew.Degree(90).In(prefUnit),
     }
 
-    const value: number = profileProperties ? UNew.Degree(profileProperties[fieldProps.key] / 10).In(prefUnit) : 0
+    const value: number = UNew.Degree(
+        profileProperties?.[fieldProps.key] ? 
+        profileProperties[fieldProps.key] / 10 : 0
+    ).In(prefUnit)
 
     const onValueChange = (value: number): void => {
         return debouncedProfileUpdate({

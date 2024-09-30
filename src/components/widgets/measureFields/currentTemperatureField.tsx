@@ -29,7 +29,10 @@ export const CurrentTemperatureField: React.FC<CurrentTemperatureFieldProps> = (
         maxValue: UNew.Celsius(50).In(prefUnit),
     }
 
-    const value: number = currentConditions ? UNew.Celsius(currentConditions[fieldProps.key]).In(prefUnit) : 0
+    const value: number = UNew.Celsius(
+        currentConditions?.[fieldProps.key] ? 
+        currentConditions[fieldProps.key] : 15
+    ).In(prefUnit)
 
     const onValueChange = (value: number): void => {
         return debouncedUpdateConditions({

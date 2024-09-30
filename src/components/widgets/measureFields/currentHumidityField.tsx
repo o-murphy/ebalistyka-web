@@ -22,7 +22,7 @@ export const CurrentHumidityField: React.FC<CurrentHumidityFieldProps> = () => {
         maxValue: 100,
     }
 
-    const value: number = currentConditions ? currentConditions[fieldProps.key] : 0
+    const value: number = currentConditions?.[fieldProps.key] ? currentConditions[fieldProps.key] : 0
 
     const onValueChange = (value: number): void => {
         return debouncedUpdateConditions({

@@ -17,7 +17,7 @@ export const SightHeightField: React.FC<SightHeightFieldProps> = () => {
     const { preferredUnits } = usePreferredUnits()
 
     const prefUnit = preferredUnits.sizes
-    const accuracy = getFractionDigits(0.01, UNew.Inch(1).In(prefUnit))
+    const accuracy = getFractionDigits(0.1, UNew.Inch(1).In(prefUnit))
 
     const fieldProps: Partial<MeasureFormFieldProps> = {
         key: "scHeight",
@@ -30,7 +30,10 @@ export const SightHeightField: React.FC<SightHeightFieldProps> = () => {
         maxValue: UNew.Inch(5).In(prefUnit),
     }
 
-    const value: number = profileProperties ? UNew.Millimeter(profileProperties[fieldProps.key]).In(prefUnit) : 0
+    const value: number = UNew.Millimeter(
+        profileProperties?.[fieldProps.key] ? 
+        profileProperties[fieldProps.key] : 2
+    ).In(prefUnit)
 
     const onValueChange = (value: number): void => {
         return debouncedProfileUpdate({

@@ -29,7 +29,10 @@ export const CurrentLookAngleField: React.FC<CurrentLookAngleFieldProps> = () =>
         maxValue: UNew.Degree(90).In(prefUnit),
     }
 
-    const value: number = currentConditions ? UNew.Degree(currentConditions[fieldProps.key]).In(prefUnit) : 0
+    const value: number = UNew.Degree(
+        currentConditions?.[fieldProps.key] ? 
+        currentConditions[fieldProps.key] : 0
+    ).In(prefUnit)
 
     const onValueChange = (value: number): void => {
         return debouncedUpdateConditions({

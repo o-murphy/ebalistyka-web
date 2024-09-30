@@ -29,7 +29,11 @@ export const CaliberField: React.FC<CaliberFieldProps> = () => {
         maxValue: UNew.Inch(65.535).In(prefUnit),
     }
 
-    const value: number = profileProperties ? UNew.Inch(profileProperties[fieldProps.key] / 1000).In(prefUnit) : 0
+    const value: number = UNew.Inch(
+        profileProperties?.[fieldProps.key] ? 
+        profileProperties[fieldProps.key] / 1000 : 
+        0.338
+    ).In(prefUnit)
 
     const onValueChange = (value: number): void => {
         return debouncedProfileUpdate({

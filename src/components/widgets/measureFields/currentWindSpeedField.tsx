@@ -29,7 +29,10 @@ export const WindSpeedField: React.FC<WindSpeedFieldProps> = () => {
         maxValue: UNew.MPS(100).In(prefUnit),
     }
 
-    const value: number = currentConditions ? UNew.MPS(currentConditions[fieldProps.key]).In(prefUnit) : 0
+    const value: number = UNew.MPS(
+        currentConditions?.[fieldProps.key] ? 
+        currentConditions[fieldProps.key] : 0
+    ).In(prefUnit)
 
     const onValueChange = (value: number): void => {
         return debouncedUpdateConditions({

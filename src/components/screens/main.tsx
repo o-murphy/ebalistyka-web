@@ -14,6 +14,7 @@ import { TrajectoryTable, TrajectoryChart, WindageChart, DragChart } from '../wi
 import CustomCard from '../cards/customCard';
 import { useProfile } from '../../context/profileContext';
 import CalculationStateCard from '../cards/calculationStateCard';
+import ShotParamsCard from '../cards/shotPropsCard';
 
 
 
@@ -83,6 +84,7 @@ export default function MainScreen() {
                         >
                             <CurrentConditionsCard expanded={true} label='Current conditions' />
                             <CurrentWindCard expanded={true} label='Current wind' />
+                            <ShotParamsCard expanded={true} label="Shot parameters" />
                         </ScrollView>
 
                     </View>
