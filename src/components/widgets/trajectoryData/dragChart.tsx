@@ -34,7 +34,6 @@ const DragChart = () => {
             // Conditionally add the dragTable dataset only if it exists
             ...(dragTable ? [{
                 data: dragTable.map(row => row.CD),
-                color: () => "blue" // You can specify a color here if needed
             }] : []),
             {
                 data: customDragTable.map(row => row.CD),
@@ -43,7 +42,7 @@ const DragChart = () => {
         ],
         legend: [
             // Conditionally add the "Standard" legend only if dragTable exists
-            ...(dragTable ? ["Standard"] : []),
+            ...(dragTable ? [`Standard ${profileProperties?.bcType}`] : []),
             "Calculated"
         ]
     };
