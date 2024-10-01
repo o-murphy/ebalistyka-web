@@ -78,11 +78,11 @@ const DoubleSpinBox: React.FC<DoubleSpinBoxProps> = ({
 
     if (key === '-' || key === '+') {
       handleInputChange(!currentValue.includes('-') ? '-' + currentValue : currentValue.slice(1));
-    } else if (!isNaN(Number(key))) {
-      const appendedText = currentValue.replace(/(?!^-)[^0-9]/g, '') + key.replace(/[^0-9]/g, '');
-      handleInputChange(appendedText);
-    } else if (key === 'Backspace') {
-      handleInputChange(parseFloat(currentValue) === 0 ? "0" : currentValue.slice(0, -1));
+    // } else if (!isNaN(Number(key))) {
+    //   const appendedText = currentValue.replace(/(?!^-)[^0-9]/g, '') + key.replace(/[^0-9]/g, '');
+    //   handleInputChange(appendedText);
+    // } else if (key === 'Backspace') {
+    //   handleInputChange(parseFloat(currentValue) === 0 ? "0" : currentValue.slice(0, -1));
     } else {
       const numValue = parseFloat(currentValue);
       if (key === 'ArrowUp') {
@@ -93,6 +93,12 @@ const DoubleSpinBox: React.FC<DoubleSpinBoxProps> = ({
     }
   };
 
+  const handleInput = (e) => {
+    console.log(e)
+    console.log(e.text, e.data)
+    handleInputChange(e.nativeEvent.text)
+  }
+
   return (
     <View style={style}>
       <TextInput
@@ -102,6 +108,7 @@ const DoubleSpinBox: React.FC<DoubleSpinBoxProps> = ({
         error={!!error}
         value={currentValue}
         onKeyPress={processKeyPress}
+        onChange={handleInput}
       />
       <HelperText type="error" visible={!!error}>
         {error}

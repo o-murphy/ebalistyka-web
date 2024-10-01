@@ -8,6 +8,7 @@ import debounce from "../../utils/debounce";
 import { MuzzleVelocityField, PowderSensField } from "../widgets/measureFields";
 import { ProfileProps } from "../../utils/parseA7P";
 import RecalculateChip from "../widgets/recalculateChip";
+import { TextInputChip } from "../widgets/inputChip";
 
 interface ProjectileCardProps {
     expanded?: boolean;
@@ -15,10 +16,7 @@ interface ProjectileCardProps {
 
 const ProjectileCard: React.FC<ProjectileCardProps> = ({ expanded = true }) => {
 
-    const { profileProperties, updateProfileProperties, calcState, autoRefresh } = useProfile();
-    const [curName, setCurName] = useState<string>("My Cartridge");
-
-    const debouncedUpdateProfileProperties = useCallback(debounce(updateProfileProperties, 350), [updateProfileProperties]);
+    const { profileProperties, debouncedProfileUpdate, calcState, autoRefresh } = useProfile();
 
     const [refreshable, setRefreshable] = useState(false)
 
@@ -44,15 +42,6 @@ const ProjectileCard: React.FC<ProjectileCardProps> = ({ expanded = true }) => {
         prevProfilePropertiesRef.current = profileProperties;
     }, [profileProperties, calcState]);
 
-    useEffect(() => {
-        if (profileProperties) {
-            setCurName(profileProperties.profileName);
-        }
-    }, [profileProperties]);
-
-    const acceptName = (): void => debouncedUpdateProfileProperties({ cartridgeName: curName });
-    const declineName = (): void => setCurName(profileProperties?.cartridgeName);
-
     if (!profileProperties) {
         return (
             <CustomCard title={"Projectile"} expanded={expanded} />
@@ -63,20 +52,12 @@ const ProjectileCard: React.FC<ProjectileCardProps> = ({ expanded = true }) => {
         <CustomCard title={"Projectile"} expanded={expanded}>
             <RecalculateChip visible={refreshable} style={{ marginVertical: 8 }} />
 
-            <SimpleDialog
-                style={measureFormFieldStyles.nameContainer}
+            <TextInputChip 
+                icon={"card-bulleted-outline"} 
                 label={"Projectile name"}
-                icon={"card-bulleted-outline"}
-                text={profileProperties?.cartridgeName}
-                onAccept={acceptName}
-                onDecline={declineName}
-            >
-                <TextInput
-                    value={curName}
-                    onChangeText={setCurName}
-                    maxLength={50}
-                />
-            </SimpleDialog>
+                text={profileProperties?.cartridgeName ?? "My projectile"}
+                onTextChange={text => debouncedProfileUpdate({ cartridgeName: text })}
+            />
 
             <MuzzleVelocityField />
             <PowderSensField />

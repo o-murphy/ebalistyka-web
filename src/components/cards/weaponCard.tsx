@@ -11,6 +11,7 @@ import { Dropdown } from "react-native-paper-dropdown";
 import { SightHeightField, TwistField, ZeroLookAngleField } from "../widgets/measureFields";
 import { ProfileProps } from "../../utils/parseA7P";
 import RecalculateChip from "../widgets/recalculateChip";
+import { TextInputChip } from "../widgets/inputChip";
 
 
 interface WeaponCardProps {
@@ -18,12 +19,7 @@ interface WeaponCardProps {
 }
 
 const WeaponCard: React.FC<WeaponCardProps> = ({ expanded = true }) => {
-    const { profileProperties, updateProfileProperties, calcState, autoRefresh } = useProfile();
-    const [curName, setCurName] = useState<string>("My Rifle");
-
-
-    // Use debounce for the profile name update to avoid excessive updates
-    const debouncedProfileUpdate = useCallback(debounce(updateProfileProperties, 350), [updateProfileProperties]);
+    const { profileProperties, debouncedProfileUpdate, calcState, autoRefresh } = useProfile();
 
     const [refreshable, setRefreshable] = useState(false)
 
@@ -52,15 +48,6 @@ const WeaponCard: React.FC<WeaponCardProps> = ({ expanded = true }) => {
         prevProfilePropertiesRef.current = profileProperties;
     }, [profileProperties, calcState]);
 
-    useEffect(() => {
-        if (profileProperties) {
-            setCurName(profileProperties.profileName);
-        }
-    }, [profileProperties]);
-
-    const acceptName = (): void => debouncedProfileUpdate({ profileName: curName });
-    const declineName = (): void => setCurName(profileProperties?.profileName);
-
     if (!profileProperties) {
         return (
             <CustomCard title={"Weapon"} expanded={expanded} />
@@ -71,38 +58,22 @@ const WeaponCard: React.FC<WeaponCardProps> = ({ expanded = true }) => {
     const VALUE = profileProperties.cZeroDistanceIdx.toFixed(0)
 
     return (
-        <CustomCard title={
-            "Weapon"
-            // <View
-            //     style={measureFormFieldStyles.row}
-            // >
-            //     <Text>Weapon</Text>
-            //     {/* <RecalculateChip visible={refreshable} style={{ marginHorizontal: 4 }} /> */}
-            // </View>
-        } expanded={expanded}>
+        <CustomCard title={"Weapon"} expanded={expanded}>
             <RecalculateChip visible={refreshable} style={{ marginVertical: 8 }} />
 
-            <SimpleDialog
-                style={measureFormFieldStyles.nameContainer}
+            <TextInputChip 
+                icon={"card-bulleted-outline"} 
                 label={"Weapon name"}
-                icon={"card-bulleted-outline"}
-                text={profileProperties?.profileName}
-                onAccept={acceptName}
-                onDecline={declineName}
-            >
-                <TextInput
-                    value={curName}
-                    onChangeText={setCurName}
-                    maxLength={50}
-                />
-            </SimpleDialog>
+                text={profileProperties?.profileName ?? "My rifle"}
+                onTextChange={text => debouncedProfileUpdate({ profileName: text })}
+            />s
 
             <SightHeightField />
             <TwistField />
 
-            <View style={{ ...measureFormFieldStyles.row }}>
+            <View style={{ ...styles.row }}>
                 <SegmentedButtons
-                    style={[measureFormFieldStyles.column, styles.segment]}
+                    style={[styles.segment]}
                     buttons={twistStates}
                     value={profileProperties?.twistDir}
                     onValueChange={value => debouncedProfileUpdate({ twistDir: value })}
@@ -128,6 +99,7 @@ const WeaponCard: React.FC<WeaponCardProps> = ({ expanded = true }) => {
     );
 };
 
+
 export const inputStyles = StyleSheet.create({
     style: {
         height: 24,
@@ -142,10 +114,23 @@ export const inputStyles = StyleSheet.create({
 
 const styles = StyleSheet.create({
     segment: {
-        flex: 2,
+        flex: 1,
         justifyContent: "center",
     },
     buttons: {},
+
+    row: {
+        flexDirection: "row",
+        marginVertical: 4
+    },
+    column: {
+        flexDirection: "column",
+        alignSelf: "center",
+        marginHorizontal: 4,
+    },
+    label: {
+        fontSize: 14
+    }
 });
 
 const twistStates = [

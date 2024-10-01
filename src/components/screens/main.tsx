@@ -17,7 +17,6 @@ import CalculationStateCard from '../cards/calculationStateCard';
 import ShotParamsCard from '../cards/shotPropsCard';
 
 
-
 export default function MainScreen() {
 
     const { theme } = useTheme();

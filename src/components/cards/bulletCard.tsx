@@ -2,23 +2,21 @@ import { Text, TextInput, Chip } from "react-native-paper";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import CustomCard from "./customCard";
 import SimpleDialog from "../dialogs/simpleDialog";
-import { View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { styles as measureFormFieldStyles } from "../widgets/measureFields/measureField/measureField";
 import { CalculationState, useProfile } from "../../context/profileContext";
 import debounce from "../../utils/debounce";
 import { BulletLengthField, BulletWeightField, CaliberField } from "../widgets/measureFields";
 import { ProfileProps } from "../../utils/parseA7P";
 import RecalculateChip from "../widgets/recalculateChip";
+import { TextInputChip } from "../widgets/inputChip";
 
 interface BulletCardProps {
     expanded?: boolean;
 }
 
 const BulletCard: React.FC<BulletCardProps> = ({ expanded = true }) => {
-    const { profileProperties, updateProfileProperties, calcState, autoRefresh } = useProfile();
-    const [curName, setCurName] = useState<string>("My Bullet");
-
-    const debouncedUpdateProfileProperties = useCallback(debounce(updateProfileProperties, 350), [updateProfileProperties]);
+    const { profileProperties, debouncedProfileUpdate, calcState, autoRefresh } = useProfile();
 
     const [refreshable, setRefreshable] = useState(false)
 
@@ -47,15 +45,6 @@ const BulletCard: React.FC<BulletCardProps> = ({ expanded = true }) => {
         prevProfilePropertiesRef.current = profileProperties;
     }, [profileProperties, calcState]);
 
-    useEffect(() => {
-        if (profileProperties) {
-            setCurName(profileProperties.profileName);
-        }
-    }, [profileProperties]);
-
-    const acceptName = (): void => debouncedUpdateProfileProperties({ bulletName: curName });
-    const declineName = (): void => setCurName(profileProperties?.bulletName);
-
     const editDragModel = () => {
         // navigate("DragModelScreen")
         console.log("Edit drag model");
@@ -71,33 +60,25 @@ const BulletCard: React.FC<BulletCardProps> = ({ expanded = true }) => {
         <CustomCard title={"Bullet"} expanded={expanded}>
             <RecalculateChip visible={refreshable} style={{ marginVertical: 8 }} />
 
-            <SimpleDialog
-                style={measureFormFieldStyles.nameContainer}
+            <TextInputChip 
+                icon={"card-bulleted-outline"} 
                 label={"Bullet name"}
-                icon={"card-bulleted-outline"}
-                text={profileProperties?.bulletName}
-                onAccept={acceptName}
-                onDecline={declineName}
-            >
-                <TextInput
-                    value={curName}
-                    onChangeText={setCurName}
-                    maxLength={50}
-                />
-            </SimpleDialog>
+                text={profileProperties?.bulletName ?? "My bullet"}
+                onTextChange={text => debouncedProfileUpdate({ bulletName: text })}
+            />
 
             <CaliberField />
             <BulletWeightField />
             <BulletLengthField />
 
-            <View style={measureFormFieldStyles.row}>
-                <Text style={[measureFormFieldStyles.column, { flex: 1 }, measureFormFieldStyles.label]}>
+            <View style={styles.row}>
+                <Text style={[styles.column, { flex: 1 }, styles.label]}>
                     {"Drag model"}
                 </Text>
                 <Chip
                     icon={"function"}
                     closeIcon="square-edit-outline"
-                    style={[measureFormFieldStyles.column, { flex: 2 }]}
+                    style={[styles.column, { flex: 2 }]}
                     textStyle={{ fontSize: 14 }}
                     onPress={editDragModel}
                     onClose={editDragModel}
@@ -109,5 +90,20 @@ const BulletCard: React.FC<BulletCardProps> = ({ expanded = true }) => {
         </CustomCard>
     );
 };
+
+const styles = StyleSheet.create({
+    row: {
+        flexDirection: "row",
+        marginVertical: 4
+    },
+    column: {
+        flexDirection: "column",
+        alignSelf: "center",
+        marginHorizontal: 4,
+    },
+    label: {
+        fontSize: 14
+    }
+})
 
 export default BulletCard;

@@ -1,8 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { createContext, useState, useContext, useEffect, ReactNode } from 'react';
+import { createContext, useState, useContext, useEffect, ReactNode, useCallback } from 'react';
 import parseA7P, { ProfileProps } from '../utils/parseA7P';
 import { CurrentConditionsProps, makeShot, prepareCalculator, PreparedZeroData } from '../utils/ballisticsCalculator';
 import { HitResult } from 'js-ballistics/dist/v2';
+import debounce from '../utils/debounce';
 
 export enum CalculationState {
   Error = -1,
@@ -27,6 +28,7 @@ interface ProfileContextType {
   setAutoRefresh: React.Dispatch<React.SetStateAction<boolean>>;
   zero: () => void;
   fire: () => void;
+  debouncedProfileUpdate: (props: Partial<ProfileProps>) => void;
 }
 
 export const ProfileContext = createContext<ProfileContextType | null>(null);
@@ -59,20 +61,19 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
   useEffect(() => {
     if (profileProperties && autoRefresh) {
       zero()
-      saveProfileProperties(); // Save profile properties whenever it changes
     }
   }, [profileProperties]);
 
   useEffect(() => {
     if (currentConditions && calculator && autoRefresh) {
       fire();
-      saveCurrentConditions(); // Save current conditions whenever they change
     }
   }, [currentConditions, calculator, autoRefresh]);
 
   const zero = () => {
     const preparedCalculator = prepareCalculator(profileProperties);
     setCalculator(preparedCalculator);
+    saveProfileProperties(); // Save profile properties whenever it changes
     return preparedCalculator
   }
 
@@ -84,6 +85,7 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
         const result = makeShot(currentCalc, currentConditions);
         setHitResult(result);
         setCalcState(result instanceof Error ? CalculationState.Error : CalculationState.Complete);
+        saveCurrentConditions(); // Save current conditions whenever they change
       } else {
         setHitResult(currentCalc.error);
         setCalcState(CalculationState.Error);
@@ -148,6 +150,7 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
     try {
       const profileValue = await AsyncStorage.getItem('profileProperties');
       const conditionsValue = await AsyncStorage.getItem('currentConditions');
+      console.log("Loaded", profileValue)
 
       if (profileValue !== null) {
         setProfileProperties(JSON.parse(profileValue));
@@ -160,6 +163,9 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
       console.error('Failed to load user data:', error);
     }
   };
+
+  const debouncedProfileUpdate = useCallback(debounce(updateProfileProperties, 350), [updateProfileProperties]);
+
 
   return (
     <ProfileContext.Provider value={{
@@ -177,6 +183,8 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
       setAutoRefresh,
       zero,
       fire,
+
+      debouncedProfileUpdate,
     }}>
       {children}
     </ProfileContext.Provider>
