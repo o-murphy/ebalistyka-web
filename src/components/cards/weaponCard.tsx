@@ -5,7 +5,7 @@ import { UNew } from "js-ballistics/dist/v2";
 import { StyleSheet, View } from "react-native";
 import { CalculationState, useProfile } from "../../context/profileContext";
 import { Dropdown } from "react-native-paper-dropdown";
-import { SightHeightField, TwistField, ZeroLookAngleField } from "../widgets/measureFields";
+import { SightHeightField, TwistField, ZeroDistanceField, ZeroLookAngleField } from "../widgets/measureFields";
 import { ProfileProps } from "../../utils/parseA7P";
 import RecalculateChip from "../widgets/recalculateChip";
 import { TextInputChip } from "../widgets/inputChip";
@@ -18,7 +18,6 @@ interface WeaponCardProps {
 
 const WeaponCard: React.FC<WeaponCardProps> = ({ expanded = true }) => {
     const { profileProperties, updateProfileProperties, calcState } = useProfile();
-    const { preferredUnits } = usePreferredUnits()
 
     const [refreshable, setRefreshable] = useState(false)
 
@@ -31,18 +30,16 @@ const WeaponCard: React.FC<WeaponCardProps> = ({ expanded = true }) => {
             const twist = prevProfilePropertiesRef.current?.rTwist !== profileProperties.rTwist;
             const twDir = prevProfilePropertiesRef.current?.twistDir !== profileProperties.twistDir;
             const look = prevProfilePropertiesRef.current?.cZeroWPitch !== profileProperties.cZeroWPitch;
-            const zeroD = prevProfilePropertiesRef.current?.cZeroDistanceIdx !== profileProperties.cZeroDistanceIdx;
-    
-            if (sh || twist || twDir || look || zeroD) {
-                setRefreshable(true)
+            const zeroDistIdx = prevProfilePropertiesRef.current?.cZeroDistanceIdx !== profileProperties.cZeroDistanceIdx;
+            
+            if (sh || twist || twDir || look || zeroDistIdx) {
+                setRefreshable(true)                
             } else {
-                setRefreshable(false)
+                setRefreshable(false)    
             }
-    
-        } else {
-            setRefreshable(false)
-        }
-
+        } 
+        setRefreshable(false)
+        
         // Update the ref with the current profileProperties
         prevProfilePropertiesRef.current = profileProperties;
     }, [profileProperties, calcState]);
@@ -52,9 +49,6 @@ const WeaponCard: React.FC<WeaponCardProps> = ({ expanded = true }) => {
             <CustomCard title={"Weapon"} expanded={expanded} />
         );
     }
-
-    const OPTIONS = profileProperties.distances.map((value, index) => { return { label: UNew.Meter(value / 100).In(preferredUnits.distance).toFixed(0), value: index.toFixed(0) } })
-    const VALUE = profileProperties.cZeroDistanceIdx.toFixed(0)
 
     return (
         <CustomCard title={"Weapon"} expanded={expanded}>
@@ -80,19 +74,7 @@ const WeaponCard: React.FC<WeaponCardProps> = ({ expanded = true }) => {
             </View>
 
             <ZeroLookAngleField />
-
-            <Dropdown
-                label={"Zero distance"}
-                mode={"outlined"}
-                // TODO: Future fix
-                // dense={true}
-                // left={<TextInput.Icon icon={"arrow-left-right-bold"} size={iconSize} style={inputSideStyles.icon} />}
-                options={OPTIONS}
-                value={VALUE}
-                onSelect={value => updateProfileProperties({
-                    cZeroDistanceIdx: (() => { console.log(OPTIONS, value); return parseFloat(value) })()
-                })}
-            />
+            <ZeroDistanceField />
 
         </CustomCard>
     );

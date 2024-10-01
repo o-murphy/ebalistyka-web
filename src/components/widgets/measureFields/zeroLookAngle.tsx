@@ -4,17 +4,15 @@ import { UNew, Unit, UnitProps, Measure } from "js-ballistics/dist/v2"
 import { usePreferredUnits } from "../../../context/preferredUnitsContext";
 import getFractionDigits from "../../../utils/fractionConvertor";
 
-export interface ZeroLookAngleFieldProps extends Omit<MeasureFormFieldProps, 'value' | 'suffix' | 'onValueChange'> { }
 
-
-export const ZeroLookAngleField: React.FC<ZeroLookAngleFieldProps> = () => {
+export const ZeroLookAngleField = () => {
     const { profileProperties, updateProfileProperties } = useProfile();
 
     const { preferredUnits } = usePreferredUnits()
 
     const prefUnit = preferredUnits.angular
     const accuracy = getFractionDigits(0.01, UNew.MIL(1).In(prefUnit))
-    
+
     const fieldProps: Partial<MeasureFormFieldProps> = {
         fKey: "cZeroWPitch",
         label: "Look angle",
@@ -27,8 +25,8 @@ export const ZeroLookAngleField: React.FC<ZeroLookAngleFieldProps> = () => {
     }
 
     const value: number = UNew.Degree(
-        profileProperties?.[fieldProps.fKey] ? 
-        profileProperties[fieldProps.fKey] / 10 : 0
+        profileProperties?.[fieldProps.fKey] ?
+            profileProperties[fieldProps.fKey] / 10 : 0
     ).In(prefUnit)
 
     const onValueChange = (value: number): void => {
@@ -39,9 +37,9 @@ export const ZeroLookAngleField: React.FC<ZeroLookAngleFieldProps> = () => {
 
     return (
         <MeasureFormField
-        {...fieldProps}
-        value={value}
-        onValueChange={onValueChange}
-    />
+            {...fieldProps}
+            value={value}
+            onValueChange={onValueChange}
+        />
     )
 }

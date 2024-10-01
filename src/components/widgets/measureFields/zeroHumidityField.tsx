@@ -2,10 +2,7 @@ import { useProfile } from "../../../context/profileContext";
 import MeasureFormField, { MeasureFormFieldProps } from "./measureField"
 
 
-export interface ZeroHumidityFieldProps extends Omit<MeasureFormFieldProps, 'value' | 'suffix' | 'onValueChange'> { }
-
-
-export const ZeroHumidityField: React.FC<ZeroHumidityFieldProps> = () => {
+export const ZeroHumidityField = () => {
     const { profileProperties, updateProfileProperties } = useProfile();
 
     const fieldProps: Partial<MeasureFormFieldProps> = {

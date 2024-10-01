@@ -3,12 +3,9 @@ import MeasureFormField, { MeasureFormFieldProps } from "./measureField"
 import { UNew, Unit, UnitProps, Measure } from "js-ballistics/dist/v2"
 import { usePreferredUnits } from "../../../context/preferredUnitsContext";
 import getFractionDigits from "../../../utils/fractionConvertor";
-import { useEffect } from "react";
-
-export interface CurrentLookAngleFieldProps extends Omit<MeasureFormFieldProps, 'value' | 'suffix' | 'onValueChange'> { }
 
 
-export const CurrentLookAngleField: React.FC<CurrentLookAngleFieldProps> = () => {
+export const CurrentLookAngleField = () => {
     const { currentConditions, updateCurrentConditions } = useProfile();
 
     const { preferredUnits } = usePreferredUnits()

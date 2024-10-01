@@ -5,9 +5,7 @@ import { usePreferredUnits } from "../../../context/preferredUnitsContext";
 import getFractionDigits from "../../../utils/fractionConvertor";
 
 
-export interface BulletLengthFieldProps extends Omit<MeasureFormFieldProps, 'value' | 'suffix' | 'onValueChange'> { }
-
-export const BulletLengthField: React.FC<BulletLengthFieldProps> = () => {
+export const BulletLengthField = () => {
     const { profileProperties, updateProfileProperties } = useProfile();
 
     const { preferredUnits } = usePreferredUnits()

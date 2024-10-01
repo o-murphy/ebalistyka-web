@@ -4,10 +4,8 @@ import { UNew, Unit, UnitProps, Measure } from "js-ballistics/dist/v2"
 import { usePreferredUnits } from "../../../context/preferredUnitsContext";
 import getFractionDigits from "../../../utils/fractionConvertor";
 
-export interface ZeroPressureFieldProps extends Omit<MeasureFormFieldProps, 'value' | 'suffix' | 'onValueChange'> { }
 
-
-export const ZeroPressureField: React.FC<ZeroPressureFieldProps> = () => {
+export const ZeroPressureField = () => {
     const { profileProperties, updateProfileProperties } = useProfile();
 
     const { preferredUnits } = usePreferredUnits()
@@ -23,12 +21,12 @@ export const ZeroPressureField: React.FC<ZeroPressureFieldProps> = () => {
         step: 1 / (10 ** accuracy),
         suffix: UnitProps[prefUnit].symbol,
         minValue: UNew.hPa(500).In(prefUnit),
-        maxValue:UNew.hPa(1300).In(prefUnit),
+        maxValue: UNew.hPa(1300).In(prefUnit),
     }
 
     const value: number = UNew.hPa(
-        profileProperties?.[fieldProps.fKey] ? 
-        profileProperties[fieldProps.fKey] / 10 : 1000
+        profileProperties?.[fieldProps.fKey] ?
+            profileProperties[fieldProps.fKey] / 10 : 1000
     ).In(prefUnit)
 
     const onValueChange = (value: number): void => {
@@ -39,9 +37,9 @@ export const ZeroPressureField: React.FC<ZeroPressureFieldProps> = () => {
 
     return (
         <MeasureFormField
-        {...fieldProps}
-        value={value}
-        onValueChange={onValueChange}
-    />
+            {...fieldProps}
+            value={value}
+            onValueChange={onValueChange}
+        />
     )
 }

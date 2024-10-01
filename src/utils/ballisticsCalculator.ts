@@ -4,10 +4,9 @@ import Calculator, {
     DragModel,
     HitResult,
     Wind
-
 } from 'js-ballistics/dist/v2';
 import { ProfileProps } from './parseA7P';
-import { Measure, Unit } from 'js-ballistics';
+import { Unit } from 'js-ballistics';
 
 export interface PreparedZeroData {
     weapon: Weapon;
@@ -209,7 +208,7 @@ export const shootTheTarget = (calculator: PreparedZeroData, currentConditions: 
         })
 
         const newElevation = calc.barrelElevationForTarget(newShot, shotData.targetDistance)
-        const horizontal = UNew.Meter(Math.cos(newShot.lookAngle.In(Unit.Radian)) * shotData.targetDistance.In(Unit.Meter))
+        // const horizontal = UNew.Meter(Math.cos(newShot.lookAngle.In(Unit.Radian)) * shotData.targetDistance.In(Unit.Meter))
         const hold = UNew.MIL(newElevation.In(Unit.MIL) - weapon.zeroElevation.In(Unit.MIL))
 
         newShot.relativeAngle = hold

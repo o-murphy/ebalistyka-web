@@ -1,7 +1,7 @@
 import React from "react";
 import {  StyleSheet } from "react-native";
 import { TextInput } from "react-native-paper";
-import {SpinBox, DoubleSpinBox, SpinBoxProps} from "../../spinBox/spinBox";
+import {DoubleSpinBox, SpinBoxProps} from "../../doubleSpinBox";
 
 
 export interface MeasureFormFieldProps extends SpinBoxProps {
@@ -44,9 +44,10 @@ const MeasureFormField: React.FC<MeasureFormFieldProps> = ({
   }
 
   return (
-      fractionDigits <= 0 
-      ? <SpinBox {...spinBoxProps}/>
-      : <DoubleSpinBox {...spinBoxProps} />
+      // fractionDigits <= 0 
+      // ? <SpinBox {...spinBoxProps}/>
+      // : <DoubleSpinBox {...spinBoxProps} />
+      <DoubleSpinBox {...spinBoxProps} />
   )
 };
 

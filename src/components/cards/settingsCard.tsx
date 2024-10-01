@@ -2,7 +2,7 @@
 import { Dialog, FAB, Portal } from "react-native-paper"
 
 import { useEffect, useState } from "react";
-import { StyleProp, StyleSheet, View, ViewStyle } from "react-native";
+import { ScrollView, StyleProp, StyleSheet, View, ViewStyle } from "react-native";
 import { Dropdown } from "react-native-paper-dropdown";
 import { Unit, UnitProps, Measure } from "js-ballistics/dist/v2"
 import { usePreferredUnits } from "../../context/preferredUnitsContext";
@@ -107,9 +107,13 @@ export default function SettingsUnitCard({ visibility }) {
             <Dialog visible={visible} onDismiss={onDismiss} style={styles.dialog}>
                 <Dialog.Title>{"Settings"}</Dialog.Title>
 
-                <Dialog.Content>
+                {/* <Dialog.Content> */}
 
-                    <View style={{ flex: 1, flexDirection: "column" }}>
+                <Dialog.ScrollArea>
+                      <ScrollView contentContainerStyle={{ padding: 24 }}>
+
+
+                    {/* <View style={{ flex: 1, flexDirection: "column" }}> */}
 
                         <UnitSelector
                             containerStyle={styles.row}
@@ -233,9 +237,13 @@ export default function SettingsUnitCard({ visibility }) {
                             onValueChange={value => { onUnitChange({ energy: value }) }}
                         />
 
-                    </View>
+                    {/* </View> */}
 
-                </Dialog.Content>
+                    {/* {children} */}
+                      </ScrollView>
+                  </Dialog.ScrollArea>
+
+                {/* </Dialog.Content> */}
 
                 <Dialog.Actions>
                     <FAB
@@ -255,7 +263,7 @@ export default function SettingsUnitCard({ visibility }) {
 }
 
 const styles = StyleSheet.create({
-    dialog: { width: 350, alignSelf: 'center', justifyContent: 'center' },
+    dialog: { width: 350, height: "80%", alignSelf: 'center', justifyContent: 'center' },
     column: {
         flex: 1,
         flexDirection: "row",

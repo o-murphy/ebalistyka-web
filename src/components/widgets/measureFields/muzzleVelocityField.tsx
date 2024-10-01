@@ -5,10 +5,7 @@ import { usePreferredUnits } from "../../../context/preferredUnitsContext";
 import getFractionDigits from "../../../utils/fractionConvertor";
 
 
-export interface MuzzleVelocityFieldProps extends Omit<MeasureFormFieldProps, 'value' | 'suffix' | 'onValueChange'> { }
-
-
-export const MuzzleVelocityField: React.FC<MuzzleVelocityFieldProps> = () => {
+export const MuzzleVelocityField = () => {
     const { profileProperties, updateProfileProperties } = useProfile();
 
     const { preferredUnits } = usePreferredUnits()

@@ -1,37 +1,39 @@
-import { CaliberField, CaliberFieldProps } from "./caliberField";
-import { SightHeightField, SightHeightFieldProps } from "./sightHeightField";
-import { TwistField, TwistFieldProps } from "./twistField";
-import { ZeroLookAngleField, ZeroLookAngleFieldProps } from "./zeroLookAngle";
-import { BulletLengthField, BulletLengthFieldProps } from "./bulletLengthField";
-import { BulletWeightField, BulletWeightFieldProps } from "./bulletWeightField";
-import { MuzzleVelocityField, MuzzleVelocityFieldProps } from "./muzzleVelocityField";
-import { PowderSensField, PowderSensFieldProps } from "./powderSensField";
-import { CurrentLookAngleField, CurrentLookAngleFieldProps } from "./currentLookAngleField";
-import { CurrentTemperatureField, CurrentTemperatureFieldProps } from "./currentTemperatureField";
-import { CurrentPressureField, CurrentPressureFieldProps } from "./currentPressureField";
-import { CurrentHumidityField, CurrentHumidityFieldProps } from "./currentHumidityField";
-import { ZeroTemperatureField, ZeroTemperatureFieldProps } from "./zeroTemperatureField";
-import { WindSpeedField, WindSpeedFieldProps } from "./currentWindSpeedField";
-import { TrajectoryRangeField, TrajectoryRangeFieldProps } from "./trajectoryRangeField";
-import { TrajectoryStepField, TrajectoryStepFieldProps } from "./trajectoryCalcStep";
-import { TrajectoryTargetDistance, TrajectoryTargetDistanceFieldProps } from "./trajectoryTargetDistance";
+import { CaliberField } from "./caliberField";
+import { SightHeightField } from "./sightHeightField";
+import { TwistField } from "./twistField";
+import { ZeroLookAngleField } from "./zeroLookAngle";
+import { BulletLengthField } from "./bulletLengthField";
+import { BulletWeightField } from "./bulletWeightField";
+import { MuzzleVelocityField } from "./muzzleVelocityField";
+import { PowderSensField } from "./powderSensField";
+import { CurrentLookAngleField } from "./currentLookAngleField";
+import { CurrentTemperatureField } from "./currentTemperatureField";
+import { CurrentPressureField } from "./currentPressureField";
+import { CurrentHumidityField } from "./currentHumidityField";
+import { ZeroTemperatureField } from "./zeroTemperatureField";
+import { WindSpeedField } from "./currentWindSpeedField";
+import { TrajectoryRangeField } from "./trajectoryRangeField";
+import { TrajectoryStepField } from "./trajectoryCalcStep";
+import { TrajectoryTargetDistance } from "./trajectoryTargetDistance";
+import { ZeroDistanceField } from "./zeroDistanceField";
 
 export {
-    CaliberField, CaliberFieldProps,
-    SightHeightField, SightHeightFieldProps,
-    TwistField, TwistFieldProps,
-    ZeroLookAngleField, ZeroLookAngleFieldProps,
-    BulletLengthField, BulletLengthFieldProps,
-    BulletWeightField, BulletWeightFieldProps,
-    MuzzleVelocityField, MuzzleVelocityFieldProps,
-    PowderSensField, PowderSensFieldProps,
-    CurrentLookAngleField, CurrentLookAngleFieldProps,
-    CurrentTemperatureField, CurrentTemperatureFieldProps,
-    CurrentPressureField, CurrentPressureFieldProps,
-    CurrentHumidityField, CurrentHumidityFieldProps,
-    ZeroTemperatureField, ZeroTemperatureFieldProps,
-    WindSpeedField, WindSpeedFieldProps,
-    TrajectoryRangeField, TrajectoryRangeFieldProps,
-    TrajectoryStepField, TrajectoryStepFieldProps,
-    TrajectoryTargetDistance, TrajectoryTargetDistanceFieldProps
+    CaliberField,
+    SightHeightField,
+    TwistField,
+    ZeroLookAngleField,
+    BulletLengthField,
+    BulletWeightField,
+    MuzzleVelocityField,
+    PowderSensField,
+    CurrentLookAngleField,
+    CurrentTemperatureField,
+    CurrentPressureField,
+    CurrentHumidityField,
+    ZeroTemperatureField,
+    WindSpeedField,
+    TrajectoryRangeField,
+    TrajectoryStepField,
+    TrajectoryTargetDistance,
+    ZeroDistanceField,
 };

@@ -2,10 +2,7 @@ import { useProfile } from "../../../context/profileContext";
 import MeasureFormField, { MeasureFormFieldProps } from "./measureField"
 
 
-export interface PowderSensFieldProps extends Omit<MeasureFormFieldProps, 'value' | 'suffix' | 'onValueChange'> { }
-
-
-export const PowderSensField: React.FC<PowderSensFieldProps> = () => {
+export const PowderSensField = () => {
     const { profileProperties, updateProfileProperties } = useProfile();
 
     const fieldProps: Partial<MeasureFormFieldProps> = {

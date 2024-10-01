@@ -4,10 +4,8 @@ import { UNew, Unit, UnitProps, Measure } from "js-ballistics/dist/v2"
 import { usePreferredUnits } from "../../../context/preferredUnitsContext";
 import getFractionDigits from "../../../utils/fractionConvertor";
 
-export interface CurrentTemperatureFieldProps extends Omit<MeasureFormFieldProps, 'value' | 'suffix' | 'onValueChange'> { }
 
-
-export const CurrentTemperatureField: React.FC<CurrentTemperatureFieldProps> = () => {
+export const CurrentTemperatureField = () => {
     const { currentConditions, updateCurrentConditions } = useProfile();
 
     const { preferredUnits } = usePreferredUnits()

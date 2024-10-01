@@ -5,10 +5,7 @@ import { usePreferredUnits } from "../../../context/preferredUnitsContext";
 import getFractionDigits from "../../../utils/fractionConvertor";
 
 
-export interface SightHeightFieldProps extends Omit<MeasureFormFieldProps, 'value' | 'suffix' | 'onValueChange'> { }
-
-
-export const SightHeightField: React.FC<SightHeightFieldProps> = () => {
+export const SightHeightField = () => {
     const { profileProperties, updateProfileProperties } = useProfile();
 
     const { preferredUnits } = usePreferredUnits()

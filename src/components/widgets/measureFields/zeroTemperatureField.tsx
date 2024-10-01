@@ -4,10 +4,8 @@ import { UNew, Unit, UnitProps, Measure } from "js-ballistics/dist/v2"
 import { usePreferredUnits } from "../../../context/preferredUnitsContext";
 import getFractionDigits from "../../../utils/fractionConvertor";
 
-export interface ZeroTemperatureFieldProps extends Omit<MeasureFormFieldProps, 'value' | 'suffix' | 'onValueChange'> { }
 
-
-export const ZeroTemperatureField: React.FC<ZeroTemperatureFieldProps> = () => {
+export const ZeroTemperatureField = () => {
     const { profileProperties, updateProfileProperties } = useProfile();
 
     const { preferredUnits } = usePreferredUnits()
@@ -27,8 +25,8 @@ export const ZeroTemperatureField: React.FC<ZeroTemperatureFieldProps> = () => {
     }
 
     const value: number = UNew.Celsius(
-        profileProperties?.[fieldProps.fKey] ? 
-        profileProperties[fieldProps.fKey] : 15
+        profileProperties?.[fieldProps.fKey] ?
+            profileProperties[fieldProps.fKey] : 15
     ).In(prefUnit)
 
     const onValueChange = (value: number): void => {
@@ -39,9 +37,9 @@ export const ZeroTemperatureField: React.FC<ZeroTemperatureFieldProps> = () => {
 
     return (
         <MeasureFormField
-        {...fieldProps}
-        value={value}
-        onValueChange={onValueChange}
-    />
+            {...fieldProps}
+            value={value}
+            onValueChange={onValueChange}
+        />
     )
 }

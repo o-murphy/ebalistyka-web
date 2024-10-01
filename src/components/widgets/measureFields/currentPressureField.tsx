@@ -4,10 +4,8 @@ import { UNew, Unit, UnitProps, Measure } from "js-ballistics/dist/v2"
 import { usePreferredUnits } from "../../../context/preferredUnitsContext";
 import getFractionDigits from "../../../utils/fractionConvertor";
 
-export interface CurrentPressureFieldProps extends Omit<MeasureFormFieldProps, 'value' | 'suffix' | 'onValueChange'> { }
 
-
-export const CurrentPressureField: React.FC<CurrentPressureFieldProps> = () => {
+export const CurrentPressureField = () => {
     const { currentConditions, updateCurrentConditions } = useProfile();
 
     const { preferredUnits } = usePreferredUnits()

@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { FileUploader } from "react-drag-drop-files";
-import parseA7P from "../../utils/parseA7P";
+import parseA7P, { ProfileProps } from "../../utils/parseA7P";
 import { StyleSheet, StyleProp, ViewProps } from "react-native";
 import { Button } from "react-native-paper";
 import { ProfileContext } from "../../context/profileContext";
@@ -18,7 +18,7 @@ function A7PFileUploader({ style = null }: A7PFileUploaderProps) {
 
   const { profileProperties, setProfileProperties, updateProfileProperties } = useContext(ProfileContext);
 
-  const onSuccess = (data) => {
+  const onSuccess = (data: ProfileProps) => {
     if (profileProperties) {
       updateProfileProperties(data)
     } else {

@@ -66,7 +66,8 @@ const AdjustedTrajectoryChart = () => {
                 height: 480,
                 verticalLabelRotation: -90,
                 xLabelsOffset: 20,
-            }} />
+            }} 
+        />
     )
 };
 
