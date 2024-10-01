@@ -1,10 +1,6 @@
-import { TextInput } from "react-native-paper";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import CustomCard from "./customCard";
-import SimpleDialog from "../dialogs/simpleDialog";
-import { styles as measureFormFieldStyles } from "../widgets/measureFields/measureField/measureField";
 import { CalculationState, useProfile } from "../../context/profileContext";
-import debounce from "../../utils/debounce";
 import { MuzzleVelocityField, PowderSensField } from "../widgets/measureFields";
 import { ProfileProps } from "../../utils/parseA7P";
 import RecalculateChip from "../widgets/recalculateChip";
@@ -16,7 +12,7 @@ interface ProjectileCardProps {
 
 const ProjectileCard: React.FC<ProjectileCardProps> = ({ expanded = true }) => {
 
-    const { profileProperties, debouncedProfileUpdate, calcState, autoRefresh } = useProfile();
+    const { profileProperties, updateProfileProperties, calcState } = useProfile();
 
     const [refreshable, setRefreshable] = useState(false)
 
@@ -24,7 +20,7 @@ const ProjectileCard: React.FC<ProjectileCardProps> = ({ expanded = true }) => {
 
     useEffect(() => {
         
-        if ([CalculationState.ZeroUpdated].includes(calcState) && !autoRefresh) {
+        if ([CalculationState.ZeroUpdated].includes(calcState)) {
             const mv = prevProfilePropertiesRef.current?.cMuzzleVelocity !== profileProperties.cMuzzleVelocity;
             const sens = prevProfilePropertiesRef.current?.cTCoeff !== profileProperties.cTCoeff;
     
@@ -56,7 +52,7 @@ const ProjectileCard: React.FC<ProjectileCardProps> = ({ expanded = true }) => {
                 icon={"card-bulleted-outline"} 
                 label={"Projectile name"}
                 text={profileProperties?.cartridgeName ?? "My projectile"}
-                onTextChange={text => debouncedProfileUpdate({ cartridgeName: text })}
+                onTextChange={text => updateProfileProperties({ cartridgeName: text })}
             />
 
             <MuzzleVelocityField />

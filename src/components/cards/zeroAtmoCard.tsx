@@ -14,7 +14,7 @@ interface AtmoCardProps {
 
 const ZeroAtmoCard: React.FC<AtmoCardProps> = ({ label = "Zero atmosphere", expanded = true }) => {
 
-    const { profileProperties, calcState, autoRefresh } = useProfile();
+    const { profileProperties, calcState } = useProfile();
 
     const [refreshable, setRefreshable] = useState(false)
 
@@ -22,7 +22,7 @@ const ZeroAtmoCard: React.FC<AtmoCardProps> = ({ label = "Zero atmosphere", expa
 
     useEffect(() => {
 
-        if ([CalculationState.ZeroUpdated].includes(calcState) && !autoRefresh) {
+        if ([CalculationState.ZeroUpdated].includes(calcState)) {
             const temperature = prevProfilePropertiesRef.current?.cZeroAirTemperature !== profileProperties.cZeroAirTemperature;
             const pressure = prevProfilePropertiesRef.current?.cZeroAirPressure !== profileProperties.cZeroAirPressure;
             const humidity = prevProfilePropertiesRef.current?.cZeroAirHumidity !== profileProperties.cZeroAirHumidity

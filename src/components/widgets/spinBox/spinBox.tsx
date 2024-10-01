@@ -106,14 +106,11 @@ const SpinBox: React.FC<SpinBoxProps> = ({
     <View style={style}>
       <TextInput
         {...inputProps}
-        // keyboardType="numeric"
         keyboardType="default"
         error={!!error}
         value={currentValue}
         onKeyPress={processKeyPress}
-        // onChange={handleInput}
         onChange={e => handleInputChange(e.nativeEvent.text)}
-        // onChange={e => console.log(e)}
       />
       <HelperText type="error" visible={!!error}>
         {error}
@@ -121,18 +118,6 @@ const SpinBox: React.FC<SpinBoxProps> = ({
     </View>
   );
 };
-
-// interface DoubleSpinBoxProps {
-//   value?: number;
-//   onValueChange?: (newValue: number) => void;
-//   fractionDigits?: number; // Number of decimal places
-//   minValue?: number; // Minimum value
-//   maxValue?: number; // Maximum value
-//   step?: number; // Step increment/decrement value
-//   style?: StyleProp<ViewStyle>; // Style for the container
-//   inputProps?: TextInputProps; // Additional props for the TextInput
-//   strict?: boolean;
-// }
 
 const DoubleSpinBox: React.FC<SpinBoxProps> = ({
   value = 0,
@@ -207,22 +192,15 @@ const DoubleSpinBox: React.FC<SpinBoxProps> = ({
     }
   };
 
-  const handleInput = (e) => {
-    console.log(e)
-    console.log(e.text, e.data)
-    handleInputChange(e.nativeEvent.text)
-  }
-
   return (
     <View style={style}>
       <TextInput
         {...inputProps}
-        // keyboardType="numeric"
         keyboardType="default"
         error={!!error}
         value={currentValue}
         onKeyPress={processKeyPress}
-        onChange={handleInput}
+        onChange={e => handleInputChange(e.nativeEvent.text)}
       />
       <HelperText type="error" visible={!!error}>
         {error}

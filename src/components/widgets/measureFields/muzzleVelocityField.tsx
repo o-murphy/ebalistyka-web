@@ -1,8 +1,6 @@
-import { useCallback } from "react";
 import { useProfile } from "../../../context/profileContext";
 import MeasureFormField, { MeasureFormFieldProps } from "./measureField"
 import { UNew, Unit, UnitProps, Measure } from "js-ballistics/dist/v2"
-import debounce from "../../../utils/debounce";
 import { usePreferredUnits } from "../../../context/preferredUnitsContext";
 import getFractionDigits from "../../../utils/fractionConvertor";
 
@@ -12,7 +10,6 @@ export interface MuzzleVelocityFieldProps extends Omit<MeasureFormFieldProps, 'v
 
 export const MuzzleVelocityField: React.FC<MuzzleVelocityFieldProps> = () => {
     const { profileProperties, updateProfileProperties } = useProfile();
-    const debouncedProfileUpdate = useCallback(debounce(updateProfileProperties, 300), [updateProfileProperties]);
 
     const { preferredUnits } = usePreferredUnits()
 
@@ -20,7 +17,7 @@ export const MuzzleVelocityField: React.FC<MuzzleVelocityFieldProps> = () => {
     const accuracy = getFractionDigits(1, UNew.MPS(1).In(prefUnit))
 
     const fieldProps: Partial<MeasureFormFieldProps> = {
-        key: "cMuzzleVelocity",
+        fKey: "cMuzzleVelocity",
         label: "Muzzle velocity",
         icon: "speedometer",
         fractionDigits: accuracy,
@@ -31,13 +28,13 @@ export const MuzzleVelocityField: React.FC<MuzzleVelocityFieldProps> = () => {
     }
 
     const value: number = UNew.MPS(
-        profileProperties?.[fieldProps.key] ? 
-        profileProperties[fieldProps.key] / 10 : 800
+        profileProperties?.[fieldProps.fKey] ? 
+        profileProperties[fieldProps.fKey] / 10 : 800
     ).In(prefUnit)
 
     const onValueChange = (value: number): void => {
-        return debouncedProfileUpdate({
-            [fieldProps.key]: Math.round(new Measure.Velocity(value, preferredUnits.velocity).In(Unit.MPS) * 10)
+        return updateProfileProperties({
+            [fieldProps.fKey]: new Measure.Velocity(value, preferredUnits.velocity).In(Unit.MPS) * 10
         })
     }
 

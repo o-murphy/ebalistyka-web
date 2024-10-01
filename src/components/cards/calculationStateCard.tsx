@@ -14,23 +14,17 @@ const CalculationStateCard = (cardStyle) => {
     const { theme } = useTheme();
     const {
         calcState, currentConditions,
-        autoRefresh,
         profileProperties, hitResult, setCalcState
     } = useProfile();
 
     const [refreshable, setRefreshable] = useState(false)
 
     const prevProfilePropertiesRef = useRef<ProfileProps | null>(null);
-    const prevCurrentConditionsRef = useRef<CurrentConditionsProps | null>(null);
+    const prevCurrentConditionsRef = useRef<CurrentConditionsProps>(currentConditions);
 
     useEffect(() => {
 
-        if (autoRefresh) {
-            setRefreshable(false)
-            return
-        } 
-
-        if ([CalculationState.ConditionsUpdated, CalculationState.ZeroUpdated].includes(calcState)) {
+        if ([CalculationState.ConditionsUpdated, CalculationState.ZeroUpdated].includes(_calcState)) {
 
             const conChange = prevCurrentConditionsRef.current != currentConditions;
             const profChange = prevProfilePropertiesRef.current != profileProperties;
@@ -57,12 +51,13 @@ const CalculationStateCard = (cardStyle) => {
     let reloadAlert: boolean = false;
     let showButton: boolean = false;
 
-    if (!autoRefresh) {
-        if (calcState === CalculationState.NoData && profileProperties) {
-            setCalcState(CalculationState.ZeroUpdated)
+        let _calcState = calcState
+
+        if (_calcState === CalculationState.NoData && profileProperties) {
+            _calcState = CalculationState.ZeroUpdated;
         }
 
-        switch (calcState) {
+        switch (_calcState) {
             case CalculationState.Complete:
                 title = "INFO"
                 details = "Shot trajectory calculation success"
@@ -101,29 +96,29 @@ const CalculationStateCard = (cardStyle) => {
                 showButton = true
                 break;
         }
-    } else {
-        switch (calcState) {
-            case CalculationState.NoData:
-                title = "WARNING! Zero data not initialized"
-                details = "Open .a7p file to start calculations"
-                backgroundColor = theme.colors.primaryContainer
-                fontColor = theme.colors.onPrimaryContainer
-                break;
-            case CalculationState.Error:
-                title = "ERROR!"
-                details = hitResult instanceof Error ? hitResult?.message : "Undefined"
-                backgroundColor = theme.colors.errorContainer
-                fontColor = theme.colors.error
-                reloadAlert = true
-                break;
-            default:
-                title = "INFO"
-                details = "Shot trajectory calculation success"
-                backgroundColor = "#00AA8D"
-                fontColor = theme.colors.onPrimary
-                break;
-        }
-    }
+    // } else {
+    //     switch (calcState) {
+    //         case CalculationState.NoData:
+    //             title = "WARNING! Zero data not initialized"
+    //             details = "Open .a7p file to start calculations"
+    //             backgroundColor = theme.colors.primaryContainer
+    //             fontColor = theme.colors.onPrimaryContainer
+    //             break;
+    //         case CalculationState.Error:
+    //             title = "ERROR!"
+    //             details = hitResult instanceof Error ? hitResult?.message : "Undefined"
+    //             backgroundColor = theme.colors.errorContainer
+    //             fontColor = theme.colors.error
+    //             reloadAlert = true
+    //             break;
+    //         default:
+    //             title = "INFO"
+    //             details = "Shot trajectory calculation success"
+    //             backgroundColor = "#00AA8D"
+    //             fontColor = theme.colors.onPrimary
+    //             break;
+    //     }
+    // }
 
     return (
         <CustomCard

@@ -1,17 +1,15 @@
-import { SegmentedButtons, Text, TextInput } from "react-native-paper";
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import { SegmentedButtons } from "react-native-paper";
+import React, { useState, useEffect, useRef } from "react";
 import CustomCard from "./customCard";
-import SimpleDialog from "../dialogs/simpleDialog";
-import { preferredUnits, UNew } from "js-ballistics/dist/v2";
+import { UNew } from "js-ballistics/dist/v2";
 import { StyleSheet, View } from "react-native";
-import { styles as measureFormFieldStyles } from "../widgets/measureFields/measureField/measureField";
 import { CalculationState, useProfile } from "../../context/profileContext";
-import debounce from "../../utils/debounce";
 import { Dropdown } from "react-native-paper-dropdown";
 import { SightHeightField, TwistField, ZeroLookAngleField } from "../widgets/measureFields";
 import { ProfileProps } from "../../utils/parseA7P";
 import RecalculateChip from "../widgets/recalculateChip";
 import { TextInputChip } from "../widgets/inputChip";
+import { usePreferredUnits } from "../../context/preferredUnitsContext";
 
 
 interface WeaponCardProps {
@@ -19,7 +17,8 @@ interface WeaponCardProps {
 }
 
 const WeaponCard: React.FC<WeaponCardProps> = ({ expanded = true }) => {
-    const { profileProperties, debouncedProfileUpdate, calcState, autoRefresh } = useProfile();
+    const { profileProperties, updateProfileProperties, calcState } = useProfile();
+    const { preferredUnits } = usePreferredUnits()
 
     const [refreshable, setRefreshable] = useState(false)
 
@@ -27,7 +26,7 @@ const WeaponCard: React.FC<WeaponCardProps> = ({ expanded = true }) => {
 
     useEffect(() => {
 
-        if ([CalculationState.ZeroUpdated].includes(calcState) && !autoRefresh) {
+        if ([CalculationState.ZeroUpdated].includes(calcState)) {
             const sh = prevProfilePropertiesRef.current?.scHeight !== profileProperties.scHeight;
             const twist = prevProfilePropertiesRef.current?.rTwist !== profileProperties.rTwist;
             const twDir = prevProfilePropertiesRef.current?.twistDir !== profileProperties.twistDir;
@@ -65,7 +64,7 @@ const WeaponCard: React.FC<WeaponCardProps> = ({ expanded = true }) => {
                 icon={"card-bulleted-outline"} 
                 label={"Weapon name"}
                 text={profileProperties?.profileName ?? "My rifle"}
-                onTextChange={text => debouncedProfileUpdate({ profileName: text })}
+                onTextChange={text => updateProfileProperties({ profileName: text })}
             />s
 
             <SightHeightField />
@@ -76,7 +75,7 @@ const WeaponCard: React.FC<WeaponCardProps> = ({ expanded = true }) => {
                     style={[styles.segment]}
                     buttons={twistStates}
                     value={profileProperties?.twistDir}
-                    onValueChange={value => debouncedProfileUpdate({ twistDir: value })}
+                    onValueChange={value => updateProfileProperties({ twistDir: value })}
                 />
             </View>
 
@@ -90,7 +89,7 @@ const WeaponCard: React.FC<WeaponCardProps> = ({ expanded = true }) => {
                 // left={<TextInput.Icon icon={"arrow-left-right-bold"} size={iconSize} style={inputSideStyles.icon} />}
                 options={OPTIONS}
                 value={VALUE}
-                onSelect={value => debouncedProfileUpdate({
+                onSelect={value => updateProfileProperties({
                     cZeroDistanceIdx: (() => { console.log(OPTIONS, value); return parseFloat(value) })()
                 })}
             />

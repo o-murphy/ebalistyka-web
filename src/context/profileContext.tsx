@@ -24,19 +24,17 @@ interface ProfileContextType {
   hitResult: HitResult | null | Error;
   calcState: CalculationState;
   setCalcState: React.Dispatch<React.SetStateAction<CalculationState>>;
-  autoRefresh: boolean;
-  setAutoRefresh: React.Dispatch<React.SetStateAction<boolean>>;
+  // autoRefresh: boolean;
+  // setAutoRefresh: React.Dispatch<React.SetStateAction<boolean>>;
   zero: () => void;
   fire: () => void;
-  debouncedProfileUpdate: (props: Partial<ProfileProps>) => void;
 }
 
 export const ProfileContext = createContext<ProfileContextType | null>(null);
 
 export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-
   const [profileProperties, setProfileProperties] = useState<ProfileProps | null>(null);
-  const [currentConditions, setCurrentConditions] = useState<CurrentConditionsProps>({
+  const [currentConditions, setCurrentConditions] = useState<CurrentConditionsProps | null>({
     temperature: 15,
     pressure: 1000,
     humidity: 50,
@@ -47,45 +45,45 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
     trajectoryStep: 100,
     trajectoryRange: 2000
   });
-
+  
   const [calcState, setCalcState] = useState<CalculationState>(CalculationState.NoData);
-  // const [autoRefresh, setAutoRefresh] = useState<boolean>(true);
-  const [autoRefresh, setAutoRefresh] = useState<boolean>(false);
+  // const [autoRefresh, setAutoRefresh] = useState<boolean>(false);
   const [calculator, setCalculator] = useState<PreparedZeroData | null>(null);
   const [hitResult, setHitResult] = useState<HitResult | Error | null>(null);
+  
+  const [isLoaded, setIsLoaded] = useState(false); // Track loading state
 
   useEffect(() => {
     loadUserData(); // Load data on mount
   }, []);
 
   useEffect(() => {
-    if (profileProperties && autoRefresh) {
-      zero()
+    if (isLoaded) { // Only save if data has been loaded
+      saveProfileProperties(); // Save profile properties whenever it changes
     }
-  }, [profileProperties]);
+  }, [profileProperties, isLoaded]);
 
   useEffect(() => {
-    if (currentConditions && calculator && autoRefresh) {
-      fire();
+    if (isLoaded) { // Only save if data has been loaded
+      saveCurrentConditions(); // Save current conditions whenever they change
     }
-  }, [currentConditions, calculator, autoRefresh]);
+  }, [currentConditions, calculator, isLoaded]);
 
   const zero = () => {
     const preparedCalculator = prepareCalculator(profileProperties);
     setCalculator(preparedCalculator);
-    saveProfileProperties(); // Save profile properties whenever it changes
-    return preparedCalculator
+    return preparedCalculator;
   }
 
   const fire = () => {
-    const currentCalc: PreparedZeroData = autoRefresh ? calculator : zero()
-
+    console.log("F")
+    // const currentCalc: PreparedZeroData = autoRefresh ? calculator : zero();
+    const currentCalc: PreparedZeroData = zero();
     if (currentCalc) {
       if (!currentCalc.error) {
         const result = makeShot(currentCalc, currentConditions);
         setHitResult(result);
         setCalcState(result instanceof Error ? CalculationState.Error : CalculationState.Complete);
-        saveCurrentConditions(); // Save current conditions whenever they change
       } else {
         setHitResult(currentCalc.error);
         setCalcState(CalculationState.Error);
@@ -121,19 +119,22 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
   };
 
   const updateCurrentConditions = (props: Partial<CurrentConditionsProps>) => {
-    setCurrentConditions((prev) => ({
-      ...prev,
-      ...props,
-    }));
-    setCalcState(CalculationState.ConditionsUpdated);
+    if (currentConditions) {
+      setCurrentConditions((prev) => ({
+        ...prev,
+        ...props,
+      }));
+      setCalcState(CalculationState.ConditionsUpdated);
+    }
   };
 
   const saveProfileProperties = async () => {
     try {
       const jsonValue = JSON.stringify(profileProperties);
       await AsyncStorage.setItem('profileProperties', jsonValue);
+      // console.log("Saved profileProps", profileProperties);
     } catch (error) {
-      console.error('Failed to save profile properties:', error);
+      // console.error('Failed to save profile properties:', error);
     }
   };
 
@@ -141,8 +142,9 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
     try {
       const jsonValue = JSON.stringify(currentConditions);
       await AsyncStorage.setItem('currentConditions', jsonValue);
+      // console.log("Saved currentConditions", currentConditions);
     } catch (error) {
-      console.error('Failed to save current conditions:', error);
+      // console.error('Failed to save current conditions:', error);
     }
   };
 
@@ -150,7 +152,8 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
     try {
       const profileValue = await AsyncStorage.getItem('profileProperties');
       const conditionsValue = await AsyncStorage.getItem('currentConditions');
-      console.log("Loaded", profileValue)
+      // console.log("Loaded profileProps", profileValue);
+      // console.log("Loaded currentConditions", conditionsValue);
 
       if (profileValue !== null) {
         setProfileProperties(JSON.parse(profileValue));
@@ -159,32 +162,32 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
       if (conditionsValue !== null) {
         setCurrentConditions(JSON.parse(conditionsValue));
       }
+
+      setIsLoaded(true); // Mark as loaded after attempting to load data
     } catch (error) {
       console.error('Failed to load user data:', error);
     }
   };
 
   const debouncedProfileUpdate = useCallback(debounce(updateProfileProperties, 350), [updateProfileProperties]);
-
+  const debouncedUpdateConditions = useCallback(debounce(updateCurrentConditions, 350), [updateCurrentConditions]);
 
   return (
     <ProfileContext.Provider value={{
       profileProperties,
       fetchBinaryFile,
       setProfileProperties,
-      updateProfileProperties,
+      updateProfileProperties: debouncedProfileUpdate,
       currentConditions,
-      updateCurrentConditions,
+      updateCurrentConditions: debouncedUpdateConditions,
       calculator,
       hitResult,
       calcState,
       setCalcState,
-      autoRefresh,
-      setAutoRefresh,
+      // autoRefresh,
+      // setAutoRefresh,
       zero,
       fire,
-
-      debouncedProfileUpdate,
     }}>
       {children}
     </ProfileContext.Provider>

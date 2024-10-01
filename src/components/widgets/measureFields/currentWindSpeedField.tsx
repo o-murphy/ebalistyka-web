@@ -1,8 +1,6 @@
-import { useCallback } from "react";
 import { useProfile } from "../../../context/profileContext";
 import MeasureFormField, { MeasureFormFieldProps } from "./measureField"
 import { UNew, Unit, UnitProps, Measure } from "js-ballistics/dist/v2"
-import debounce from "../../../utils/debounce";
 import { usePreferredUnits } from "../../../context/preferredUnitsContext";
 import getFractionDigits from "../../../utils/fractionConvertor";
 
@@ -11,7 +9,6 @@ export interface WindSpeedFieldProps extends Omit<MeasureFormFieldProps, 'value'
 
 export const WindSpeedField: React.FC<WindSpeedFieldProps> = () => {
     const { currentConditions, updateCurrentConditions } = useProfile();
-    const debouncedUpdateConditions = useCallback(debounce(updateCurrentConditions, 350), [updateCurrentConditions]);
 
     const { preferredUnits } = usePreferredUnits()
 
@@ -19,7 +16,7 @@ export const WindSpeedField: React.FC<WindSpeedFieldProps> = () => {
     const accuracy = getFractionDigits(0.1, UNew.MPS(1).In(prefUnit))
 
     const fieldProps: Partial<MeasureFormFieldProps> = {
-        key: "windSpeed",
+        fKey: "windSpeed",
         label: "Wind speed",
         icon: "windsock",
         fractionDigits: accuracy,
@@ -30,13 +27,13 @@ export const WindSpeedField: React.FC<WindSpeedFieldProps> = () => {
     }
 
     const value: number = UNew.MPS(
-        currentConditions?.[fieldProps.key] ? 
-        currentConditions[fieldProps.key] : 0
+        currentConditions?.[fieldProps.fKey] ? 
+        currentConditions[fieldProps.fKey] : 0
     ).In(prefUnit)
 
     const onValueChange = (value: number): void => {
-        return debouncedUpdateConditions({
-            [fieldProps.key]: new Measure.Velocity(value, prefUnit).In(Unit.MPS)
+        return updateCurrentConditions({
+            [fieldProps.fKey]: new Measure.Velocity(value, prefUnit).In(Unit.MPS)
         })
     }
 

@@ -1,10 +1,9 @@
 
-import { Dialog, FAB, Portal, Switch, Text } from "react-native-paper"
+import { Dialog, FAB, Portal } from "react-native-paper"
 
 import { useEffect, useState } from "react";
 import { StyleProp, StyleSheet, View, ViewStyle } from "react-native";
 import { Dropdown } from "react-native-paper-dropdown";
-import { useProfile } from "../../context/profileContext";
 import { Unit, UnitProps, Measure } from "js-ballistics/dist/v2"
 import { usePreferredUnits } from "../../context/preferredUnitsContext";
 
@@ -23,7 +22,7 @@ const getUnitList = (measure: Object) =>
 
 
 interface UnitSelectorProps {
-    key?: string;
+    fKey?: string;
     label: string;
     value?: Unit;
     defaultValue: Unit;
@@ -32,7 +31,7 @@ interface UnitSelectorProps {
     containerStyle?: StyleProp<ViewStyle>
 }
 
-const UnitSelector = ({ key = null, label, value = null, defaultValue, options, onValueChange, containerStyle }: UnitSelectorProps) => {
+const UnitSelector = ({ fKey: key = null, label, value = null, defaultValue, options, onValueChange, containerStyle }: UnitSelectorProps) => {
 
     const [curValue, setCurValue] = useState(value ?? defaultValue);
 
@@ -58,21 +57,7 @@ const UnitSelector = ({ key = null, label, value = null, defaultValue, options, 
 export default function SettingsUnitCard({ visibility }) {
 
     const [visible, setVisible] = visibility
-
     const {preferredUnits, setPreferredUnits} = usePreferredUnits()
-
-
-    const {
-        fire, autoRefresh, setAutoRefresh, calculator
-    } = useProfile()
-
-    // Initialize curAutoRefresh based on the current autoRefresh value
-    const [curAutoRefresh, setCurAutoRefresh] = useState(autoRefresh);
-
-    useEffect(() => {
-        // Sync curAutoRefresh when autoRefresh changes
-        setCurAutoRefresh(autoRefresh);
-    }, [autoRefresh, visibility]);
 
     const [units, setUnits] = useState({
         distance: preferredUnits.distance,
@@ -86,6 +71,10 @@ export default function SettingsUnitCard({ visibility }) {
         angular: preferredUnits.angular,
         weight: preferredUnits.weight,
     })
+
+    useEffect(() => {
+        setUnits(preferredUnits)
+    }, [preferredUnits])
 
     const onUnitChange = (props: {}) => {
         setUnits({ ...units, ...props })
@@ -105,12 +94,6 @@ export default function SettingsUnitCard({ visibility }) {
             weight: units.weight,
         })
 
-        setAutoRefresh(curAutoRefresh)
-
-        if (curAutoRefresh && calculator) {
-            fire()
-        }
-
         setVisible(false)
 
     }
@@ -128,17 +111,10 @@ export default function SettingsUnitCard({ visibility }) {
 
                     <View style={{ flex: 1, flexDirection: "column" }}>
 
-
-                        <View style={styles.row}>
-                            <Text style={styles.column}> Auto refresh</Text>
-                            <Switch value={curAutoRefresh} onValueChange={() => setCurAutoRefresh((prev) => !prev)} />
-
-                        </View>
-
                         <UnitSelector
                             containerStyle={styles.row}
 
-                            key="distance"
+                            fKey="distance"
                             label="Distance units"
                             value={preferredUnits.distance}
                             defaultValue={preferredUnits.distance}
@@ -153,7 +129,7 @@ export default function SettingsUnitCard({ visibility }) {
                         <UnitSelector
                             containerStyle={styles.row}
 
-                            key="velocity"
+                            fKey="velocity"
                             label="Velocity units"
                             value={units.velocity}
                             defaultValue={units.velocity}
@@ -167,7 +143,7 @@ export default function SettingsUnitCard({ visibility }) {
                         <UnitSelector
                             containerStyle={styles.row}
 
-                            key="sizes"
+                            fKey="sizes"
                             label="Sizes units"
                             value={units.sizes}
                             defaultValue={units.sizes}
@@ -183,7 +159,7 @@ export default function SettingsUnitCard({ visibility }) {
                         <UnitSelector
                             containerStyle={styles.row}
 
-                            key="angular"
+                            fKey="angular"
                             label="Angular units"
                             value={units.angular}
                             defaultValue={units.angular}
@@ -194,7 +170,7 @@ export default function SettingsUnitCard({ visibility }) {
                         <UnitSelector
                             containerStyle={styles.row}
 
-                            key="adjustment"
+                            fKey="adjustment"
                             label="Adjustment units"
                             value={units.adjustment}
                             defaultValue={units.adjustment}
@@ -205,7 +181,7 @@ export default function SettingsUnitCard({ visibility }) {
                         <UnitSelector
                             containerStyle={styles.row}
 
-                            key="drop"
+                            fKey="drop"
                             label="Drop units"
                             value={units.drop}
                             defaultValue={units.drop}
@@ -216,7 +192,7 @@ export default function SettingsUnitCard({ visibility }) {
                         <UnitSelector
                             containerStyle={styles.row}
 
-                            key="weight"
+                            fKey="weight"
                             label="Weight units"
                             value={units.weight}
                             defaultValue={units.weight}
@@ -227,7 +203,7 @@ export default function SettingsUnitCard({ visibility }) {
                         <UnitSelector
                             containerStyle={styles.row}
 
-                            key="temperature"
+                            fKey="temperature"
                             label="Temperature units"
                             value={units.temperature}
                             defaultValue={units.temperature}
@@ -238,7 +214,7 @@ export default function SettingsUnitCard({ visibility }) {
                         <UnitSelector
                             containerStyle={styles.row}
 
-                            key="pressure"
+                            fKey="pressure"
                             label="Pressure units"
                             value={preferredUnits.pressure}
                             defaultValue={preferredUnits.pressure}
@@ -249,7 +225,7 @@ export default function SettingsUnitCard({ visibility }) {
                         <UnitSelector
                             containerStyle={styles.row}
 
-                            key="energy"
+                            fKey="energy"
                             label="Pressure units"
                             value={preferredUnits.energy}
                             defaultValue={preferredUnits.energy}

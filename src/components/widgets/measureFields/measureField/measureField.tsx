@@ -5,7 +5,7 @@ import {SpinBox, DoubleSpinBox, SpinBoxProps} from "../../spinBox/spinBox";
 
 
 export interface MeasureFormFieldProps extends SpinBoxProps {
-  key?: string;
+  fKey?: string;
   label?: string;
   suffix?: string;
   icon?: string;
@@ -30,6 +30,7 @@ const MeasureFormField: React.FC<MeasureFormFieldProps> = ({
     onValueChange: onValueChange ? onValueChange : null,
     minValue: minValue,
     maxValue: maxValue,
+    fractionDigits: fractionDigits,
     step: step ?? 1,
     style: [styles.spinBox, { marginVertical: 8 }],
     inputProps: {

@@ -17,14 +17,14 @@ interface ShotParamsCardProps {
 
 const ShotParamsCard: React.FC<ShotParamsCardProps> = ({ label = "Shot properties", expanded = true }) => {
 
-    const { calcState, currentConditions, autoRefresh } = useProfile()
+    const { calcState, currentConditions } = useProfile()
     const [refreshable, setRefreshable] = useState(false)
 
     const prevCurrentConditionsRef = useRef<CurrentConditionsProps | null>(null);
 
     useEffect(() => {
 
-        if ([CalculationState.ConditionsUpdated].includes(calcState) && !autoRefresh) {
+        if ([CalculationState.ConditionsUpdated].includes(calcState)) {
             const rangeUpd = prevCurrentConditionsRef.current?.trajectoryRange !== currentConditions.trajectoryRange;
             const stepUpd = prevCurrentConditionsRef.current?.trajectoryStep !== currentConditions.trajectoryStep;
     

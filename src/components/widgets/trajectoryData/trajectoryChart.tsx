@@ -7,12 +7,10 @@ import CustomChart from '../adaptiveChart';
 import { usePreferredUnits } from '../../../context/preferredUnitsContext';
 
 
-function findOppositeCathetus(hypotenuse, angleInDegrees) {
-    // Переводимо кут у градусах у радіани
+function findOppositeLeg(hypotenuse, angleInDegrees) {
     const angleInRadians = angleInDegrees * (Math.PI / 180);
-    // Обчислюємо протилежний катет
-    const oppositeCathetus = hypotenuse * Math.sin(angleInRadians);
-    return oppositeCathetus;
+    const oppositeLeg = hypotenuse * Math.sin(angleInRadians);
+    return oppositeLeg;
 }
 
 const TrajectoryChart = () => {
@@ -37,14 +35,14 @@ const TrajectoryChart = () => {
                 color: () => theme.colors.primary,
             },
             {
-                data: result.map(row => findOppositeCathetus(
+                data: result.map(row => findOppositeLeg(
                     row.lookDistance.In(preferredUnits.drop),
                     hitResult.shot.lookAngle.In(Unit.Degree)
                 )),
                 color: () => "orange",
             },
             {
-                data: result.map(row => findOppositeCathetus(
+                data: result.map(row => findOppositeLeg(
                     row.lookDistance.In(preferredUnits.drop),
                     hitResult.shot.barrelElevation.In(Unit.Degree)
                 )),

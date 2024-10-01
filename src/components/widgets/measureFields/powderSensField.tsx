@@ -1,7 +1,5 @@
-import { useCallback } from "react";
 import { useProfile } from "../../../context/profileContext";
 import MeasureFormField, { MeasureFormFieldProps } from "./measureField"
-import debounce from "../../../utils/debounce";
 
 
 export interface PowderSensFieldProps extends Omit<MeasureFormFieldProps, 'value' | 'suffix' | 'onValueChange'> { }
@@ -9,10 +7,9 @@ export interface PowderSensFieldProps extends Omit<MeasureFormFieldProps, 'value
 
 export const PowderSensField: React.FC<PowderSensFieldProps> = () => {
     const { profileProperties, updateProfileProperties } = useProfile();
-    const debouncedProfileUpdate = useCallback(debounce(updateProfileProperties, 300), [updateProfileProperties]);
 
     const fieldProps: Partial<MeasureFormFieldProps> = {
-        key: "cTCoeff",
+        fKey: "cTCoeff",
         label: "Temperature sens.",
         suffix: "%/15°C",
         icon: "percent",
@@ -22,11 +19,11 @@ export const PowderSensField: React.FC<PowderSensFieldProps> = () => {
         maxValue: 100,
     }
 
-    const value: number = profileProperties?.[fieldProps.key] ? profileProperties[fieldProps.key] / 1000 : 0
+    const value: number = profileProperties?.[fieldProps.fKey] ? profileProperties[fieldProps.fKey] / 1000 : 0
 
     const onValueChange = (value: number): void => {
-        return debouncedProfileUpdate({
-            [fieldProps.key]: Math.round(value * 1000)
+        return updateProfileProperties({
+            [fieldProps.fKey]: value * 1000
         })
     }
 

@@ -3,7 +3,7 @@ import { MeasureFormFieldProps } from "./measureField";
 
 export const measureFieldsProps: Record<string, Partial<MeasureFormFieldProps>> = {
     temp: {
-        key: "cZeroAirTemperature",
+        fKey: "cZeroAirTemperature",
         label: "Temperature",
         suffix: UnitProps[Unit.Celsius].symbol,
         icon: "thermometer",
@@ -13,7 +13,7 @@ export const measureFieldsProps: Record<string, Partial<MeasureFormFieldProps>> 
         value: 15,
     },
     pressure: {
-        key: "pressure",
+        fKey: "pressure",
         label: "Pressure",
         suffix: UnitProps[Unit.hPa].symbol,
         icon: "speedometer",
@@ -23,7 +23,7 @@ export const measureFieldsProps: Record<string, Partial<MeasureFormFieldProps>> 
         value: 1000,
     },
     humidity: {
-        key: "humidity",
+        fKey: "humidity",
         label: "Humidity",
         suffix: "%",
         icon: "water",
@@ -33,7 +33,7 @@ export const measureFieldsProps: Record<string, Partial<MeasureFormFieldProps>> 
         value: 78,
     },
     windSpeed: {
-        key: "windSpeed",
+        fKey: "windSpeed",
         label: "Wind speed",
         suffix: UnitProps[Unit.MPS].symbol,
         icon: "windsock",

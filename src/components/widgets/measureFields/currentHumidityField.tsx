@@ -1,7 +1,6 @@
-import { useCallback } from "react";
+import { useEffect } from "react";
 import { useProfile } from "../../../context/profileContext";
 import MeasureFormField, { MeasureFormFieldProps } from "./measureField"
-import debounce from "../../../utils/debounce";
 
 
 export interface CurrentHumidityFieldProps extends Omit<MeasureFormFieldProps, 'value' | 'suffix' | 'onValueChange'> { }
@@ -9,10 +8,9 @@ export interface CurrentHumidityFieldProps extends Omit<MeasureFormFieldProps, '
 
 export const CurrentHumidityField: React.FC<CurrentHumidityFieldProps> = () => {
     const { currentConditions, updateCurrentConditions } = useProfile();
-    const debouncedUpdateConditions = useCallback(debounce(updateCurrentConditions, 350), [updateCurrentConditions]);
 
     const fieldProps: Partial<MeasureFormFieldProps> = {
-        key: "humidity",
+        fKey: "humidity",
         label: "Humidity",
         suffix: "%",
         icon: "water",
@@ -22,11 +20,11 @@ export const CurrentHumidityField: React.FC<CurrentHumidityFieldProps> = () => {
         maxValue: 100,
     }
 
-    const value: number = currentConditions?.[fieldProps.key] ? currentConditions[fieldProps.key] : 0
+    const value: number = currentConditions?.[fieldProps.fKey] ? currentConditions[fieldProps.fKey] : 0
 
     const onValueChange = (value: number): void => {
-        return debouncedUpdateConditions({
-            [fieldProps.key]: value
+        return updateCurrentConditions({
+            [fieldProps.fKey]: value
         })
     }
 

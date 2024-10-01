@@ -1,8 +1,6 @@
-import { useCallback } from "react";
 import { useProfile } from "../../../context/profileContext";
 import MeasureFormField, { MeasureFormFieldProps } from "./measureField"
 import { UNew, Unit, UnitProps, Measure } from "js-ballistics/dist/v2"
-import debounce from "../../../utils/debounce";
 import { usePreferredUnits } from "../../../context/preferredUnitsContext";
 import getFractionDigits from "../../../utils/fractionConvertor";
 
@@ -11,7 +9,6 @@ export interface CurrentPressureFieldProps extends Omit<MeasureFormFieldProps, '
 
 export const CurrentPressureField: React.FC<CurrentPressureFieldProps> = () => {
     const { currentConditions, updateCurrentConditions } = useProfile();
-    const debouncedUpdateConditions = useCallback(debounce(updateCurrentConditions, 350), [updateCurrentConditions]);
 
     const { preferredUnits } = usePreferredUnits()
 
@@ -19,7 +16,7 @@ export const CurrentPressureField: React.FC<CurrentPressureFieldProps> = () => {
     const accuracy = getFractionDigits(1, UNew.hPa(1).In(prefUnit))
 
     const fieldProps: Partial<MeasureFormFieldProps> = {
-        key: "pressure",
+        fKey: "pressure",
         label: "Pressure",
         icon: "speedometer",
         fractionDigits: accuracy,
@@ -30,13 +27,13 @@ export const CurrentPressureField: React.FC<CurrentPressureFieldProps> = () => {
     }
 
     const value: number = UNew.hPa(
-        currentConditions?.[fieldProps.key] ? 
-        currentConditions[fieldProps.key] : 1000
+        currentConditions?.[fieldProps.fKey] ? 
+        currentConditions[fieldProps.fKey] : 1000
     ).In(prefUnit)
 
     const onValueChange = (value: number): void => {
-        return debouncedUpdateConditions({
-            [fieldProps.key]: new Measure.Pressure(value, prefUnit).In(Unit.hPa)
+        return updateCurrentConditions({
+            [fieldProps.fKey]: new Measure.Pressure(value, prefUnit).In(Unit.hPa)
         })
     }
 

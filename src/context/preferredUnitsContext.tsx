@@ -66,6 +66,8 @@ export const PreferredUnitsProvider: React.FC<PreferredUnitsProviderProps> = ({ 
     weight: Unit.Grain,
   });
 
+  const [isLoaded, setIsLoaded] = useState(false); // Track loading state
+
   // Load preferred units from AsyncStorage on component mount
   useEffect(() => {
     const loadUnits = async () => {
@@ -73,14 +75,19 @@ export const PreferredUnitsProvider: React.FC<PreferredUnitsProviderProps> = ({ 
       if (storedUnits) {
         setPreferredUnits(storedUnits);
       }
+      console.log("Loading units")
+      setIsLoaded(true); // Mark as loaded after attempting to load data
     };
     loadUnits();
   }, []);
 
   // Store preferred units to AsyncStorage whenever they are updated
   useEffect(() => {
-    savePreferredUnitsToStorage(preferredUnits);
-  }, [preferredUnits]);
+    if (isLoaded) { // Only save if data has been loaded
+      console.log("Saving units")
+      savePreferredUnitsToStorage(preferredUnits);
+    }
+  }, [preferredUnits, isLoaded]);
 
   return (
     <PreferredUnitsContext.Provider value={{ preferredUnits, setPreferredUnits }}>

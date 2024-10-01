@@ -1,9 +1,8 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import CustomCard from "./customCard";
 import WindDirectionPicker from "../widgets/windDirectionPicker";
 import { MeasureFormFieldProps } from "../widgets/measureFields/measureField/measureField";
 import { CalculationState, useProfile } from "../../context/profileContext";
-import debounce from "../../utils/debounce";
 import { preferredUnits, UNew, UnitProps, Unit, Measure } from "js-ballistics/dist/v2";
 import MeasureFormField from "../widgets/measureFields/measureField";
 import RecalculateChip from "../widgets/recalculateChip";
@@ -16,8 +15,7 @@ interface WindCardProps {
 }
 
 const CurrentWindCard: React.FC<WindCardProps> = ({ label = "Zero wind direction and speed", expanded = true }) => {
-    const { currentConditions, updateCurrentConditions, calcState, autoRefresh } = useProfile();
-    const debouncedUpdateConditions = useCallback(debounce(updateCurrentConditions, 350), [updateCurrentConditions]);
+    const { currentConditions, updateCurrentConditions, calcState } = useProfile();
 
     const [windDir, setWindDir] = useState(currentConditions.windDirection)
     const [windSpeed, setWindSpeed] = useState(currentConditions.windSpeed)
@@ -28,7 +26,7 @@ const CurrentWindCard: React.FC<WindCardProps> = ({ label = "Zero wind direction
 
     useEffect(() => {
 
-        if ([CalculationState.ConditionsUpdated].includes(calcState) && !autoRefresh) {
+        if ([CalculationState.ConditionsUpdated].includes(calcState)) {
             const windDirection = prevCurrentConditionsRef.current?.windDirection !== currentConditions.windDirection;
             const stepSpeed = prevCurrentConditionsRef.current?.windSpeed !== currentConditions.windSpeed;
     
@@ -49,7 +47,7 @@ const CurrentWindCard: React.FC<WindCardProps> = ({ label = "Zero wind direction
     const unitProps = UnitProps[preferredUnits.velocity]
 
     const fieldProps: Partial<MeasureFormFieldProps> = {
-        key: "windSpeed",
+        fKey: "windSpeed",
         label: "Wind speed",
         icon: "windsock",
         fractionDigits: unitProps.accuracy,
@@ -69,7 +67,7 @@ const CurrentWindCard: React.FC<WindCardProps> = ({ label = "Zero wind direction
 
     useEffect(() => {
         if (windSpeed != 0) {
-            debouncedUpdateConditions({ windDirection: windDir, windSpeed: windSpeed })
+            updateCurrentConditions({ windDirection: windDir, windSpeed: windSpeed })
         }
     }, [windDir, windSpeed])
 

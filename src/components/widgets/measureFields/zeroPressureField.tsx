@@ -1,8 +1,6 @@
-import { useCallback } from "react";
 import { useProfile } from "../../../context/profileContext";
 import MeasureFormField, { MeasureFormFieldProps } from "./measureField"
 import { UNew, Unit, UnitProps, Measure } from "js-ballistics/dist/v2"
-import debounce from "../../../utils/debounce";
 import { usePreferredUnits } from "../../../context/preferredUnitsContext";
 import getFractionDigits from "../../../utils/fractionConvertor";
 
@@ -11,7 +9,6 @@ export interface ZeroPressureFieldProps extends Omit<MeasureFormFieldProps, 'val
 
 export const ZeroPressureField: React.FC<ZeroPressureFieldProps> = () => {
     const { profileProperties, updateProfileProperties } = useProfile();
-    const debouncedProfileUpdate = useCallback(debounce(updateProfileProperties, 300), [updateProfileProperties]);
 
     const { preferredUnits } = usePreferredUnits()
 
@@ -19,7 +16,7 @@ export const ZeroPressureField: React.FC<ZeroPressureFieldProps> = () => {
     const accuracy = getFractionDigits(1, UNew.hPa(1).In(prefUnit))
 
     const fieldProps: Partial<MeasureFormFieldProps> = {
-        key: "cZeroAirPressure",
+        fKey: "cZeroAirPressure",
         label: "Pressure",
         icon: "speedometer",
         fractionDigits: accuracy,
@@ -30,13 +27,13 @@ export const ZeroPressureField: React.FC<ZeroPressureFieldProps> = () => {
     }
 
     const value: number = UNew.hPa(
-        profileProperties?.[fieldProps.key] ? 
-        profileProperties[fieldProps.key] / 10 : 1000
+        profileProperties?.[fieldProps.fKey] ? 
+        profileProperties[fieldProps.fKey] / 10 : 1000
     ).In(prefUnit)
 
     const onValueChange = (value: number): void => {
-        return debouncedProfileUpdate({
-            [fieldProps.key]: Math.round(new Measure.Pressure(value, prefUnit).In(Unit.hPa) * 10)
+        return updateProfileProperties({
+            [fieldProps.fKey]: new Measure.Pressure(value, prefUnit).In(Unit.hPa) * 10
         })
     }
 

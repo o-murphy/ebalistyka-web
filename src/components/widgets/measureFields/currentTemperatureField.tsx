@@ -1,8 +1,6 @@
-import { useCallback } from "react";
 import { useProfile } from "../../../context/profileContext";
 import MeasureFormField, { MeasureFormFieldProps } from "./measureField"
 import { UNew, Unit, UnitProps, Measure } from "js-ballistics/dist/v2"
-import debounce from "../../../utils/debounce";
 import { usePreferredUnits } from "../../../context/preferredUnitsContext";
 import getFractionDigits from "../../../utils/fractionConvertor";
 
@@ -11,7 +9,6 @@ export interface CurrentTemperatureFieldProps extends Omit<MeasureFormFieldProps
 
 export const CurrentTemperatureField: React.FC<CurrentTemperatureFieldProps> = () => {
     const { currentConditions, updateCurrentConditions } = useProfile();
-    const debouncedUpdateConditions = useCallback(debounce(updateCurrentConditions, 350), [updateCurrentConditions]);
 
     const { preferredUnits } = usePreferredUnits()
 
@@ -19,7 +16,7 @@ export const CurrentTemperatureField: React.FC<CurrentTemperatureFieldProps> = (
     const accuracy = getFractionDigits(1, UNew.Celsius(1).In(prefUnit))
 
     const fieldProps: Partial<MeasureFormFieldProps> = {
-        key: "temperature",
+        fKey: "temperature",
         label: "Temperature",
         icon: "thermometer",
         fractionDigits: accuracy,
@@ -30,13 +27,13 @@ export const CurrentTemperatureField: React.FC<CurrentTemperatureFieldProps> = (
     }
 
     const value: number = UNew.Celsius(
-        currentConditions?.[fieldProps.key] ? 
-        currentConditions[fieldProps.key] : 15
+        currentConditions?.[fieldProps.fKey] ? 
+        currentConditions[fieldProps.fKey] : 15
     ).In(prefUnit)
 
     const onValueChange = (value: number): void => {
-        return debouncedUpdateConditions({
-            [fieldProps.key]: new Measure.Temperature(value, prefUnit).In(Unit.Celsius)
+        return updateCurrentConditions({
+            [fieldProps.fKey]: new Measure.Temperature(value, prefUnit).In(Unit.Celsius)
         })
     }
 
