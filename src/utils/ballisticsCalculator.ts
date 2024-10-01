@@ -28,6 +28,22 @@ export interface CurrentConditionsProps {
     trajectoryRange: number
 }
 
+// Handle messages from the main thread
+// self.onmessage = async (event) => {
+//     const { currentCalc, currentConditions } = event.data;
+  
+//     try {
+//       // Perform your calculations here (this should be asynchronous)
+//       const result = await makeShot(currentCalc, currentConditions);
+//       const adjustedResult = await shootTheTarget(currentCalc, currentConditions);
+  
+//       // Post the results back to the main thread
+//       self.postMessage({ result, adjustedResult });
+//     } catch (error) {
+//       self.postMessage({ error: error.message });
+//     }
+// };
+
 const dragModel = (profile: ProfileProps) => {
     switch (profile.bcType) {
         case "G7":

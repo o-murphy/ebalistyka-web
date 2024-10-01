@@ -82,4 +82,4 @@ export const inputSideStyles = StyleSheet.create({
 });
 
 // export const iconSize = 12;
-export const iconSize = null;
+export const iconSize = 20;

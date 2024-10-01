@@ -59,7 +59,7 @@ const WeaponCard: React.FC<WeaponCardProps> = ({ expanded = true }) => {
                 label={"Weapon name"}
                 text={profileProperties?.profileName ?? "My rifle"}
                 onTextChange={text => updateProfileProperties({ profileName: text })}
-            />s
+            />
 
             <SightHeightField />
             <TwistField />

@@ -16,7 +16,7 @@ export const TrajectoryRangeField = () => {
     const fieldProps: Partial<MeasureFormFieldProps> = {
         fKey: "trajectoryRange",
         label: "Trajectory range",
-        icon: "",
+        icon: "map-marker-distance",
         fractionDigits: accuracy,
         step: 1 / (10 ** accuracy),
         suffix: UnitProps[prefUnit].symbol,

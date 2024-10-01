@@ -10,7 +10,7 @@ export enum CalculationState {
   NoData = 0,
   ZeroUpdated = 1,
   ConditionsUpdated = 2,
-  Complete = 3,
+  Complete = 3
 }
 
 interface ProfileContextType {
@@ -28,7 +28,8 @@ interface ProfileContextType {
   // autoRefresh: boolean;
   // setAutoRefresh: React.Dispatch<React.SetStateAction<boolean>>;
   zero: () => void;
-  fire: () => void;
+  fire: () => Promise<void>;
+  inProgress: boolean;
 }
 
 export const ProfileContext = createContext<ProfileContextType | null>(null);
@@ -55,6 +56,8 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
   
   const [isLoaded, setIsLoaded] = useState(false); // Track loading state
 
+  const [inProgress, setInProgress] = useState<boolean>(false)
+
   useEffect(() => {
     loadUserData(); // Load data on mount
   }, []);
@@ -77,21 +80,29 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
     return preparedCalculator;
   }
 
-  const fire = () => {
-    console.log("F")
+  const fire = async () => {
+
+    try {
+      setInProgress(true);
     // const currentCalc: PreparedZeroData = autoRefresh ? calculator : zero();
-    const currentCalc: PreparedZeroData = zero();
-    if (currentCalc) {
-      if (!currentCalc.error) {
-        const result = makeShot(currentCalc, currentConditions);
-        const adjustedResult = shootTheTarget(currentCalc, currentConditions);
-        setHitResult(result);
-        setAdjustedResult(adjustedResult);
-        setCalcState(result instanceof Error ? CalculationState.Error : CalculationState.Complete);
-      } else {
-        setHitResult(currentCalc.error);
-        setCalcState(CalculationState.Error);
+      const currentCalc: PreparedZeroData = zero();
+      if (currentCalc) {
+        if (!currentCalc.error) {
+          const result = makeShot(currentCalc, currentConditions);
+          const adjustedResult = shootTheTarget(currentCalc, currentConditions);
+          setHitResult(result);
+          setAdjustedResult(adjustedResult);
+          setCalcState(result instanceof Error ? CalculationState.Error : CalculationState.Complete);
+        } else {
+          setHitResult(currentCalc.error);
+          setCalcState(CalculationState.Error);
+        }
       }
+    } catch (error) {
+      console.error('Error during fire:', error);
+      setCalcState(CalculationState.Error);
+    } finally {
+      setInProgress(false); // Set loading to false when the fire function ends
     }
   };
 
@@ -193,6 +204,7 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
       // setAutoRefresh,
       zero,
       fire,
+      inProgress
     }}>
       {children}
     </ProfileContext.Provider>

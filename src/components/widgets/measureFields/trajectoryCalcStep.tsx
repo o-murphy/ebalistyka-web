@@ -16,7 +16,7 @@ export const TrajectoryStepField = () => {
     const fieldProps: Partial<MeasureFormFieldProps> = {
         fKey: "trajectoryStep",
         label: "Trajectory step",
-        icon: "",
+        icon: "delta",
         fractionDigits: accuracy,
         step: 1 / (10 ** accuracy),
         suffix: UnitProps[prefUnit].symbol,

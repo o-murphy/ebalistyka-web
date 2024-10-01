@@ -18,7 +18,7 @@ export const ZeroDistanceField = () => {
     const fieldProps: Partial<MeasureFormFieldProps> = {
         // fKey: "trajectoryRange",
         label: "Zero distance",
-        icon: "arrow-left-right-bold",
+        icon: "arrow-left-right",
         fractionDigits: accuracy,
         step: 10 ** step,
         suffix: UnitProps[prefUnit].symbol,

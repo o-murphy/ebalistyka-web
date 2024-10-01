@@ -14,7 +14,7 @@ const CalculationStateCard = (cardStyle) => {
     const { theme } = useTheme();
     const {
         calcState, currentConditions,
-        profileProperties, hitResult, setCalcState
+        profileProperties, hitResult
     } = useProfile();
 
     const [refreshable, setRefreshable] = useState(false)
