@@ -44,7 +44,7 @@ const TrajectoryChart = () => {
             {
                 data: result.map(row => findOppositeLeg(
                     row.lookDistance.In(preferredUnits.drop),
-                    hitResult.shot.barrelElevation.In(Unit.Degree)
+                    hitResult.shot.barrelElevation.In(Unit.Degree) + hitResult.shot.lookAngle.In(Unit.Degree)
                 )),
                 color: () => theme.colors.errorContainer,
             },
