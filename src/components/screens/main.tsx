@@ -10,7 +10,7 @@ import CurrentConditionsCard from '../cards/currentConditionsCard';
 import { useTheme } from '../../context/themeContext';
 import { PaperProvider } from 'react-native-paper';
 import TopAppBar from '../widgets/topAppBar';
-import { TrajectoryTable, TrajectoryChart, WindageChart, DragChart } from '../widgets/trajectoryData';
+import { TrajectoryTable, TrajectoryChart, WindageChart, DragChart, AdjustmentChart, AdjustedTable, AdjustedWindageChart } from '../widgets/trajectoryData';
 import CustomCard from '../cards/customCard';
 import { useProfile } from '../../context/profileContext';
 import CalculationStateCard from '../cards/calculationStateCard';
@@ -20,9 +20,10 @@ import ShotParamsCard from '../cards/shotPropsCard';
 export default function MainScreen() {
 
     const { theme } = useTheme();
-    const { hitResult } = useProfile();
+    const { hitResult, adjustedResult } = useProfile();
 
     const hitResultError = hitResult instanceof Error;
+    const adjustedResultError = hitResult instanceof Error;
 
 
     return (
@@ -54,20 +55,40 @@ export default function MainScreen() {
                                 showsVerticalScrollIndicator={false}
                             >
 
-                                <TrajectoryTable />
+                                {/* <TrajectoryTable /> */}
 
                                 {!hitResultError && hitResult ? (
-                                    <CustomCard title='Chart'>
+                                    <CustomCard title='Horizontal shot'>
+                                        <TrajectoryTable />
                                         <TrajectoryChart />
                                         <WindageChart />
-                                        <DragChart />
                                     </CustomCard>
 
                                 ) : (
-                                    <CustomCard title='Chart'>
+                                    <CustomCard title='Horizontal shot'>
 
                                     </CustomCard>
                                 )}
+
+                                {/* <AdjustedTable /> */}
+
+                                {!adjustedResultError && adjustedResult ? (
+                                    <CustomCard title='Target adjustment'>
+                                        <AdjustedTable />
+                                        <AdjustmentChart />
+                                        <AdjustedWindageChart />
+                                        {/* <DragChart /> */}
+                                    </CustomCard>
+
+                                ) : (
+                                    <CustomCard title='Target adjustment'>
+
+                                    </CustomCard>
+                                )}
+
+                                <CustomCard title={"Drag model"} >
+                                    <DragChart /> 
+                                </CustomCard>
 
                             </ScrollView>
 

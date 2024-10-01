@@ -2,31 +2,50 @@ import { StyleSheet } from 'react-native';
 import { useProfile } from '../../../context/profileContext';
 import { Text } from 'react-native-paper';
 import CustomChart from '../adaptiveChart';
+import { Table } from 'js-ballistics/dist/v2';
 
 
 const DragChart = () => {
 
-    const { calculator } = useProfile()
+    const { calculator, profileProperties } = useProfile()
 
-    const dragTable = calculator?.ammo?.dm?.dragTable
+    // const dragTable = calculator?.ammo?.dm?.dragTable
 
-    if (!dragTable) return (
-        <Text>Can't display chart</Text>
-    );
+    if (!profileProperties || !calculator) return null;
+
+    let dragTable = null;
+    
+    switch (profileProperties?.bcType) {
+        case "G1":
+            dragTable = Table.G1;
+            break;
+        case "G7":
+            dragTable = Table.G7;
+            break;
+        default:
+            break;
+    }
+
+    const customDragTable = calculator?.calc?.cdm
 
     const data = {
-        labels: dragTable.map(row => row.Mach),
+        labels: customDragTable.map(row => row.Mach),
         datasets: [
-            // {
-            //     data: result.map(row => row.drag),
-            // },
-            {
+            // Conditionally add the dragTable dataset only if it exists
+            ...(dragTable ? [{
                 data: dragTable.map(row => row.CD),
+                color: () => "blue" // You can specify a color here if needed
+            }] : []),
+            {
+                data: customDragTable.map(row => row.CD),
+                color: () => "orange"
             }
         ],
         legend: [
-            "Drag",
-        ],
+            // Conditionally add the "Standard" legend only if dragTable exists
+            ...(dragTable ? ["Standard"] : []),
+            "Calculated"
+        ]
     };
 
     const formatLabel = (value) => {

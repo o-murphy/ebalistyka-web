@@ -12,7 +12,9 @@ import { CurrentPressureField, CurrentPressureFieldProps } from "./currentPressu
 import { CurrentHumidityField, CurrentHumidityFieldProps } from "./currentHumidityField";
 import { ZeroTemperatureField, ZeroTemperatureFieldProps } from "./zeroTemperatureField";
 import { WindSpeedField, WindSpeedFieldProps } from "./currentWindSpeedField";
-
+import { TrajectoryRangeField, TrajectoryRangeFieldProps } from "./trajectoryRangeField";
+import { TrajectoryStepField, TrajectoryStepFieldProps } from "./trajectoryCalcStep";
+import { TrajectoryTargetDistance, TrajectoryTargetDistanceFieldProps } from "./trajectoryTargetDistance";
 
 export {
     CaliberField, CaliberFieldProps,
@@ -29,4 +31,7 @@ export {
     CurrentHumidityField, CurrentHumidityFieldProps,
     ZeroTemperatureField, ZeroTemperatureFieldProps,
     WindSpeedField, WindSpeedFieldProps,
+    TrajectoryRangeField, TrajectoryRangeFieldProps,
+    TrajectoryStepField, TrajectoryStepFieldProps,
+    TrajectoryTargetDistance, TrajectoryTargetDistanceFieldProps
 };

@@ -1,12 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import CustomCard from "./customCard";
-import { TrajectoryRangeField } from "../widgets/measureFields/trajectoryRangeField";
-import { TrajectoryStepField } from "../widgets/measureFields/trajectoryCalcStep";
+import { TrajectoryRangeField, TrajectoryStepField, TrajectoryTargetDistance } from "../widgets/measureFields";
 import { CalculationState, useProfile } from "../../context/profileContext";
-import { View } from "react-native";
-import { Text } from "react-native-paper";
 import RecalculateChip from "../widgets/recalculateChip";
-import { ProfileProps } from "../../utils/parseA7P";
 import { CurrentConditionsProps } from "../../utils/ballisticsCalculator";
 
 
@@ -27,8 +23,9 @@ const ShotParamsCard: React.FC<ShotParamsCardProps> = ({ label = "Shot propertie
         if ([CalculationState.ConditionsUpdated].includes(calcState)) {
             const rangeUpd = prevCurrentConditionsRef.current?.trajectoryRange !== currentConditions.trajectoryRange;
             const stepUpd = prevCurrentConditionsRef.current?.trajectoryStep !== currentConditions.trajectoryStep;
+            const targetDist = prevCurrentConditionsRef.current?.targetDistance !== currentConditions.targetDistance;
     
-            if (rangeUpd || stepUpd) {
+            if (rangeUpd || stepUpd || targetDist) {
                 setRefreshable(true)
             } else {
                 setRefreshable(false)
@@ -51,6 +48,7 @@ const ShotParamsCard: React.FC<ShotParamsCardProps> = ({ label = "Shot propertie
             <RecalculateChip visible={refreshable} style={{  }} />
             <TrajectoryRangeField />
             <TrajectoryStepField />
+            <TrajectoryTargetDistance />
         </CustomCard>
     );
 };

@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createContext, useState, useContext, useEffect, ReactNode, useCallback } from 'react';
 import parseA7P, { ProfileProps } from '../utils/parseA7P';
-import { CurrentConditionsProps, makeShot, prepareCalculator, PreparedZeroData } from '../utils/ballisticsCalculator';
+import { CurrentConditionsProps, makeShot, prepareCalculator, PreparedZeroData, shootTheTarget } from '../utils/ballisticsCalculator';
 import { HitResult } from 'js-ballistics/dist/v2';
 import debounce from '../utils/debounce';
 
@@ -22,6 +22,7 @@ interface ProfileContextType {
   updateCurrentConditions: (props: Partial<CurrentConditionsProps>) => void;
   calculator: PreparedZeroData | null;
   hitResult: HitResult | null | Error;
+  adjustedResult: HitResult | null | Error;
   calcState: CalculationState;
   setCalcState: React.Dispatch<React.SetStateAction<CalculationState>>;
   // autoRefresh: boolean;
@@ -50,6 +51,7 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
   // const [autoRefresh, setAutoRefresh] = useState<boolean>(false);
   const [calculator, setCalculator] = useState<PreparedZeroData | null>(null);
   const [hitResult, setHitResult] = useState<HitResult | Error | null>(null);
+  const [adjustedResult, setAdjustedResult] = useState<HitResult | Error | null>(null);
   
   const [isLoaded, setIsLoaded] = useState(false); // Track loading state
 
@@ -82,7 +84,9 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
     if (currentCalc) {
       if (!currentCalc.error) {
         const result = makeShot(currentCalc, currentConditions);
+        const adjustedResult = shootTheTarget(currentCalc, currentConditions);
         setHitResult(result);
+        setAdjustedResult(adjustedResult);
         setCalcState(result instanceof Error ? CalculationState.Error : CalculationState.Complete);
       } else {
         setHitResult(currentCalc.error);
@@ -182,6 +186,7 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
       updateCurrentConditions: debouncedUpdateConditions,
       calculator,
       hitResult,
+      adjustedResult,
       calcState,
       setCalcState,
       // autoRefresh,
