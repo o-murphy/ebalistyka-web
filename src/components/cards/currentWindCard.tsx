@@ -3,10 +3,12 @@ import CustomCard from "./customCard";
 import WindDirectionPicker from "../widgets/windDirectionPicker";
 import { MeasureFormFieldProps } from "../widgets/measureFields/measureField/measureField";
 import { CalculationState, useProfile } from "../../context/profileContext";
-import { preferredUnits, UNew, UnitProps, Unit, Measure } from "js-ballistics/dist/v2";
+import { UNew, UnitProps, Unit, Measure } from "js-ballistics/dist/v2";
 import MeasureFormField from "../widgets/measureFields/measureField";
 import RecalculateChip from "../widgets/recalculateChip";
 import { CurrentConditionsProps } from "../../utils/ballisticsCalculator";
+import { usePreferredUnits } from "../../context/preferredUnitsContext";
+import getFractionDigits from "../../utils/fractionConvertor";
 
 
 interface WindCardProps {
@@ -16,7 +18,7 @@ interface WindCardProps {
 
 const CurrentWindCard: React.FC<WindCardProps> = ({ label = "Zero wind direction and speed", expanded = true }) => {
     const { currentConditions, updateCurrentConditions, calcState } = useProfile();
-
+    const { preferredUnits } = usePreferredUnits()
     const [windDir, setWindDir] = useState(currentConditions.windDirection)
     const [windSpeed, setWindSpeed] = useState(currentConditions.windSpeed)
 
@@ -44,15 +46,18 @@ const CurrentWindCard: React.FC<WindCardProps> = ({ label = "Zero wind direction
         prevCurrentConditionsRef.current = currentConditions;
     }, [currentConditions, calcState]);
 
-    const unitProps = UnitProps[preferredUnits.velocity]
+    const prefUnit = preferredUnits.velocity
+
+    const accuracy = getFractionDigits(0.1, UNew.MPS(1).In(prefUnit))
+
 
     const fieldProps: Partial<MeasureFormFieldProps> = {
         fKey: "windSpeed",
         label: "Wind speed",
         icon: "windsock",
-        fractionDigits: unitProps.accuracy,
-        step: 1 / (10 ** unitProps.accuracy),
-        suffix: unitProps.symbol,
+        fractionDigits: accuracy,
+        step: 10 ** -accuracy,
+        suffix: UnitProps[prefUnit].symbol,
         minValue: UNew.MPS(0).In(preferredUnits.velocity),
         maxValue: UNew.MPS(100).In(preferredUnits.velocity),
     }

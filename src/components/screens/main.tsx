@@ -10,7 +10,7 @@ import CurrentConditionsCard from '../cards/currentConditionsCard';
 import { useTheme } from '../../context/themeContext';
 import { PaperProvider } from 'react-native-paper';
 import TopAppBar from '../widgets/topAppBar';
-import { TrajectoryTable, DragChart, HorizontalTrajectoryChart, AdjustedTrajectoryChart, AdjustedTable, HorizontalWindageChart, AdjustedWindageChart } from '../widgets/trajectoryData';
+import { TrajectoryTable, DragChart, HorizontalTrajectoryChart, AdjustedTrajectoryChart, AdjustedTable, HorizontalWindageChart, AdjustedWindageChart, TrajectoryReticle } from '../widgets/trajectoryData';
 import CustomCard from '../cards/customCard';
 import { useProfile } from '../../context/profileContext';
 import CalculationStateCard from '../cards/calculationStateCard';
@@ -85,6 +85,10 @@ export default function MainScreen() {
 
                                     </CustomCard>
                                 )}
+
+                                <CustomCard title={"Reticle"} >
+                                    <TrajectoryReticle /> 
+                                </CustomCard>
 
                                 <CustomCard title={"Drag model"} >
                                     <DragChart /> 

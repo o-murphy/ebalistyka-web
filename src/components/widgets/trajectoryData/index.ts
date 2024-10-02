@@ -3,6 +3,7 @@ import { HorizontalTrajectoryChart, AdjustedTrajectoryChart } from "./trajectory
 import { HorizontalWindageChart, AdjustedWindageChart } from "./windageChart";
 import DragChart from "./dragChart";
 import AdjustedTable from "./adjustedTable";
+import { TrajectoryReticle } from "./relicle";
 
 
 export {
@@ -12,5 +13,6 @@ export {
     DragChart,
     AdjustedTrajectoryChart,
     AdjustedTable,
-    AdjustedWindageChart
+    AdjustedWindageChart,
+    TrajectoryReticle,
 };
