@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import CustomCard from "./customCard";
-import { CalculationState, useProfile } from "../../context/profileContext";
+import { CalculationState, useCalculator } from "../../context/profileContext";
 import { ZeroTemperatureField } from "../widgets/measureFields";
 import { ZeroPressureField } from "../widgets/measureFields/zeroPressureField";
 import { ZeroHumidityField } from "../widgets/measureFields/zeroHumidityField";
@@ -14,7 +14,7 @@ interface AtmoCardProps {
 
 const ZeroAtmoCard: React.FC<AtmoCardProps> = ({ label = "Zero atmosphere", expanded = true }) => {
 
-    const { profileProperties, calcState } = useProfile();
+    const { profileProperties, calcState } = useCalculator();
 
     const [refreshable, setRefreshable] = useState(false)
 

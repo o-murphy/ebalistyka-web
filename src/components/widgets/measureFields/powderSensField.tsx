@@ -1,9 +1,9 @@
-import { useProfile } from "../../../context/profileContext";
+import { useCalculator } from "../../../context/profileContext";
 import MeasureFormField, { MeasureFormFieldProps } from "./measureField"
 
 
 export const PowderSensField = () => {
-    const { profileProperties, updateProfileProperties } = useProfile();
+    const { profileProperties, updateProfileProperties } = useCalculator();
 
     const fieldProps: Partial<MeasureFormFieldProps> = {
         fKey: "cTCoeff",

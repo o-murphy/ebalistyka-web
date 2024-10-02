@@ -1,6 +1,6 @@
 import { DataTable, Text } from 'react-native-paper';
 import { TrajectoryData, UnitProps } from 'js-ballistics/dist/v2';
-import { useProfile } from '../../../context/profileContext';
+import { useCalculator } from '../../../context/profileContext';
 import { StyleSheet, ScrollView, View } from 'react-native';
 import { useTheme } from '../../../context/themeContext';
 import CustomCard from '../../cards/customCard';
@@ -18,7 +18,7 @@ const TrajectoryTable = () => {
     const isScrollable = containerWidth < tableWidth;
 
 
-    const { hitResult } = useProfile()
+    const { hitResult } = useCalculator()
     const { theme } = useTheme()
     const hitResultError = hitResult instanceof Error;
 

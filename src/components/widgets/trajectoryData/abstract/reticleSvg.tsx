@@ -1,48 +1,60 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Svg, Circle } from 'react-native-svg';
+import { Svg, Circle, Text } from 'react-native-svg';
 import HorusTremor5 from '../../../../../assets/HorusTremor5'; // Your base SVG
-import { useProfile } from '../../../../context/profileContext';
-import { Unit } from 'js-ballistics/dist/v2';
+import { useCalculator } from '../../../../context/profileContext';
 import { useTheme } from '../../../../context/themeContext';
 import { usePreferredUnits } from '../../../../context/preferredUnitsContext';
-import { UNew } from 'js-ballistics';
+import { TrajectoryData, UNew, Unit } from 'js-ballistics/dist/v2';
 
-export const Reticle = () => {
+
+interface ReticleProps {
+    trajectory: TrajectoryData[] | any[];
+}
+
+
+export const Reticle: React.FC<ReticleProps> = ({ trajectory }) => {
 
     const Mil1 = 20
 
-    const { hitResult, currentConditions } = useProfile()
-    const { theme } = useTheme()
+    const { currentConditions } = useCalculator()
     const { preferredUnits } = usePreferredUnits()
-
-    const isError = hitResult instanceof Error
+    const { theme } = useTheme()
 
     const trajStep = parseFloat((UNew.Meter(currentConditions.trajectoryStep).In(preferredUnits.distance) / 10).toFixed(0)) * 10
     const filterValues = (value) => {
-        return parseFloat(value.distance.In(preferredUnits.distance).toFixed(0)) % trajStep === 0
+        const numericValue = parseFloat(value.distance.In(preferredUnits.distance).toFixed(0))
+        return numericValue % 100 === 0
     }
 
+    const preparedData = trajectory.filter(filterValues).map((value) => {
+        return {
+            cx: value.windageAdjustment.In(Unit.MIL) * Mil1,
+            cy: value.dropAdjustment.In(Unit.MIL) * Mil1,
+            dst: value.distance.In(preferredUnits.distance).toFixed(0),
+        }
+    })
+
     return (
-        <View style={[styles.container, ]}>
+        <View style={[styles.container,]}>
             {/* Base SVG Component */}
-            <HorusTremor5 style={styles.svg} color={theme.colors.onSurface} viewBox="-160 -80 320 320"/>
+            <HorusTremor5 style={styles.svg} color={theme.colors.onSurface} viewBox="-160 -80 320 320" />
 
             {/* Custom SVG Elements */}
-            {!isError && <Svg style={styles.svgOverlay} viewBox="-160 -80 320 320">
-                {/* Add dynamic elements here */}
-                {/* <Rect x="-320" y="-320" width="640" height="640" fill="transparent" />
-                <Circle cx="0" cy="0" r="50" stroke="blue" strokeWidth="1" fill="none" /> */}
-                {/* <Line x1="-300" y1="0" x2="300" y2="0" stroke="red" strokeWidth="1" />
-                <Line x1="0" y1="-300" x2="0" y2="300" stroke="red" strokeWidth="1" /> */}
+            {<Svg style={styles.svgOverlay} viewBox="-160 -80 320 320">
 
-                {/* <Circle cx={0} cy={Mil1} r="3" stroke="blue" strokeWidth="0" fill="red" /> */}
+                {/* {preparedData && preparedData.map((point, index) => <Cross point={point} index={index}/>)} */}
+                {preparedData && preparedData.map((point, index) => <Circle key={index} cx={-point.cx} cy={-point.cy} r="3" strokeWidth="0" fill="red" />)}
 
-                {!isError && hitResult?.trajectory?.filter(filterValues).map((value) => {
-                    const cx = value.windageAdjustment.In(Unit.MIL) * Mil1
-                    const cy = value.dropAdjustment.In(Unit.MIL) * Mil1
-                    return <Circle cx={-cx} cy={-cy} r="1" strokeWidth="0" fill="red" />
-                })}
+                {preparedData && preparedData.map((point, index) => <Text
+                    key={index}
+                    x={-point.cx - 20}
+                    y={-point.cy}
+                    strokeWidth="1"
+                    stroke="red"
+                    style={{ fontSize: 6, }}
+                    textAnchor="end"
+                >{point.dst}</Text>)}
 
             </Svg>}
         </View>
@@ -57,6 +69,7 @@ const styles = StyleSheet.create({
         // backgroundColor: 'gray', // To visually check the container
         maxWidth: 640, // Container width
         // height: 640, // Container height
+        aspectRatio: 1,
         position: 'relative', // Necessary for absolute positioning of child elements
         alignSelf: "center"
     },
@@ -65,13 +78,15 @@ const styles = StyleSheet.create({
         top: 0,
         left: 0,
         width: '100%',
-        // height: '100%',
+        // height: 640,
+        aspectRatio: 1
     },
     svgOverlay: {
         position: 'absolute', // Stack the overlay SVG
         top: 0,
         left: 0,
         width: '100%',
-        // height: '100%',
+        // height: 640,
+        aspectRatio: 1
     },
 });

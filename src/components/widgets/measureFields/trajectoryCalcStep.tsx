@@ -1,4 +1,4 @@
-import { useProfile } from "../../../context/profileContext";
+import { useCalculator } from "../../../context/profileContext";
 import MeasureFormField, { MeasureFormFieldProps } from "./measureField"
 import { UNew, Unit, UnitProps, Measure } from "js-ballistics/dist/v2"
 import { usePreferredUnits } from "../../../context/preferredUnitsContext";
@@ -6,7 +6,7 @@ import getFractionDigits from "../../../utils/fractionConvertor";
 
 
 export const TrajectoryStepField = () => {
-    const { currentConditions, updateCurrentConditions } = useProfile();
+    const { currentConditions, updateCurrentConditions } = useCalculator();
 
     const { preferredUnits } = usePreferredUnits()
 
@@ -18,7 +18,8 @@ export const TrajectoryStepField = () => {
         label: "Trajectory step",
         icon: "delta",
         fractionDigits: accuracy,
-        step: 1 / (10 ** accuracy),
+        // step: 1 / (10 ** accuracy),
+        step: 10,
         suffix: UnitProps[prefUnit].symbol,
         minValue: UNew.Meter(10).In(prefUnit),
         maxValue: UNew.Meter(500).In(prefUnit),

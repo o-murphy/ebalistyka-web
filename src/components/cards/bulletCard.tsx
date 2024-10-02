@@ -2,7 +2,7 @@ import { Text, Chip } from "react-native-paper";
 import React, { useEffect, useRef, useState } from "react";
 import CustomCard from "./customCard";
 import { StyleSheet, View } from "react-native";
-import { CalculationState, useProfile } from "../../context/profileContext";
+import { CalculationState, useCalculator } from "../../context/profileContext";
 import { BulletLengthField, BulletWeightField, CaliberField } from "../widgets/measureFields";
 import { ProfileProps } from "../../utils/parseA7P";
 import RecalculateChip from "../widgets/recalculateChip";
@@ -13,7 +13,7 @@ interface BulletCardProps {
 }
 
 const BulletCard: React.FC<BulletCardProps> = ({ expanded = true }) => {
-    const { profileProperties, updateProfileProperties, calcState } = useProfile();
+    const { profileProperties, updateProfileProperties, calcState } = useCalculator();
 
     const [refreshable, setRefreshable] = useState(false)
 

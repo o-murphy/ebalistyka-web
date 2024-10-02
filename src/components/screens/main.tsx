@@ -10,9 +10,9 @@ import CurrentConditionsCard from '../cards/currentConditionsCard';
 import { useTheme } from '../../context/themeContext';
 import { PaperProvider, SegmentedButtons } from 'react-native-paper';
 import TopAppBar from '../widgets/topAppBar';
-import { TrajectoryTable, DragChart, HorizontalTrajectoryChart, AdjustedTrajectoryChart, AdjustedTable, HorizontalWindageChart, AdjustedWindageChart, TrajectoryReticle } from '../widgets/trajectoryData';
+import { TrajectoryTable, DragChart, HorizontalTrajectoryChart, AdjustedTrajectoryChart, AdjustedTable, HorizontalWindageChart, AdjustedWindageChart, TrajectoryReticle, AdjustedReticle } from '../widgets/trajectoryData';
 import CustomCard from '../cards/customCard';
-import { DataToDisplay, TrajectoryMode, useProfile } from '../../context/profileContext';
+import { DataToDisplay, TrajectoryMode, useCalculator } from '../../context/profileContext';
 import CalculationStateCard from '../cards/calculationStateCard';
 import ShotParamsCard from '../cards/shotPropsCard';
 import CalculationModeCard from '../cards/calculationModeCard';
@@ -22,7 +22,7 @@ import CalculationModeCard from '../cards/calculationModeCard';
 export default function MainScreen() {
 
     const { theme } = useTheme();
-    const { hitResult, adjustedResult, trajectoryMode, dataToDisplay } = useProfile();
+    const { hitResult, adjustedResult, trajectoryMode, dataToDisplay } = useCalculator();
 
 
     const hitResultError = hitResult instanceof Error;
@@ -58,41 +58,38 @@ export default function MainScreen() {
                             alwaysBounceVertical={false}
                             showsVerticalScrollIndicator={false}
                         >
-
-                            {
-                                trajectoryMode === TrajectoryMode.Horizontal
-                                    ?
-                                    (!hitResultError && hitResult ? (
-                                        <CustomCard title='Horizontal shot'>
-                                            {dataToDisplay === DataToDisplay.Table && <TrajectoryTable />}
-                                            {dataToDisplay === DataToDisplay.Chart && <HorizontalTrajectoryChart />}
-                                            {dataToDisplay === DataToDisplay.Chart && <HorizontalWindageChart />}
-                                            {dataToDisplay === DataToDisplay.Reticle && <TrajectoryReticle />}
-                                            {dataToDisplay === DataToDisplay.DragModel && <DragChart />}
-                                        </CustomCard>
-
-                                    ) : (
-                                        <CustomCard title='Horizontal shot'>
-
-                                        </CustomCard>
-                                    ))
-                                    :
-                                    (!adjustedResultError && adjustedResult ? (
-                                        <CustomCard title='Target adjustment'>
-                                            <AdjustedTable />
-                                            <AdjustedTrajectoryChart />
-                                            <AdjustedWindageChart />
-                                            <CustomCard title={"Drag model"} expanded={false}>
-                                                <DragChart />
+                            {dataToDisplay === DataToDisplay.DragModel
+                                ?
+                                <CustomCard title='Drag model'>
+                                    <DragChart />
+                                </CustomCard>
+                                :
+                                (
+                                    trajectoryMode === TrajectoryMode.Zero
+                                        ?
+                                        (!hitResultError && hitResult ? (
+                                            <CustomCard title='Zero shot'>
+                                                {dataToDisplay === DataToDisplay.Table && <TrajectoryTable />}
+                                                {dataToDisplay === DataToDisplay.Chart && <HorizontalTrajectoryChart />}
+                                                {dataToDisplay === DataToDisplay.Chart && <HorizontalWindageChart />}
+                                                {dataToDisplay === DataToDisplay.Reticle && <TrajectoryReticle />}
                                             </CustomCard>
-                                        </CustomCard>
 
-                                    ) : (
-                                        <CustomCard title='Target adjustment'>
+                                        ) : <CustomCard title='Zero shot' />)
+                                        :
+                                        (!adjustedResultError && adjustedResult ? (
+                                            <CustomCard title='Relative shot'>
+                                                {dataToDisplay === DataToDisplay.Table && <AdjustedTable />}
+                                                {dataToDisplay === DataToDisplay.Chart && <AdjustedTrajectoryChart />}
+                                                {dataToDisplay === DataToDisplay.Chart && <AdjustedWindageChart />}
+                                                {dataToDisplay === DataToDisplay.Reticle && <AdjustedReticle />}
+                                            </CustomCard>
 
-                                        </CustomCard>
-                                    ))
-                            }
+                                        ) : (
+                                            <CustomCard title='Relative shot' />)
+                                        )
+                                )}
+
 
                         </ScrollView>
 

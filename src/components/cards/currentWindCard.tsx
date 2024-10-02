@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import CustomCard from "./customCard";
 import WindDirectionPicker from "../widgets/windDirectionPicker";
 import { MeasureFormFieldProps } from "../widgets/measureFields/measureField/measureField";
-import { CalculationState, useProfile } from "../../context/profileContext";
+import { CalculationState, useCalculator } from "../../context/profileContext";
 import { UNew, UnitProps, Unit, Measure } from "js-ballistics/dist/v2";
 import MeasureFormField from "../widgets/measureFields/measureField";
 import RecalculateChip from "../widgets/recalculateChip";
@@ -17,7 +17,7 @@ interface WindCardProps {
 }
 
 const CurrentWindCard: React.FC<WindCardProps> = ({ label = "Zero wind direction and speed", expanded = true }) => {
-    const { currentConditions, updateCurrentConditions, calcState } = useProfile();
+    const { currentConditions, updateCurrentConditions, calcState } = useCalculator();
     const { preferredUnits } = usePreferredUnits()
     const [windDir, setWindDir] = useState(currentConditions.windDirection)
     const [windSpeed, setWindSpeed] = useState(currentConditions.windSpeed)

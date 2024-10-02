@@ -1,6 +1,6 @@
 import { Chip, Icon, ActivityIndicator } from "react-native-paper"
 import { useTheme } from "../../context/themeContext"
-import { useProfile } from "../../context/profileContext"
+import { useCalculator } from "../../context/profileContext"
 import { StyleProp, ViewStyle } from "react-native"
 import { ReactNode } from "react"
 
@@ -13,7 +13,7 @@ interface RecalculateChipProps {
 
 const RecalculateChip = ({ style = null, visible = false }: RecalculateChipProps): ReactNode => {
     const { theme } = useTheme();
-    const { fire, inProgress } = useProfile();
+    const { fire, inProgress } = useCalculator();
   
     const iconSource = () => {
       return inProgress ? (

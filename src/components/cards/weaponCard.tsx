@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from "react";
 import CustomCard from "./customCard";
 import { UNew } from "js-ballistics/dist/v2";
 import { StyleSheet, View } from "react-native";
-import { CalculationState, useProfile } from "../../context/profileContext";
+import { CalculationState, useCalculator } from "../../context/profileContext";
 import { Dropdown } from "react-native-paper-dropdown";
 import { SightHeightField, TwistField, ZeroDistanceField, ZeroLookAngleField } from "../widgets/measureFields";
 import { ProfileProps } from "../../utils/parseA7P";
@@ -17,7 +17,7 @@ interface WeaponCardProps {
 }
 
 const WeaponCard: React.FC<WeaponCardProps> = ({ expanded = true }) => {
-    const { profileProperties, updateProfileProperties, calcState } = useProfile();
+    const { profileProperties, updateProfileProperties, calcState } = useCalculator();
 
     const [refreshable, setRefreshable] = useState(false)
 

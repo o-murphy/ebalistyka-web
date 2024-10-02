@@ -1,10 +1,10 @@
 import { useEffect } from "react";
-import { useProfile } from "../../../context/profileContext";
+import { useCalculator } from "../../../context/profileContext";
 import MeasureFormField, { MeasureFormFieldProps } from "./measureField"
 
 
 export const CurrentHumidityField = () => {
-    const { currentConditions, updateCurrentConditions } = useProfile();
+    const { currentConditions, updateCurrentConditions } = useCalculator();
 
     const fieldProps: Partial<MeasureFormFieldProps> = {
         fKey: "humidity",

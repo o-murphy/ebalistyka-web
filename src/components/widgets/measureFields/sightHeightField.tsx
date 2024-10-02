@@ -1,4 +1,4 @@
-import { useProfile } from "../../../context/profileContext";
+import { useCalculator } from "../../../context/profileContext";
 import MeasureFormField, { MeasureFormFieldProps } from "./measureField"
 import { UNew, Unit, UnitProps, Measure } from "js-ballistics/dist/v2"
 import { usePreferredUnits } from "../../../context/preferredUnitsContext";
@@ -6,7 +6,7 @@ import getFractionDigits from "../../../utils/fractionConvertor";
 
 
 export const SightHeightField = () => {
-    const { profileProperties, updateProfileProperties } = useProfile();
+    const { profileProperties, updateProfileProperties } = useCalculator();
 
     const { preferredUnits } = usePreferredUnits()
 

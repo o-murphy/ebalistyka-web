@@ -37,7 +37,7 @@ interface CalculationContextType {
 }
 
 export enum TrajectoryMode {
-  Horizontal = 1,
+  Zero = 1,
   Relative = 2
 }
 
@@ -74,7 +74,7 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
 
   const [inProgress, setInProgress] = useState<boolean>(false)
 
-  const [ trajectoryMode, setTrajectoryMode ] = useState<TrajectoryMode>(TrajectoryMode.Horizontal)
+  const [ trajectoryMode, setTrajectoryMode ] = useState<TrajectoryMode>(TrajectoryMode.Zero)
   const [ dataToDisplay, setDataToDisplay ] = useState<DataToDisplay>(DataToDisplay.Table);
 
   useEffect(() => {
@@ -235,7 +235,7 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
   );
 };
 
-export const useProfile = () => {
+export const useCalculator = () => {
   const context = useContext(CalculationContext);
   if (!context) {
     throw new Error('useProfile must be used within a ProfileProvider');

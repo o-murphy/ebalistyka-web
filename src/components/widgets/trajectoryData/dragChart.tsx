@@ -1,6 +1,6 @@
 import { Card } from 'react-native-paper';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { useProfile } from '../../../context/profileContext';
+import { useCalculator } from '../../../context/profileContext';
 import { Table } from 'js-ballistics/dist/v2';
 import React from 'react';
 import { useTheme } from '../../../context/themeContext';
@@ -55,7 +55,7 @@ const combineDragTables = (dragTable, customDragTable) => {
 };
 
 const DragChart = () => {
-    const { calculator, profileProperties } = useProfile();
+    const { calculator, profileProperties } = useCalculator();
     const { theme } = useTheme();
 
     let dragTable = null;
@@ -107,7 +107,7 @@ const DragChart = () => {
                         stroke={theme.colors.primary}
                         strokeWidth={1}
                         dot={false}
-                        name="Standard"
+                        name={`Standard ${profileProperties?.bcType}`}
                     />
                 )}
                 {/* Line for Custom Drag Table */}

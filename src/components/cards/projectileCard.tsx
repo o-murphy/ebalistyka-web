@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import CustomCard from "./customCard";
-import { CalculationState, useProfile } from "../../context/profileContext";
+import { CalculationState, useCalculator } from "../../context/profileContext";
 import { MuzzleVelocityField, PowderSensField } from "../widgets/measureFields";
 import { ProfileProps } from "../../utils/parseA7P";
 import RecalculateChip from "../widgets/recalculateChip";
@@ -12,7 +12,7 @@ interface ProjectileCardProps {
 
 const ProjectileCard: React.FC<ProjectileCardProps> = ({ expanded = true }) => {
 
-    const { profileProperties, updateProfileProperties, calcState } = useProfile();
+    const { profileProperties, updateProfileProperties, calcState } = useCalculator();
 
     const [refreshable, setRefreshable] = useState(false)
 

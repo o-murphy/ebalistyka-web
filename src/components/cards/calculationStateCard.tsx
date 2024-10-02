@@ -1,7 +1,7 @@
 import { Text } from "react-native-paper";
 import CustomCard from "./customCard";
 import { useTheme } from "../../context/themeContext";
-import { CalculationState, useProfile } from "../../context/profileContext";
+import { CalculationState, useCalculator } from "../../context/profileContext";
 import { ColorValue, StyleSheet, View } from "react-native";
 import { useEffect, useRef, useState } from "react";
 import { ProfileProps } from "../../utils/parseA7P";
@@ -13,7 +13,7 @@ const CalculationStateCard = (cardStyle) => {
     const {
         calcState, currentConditions,
         profileProperties, hitResult,
-    } = useProfile();
+    } = useCalculator();
 
     const [, setRefreshable] = useState(false);
 
@@ -99,7 +99,14 @@ const CalculationStateCard = (cardStyle) => {
 }
 
 const styles = StyleSheet.create({
-    row: { flex: 1, flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginVertical: 4, width: '100%' },
+    row: { 
+        flexDirection: "row", 
+        flexWrap: "wrap",  // Enable wrapping when there's not enough space
+        justifyContent: "space-between", 
+        alignItems: "center", 
+        marginVertical: 4, 
+        width: '100%' 
+    },
     column: { flexDirection: "column", marginHorizontal: 4 },
     // chipContainer: { marginLeft: 'auto' } // Align the chip to the right
 });

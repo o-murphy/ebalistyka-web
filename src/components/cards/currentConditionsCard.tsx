@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import CustomCard from "./customCard";
-import { CalculationState, useProfile } from "../../context/profileContext";
+import { CalculationState, useCalculator } from "../../context/profileContext";
 import { CurrentHumidityField, CurrentLookAngleField, CurrentPressureField, CurrentTemperatureField } from "../widgets/measureFields";
 import { CurrentConditionsProps } from "../../utils/ballisticsCalculator";
 import RecalculateChip from "../widgets/recalculateChip";
@@ -12,7 +12,7 @@ interface AtmoCardProps {
 
 const CurrentConditionsCard: React.FC<AtmoCardProps> = ({ label = "Zero atmosphere", expanded = true }) => {
 
-    const { currentConditions, calcState } = useProfile();
+    const { currentConditions, calcState } = useCalculator();
 
     const [refreshable, setRefreshable] = useState(false)
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import CustomCard from "./customCard";
 import { TrajectoryRangeField, TrajectoryStepField, TrajectoryTargetDistance } from "../widgets/measureFields";
-import { CalculationState, useProfile } from "../../context/profileContext";
+import { CalculationState, useCalculator } from "../../context/profileContext";
 import RecalculateChip from "../widgets/recalculateChip";
 import { CurrentConditionsProps } from "../../utils/ballisticsCalculator";
 
@@ -13,7 +13,7 @@ interface ShotParamsCardProps {
 
 const ShotParamsCard: React.FC<ShotParamsCardProps> = ({ label = "Shot properties", expanded = true }) => {
 
-    const { calcState, currentConditions } = useProfile()
+    const { calcState, currentConditions } = useCalculator()
     const [refreshable, setRefreshable] = useState(false)
 
     const prevCurrentConditionsRef = useRef<CurrentConditionsProps | null>(null);
