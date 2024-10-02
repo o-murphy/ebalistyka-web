@@ -71,9 +71,7 @@ const CurrentWindCard: React.FC<WindCardProps> = ({ label = "Zero wind direction
 
 
     useEffect(() => {
-        if (windSpeed != 0) {
             updateCurrentConditions({ windDirection: windDir, windSpeed: windSpeed })
-        }
     }, [windDir, windSpeed])
 
     return (

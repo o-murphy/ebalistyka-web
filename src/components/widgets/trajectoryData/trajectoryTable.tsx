@@ -48,7 +48,8 @@ const TrajectoryTable = () => {
     const headerTitles = ["Time", "Range", "V", "Mach", "Height", 
       "Drop", "Drop adjustment", 
       "Windage", "Wind. adjustment", 
-      "Look distance", "Angle",
+      "Look distance", 
+      // "Angle",
       "Density", "Drag", "Energy"
     ]
 
@@ -63,7 +64,7 @@ const TrajectoryTable = () => {
       preferredUnits.drop,
       preferredUnits.adjustment,
       preferredUnits.distance,
-      preferredUnits.angular,
+      // preferredUnits.angular,
       "",
       "",
       preferredUnits.energy,
@@ -95,7 +96,7 @@ const TrajectoryTable = () => {
                       <DataTable.Cell {...dataRowStyle(row)}>{row.windage.In(preferredUnits.drop).toFixed(1)}</DataTable.Cell>
                       <DataTable.Cell {...dataRowStyle(row)}>{row.windageAdjustment.In(preferredUnits.adjustment).toFixed(2)}</DataTable.Cell>
                       <DataTable.Cell {...dataRowStyle(row)}>{row.lookDistance.In(preferredUnits.distance).toFixed(0)}</DataTable.Cell>
-                      <DataTable.Cell {...dataRowStyle(row)}>{row.angle.In(preferredUnits.angular).toFixed(2)}</DataTable.Cell>
+                      {/* <DataTable.Cell {...dataRowStyle(row)}>{row.angle.In(preferredUnits.angular).toFixed(2)}</DataTable.Cell> */}
                       <DataTable.Cell {...dataRowStyle(row)}>{row.densityFactor.toFixed(2)}</DataTable.Cell>
                       <DataTable.Cell {...dataRowStyle(row)}>{row.drag.toFixed(3)}</DataTable.Cell>
                       <DataTable.Cell {...dataRowStyle(row)}>{row.energy.In(preferredUnits.energy).toFixed(0)}</DataTable.Cell>

@@ -16,19 +16,28 @@ export const TrajectoryReticle = () => {
 }
 
 export const AdjustedReticle = () => {
+    // const { adjustedResult } = useCalculator()
+
+
+    // if (!(adjustedResult instanceof Error)) {
+    //     const trajectory = adjustedResult?.trajectory.map(row => {
+    //         return {
+    //             ...row, dropAdjustment: UNew.Radian(row.dropAdjustment.In(Unit.Radian) - adjustedResult.shot.relativeAngle.In(Unit.Radian))
+    //         }
+    //     })
+    //     trajectory.shift()
+    //     return (
+    //         <Reticle trajectory={trajectory}/>
+    //     )  
+    // }
+    // return null
     const { adjustedResult } = useCalculator()
-
-
     if (!(adjustedResult instanceof Error)) {
-        const trajectory = adjustedResult?.trajectory.map(row => {
-            return {
-                ...row, dropAdjustment: UNew.Radian(row.dropAdjustment.In(Unit.Radian) - adjustedResult.shot.relativeAngle.In(Unit.Radian))
-            }
-        })
+        const trajectory = [...adjustedResult?.trajectory]
         trajectory.shift()
         return (
             <Reticle trajectory={trajectory}/>
-        )  
+        )
     }
     return null
 }

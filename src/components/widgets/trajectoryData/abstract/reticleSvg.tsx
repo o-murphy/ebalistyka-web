@@ -44,11 +44,11 @@ export const Reticle: React.FC<ReticleProps> = ({ trajectory }) => {
             {<Svg style={styles.svgOverlay} viewBox="-160 -80 320 320">
 
                 {/* {preparedData && preparedData.map((point, index) => <Cross point={point} index={index}/>)} */}
-                {preparedData && preparedData.map((point, index) => <Circle key={index} cx={-point.cx} cy={-point.cy} r="3" strokeWidth="0" fill="red" />)}
+                {preparedData && preparedData.map((point, index) => <Circle key={index} cx={point.cx} cy={-point.cy} r="3" strokeWidth="0" fill="red" />)}
 
                 {preparedData && preparedData.map((point, index) => <Text
                     key={index}
-                    x={-point.cx - 20}
+                    x={point.cx - 20}
                     y={-point.cy}
                     strokeWidth="1"
                     stroke="red"

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import WeaponCard from '../cards/weaponCard';
 import ProjectileCard from '../cards/projectileCard';

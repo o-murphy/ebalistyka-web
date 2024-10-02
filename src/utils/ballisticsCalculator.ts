@@ -226,7 +226,8 @@ export const shootTheTarget = (calculator: PreparedZeroData, currentConditions: 
         const newElevation = calc.barrelElevationForTarget(newShot, shotData.targetDistance)
         // const horizontal = UNew.Meter(Math.cos(newShot.lookAngle.In(Unit.Radian)) * shotData.targetDistance.In(Unit.Meter))
         const hold = UNew.MIL(newElevation.In(Unit.MIL) - weapon.zeroElevation.In(Unit.MIL))
-
+        console.log(`Elevalion: ${newElevation.to(Unit.MIL)} at ${shotData.targetDistance.to(Unit.Meter)}`)
+        console.log(`Hold: ${hold.to(Unit.MIL)} at ${shotData.targetDistance.to(Unit.Meter)}`)
         newShot.relativeAngle = hold
         const adjustedHit = calc.fire({shot: newShot, ...shotData.trajectoryProps})
         return adjustedHit
