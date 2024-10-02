@@ -6,21 +6,29 @@ import { useTheme } from '../../../../context/themeContext';
 import React from 'react';
 import { ToolTipRow } from './tooltipRow';
 
-const WindageTooltip = ({ active, label, payload, preferredUnits }) => {
+interface WindageTooltipProps {
+    active?: boolean;
+    label?: string;
+    payload?: any;
+    preferredUnits: any;
+}
+
+const WindageTooltip: React.FC<WindageTooltipProps> = ({ active = false, label = '', payload = [], preferredUnits }) => {
     const { theme } = useTheme();
 
-    if (active && payload && payload.length) {
-        // Get windage and its adjustment from the payload
-        const distanceValue = `${label} ${UnitProps[preferredUnits.distance].symbol}`
+    console.log({ active, label, payload }); // Debugging log
+
+    if (active && payload.length > 0) {
+        const distanceValue = `${label} ${UnitProps[preferredUnits.distance].symbol}`;
         const windageValue = `${payload[0].value} ${UnitProps[preferredUnits.drop].symbol}`;
         const windageAdjValue = `${payload[0].payload.windageAdj} ${UnitProps[preferredUnits.adjustment].symbol}`;
 
         return (
             <Card elevation={2} style={{ backgroundColor: `rgba(${theme.colors.primaryContainer}, 0.5)` }}>
                 <Card.Content>
-                    <ToolTipRow label={`Distance:`} value={distanceValue}/>
-                    <ToolTipRow label={`Windage:`} value={windageValue}/>
-                    <ToolTipRow label={`Adjustment:`} value={windageAdjValue}/>
+                    <ToolTipRow label={`Distance:`} value={distanceValue} />
+                    <ToolTipRow label={`Windage:`} value={windageValue} />
+                    <ToolTipRow label={`Adjustment:`} value={windageAdjValue} />
                 </Card.Content>
             </Card>
         );
@@ -30,14 +38,13 @@ const WindageTooltip = ({ active, label, payload, preferredUnits }) => {
 };
 
 export interface WindageChartProps {
-    results: HitResult | Error,
-    preferredUnits: any 
+    results: HitResult | Error;
+    preferredUnits: any; 
 }
 
 export const WindageChart: React.FC<WindageChartProps> = ({
     results, preferredUnits
 }) => {
-
     const { theme } = useTheme();
 
     if (results instanceof Error) return (
@@ -93,7 +100,7 @@ export const WindageChart: React.FC<WindageChartProps> = ({
                 />
 
                 <Tooltip content={(props) => <WindageTooltip {...props} preferredUnits={preferredUnits} />} />
-                <Legend verticalAlign="top" layout="horizontal" wrapperStyle={{ paddingBottom: 10 }}/>
+                <Legend verticalAlign="top" layout="horizontal" wrapperStyle={{ paddingBottom: 10 }} />
 
                 {/* Line for Windage */}
                 <Line
@@ -102,6 +109,7 @@ export const WindageChart: React.FC<WindageChartProps> = ({
                     stroke={theme.colors.primary}
                     strokeWidth={2}
                     dot={false}
+                    name="Windage"
                 />
                 {/* No line for windage adjustment */}
             </LineChart>

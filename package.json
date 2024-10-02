@@ -14,7 +14,7 @@
   "dependencies": {
     "@expo/metro-runtime": "^3.2.3",
     "@react-native-async-storage/async-storage": "^2.0.0",
-    "@types/react": "^18.3.8",
+    "@types/react": "^18.3.10",
     "crypto-js": "^4.2.0",
     "expo": "^51.0.34",
     "expo-status-bar": "^1.12.1",
@@ -39,6 +39,8 @@
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
+    "@types/react-native": "^0.73.0",
+    "@types/recharts": "^1.8.29",
     "babel-preset-expo": "^11.0.14",
     "gh-pages": "^6.1.1"
   },

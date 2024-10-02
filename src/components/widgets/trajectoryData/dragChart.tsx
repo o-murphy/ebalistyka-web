@@ -6,13 +6,19 @@ import React from 'react';
 import { useTheme } from '../../../context/themeContext';
 import { ToolTipRow } from './abstract';
 
-const DragTooltip = ({ active, label, payload }) => {
+interface DragTooltipProps {
+    active?: boolean;
+    label?: number; // Expecting label as a number for Mach
+    payload?: any; // Each payload should have a number value
+}
+
+const DragTooltip: React.FC<DragTooltipProps> = ({ active, label, payload }) => {
     const { theme } = useTheme();
 
     if (active && payload && payload.length) {
-        const machValue = `${label.toFixed(2)}`;
-        const standardCdValue = payload[0]?.value && `${payload[0].value.toFixed(4)}`;
-        const customCdValue = payload[1]?.value && `${payload[1].value.toFixed(4)}`; // Assuming CDCustom is the second payload
+        const machValue = `${label?.toFixed(2)}`; // Ensure label is defined
+        const standardCdValue = payload[0]?.value !== undefined ? `${payload[0].value.toFixed(4)}` : null;
+        const customCdValue = payload[1]?.value !== undefined ? `${payload[1].value.toFixed(4)}` : null;
 
         return (
             <Card elevation={2} style={{ backgroundColor: `rgba(${theme.colors.primaryContainer}, 0.5)` }}>
@@ -51,8 +57,6 @@ const combineDragTables = (dragTable, customDragTable) => {
 const DragChart = () => {
     const { calculator, profileProperties } = useProfile();
     const { theme } = useTheme();
-
-    if (!profileProperties || !calculator) return null;
 
     let dragTable = null;
 
@@ -100,9 +104,10 @@ const DragChart = () => {
                     <Line
                         type="monotone"
                         dataKey="CDStandard"
-                        stroke={theme.colors.onSurface}
+                        stroke={theme.colors.primary}
                         strokeWidth={1}
                         dot={false}
+                        name="Standard"
                     />
                 )}
                 {/* Line for Custom Drag Table */}
@@ -113,7 +118,7 @@ const DragChart = () => {
                         stroke={"orange"}
                         strokeWidth={2}
                         dot={false}
-                        isAnimationActive={false}
+                        name="Custom"
                     />
                 )}
             </LineChart>

@@ -41,7 +41,7 @@ const CustomCard: React.FC<CustomCardProps> = ({ children = null, title = null, 
                 ) : null}
             />
 
-            {isExpanded && (
+            {isExpanded && children && (
                 <Card.Content style={styles.content}>
                     {children}
                 </Card.Content>

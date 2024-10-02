@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Svg, Circle, Line, Rect } from 'react-native-svg';
+import { Svg, Circle } from 'react-native-svg';
 import HorusTremor5 from '../../../../../assets/HorusTremor5'; // Your base SVG
 import { useProfile } from '../../../../context/profileContext';
 import { Unit } from 'js-ballistics/dist/v2';

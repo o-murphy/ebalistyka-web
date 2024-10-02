@@ -13,13 +13,19 @@ function findOppositeLeg(hypotenuse, angleInDegrees) {
   return oppositeLeg;
 }
 
-const TrajectoryTooltip = ({ active, label, payload, preferredUnits }) => {
+interface TrajectoryTooltipProps {
+  active?: boolean;  // optional, as Recharts might not provide it
+  label?: string;    // optional
+  payload?: any;     // optional
+  preferredUnits: any;
+}
+
+const TrajectoryTooltip: React.FC<TrajectoryTooltipProps> = ({ active, label, payload, preferredUnits }) => {
   const { theme } = useTheme();
 
-
+  // Check if the tooltip should be displayed
   if (active && payload && payload.length) {
-
-    const distanceValue = `${label} ${UnitProps[preferredUnits.distance].symbol}`
+    const distanceValue = `${label} ${UnitProps[preferredUnits.distance].symbol}`;
     const velocityValue = `${payload[0].value}${UnitProps[preferredUnits.velocity].symbol}`;
     const heightValue = `${payload[3].value} ${UnitProps[preferredUnits.drop].symbol}`;
     const dropValue = `${payload[3].payload.drop} ${UnitProps[preferredUnits.drop].symbol}`;
@@ -143,6 +149,7 @@ export const TrajectoryChart: React.FC<WindageChartProps> = ({
           stroke="#82ca9d"
           strokeWidth={2}
           dot={false}
+          name="Velocity"
         />
 
         {/* Line for Adjustment (uses left Y-Axis) */}
@@ -152,6 +159,7 @@ export const TrajectoryChart: React.FC<WindageChartProps> = ({
           dataKey="sightLine"
           stroke="orange"
           dot={false}
+          name="Sight line"
         />
 
         {/* Line for Barrel Line (uses left Y-Axis) */}
@@ -161,6 +169,7 @@ export const TrajectoryChart: React.FC<WindageChartProps> = ({
           dataKey="barrelLine"
           stroke={theme.colors.error}
           dot={false}
+          name="Barrel line"
         />
 
         {/* Line for Height (uses left Y-Axis) */}
@@ -171,6 +180,7 @@ export const TrajectoryChart: React.FC<WindageChartProps> = ({
           stroke={theme.colors.primary}
           strokeWidth={2}
           dot={false}
+          name="Height"
         />
       </LineChart>
     </ResponsiveContainer>
@@ -178,84 +188,3 @@ export const TrajectoryChart: React.FC<WindageChartProps> = ({
 };
 
 export default TrajectoryChart;
-
-// import { Unit } from 'js-ballistics/dist/v2';
-// import { StyleSheet } from 'react-native';
-// import { useProfile } from '../../../context/profileContext';
-// import { Text } from 'react-native-paper';
-// import { useTheme } from '../../../context/themeContext';
-// import CustomChart from '../adaptiveChart';
-// import { usePreferredUnits } from '../../../context/preferredUnitsContext';
-
-
-// function findOppositeLeg(hypotenuse, angleInDegrees) {
-//     const angleInRadians = angleInDegrees * (Math.PI / 180);
-//     const oppositeLeg = hypotenuse * Math.sin(angleInRadians);
-//     return oppositeLeg;
-// }
-
-// const TrajectoryChart = () => {
-
-//     const { theme } = useTheme()
-//     const { hitResult } = useProfile()
-//     const { preferredUnits } = usePreferredUnits()
-
-
-//     if (hitResult instanceof Error) return (
-//         <Text>Can't display chart</Text>
-//     );
-
-//     const result = hitResult.trajectory;
-
-//     const data = {
-//         labels: result.map((row) => row.distance.In(preferredUnits.distance).toFixed(0)),
-//         datasets: [
-//             {
-//                 data: result.map((row) => row.velocity.In(preferredUnits.velocity)),
-//                 // color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`,
-//                 color: () => theme.colors.primary,
-//             },
-//             {
-//                 data: result.map(row => findOppositeLeg(
-//                     row.lookDistance.In(preferredUnits.drop),
-//                     hitResult.shot.lookAngle.In(Unit.Degree)
-//                 )),
-//                 color: () => "orange",
-//             },
-//             {
-//                 data: result.map(row => findOppositeLeg(
-//                     row.lookDistance.In(preferredUnits.drop),
-//                     hitResult.shot.barrelElevation.In(Unit.Degree)
-//                 ) - hitResult.shot.weapon.sightHeight.In(preferredUnits.drop)),
-//                 color: () => theme.colors.errorContainer,
-//             },
-//             {
-//                 data: result.map((row) => row.height.In(preferredUnits.drop)),
-//             },
-//         ],
-//         legend: [
-//             "Velocity",
-//             "Sight line",
-//             "Barrel line",
-//             "Height",
-//         ],
-//     };
-
-//     return (
-//         <CustomChart containerStyle={styles.customChart} data={data}
-//             chartProps={{
-//                 height: 480,
-//                 verticalLabelRotation: -90,
-//                 xLabelsOffset: 20,
-//             }}
-//         />
-//     )
-// };
-
-// const styles = StyleSheet.create({
-//     customChart: {
-//         // flex: 1, justifyContent: "center"
-//     }
-// })
-
-// export default TrajectoryChart;

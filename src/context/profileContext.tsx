@@ -13,7 +13,7 @@ export enum CalculationState {
   Complete = 3
 }
 
-interface ProfileContextType {
+interface CalculationContextType {
   profileProperties: ProfileProps | null;
   fetchBinaryFile: (file: string) => Promise<void>;
   setProfileProperties: React.Dispatch<React.SetStateAction<ProfileProps | null>>;
@@ -30,9 +30,25 @@ interface ProfileContextType {
   zero: () => void;
   fire: () => Promise<void>;
   inProgress: boolean;
+  trajectoryMode: TrajectoryMode, 
+  setTrajectoryMode: React.Dispatch<React.SetStateAction<TrajectoryMode>>,
+  dataToDisplay: DataToDisplay, 
+  setDataToDisplay: React.Dispatch<React.SetStateAction<DataToDisplay>>
 }
 
-export const ProfileContext = createContext<ProfileContextType | null>(null);
+export enum TrajectoryMode {
+  Horizontal = 1,
+  Relative = 2
+}
+
+export enum DataToDisplay {
+  Table = 1,
+  Chart = 2,
+  Reticle = 3,
+  DragModel = 4,
+}
+
+export const CalculationContext = createContext<CalculationContextType | null>(null);
 
 export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [profileProperties, setProfileProperties] = useState<ProfileProps | null>(null);
@@ -57,6 +73,9 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
   const [isLoaded, setIsLoaded] = useState(false); // Track loading state
 
   const [inProgress, setInProgress] = useState<boolean>(false)
+
+  const [ trajectoryMode, setTrajectoryMode ] = useState<TrajectoryMode>(TrajectoryMode.Horizontal)
+  const [ dataToDisplay, setDataToDisplay ] = useState<DataToDisplay>(DataToDisplay.Table);
 
   useEffect(() => {
     loadUserData(); // Load data on mount
@@ -188,7 +207,7 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
   const debouncedUpdateConditions = useCallback(debounce(updateCurrentConditions, 350), [updateCurrentConditions]);
 
   return (
-    <ProfileContext.Provider value={{
+    <CalculationContext.Provider value={{
       profileProperties,
       fetchBinaryFile,
       setProfileProperties,
@@ -200,19 +219,24 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
       adjustedResult,
       calcState,
       setCalcState,
-      // autoRefresh,
-      // setAutoRefresh,
+
       zero,
       fire,
-      inProgress
+      inProgress,
+      
+      trajectoryMode, 
+      setTrajectoryMode,
+
+      dataToDisplay,
+      setDataToDisplay
     }}>
       {children}
-    </ProfileContext.Provider>
+    </CalculationContext.Provider>
   );
 };
 
 export const useProfile = () => {
-  const context = useContext(ProfileContext);
+  const context = useContext(CalculationContext);
   if (!context) {
     throw new Error('useProfile must be used within a ProfileProvider');
   }

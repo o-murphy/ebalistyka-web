@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import WeaponCard from '../cards/weaponCard';
 import ProjectileCard from '../cards/projectileCard';
@@ -8,114 +8,114 @@ import CurrentWindCard from '../cards/currentWindCard';
 import CurrentConditionsCard from '../cards/currentConditionsCard';
 // import { isMobile } from 'react-device-detect';
 import { useTheme } from '../../context/themeContext';
-import { PaperProvider } from 'react-native-paper';
+import { PaperProvider, SegmentedButtons } from 'react-native-paper';
 import TopAppBar from '../widgets/topAppBar';
 import { TrajectoryTable, DragChart, HorizontalTrajectoryChart, AdjustedTrajectoryChart, AdjustedTable, HorizontalWindageChart, AdjustedWindageChart, TrajectoryReticle } from '../widgets/trajectoryData';
 import CustomCard from '../cards/customCard';
-import { useProfile } from '../../context/profileContext';
+import { DataToDisplay, TrajectoryMode, useProfile } from '../../context/profileContext';
 import CalculationStateCard from '../cards/calculationStateCard';
 import ShotParamsCard from '../cards/shotPropsCard';
+import CalculationModeCard from '../cards/calculationModeCard';
+
 
 
 export default function MainScreen() {
 
     const { theme } = useTheme();
-    const { hitResult, adjustedResult } = useProfile();
+    const { hitResult, adjustedResult, trajectoryMode, dataToDisplay } = useProfile();
+
 
     const hitResultError = hitResult instanceof Error;
     const adjustedResultError = hitResult instanceof Error;
 
 
     return (
-            <PaperProvider theme={theme}>
+        <PaperProvider theme={theme}>
 
-                <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
-                    <TopAppBar />
+            <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
+                <TopAppBar />
 
-                    <View style={{ ...styles.row }}>
+                <View style={{ ...styles.row }}>
 
-                        <ScrollView
-                            style={{ ...styles.column, flex: 1, minWidth: 280, }}
+                    <ScrollView
+                        style={{ ...styles.column, flex: 1, minWidth: 280, }}
+                        keyboardShouldPersistTaps="always"
+                        alwaysBounceVertical={false}
+                        showsVerticalScrollIndicator={false}
+                    >
+                        <WeaponCard expanded={true} />
+                        <ProjectileCard expanded={true} />
+                        <BulletCard expanded={true} />
+                        <ZeroAtmoCard expanded={false} />
+                    </ScrollView>
+
+                    <View style={{ ...styles.column, flex: 4, minWidth: 240, }}>
+                        <CalculationStateCard cardStyle={{ ...styles.column, }} />
+                        <CalculationModeCard cardStyle={{ ...styles.column }} />
+
+                        <ScrollView style={{ ...styles.column, }}
                             keyboardShouldPersistTaps="always"
                             alwaysBounceVertical={false}
                             showsVerticalScrollIndicator={false}
                         >
-                            <WeaponCard expanded={true} />
-                            <ProjectileCard expanded={true} />
-                            <BulletCard expanded={true} />
-                            <ZeroAtmoCard expanded={false} />
+
+                            {
+                                trajectoryMode === TrajectoryMode.Horizontal
+                                    ?
+                                    (!hitResultError && hitResult ? (
+                                        <CustomCard title='Horizontal shot'>
+                                            {dataToDisplay === DataToDisplay.Table && <TrajectoryTable />}
+                                            {dataToDisplay === DataToDisplay.Chart && <HorizontalTrajectoryChart />}
+                                            {dataToDisplay === DataToDisplay.Chart && <HorizontalWindageChart />}
+                                            {dataToDisplay === DataToDisplay.Reticle && <TrajectoryReticle />}
+                                            {dataToDisplay === DataToDisplay.DragModel && <DragChart />}
+                                        </CustomCard>
+
+                                    ) : (
+                                        <CustomCard title='Horizontal shot'>
+
+                                        </CustomCard>
+                                    ))
+                                    :
+                                    (!adjustedResultError && adjustedResult ? (
+                                        <CustomCard title='Target adjustment'>
+                                            <AdjustedTable />
+                                            <AdjustedTrajectoryChart />
+                                            <AdjustedWindageChart />
+                                            <CustomCard title={"Drag model"} expanded={false}>
+                                                <DragChart />
+                                            </CustomCard>
+                                        </CustomCard>
+
+                                    ) : (
+                                        <CustomCard title='Target adjustment'>
+
+                                        </CustomCard>
+                                    ))
+                            }
+
                         </ScrollView>
 
-                        <View style={{ ...styles.column, flex: 4, minWidth: 240, }}>
-                            <CalculationStateCard cardStyle={{ ...styles.column, }} />
-
-                            <ScrollView style={{ ...styles.column, }}
-                                keyboardShouldPersistTaps="always"
-                                alwaysBounceVertical={false}
-                                showsVerticalScrollIndicator={false}
-                            >
-
-                                {/* <TrajectoryTable /> */}
-
-                                {!hitResultError && hitResult ? (
-                                    <CustomCard title='Horizontal shot'>
-                                        <TrajectoryTable />
-                                        <HorizontalTrajectoryChart />
-                                        <HorizontalWindageChart />
-                                    </CustomCard>
-
-                                ) : (
-                                    <CustomCard title='Horizontal shot'>
-
-                                    </CustomCard>
-                                )}
-
-                                {/* <AdjustedTable /> */}
-
-                                {!adjustedResultError && adjustedResult ? (
-                                    <CustomCard title='Target adjustment'>
-                                        <AdjustedTable />
-                                        <AdjustedTrajectoryChart />
-                                        <AdjustedWindageChart />
-                                        {/* <DragChart /> */}
-                                    </CustomCard>
-
-                                ) : (
-                                    <CustomCard title='Target adjustment'>
-
-                                    </CustomCard>
-                                )}
-
-                                <CustomCard title={"Reticle"} >
-                                    <TrajectoryReticle /> 
-                                </CustomCard>
-
-                                <CustomCard title={"Drag model"} >
-                                    <DragChart /> 
-                                </CustomCard>
-
-                            </ScrollView>
-
-
-                        </View>
-
-
-                        <ScrollView
-                            style={{ ...styles.column, flex: 1, minWidth: 280 }}
-                            keyboardShouldPersistTaps="always"
-                            alwaysBounceVertical={false}
-                            showsVerticalScrollIndicator={false}
-                        >
-                            <CurrentConditionsCard expanded={true} label='Current conditions' />
-                            <CurrentWindCard expanded={true} label='Current wind' />
-                            <ShotParamsCard expanded={true} label="Shot parameters" />
-                        </ScrollView>
 
                     </View>
 
+
+                    <ScrollView
+                        style={{ ...styles.column, flex: 1, minWidth: 280 }}
+                        keyboardShouldPersistTaps="always"
+                        alwaysBounceVertical={false}
+                        showsVerticalScrollIndicator={false}
+                    >
+                        <CurrentConditionsCard expanded={true} label='Current conditions' />
+                        <CurrentWindCard expanded={true} label='Current wind' />
+                        <ShotParamsCard expanded={true} label="Shot parameters" />
+                    </ScrollView>
+
                 </View>
 
-            </PaperProvider>
+            </View>
+
+        </PaperProvider>
     );
 }
 
