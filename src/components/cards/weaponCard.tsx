@@ -33,12 +33,13 @@ const WeaponCard: React.FC<WeaponCardProps> = ({ expanded = true }) => {
             const zeroDistIdx = prevProfilePropertiesRef.current?.cZeroDistanceIdx !== profileProperties.cZeroDistanceIdx;
             
             if (sh || twist || twDir || look || zeroDistIdx) {
-                setRefreshable(true)                
+                setRefreshable(true)
             } else {
-                setRefreshable(false)    
+                setRefreshable(false)
             }
-        } 
-        setRefreshable(false)
+        } else {
+            setRefreshable(false)
+        }
         
         // Update the ref with the current profileProperties
         prevProfilePropertiesRef.current = profileProperties;
