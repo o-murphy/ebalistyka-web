@@ -10,7 +10,7 @@ import CurrentConditionsCard from '../cards/currentConditionsCard';
 import { useTheme } from '../../context/themeContext';
 import { PaperProvider } from 'react-native-paper';
 import TopAppBar from '../widgets/topAppBar';
-import { TrajectoryTable, TrajectoryChart, WindageChart, DragChart, AdjustmentChart, AdjustedTable, AdjustedWindageChart } from '../widgets/trajectoryData';
+import { TrajectoryTable, DragChart, HorizontalTrajectoryChart, AdjustedTrajectoryChart, AdjustedTable, HorizontalWindageChart, AdjustedWindageChart } from '../widgets/trajectoryData';
 import CustomCard from '../cards/customCard';
 import { useProfile } from '../../context/profileContext';
 import CalculationStateCard from '../cards/calculationStateCard';
@@ -60,8 +60,8 @@ export default function MainScreen() {
                                 {!hitResultError && hitResult ? (
                                     <CustomCard title='Horizontal shot'>
                                         <TrajectoryTable />
-                                        <TrajectoryChart />
-                                        <WindageChart />
+                                        <HorizontalTrajectoryChart />
+                                        <HorizontalWindageChart />
                                     </CustomCard>
 
                                 ) : (
@@ -75,7 +75,7 @@ export default function MainScreen() {
                                 {!adjustedResultError && adjustedResult ? (
                                     <CustomCard title='Target adjustment'>
                                         <AdjustedTable />
-                                        <AdjustmentChart />
+                                        <AdjustedTrajectoryChart />
                                         <AdjustedWindageChart />
                                         {/* <DragChart /> */}
                                     </CustomCard>

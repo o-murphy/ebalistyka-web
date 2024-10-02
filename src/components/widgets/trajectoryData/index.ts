@@ -1,18 +1,16 @@
 import TrajectoryTable from "./trajectoryTable";
-import TrajectoryChart from "./trajectoryChart";
-import WindageChart from "./windageChart";
+import { HorizontalTrajectoryChart, AdjustedTrajectoryChart } from "./trajectoryChart";
+import { HorizontalWindageChart, AdjustedWindageChart } from "./windageChart";
 import DragChart from "./dragChart";
-import AdjustedTrajectoryChart from "./adjustedTrajectoryChart";
 import AdjustedTable from "./adjustedTable";
-import AdjustedWindageChart from "./adjustedWindageChart";
 
 
 export {
     TrajectoryTable,
-    TrajectoryChart, 
-    WindageChart, 
+    HorizontalTrajectoryChart, 
+    HorizontalWindageChart, 
     DragChart,
-    AdjustedTrajectoryChart as AdjustmentChart,
+    AdjustedTrajectoryChart,
     AdjustedTable,
     AdjustedWindageChart
 };
