@@ -16,6 +16,7 @@ import { DataToDisplay, TrajectoryMode, useCalculator } from '../../context/prof
 import CalculationStateCard from '../cards/calculationStateCard';
 import ShotParamsCard from '../cards/shotPropsCard';
 import CalculationModeCard from '../cards/calculationModeCard';
+import SingleShotCard from '../cards/singleShotCard';
 
 
 
@@ -57,6 +58,9 @@ const MainScreen = () => {
                             alwaysBounceVertical={false}
                             showsVerticalScrollIndicator={false}
                         >
+
+                            {trajectoryMode === TrajectoryMode.Adjusted && <SingleShotCard expanded={true}/>}
+                            
                             {dataToDisplay === DataToDisplay.DragModel && (
                                 <CustomCard title='Drag model'>
                                     <DragChart />

@@ -18,6 +18,7 @@ export interface SpinBoxProps {
   style?: StyleProp<ViewStyle>; // Style for the container
   inputProps?: TextInputProps; // Additional props for the TextInput
   strict?: boolean;
+  showError?: boolean;
 }
 
 
@@ -30,7 +31,8 @@ export const DoubleSpinBox: React.FC<SpinBoxProps> = ({
   step = 1,
   style,
   inputProps,
-  strict = false
+  strict = false,
+  showError = true,
 }) => {
   const [currentValue, setCurrentValue] = useState<string>(value.toFixed(fixedPoints));
   const [error, setError] = useState<string | null>(null);
@@ -99,9 +101,9 @@ export const DoubleSpinBox: React.FC<SpinBoxProps> = ({
         onKeyPress={processKeyPress}
         onChange={e => handleInputChange(e.nativeEvent.text)}
       />
-      <HelperText type="error" visible={!!error}>
+      {showError && <HelperText type="error" visible={!!error}>
         {error}
-      </HelperText>
+      </HelperText>}
     </View>
   );
 };
