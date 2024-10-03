@@ -77,7 +77,7 @@ const MainScreen = () => {
 
                                         </CustomCard>
                                         :
-                                        <CustomCard title='Relative shot'>
+                                        <CustomCard title='Adjusted shot'>
                                             {dataToDisplay === DataToDisplay.Table && <AdjustedTable />}
                                             {dataToDisplay === DataToDisplay.Chart && <AdjustedTrajectoryChart />}
                                             {dataToDisplay === DataToDisplay.Chart && <AdjustedWindageChart />}

@@ -29,8 +29,8 @@ const CalculationModeCard = (cardStyle) => {
                                 label: "Zero trajectory"
                             },
                             {
-                                value: TrajectoryMode.Relative,
-                                label: "Relative trajectory"
+                                value: TrajectoryMode.Adjusted,
+                                label: "Adjusted trajectory"
                             }
                         ]}
                     />

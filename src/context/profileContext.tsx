@@ -38,7 +38,7 @@ interface CalculationContextType {
 
 export enum TrajectoryMode {
   Zero = 1,
-  Relative = 2
+  Adjusted = 2
 }
 
 export enum DataToDisplay {
