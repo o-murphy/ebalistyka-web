@@ -1,11 +1,9 @@
 import { Text, Chip } from "react-native-paper";
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 import CustomCard from "./customCard";
 import { StyleSheet, View } from "react-native";
-import { CalculationState, useCalculator } from "../../context/profileContext";
+import { useCalculator } from "../../context/profileContext";
 import { BulletLengthField, BulletWeightField, CaliberField } from "../widgets/measureFields";
-import { ProfileProps } from "../../utils/parseA7P";
-import RecalculateChip from "../widgets/recalculateChip";
 import { TextInputChip } from "../widgets/inputChip";
 
 interface BulletCardProps {
@@ -14,33 +12,6 @@ interface BulletCardProps {
 
 const BulletCard: React.FC<BulletCardProps> = ({ expanded = true }) => {
     const { profileProperties, updateProfileProperties, calcState } = useCalculator();
-
-    const [refreshable, setRefreshable] = useState(false)
-
-    const prevProfilePropertiesRef = useRef<ProfileProps | null>(null);
-
-    useEffect(() => {
-
-        if ([CalculationState.ZeroUpdated].includes(calcState)) {
-            const caliber = prevProfilePropertiesRef.current?.bDiameter !== profileProperties.bDiameter;
-            const weight = prevProfilePropertiesRef.current?.bWeight !== profileProperties.bWeight;
-            const length = prevProfilePropertiesRef.current?.bLength !== profileProperties.bLength;
-            const bcType = prevProfilePropertiesRef.current?.bcType !== profileProperties.bcType;
-            const coeffs = prevProfilePropertiesRef.current?.coefRows !== profileProperties.coefRows;
-    
-            if (caliber || weight || length || bcType || coeffs) {
-                setRefreshable(true)
-            } else {
-                setRefreshable(false)
-            }
-    
-        } else {
-            setRefreshable(false)
-        }
-
-        // Update the ref with the current profileProperties
-        prevProfilePropertiesRef.current = profileProperties;
-    }, [profileProperties, calcState]);
 
     const editDragModel = () => {
         // navigate("DragModelScreen")
@@ -55,7 +26,6 @@ const BulletCard: React.FC<BulletCardProps> = ({ expanded = true }) => {
 
     return (
         <CustomCard title={"Bullet"} expanded={expanded}>
-            <RecalculateChip visible={refreshable} style={{ marginVertical: 4 }} />
 
             <TextInputChip 
                 style={{ marginVertical: 4 }}

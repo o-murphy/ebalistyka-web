@@ -1,4 +1,4 @@
-import MeasureFormField, { MeasureFormFieldProps } from "./measureField";
+import MeasureFormField, { MeasureFormFieldProps, MeasureFormFieldRefreshable } from "./measureField";
 
-export { MeasureFormFieldProps };
+export { MeasureFormFieldProps, MeasureFormFieldRefreshable };
 export default MeasureFormField;

@@ -1,14 +1,21 @@
-import { useCalculator } from "../../../context/profileContext";
-import MeasureFormField, { MeasureFormFieldProps } from "./measureField"
+import { CalculationState, useCalculator } from "../../../context/profileContext";
+import { MeasureFormFieldProps, MeasureFormFieldRefreshable } from "./measureField"
 import { UNew, Unit, UnitProps, Measure } from "js-ballistics/dist/v2"
 import { usePreferredUnits } from "../../../context/preferredUnitsContext";
 import getFractionDigits from "../../../utils/fractionConvertor";
+import { useEffect, useState } from "react";
 
 
 export const ZeroLookAngleField = () => {
-    const { profileProperties, updateProfileProperties } = useCalculator();
-
+    const { calcState, profileProperties, updateProfileProperties } = useCalculator();
     const { preferredUnits } = usePreferredUnits()
+
+    const [refreshable, setRefreshable] = useState(false)
+    useEffect(() => {
+        if ([CalculationState.Complete].includes(calcState)) {
+            setRefreshable(false)
+        }
+    }, [calcState]);
 
     const prefUnit = preferredUnits.angular
     const accuracy = getFractionDigits(0.01, UNew.MIL(1).In(prefUnit))
@@ -30,16 +37,18 @@ export const ZeroLookAngleField = () => {
     ).In(prefUnit)
 
     const onValueChange = (value: number): void => {
-        return updateProfileProperties({
+        updateProfileProperties({
             [fieldProps.fKey]: new Measure.Angular(value, prefUnit).In(Unit.Degree) * 10
         })
+        setRefreshable(true)
     }
 
     return (
-        <MeasureFormField
-            {...fieldProps}
+        <MeasureFormFieldRefreshable 
+            fieldProps={fieldProps}
             value={value}
             onValueChange={onValueChange}
+            refreshable={refreshable}
         />
     )
 }

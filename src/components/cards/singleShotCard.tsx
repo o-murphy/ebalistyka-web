@@ -9,7 +9,7 @@ import RecalculateChip from "../widgets/recalculateChip";
 import { TextInputChip } from "../widgets/inputChip";
 import { useTheme } from "../../context/themeContext";
 import { usePreferredUnits } from "../../context/preferredUnitsContext";
-import { UNew } from "js-ballistics/dist/v2";
+import { UNew, Unit, UnitProps } from "js-ballistics/dist/v2";
 import { DoubleSpinBox } from "../widgets/doubleSpinBox";
 import { IconSource } from "react-native-paper/src/components/Icon";
 
@@ -21,7 +21,7 @@ interface SingleShotCardProps {
 interface TouchableTileProps {
     style?: StyleProp<ViewStyle>;
     icon?: IconSource;
-    iconSize?: number;
+    iconSize?: number | string;
     onPress?: () => void;
 }
 
@@ -34,7 +34,7 @@ const TouchableTile: React.FC<TouchableTileProps> = ({
     const { theme } = useTheme()
     return (
         <TouchableOpacity
-            style={[styles.touchable, style]}
+            style={[styles.center, style]}
             onPress={() => { onPress?.() }}
         >
             <Icon size={iconSize} color={theme.colors.primary} source={icon} />
@@ -45,33 +45,29 @@ const TouchableTile: React.FC<TouchableTileProps> = ({
 const TouchableValueSelector = ({ value, onValueChange }) => {
     const { theme } = useTheme()
 
+    const _styles = {
+        container: [styles.column, styles.selector, { backgroundColor: theme.colors.surfaceVariant }]
+    }
+
     return (
-        // <View style={{flex: 1}}>
-        <View style={[styles.column, styles.selector, { backgroundColor: theme.colors.surfaceVariant }]}>
+        <View style={_styles.container}>
 
-            <TouchableTile icon={"arrow-up"} iconSize={128 / 3} />
-            <View
-                style={styles.touchable}
-            >
-                <DoubleSpinBox
-                    showError={false}
-                    style={styles.spinBox}
-                    value={value}
-                    onValueChange={value => onValueChange?.(value)}
-                    inputProps={
-                        {
-                            mode: "outlined",
-                            style: styles.inputStyle,
-                            contentStyle: styles.inputContentStyle,
-                            outlineStyle: styles.inputOutlineStyle,
-                        }
-                    } />
-            </View>
-            <TouchableTile icon={"arrow-down"} iconSize={128 / 3} />
+            <TouchableTile icon={"arrow-up"} iconSize={"150%"} />
+            <DoubleSpinBox
+                showError={false}
+                style={styles.spinBox}
+                value={value}
+                onValueChange={value => onValueChange?.(value)}
+                inputProps={
+                    {
+                        mode: "outlined",
+                        style: styles.inputStyle,
+                        contentStyle: styles.inputContentStyle,
+                        outlineStyle: styles.inputOutlineStyle,
+                    }
+                } />
+            <TouchableTile icon={"arrow-down"} iconSize={"150%"} />
         </View>
-
-        // </View>
-
     )
 }
 
@@ -90,15 +86,31 @@ const SingleShotCard: React.FC<SingleShotCardProps> = ({ expanded = true }) => {
         )
     }
 
+    const _styles = {
+        container: {
+            ...styles.column, 
+            ...styles.center, 
+            ...styles.container
+        },
+        chipStyle: {
+            ...styles.column, 
+            ...styles.center, 
+            backgroundColor: theme.colors.surfaceVariant,
+        },
+        chipTextStyle: {
+            fontSize: "80%"
+        }
+    }
+
     return (
-        <CustomCard title={"Shot params"} expanded={expanded}>
-            <View style={[styles.column, {minWidth: "80%"}]}>
-                <View style={[styles.row, { width: "100%", alignSelf: "center", alignItems: "center", justifyContent: "center" }]}>
-                    <Chip style={[styles.column, styles.touchable, { backgroundColor: theme.colors.surfaceVariant }]}>Distance</Chip>
-                    <Chip style={[styles.column, styles.touchable, { backgroundColor: theme.colors.surfaceVariant }]}>Wind speed</Chip>
-                    <Chip style={[styles.column, styles.touchable, { backgroundColor: theme.colors.surfaceVariant }]}>Wind dir.</Chip>
+        <CustomCard title={"Shot params"} expanded={expanded} style={styles.card}>
+            <View style={_styles.container}>
+                <View style={styles.row}>
+                    <Chip style={_styles.chipStyle} textStyle={_styles.chipTextStyle}>{`Range (${UnitProps[preferredUnits.distance].symbol})`}</Chip>
+                    <Chip style={_styles.chipStyle} textStyle={_styles.chipTextStyle}>{`Wind (${UnitProps[preferredUnits.velocity].symbol})`}</Chip>
+                    <Chip style={_styles.chipStyle} textStyle={_styles.chipTextStyle}>{`Dir (${UnitProps[Unit.Degree].symbol})`}</Chip>
                 </View>
-                <View style={[styles.row, { width: "100%", alignSelf: "center", alignItems: "center", justifyContent: "center" }]}>
+                <View style={styles.row}>
                     <TouchableValueSelector value={UNew.Meter(currentConditions.targetDistance).In(preferredUnits.distance)} />
                     <TouchableValueSelector value={UNew.MPS(currentConditions.windSpeed).In(preferredUnits.velocity)} />
                     <TouchableValueSelector value={UNew.Degree(currentConditions.windSpeed).In(preferredUnits.angular)} />
@@ -110,38 +122,57 @@ const SingleShotCard: React.FC<SingleShotCardProps> = ({ expanded = true }) => {
 
 
 const styles = StyleSheet.create({
-    spinBox: { flex: 1, maxWidth: "100%", maxHeight: "100%" },
-    inputStyle: { flex: 1, maxWidth: "100%", maxHeight: "100%", justifyContent: "center" },
-    inputContentStyle: { textAlign: "center" },
-    inputOutlineStyle: {},
-
-    touchable: { flex: 1, alignItems: "center", justifyContent: "center" },
-
-    nameContainer: {
+    spinBox: {
         flex: 1,
+        width: "100%",
+        maxHeight: "100%"
+    },
+    inputStyle: {
+        flex: 1,
+        width: "100%",
+        maxHeight: "100%",
+        justifyContent: "center"
+    },
+    inputContentStyle: {
+        flex: 1,
+        textAlign: "center",
+        width: "100%"
+    },
+    inputOutlineStyle: {
+        flex: 1,
+        width: "100%",
+    },
+    center: {
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center"
     },
     row: {
         flexDirection: "row",
-        marginVertical: 4
+        marginVertical: 4,
+        width: "100%",
     },
     column: {
         flexDirection: "column",
-        alignSelf: "center",
         marginHorizontal: 4,
-    },
-    label: {
-        fontSize: 14
+        height: "100%"
     },
     selector: {
-        height: 128,
-        aspectRatio: 1,
         flex: 1,
+        aspectRatio: 1,
         borderTopLeftRadius: 8,
         borderTopRightRadius: 8,
         borderBottomLeftRadius: 8,
         borderBottomRightRadius: 8,
         backgroundColor: "transparent",
         overflow: "hidden",
+    },
+    container: {
+        alignSelf: "center", 
+        maxWidth: 300
+    },
+    card: {
+        overflow: "hidden"
     }
 })
 

@@ -1,15 +1,11 @@
-import { SegmentedButtons } from "react-native-paper";
-import React, { useState, useEffect, useRef } from "react";
+import { FAB, SegmentedButtons } from "react-native-paper";
+import React, { useState, useEffect } from "react";
 import CustomCard from "./customCard";
-import { UNew } from "js-ballistics/dist/v2";
 import { StyleSheet, View } from "react-native";
 import { CalculationState, useCalculator } from "../../context/profileContext";
-import { Dropdown } from "react-native-paper-dropdown";
 import { SightHeightField, TwistField, ZeroDistanceField, ZeroLookAngleField } from "../widgets/measureFields";
-import { ProfileProps } from "../../utils/parseA7P";
-import RecalculateChip from "../widgets/recalculateChip";
 import { TextInputChip } from "../widgets/inputChip";
-import { usePreferredUnits } from "../../context/preferredUnitsContext";
+import { useTheme } from "../../context/themeContext";
 
 
 interface WeaponCardProps {
@@ -17,33 +13,21 @@ interface WeaponCardProps {
 }
 
 const WeaponCard: React.FC<WeaponCardProps> = ({ expanded = true }) => {
-    const { profileProperties, updateProfileProperties, calcState } = useCalculator();
+    const { profileProperties, updateProfileProperties, calcState, fire } = useCalculator();
 
+    const { theme } = useTheme()
     const [refreshable, setRefreshable] = useState(false)
 
-    const prevProfilePropertiesRef = useRef<ProfileProps | null>(null);
-
     useEffect(() => {
-
-        if ([CalculationState.ZeroUpdated].includes(calcState)) {
-            const sh = prevProfilePropertiesRef.current?.scHeight !== profileProperties.scHeight;
-            const twist = prevProfilePropertiesRef.current?.rTwist !== profileProperties.rTwist;
-            const twDir = prevProfilePropertiesRef.current?.twistDir !== profileProperties.twistDir;
-            const look = prevProfilePropertiesRef.current?.cZeroWPitch !== profileProperties.cZeroWPitch;
-            const zeroDistIdx = prevProfilePropertiesRef.current?.cZeroDistanceIdx !== profileProperties.cZeroDistanceIdx;
-            
-            if (sh || twist || twDir || look || zeroDistIdx) {
-                setRefreshable(true)
-            } else {
-                setRefreshable(false)
-            }
-        } else {
+        if ([CalculationState.Complete].includes(calcState)) {
             setRefreshable(false)
         }
-        
-        // Update the ref with the current profileProperties
-        prevProfilePropertiesRef.current = profileProperties;
-    }, [profileProperties, calcState]);
+    }, [calcState]);
+
+    const onTwistChange = (value) => {
+        updateProfileProperties({ twistDir: value })
+        setRefreshable(true)
+    }
 
     if (!profileProperties) {
         return (
@@ -53,11 +37,10 @@ const WeaponCard: React.FC<WeaponCardProps> = ({ expanded = true }) => {
 
     return (
         <CustomCard title={"Weapon"} expanded={expanded}>
-            <RecalculateChip visible={refreshable} style={{ marginVertical: 4 }} />
 
-            <TextInputChip 
+            <TextInputChip
                 style={{ marginVertical: 4 }}
-                icon={"card-bulleted-outline"} 
+                icon={"card-bulleted-outline"}
                 label={"Weapon name"}
                 text={profileProperties?.profileName ?? "My rifle"}
                 onTextChange={text => updateProfileProperties({ profileName: text })}
@@ -66,13 +49,20 @@ const WeaponCard: React.FC<WeaponCardProps> = ({ expanded = true }) => {
             <SightHeightField />
             <TwistField />
 
-            <View style={{ ...styles.row }}>
+            <View style={styles.row}>
                 <SegmentedButtons
                     style={[styles.segment]}
                     buttons={twistStates}
                     value={profileProperties?.twistDir}
-                    onValueChange={value => updateProfileProperties({ twistDir: value })}
+                    onValueChange={onTwistChange}
                 />
+                {refreshable && <FAB
+                    style={{ alignSelf: "center", backgroundColor: theme.colors.onTertiary, marginVertical: 4, marginLeft: 4 }}
+                    size={"small"}
+                    icon={"reload"}
+                    onPress={() => fire()}
+                    color={theme.colors.tertiary}
+                />}
             </View>
 
             <ZeroLookAngleField />

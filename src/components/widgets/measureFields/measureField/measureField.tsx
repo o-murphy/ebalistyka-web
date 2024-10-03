@@ -1,7 +1,10 @@
-import React from "react";
-import {  StyleSheet } from "react-native";
-import { TextInput } from "react-native-paper";
-import {DoubleSpinBox, SpinBoxProps} from "../../doubleSpinBox";
+import React, { useState } from "react";
+import { StyleSheet, View } from "react-native";
+import { Text, FAB, TextInput, Tooltip } from "react-native-paper";
+import { DoubleSpinBox, SpinBoxProps } from "../../doubleSpinBox";
+import { useTheme } from "../../../../context/themeContext";
+import { useCalculator } from "../../../../context/profileContext";
+import { fontConfig } from "react-native-paper/src/styles/fonts";
 
 
 export interface MeasureFormFieldProps extends SpinBoxProps {
@@ -37,19 +40,57 @@ const MeasureFormField: React.FC<MeasureFormFieldProps> = ({
       label: !compact ? label : `${label}${suffix && `, ${suffix}`}`,
       mode: "outlined",
       dense: true,
-      contentStyle: !compact ? {...styles.inputContentStyle} : {...styles.inputContentStyleCompact},
+      contentStyle: !compact ? { ...styles.inputContentStyle } : { ...styles.inputContentStyleCompact },
       right: !compact && <TextInput.Affix text={suffix} textStyle={inputSideStyles.affix} />,
       left: <TextInput.Icon icon={icon} size={iconSize} style={inputSideStyles.icon} />,
-    }
+    },
+    strict: true
   }
 
   return (
-      // fractionDigits <= 0 
-      // ? <SpinBox {...spinBoxProps}/>
-      // : <DoubleSpinBox {...spinBoxProps} />
-      <DoubleSpinBox {...spinBoxProps} />
+    <DoubleSpinBox {...spinBoxProps} />
   )
 };
+
+export const MeasureFormFieldRefreshable = ({ fieldProps, value, onValueChange, refreshable }) => {
+  const { theme } = useTheme()
+  const { fire } = useCalculator()
+  const [extended, setExtended] = useState(false)
+  return (
+    <View style={{ flexDirection: "row" }}>
+      <MeasureFormField
+        {...fieldProps}
+        value={value}
+        onValueChange={onValueChange}
+      />
+      <View
+        onMouseEnter={() => setExtended(true)}
+        onMouseLeave={() => setExtended(false)}
+        style={{ alignSelf: "center", }}
+      >
+      {
+        refreshable &&
+        <Tooltip title="Recalculate" enterTouchDelay={0} leaveTouchDelay={0} >
+          <FAB
+            visible={refreshable}
+            style={{ alignSelf: "center", 
+              // backgroundColor: theme.colors.onTertiary, 
+            marginVertical: 4, marginLeft: 4 }}
+            size={"small"}
+            icon={"reload"}
+            onPress={() => fire()}
+            // color={theme.colors.tertiary}
+            variant="tertiary"
+          />
+        </Tooltip>
+      }
+      </View>
+
+
+
+    </View>
+  )
+}
 
 // Wrap in React.memo to prevent unnecessary re-renders
 export default React.memo(MeasureFormField, (prevProps, nextProps) => {
@@ -65,8 +106,8 @@ export default React.memo(MeasureFormField, (prevProps, nextProps) => {
 });
 
 export const styles = StyleSheet.create({
-  spinBox: {flex: 1},
-  inputContentStyle: { paddingRight: 80, textAlign: "right"},
+  spinBox: { flex: 1 },
+  inputContentStyle: { paddingRight: 60, textAlign: "right" },
   inputContentStyleCompact: { textAlign: "right" },
   nameContainer: {
     flex: 1,
