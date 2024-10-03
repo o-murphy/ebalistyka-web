@@ -63,11 +63,11 @@ export const MeasureFormFieldRefreshable = ({ fieldProps, value, onValueChange, 
         value={value}
         onValueChange={onValueChange}
       />
-      <View
+      {/* <View
         onMouseEnter={() => setExtended(true)}
         onMouseLeave={() => setExtended(false)}
         style={{ alignSelf: "center", }}
-      >
+      > */}
       {
         refreshable &&
         <Tooltip title="Recalculate" enterTouchDelay={0} leaveTouchDelay={0} >
@@ -84,10 +84,7 @@ export const MeasureFormFieldRefreshable = ({ fieldProps, value, onValueChange, 
           />
         </Tooltip>
       }
-      </View>
-
-
-
+      {/* </View> */}
     </View>
   )
 }
