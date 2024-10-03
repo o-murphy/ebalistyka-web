@@ -1,14 +1,23 @@
-import { useCalculator } from "../../../context/profileContext";
-import MeasureFormField, { MeasureFormFieldProps } from "./measureField"
+import { CalculationState, useCalculator } from "../../../context/profileContext";
+import { MeasureFormFieldProps, MeasureFormFieldRefreshable } from "./measureField"
 import { UNew, Unit, UnitProps, Measure } from "js-ballistics/dist/v2"
 import { usePreferredUnits } from "../../../context/preferredUnitsContext";
 import getFractionDigits from "../../../utils/fractionConvertor";
+import { useEffect, useState } from "react";
 
 
 export const CurrentTemperatureField = () => {
-    const { currentConditions, updateCurrentConditions } = useCalculator();
+    const { calcState, currentConditions, updateCurrentConditions } = useCalculator();
 
     const { preferredUnits } = usePreferredUnits()
+
+    const [refreshable, setRefreshable] = useState(false)
+
+    useEffect(() => {
+        if ([CalculationState.Complete].includes(calcState)) {
+            setRefreshable(false)
+        }
+    }, [calcState]);
 
     const prefUnit = preferredUnits.temperature
     const accuracy = getFractionDigits(1, UNew.Celsius(1).In(prefUnit))
@@ -30,16 +39,19 @@ export const CurrentTemperatureField = () => {
     ).In(prefUnit)
 
     const onValueChange = (value: number): void => {
-        return updateCurrentConditions({
+        updateCurrentConditions({
             [fieldProps.fKey]: new Measure.Temperature(value, prefUnit).In(Unit.Celsius)
         })
+        setRefreshable(true)
     }
 
     return (
-        <MeasureFormField
-        {...fieldProps}
-        value={value}
-        onValueChange={onValueChange}
-    />
+        <MeasureFormFieldRefreshable 
+            fieldProps={fieldProps}
+            value={value}
+            onValueChange={onValueChange}
+            refreshable={refreshable}
+            buttonPosition="left"
+        />
     )
 }

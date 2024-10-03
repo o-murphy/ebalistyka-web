@@ -59,17 +59,15 @@ const WeaponCard: React.FC<WeaponCardProps> = ({ expanded = true }) => {
                 {
                     refreshable &&
                     <Tooltip title="Recalculate" enterTouchDelay={0} leaveTouchDelay={0} >
-                    <FAB
+                        <FAB
                         visible={refreshable}
-                        style={{ alignSelf: "center", 
-                        // backgroundColor: theme.colors.onTertiary, 
+                        style={{ alignSelf: "center",
                         marginVertical: 4, marginLeft: 4 }}
                         size={"small"}
                         icon={"reload"}
                         onPress={() => fire()}
-                        // color={theme.colors.tertiary}
                         variant="tertiary"
-                    />
+                        />
                     </Tooltip>
                 }
             </View>

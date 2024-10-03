@@ -4,7 +4,11 @@ import {StyleSheet, View} from "react-native";
 import CircularSlider from "./circularSlider/web";
 
 
-export default function WindDirectionPicker({value, onChange, style}) {
+export default function WindDirectionPicker({value, onChange, style}: {
+    value: number, 
+    onChange: (value: number) => void,
+    style?: null
+}) {
 
     const theme = useTheme()
 
@@ -29,15 +33,11 @@ export default function WindDirectionPicker({value, onChange, style}) {
         meterText: `${value * 30}° (${value}h)`
     }
 
-    const sliderValueHandler = {
-        value: value,
-        onChange: onChange
-    }
-
     return (
         <View style={[style, styles.noSelect]}>
             <CircularSlider
-                {...sliderValueHandler}
+                value={value}
+                onChange={onChange}
                 {...sliderProps}
                 {...sliderValues}
                 // style={styles.slider}

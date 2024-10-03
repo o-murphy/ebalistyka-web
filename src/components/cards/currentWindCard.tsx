@@ -1,15 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import CustomCard from "./customCard";
 import WindDirectionPicker from "../widgets/windDirectionPicker";
-import { MeasureFormFieldProps } from "../widgets/measureFields/measureField/measureField";
 import { CalculationState, useCalculator } from "../../context/profileContext";
-import { UNew, UnitProps, Unit, Measure } from "js-ballistics/dist/v2";
-import MeasureFormField from "../widgets/measureFields/measureField";
-import RecalculateChip from "../widgets/recalculateChip";
-import { CurrentConditionsProps } from "../../utils/ballisticsCalculator";
-import { usePreferredUnits } from "../../context/preferredUnitsContext";
-import getFractionDigits from "../../utils/fractionConvertor";
-
+import { WindSpeedField } from "../widgets/measureFields";
+import { View } from "react-native";
+import { FAB, Icon, Tooltip } from "react-native-paper";
+import { Unit, UnitProps } from "js-ballistics/dist/v2";
 
 interface WindCardProps {
     label?: string;
@@ -17,80 +13,180 @@ interface WindCardProps {
 }
 
 const CurrentWindCard: React.FC<WindCardProps> = ({ label = "Zero wind direction and speed", expanded = true }) => {
-    const { currentConditions, updateCurrentConditions, calcState } = useCalculator();
-    const { preferredUnits } = usePreferredUnits()
-    const [windDir, setWindDir] = useState(currentConditions.windDirection)
-    const [windSpeed, setWindSpeed] = useState(currentConditions.windSpeed)
-
-    const [refreshable, setRefreshable] = useState(false)
-
-    const prevCurrentConditionsRef = useRef<CurrentConditionsProps | null>(null);
+    const { currentConditions, updateCurrentConditions, calcState, fire } = useCalculator();
+    const [windDir, setWindDir] = useState(currentConditions.windDirection);
+    const [isHovered, setIsHovered] = useState(false);
+    const [refreshable, setRefreshable] = useState(false);
+    const initialWindDir = useRef(currentConditions.windDirection);
 
     useEffect(() => {
-
-        if ([CalculationState.ConditionsUpdated].includes(calcState)) {
-            const windDirection = prevCurrentConditionsRef.current?.windDirection !== currentConditions.windDirection;
-            const stepSpeed = prevCurrentConditionsRef.current?.windSpeed !== currentConditions.windSpeed;
-    
-            if (windDirection || stepSpeed) {
-                setRefreshable(true)
-            } else {
-                setRefreshable(false)
-            }
-    
-        } else {
-            setRefreshable(false)
+        if (currentConditions.windDirection !== initialWindDir.current) {
+            console.log("Setting wind direction from current conditions:", currentConditions.windDirection);
+            setWindDir(currentConditions.windDirection);
+            initialWindDir.current = currentConditions.windDirection;
         }
-
-        // Update the ref with the current profileProperties
-        prevCurrentConditionsRef.current = currentConditions;
-    }, [currentConditions, calcState]);
-
-    const prefUnit = preferredUnits.velocity
-
-    const accuracy = getFractionDigits(0.1, UNew.MPS(1).In(prefUnit))
-
-
-    const fieldProps: Partial<MeasureFormFieldProps> = {
-        fKey: "windSpeed",
-        label: "Wind speed",
-        icon: "windsock",
-        fractionDigits: accuracy,
-        step: 10 ** -accuracy,
-        suffix: UnitProps[prefUnit].symbol,
-        minValue: UNew.MPS(0).In(preferredUnits.velocity),
-        maxValue: UNew.MPS(100).In(preferredUnits.velocity),
-    }
-
-    const windValue: number = currentConditions ? UNew.MPS(windSpeed).In(preferredUnits.velocity) : 0
-    const onWindValueChange = (value: number): void => {
-        return setWindSpeed(
-            new Measure.Velocity(value, preferredUnits.velocity).In(Unit.MPS)
-        )
-    }
-
+    }, [currentConditions.windDirection]);
 
     useEffect(() => {
-            updateCurrentConditions({ windDirection: windDir, windSpeed: windSpeed })
-    }, [windDir, windSpeed])
+        if (calcState === CalculationState.Complete) {
+            setRefreshable(false);
+        }
+    }, [calcState]);
+
+    const handleWindDirChange = (value) => {
+        if (value !== windDir) {
+            setWindDir(value);
+        }
+    };
+
+    const handleMouseUp = () => {
+        // Update current conditions when mouse button is released
+        updateCurrentConditions({ windDirection: windDir });
+        setRefreshable(true);
+        console.log("Updated wind direction on mouse up:", windDir);
+    };
 
     return (
         <CustomCard title={label} expanded={expanded}>
-            <RecalculateChip visible={refreshable} style={{ marginVertical: 4 }} />
-            
-            <WindDirectionPicker
-                style={{ alignItems: 'center' }}
-                value={windDir}
-                onChange={setWindDir}
-            />
-
-            <MeasureFormField
-                {...fieldProps}
-                value={windValue}
-                onValueChange={onWindValueChange}
-            />
+            <WindSpeedField />
+            <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
+                {(!isHovered && refreshable) && (
+                    <Tooltip title="Recalculate" enterTouchDelay={0} leaveTouchDelay={0}>
+                        <FAB
+                            visible={refreshable}
+                            style={{ marginVertical: 4, marginRight: 4 }}
+                            size={"small"}
+                            icon={"reload"}
+                            onPress={() => fire()}
+                            variant="tertiary"
+                        />
+                    </Tooltip>
+                )}
+                <View
+                    onMouseEnter={() => setIsHovered(true)}
+                    onMouseLeave={() => setIsHovered(false)}
+                    onMouseUp={handleMouseUp}
+                >
+                    {!isHovered ? (
+                        <FAB
+                            icon={() => (
+                                <View style={{ transform: [{ rotate: `${180 + windDir * 30}deg` }] }}>
+                                    <Icon size={20} source={"navigation"} />
+                                </View>
+                            )}
+                            size="small"
+                            variant="surface"
+                            label={`Wind from: ${windDir * 30}${UnitProps[Unit.Degree].symbol}`}
+                            animated={false}
+                        />
+                    ) : (
+                        <WindDirectionPicker
+                            value={windDir}
+                            onChange={handleWindDirChange}
+                            // onMouseUp={handleMouseUp} // Add onMouseUp event
+                        />
+                    )}
+                </View>
+            </View>
         </CustomCard>
     );
 };
 
 export default CurrentWindCard;
+
+
+// import React, { useEffect, useRef, useState } from "react";
+// import CustomCard from "./customCard";
+// import WindDirectionPicker from "../widgets/windDirectionPicker";
+// import { CalculationState, useCalculator } from "../../context/profileContext";
+// import { WindSpeedField } from "../widgets/measureFields";
+// import { View } from "react-native";
+// import { FAB, Icon, Tooltip } from "react-native-paper";
+// import { Unit, UnitProps } from "js-ballistics/dist/v2";
+
+
+// interface WindCardProps {
+//     label?: string;
+//     expanded?: boolean;
+// }
+
+// const CurrentWindCard: React.FC<WindCardProps> = ({ label = "Zero wind direction and speed", expanded = true }) => {
+
+//     const { currentConditions, updateCurrentConditions, calcState, fire } = useCalculator();
+//     const [windDir, setWindDir] = useState(currentConditions.windDirection);
+//     const [isHovered, setIsHovered] = useState(false);
+//     const [refreshable, setRefreshable] = useState(false);
+//     const initialWindDir = useRef(currentConditions.windDirection);
+
+//     useEffect(() => {
+//         // Only update windDir if it's different from the currentConditions
+//         if (currentConditions.windDirection !== initialWindDir.current) {
+//             console.log("Setting wind direction from current conditions:", currentConditions.windDirection);
+//             setWindDir(currentConditions.windDirection);
+//             initialWindDir.current = currentConditions.windDirection;
+//         }
+//     }, [currentConditions.windDirection]);
+
+//     useEffect(() => {
+//         // Update current conditions only if windDir has changed
+//         if (windDir !== currentConditions.windDirection) {
+//             updateCurrentConditions({ windDirection: windDir });
+//             setRefreshable(true);
+//             console.log("Updated wind direction:", windDir);
+//         }
+//     }, [windDir]);
+
+//     useEffect(() => {
+//         if (calcState === CalculationState.Complete) {
+//             setRefreshable(false);
+//         }
+//     }, [calcState]);
+
+//     const handleWindDirChange = (value) => {
+//         if (value !== windDir) { // Only update if the new value is different
+//             setWindDir(value);
+//         }
+//     };
+
+
+//     return (
+//         <CustomCard title={label} expanded={expanded}>
+
+//             <WindSpeedField />
+//             <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
+//                 {(!isHovered && refreshable) &&
+//                     <Tooltip title="Recalculate" enterTouchDelay={0} leaveTouchDelay={0} >
+//                         <FAB
+//                             visible={refreshable}
+//                             style={{ marginVertical: 4, marginRight: 4 }}
+//                             size={"small"}
+//                             icon={"reload"}
+//                             onPress={() => fire()}
+//                             variant="tertiary"
+//                         />
+//                     </Tooltip>
+//                 }
+//                 <View
+//                     onMouseEnter={() => setIsHovered(true)}
+//                     onMouseLeave={() => setIsHovered(false)}
+//                 >
+//                     {!isHovered ? <FAB
+//                         icon={() => <View style={{ transform: [{ rotate: `${180 + windDir * 30}deg` }] }}>
+//                             <Icon size={20} source={"navigation"} />
+//                         </View>}
+//                         size="small"
+//                         variant="surface"
+//                         label={`Wind from: ${windDir * 30}${UnitProps[Unit.Degree].symbol}`}
+//                         animated={false}
+//                     /> : <WindDirectionPicker
+//                         value={windDir}
+//                         onChange={handleWindDirChange }
+//                     />}
+//                 </View>
+
+//             </View>
+//         </CustomCard>
+//     );
+// };
+
+// export default CurrentWindCard;

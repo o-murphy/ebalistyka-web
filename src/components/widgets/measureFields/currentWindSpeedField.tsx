@@ -1,16 +1,26 @@
-import { useCalculator } from "../../../context/profileContext";
-import MeasureFormField, { MeasureFormFieldProps } from "./measureField"
+import { CalculationState, useCalculator } from "../../../context/profileContext";
+import { MeasureFormFieldProps, MeasureFormFieldRefreshable } from "./measureField"
 import { UNew, Unit, UnitProps, Measure } from "js-ballistics/dist/v2"
 import { usePreferredUnits } from "../../../context/preferredUnitsContext";
 import getFractionDigits from "../../../utils/fractionConvertor";
+import { useEffect, useState } from "react";
 
 
 export const WindSpeedField = () => {
-    const { currentConditions, updateCurrentConditions } = useCalculator();
+    const { calcState, currentConditions, updateCurrentConditions } = useCalculator();
 
     const { preferredUnits } = usePreferredUnits()
 
+    const [refreshable, setRefreshable] = useState(false)
+
+    useEffect(() => {
+        if (calcState === CalculationState.Complete) {
+            setRefreshable(false)
+        }
+    }, [calcState]);
+
     const prefUnit = preferredUnits.velocity
+
     const accuracy = getFractionDigits(0.1, UNew.MPS(1).In(prefUnit))
 
     const fieldProps: Partial<MeasureFormFieldProps> = {
@@ -18,10 +28,10 @@ export const WindSpeedField = () => {
         label: "Wind speed",
         icon: "windsock",
         fractionDigits: accuracy,
-        step: 1 / (10 ** accuracy),
+        step: 10 ** -accuracy,
         suffix: UnitProps[prefUnit].symbol,
-        minValue: UNew.MPS(0).In(prefUnit),
-        maxValue: UNew.MPS(100).In(prefUnit),
+        minValue: UNew.MPS(0).In(preferredUnits.velocity),
+        maxValue: UNew.MPS(100).In(preferredUnits.velocity),
     }
 
     const value: number = UNew.MPS(
@@ -30,16 +40,19 @@ export const WindSpeedField = () => {
     ).In(prefUnit)
 
     const onValueChange = (value: number): void => {
-        return updateCurrentConditions({
+        updateCurrentConditions({
             [fieldProps.fKey]: new Measure.Velocity(value, prefUnit).In(Unit.MPS)
         })
+        setRefreshable(true)
     }
 
     return (
-        <MeasureFormField
-        {...fieldProps}
-        value={value}
-        onValueChange={onValueChange}
-    />
+        <MeasureFormFieldRefreshable 
+            fieldProps={fieldProps}
+            value={value}
+            onValueChange={onValueChange}
+            refreshable={refreshable}
+            buttonPosition="left"
+        />
     )
 }

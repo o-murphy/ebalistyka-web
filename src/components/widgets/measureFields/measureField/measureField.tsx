@@ -52,39 +52,50 @@ const MeasureFormField: React.FC<MeasureFormFieldProps> = ({
   )
 };
 
-export const MeasureFormFieldRefreshable = ({ fieldProps, value, onValueChange, refreshable }) => {
-  const { theme } = useTheme()
+
+interface MeasureFormFieldRefreshableProps {
+  fieldProps: Partial<MeasureFormFieldProps>;
+  value: number;
+  onValueChange: (value: number) => void;
+  refreshable: boolean;
+  buttonPosition?: "left" | "right"
+}
+
+export const RefreshFAB = ({ visible, style = null }) => {
   const { fire } = useCalculator()
-  const [extended, setExtended] = useState(false)
+
   return (
-    <View style={{ flexDirection: "row" }}>
+    <Tooltip title="Recalculate" enterTouchDelay={0} leaveTouchDelay={0} >
+      <FAB
+        visible={visible}
+        style={[
+          {
+            alignSelf: "center",
+          }, style
+        ]}
+        size={"small"}
+        icon={"reload"}
+        onPress={() => fire()}
+        variant="tertiary"
+      />
+    </Tooltip>
+  )
+}
+
+export const MeasureFormFieldRefreshable = ({ fieldProps, value, onValueChange, refreshable, buttonPosition = "right" }) => {
+  const refreshFabStyle = {
+    left: {marginVertical: 4, marginRight: 4},
+    right: {marginVertical: 4, marginLeft: 4}
+  }
+  return (
+    <View style={{ flexDirection: "row", alignItems: "center" }}>
+      {buttonPosition === "left" && refreshable && <RefreshFAB visible={refreshable} style={refreshFabStyle.left}/>}
       <MeasureFormField
         {...fieldProps}
         value={value}
         onValueChange={onValueChange}
       />
-      {/* <View
-        onMouseEnter={() => setExtended(true)}
-        onMouseLeave={() => setExtended(false)}
-        style={{ alignSelf: "center", }}
-      > */}
-      {
-        refreshable &&
-        <Tooltip title="Recalculate" enterTouchDelay={0} leaveTouchDelay={0} >
-          <FAB
-            visible={refreshable}
-            style={{ alignSelf: "center", 
-              // backgroundColor: theme.colors.onTertiary, 
-            marginVertical: 4, marginLeft: 4 }}
-            size={"small"}
-            icon={"reload"}
-            onPress={() => fire()}
-            // color={theme.colors.tertiary}
-            variant="tertiary"
-          />
-        </Tooltip>
-      }
-      {/* </View> */}
+      {buttonPosition === "right" && refreshable && <RefreshFAB visible={refreshable} style={refreshFabStyle.right}/>}
     </View>
   )
 }

@@ -1,10 +1,18 @@
-import { useEffect } from "react";
-import { useCalculator } from "../../../context/profileContext";
-import MeasureFormField, { MeasureFormFieldProps } from "./measureField"
+import { CalculationState, useCalculator } from "../../../context/profileContext";
+import { MeasureFormFieldProps, MeasureFormFieldRefreshable } from "./measureField"
+import { useEffect, useState } from "react";
 
 
 export const CurrentHumidityField = () => {
-    const { currentConditions, updateCurrentConditions } = useCalculator();
+    const { calcState, currentConditions, updateCurrentConditions } = useCalculator();
+
+    const [refreshable, setRefreshable] = useState(false)
+
+    useEffect(() => {
+        if ([CalculationState.Complete].includes(calcState)) {
+            setRefreshable(false)
+        }
+    }, [calcState]);
 
     const fieldProps: Partial<MeasureFormFieldProps> = {
         fKey: "humidity",
@@ -20,16 +28,19 @@ export const CurrentHumidityField = () => {
     const value: number = currentConditions?.[fieldProps.fKey] ? currentConditions[fieldProps.fKey] : 0
 
     const onValueChange = (value: number): void => {
-        return updateCurrentConditions({
+        updateCurrentConditions({
             [fieldProps.fKey]: value
         })
+        setRefreshable(true)
     }
 
     return (
-        <MeasureFormField
-        {...fieldProps}
-        value={value}
-        onValueChange={onValueChange}
-    />
+        <MeasureFormFieldRefreshable 
+            fieldProps={fieldProps}
+            value={value}
+            onValueChange={onValueChange}
+            refreshable={refreshable}
+            buttonPosition="left"
+        />
     )
 }

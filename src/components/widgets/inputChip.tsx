@@ -20,8 +20,8 @@ export const TextInputChip: React.FC<TextInputChipProps> = ({
     onTextChange = null,
     icon = null,
     label = null,
-    
-} ): ReactNode => {
+
+}): ReactNode => {
 
     const [curText, setCurText] = useState<string>(text);
 
@@ -30,18 +30,18 @@ export const TextInputChip: React.FC<TextInputChipProps> = ({
 
     return (
         <SimpleDialog
-        style={style}
-        label={label}
-        icon={icon}
-        text={text}
-        onAccept={onAccept}
-        onDecline={onDecline}
-    >
-        <TextInput
-            value={curText}
-            onChangeText={setCurText}
-            maxLength={50}
-        />
-    </SimpleDialog>
+            style={style}
+            label={label}
+            icon={icon}
+            text={text}
+            onAccept={onAccept}
+            onDecline={onDecline}
+        >
+            <TextInput
+                value={curText}
+                onChangeText={setCurText}
+                maxLength={50}
+            />
+        </SimpleDialog>
     )
 }

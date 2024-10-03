@@ -74,11 +74,9 @@ const TouchableValueSelector = ({ value, onValueChange }) => {
 const SingleShotCard: React.FC<SingleShotCardProps> = ({ expanded = true }) => {
     const { profileProperties, currentConditions, updateCurrentConditions, calcState } = useCalculator();
     const { preferredUnits } = usePreferredUnits()
-    const [refreshable, setRefreshable] = useState(false)
 
     const { theme } = useTheme()
 
-    const prevProfilePropertiesRef = useRef<ProfileProps | null>(null);
 
     if (!profileProperties) {
         return (
