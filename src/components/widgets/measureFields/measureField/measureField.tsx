@@ -32,7 +32,7 @@ const MeasureFormField: React.FC<MeasureFormFieldProps> = ({
     maxValue: maxValue,
     fractionDigits: fractionDigits,
     step: step ?? 1,
-    style: [styles.spinBox, { marginVertical: 8 }],
+    style: [styles.spinBox, { marginVertical: 4 }],
     inputProps: {
       label: !compact ? label : `${label}${suffix && `, ${suffix}`}`,
       mode: "outlined",

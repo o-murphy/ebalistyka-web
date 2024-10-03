@@ -45,7 +45,8 @@ const ShotParamsCard: React.FC<ShotParamsCardProps> = ({ label = "Shot propertie
             expanded={expanded}
             iconButton={null}
         >
-            <RecalculateChip visible={refreshable} style={{  }} />
+            <RecalculateChip visible={refreshable} style={{ marginVertical: 4 }} />
+            
             <TrajectoryRangeField />
             <TrajectoryStepField />
             <TrajectoryTargetDistance />

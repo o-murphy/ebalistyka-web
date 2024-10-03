@@ -53,9 +53,10 @@ const WeaponCard: React.FC<WeaponCardProps> = ({ expanded = true }) => {
 
     return (
         <CustomCard title={"Weapon"} expanded={expanded}>
-            <RecalculateChip visible={refreshable} style={{ marginVertical: 8 }} />
+            <RecalculateChip visible={refreshable} style={{ marginVertical: 4 }} />
 
             <TextInputChip 
+                style={{ marginVertical: 4 }}
                 icon={"card-bulleted-outline"} 
                 label={"Weapon name"}
                 text={profileProperties?.profileName ?? "My rifle"}

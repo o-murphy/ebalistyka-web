@@ -48,7 +48,7 @@ const CurrentConditionsCard: React.FC<AtmoCardProps> = ({ label = "Zero atmosphe
 
     return (
         <CustomCard title={label} expanded={expanded}>
-            <RecalculateChip visible={refreshable} style={{  }} />
+            <RecalculateChip visible={refreshable} style={{ marginVertical: 4 }} />
 
             <CurrentTemperatureField />
             <CurrentPressureField />

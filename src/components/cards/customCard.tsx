@@ -30,6 +30,8 @@ const CustomCard: React.FC<CustomCardProps> = ({ children = null, title = null, 
         <Card mode="elevated" elevation={1} style={[styles.card, style]}>
             <Card.Title
                 title={_title}
+                style={styles.title}
+                titleStyle={styles.title}
                 right={children ? (props) => (
                     iconButton ?? <IconButton
                         {...props}
@@ -52,8 +54,8 @@ const CustomCard: React.FC<CustomCardProps> = ({ children = null, title = null, 
 
 const styles = StyleSheet.create({
     card: {
-        marginTop: 15,
-        marginHorizontal: 15,
+        marginTop: 14,
+        marginHorizontal: 14,
     },
     iconButton: {},
     title: {},

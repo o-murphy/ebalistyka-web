@@ -76,7 +76,8 @@ const CurrentWindCard: React.FC<WindCardProps> = ({ label = "Zero wind direction
 
     return (
         <CustomCard title={label} expanded={expanded}>
-            <RecalculateChip visible={refreshable} style={{  }} />
+            <RecalculateChip visible={refreshable} style={{ marginVertical: 4 }} />
+            
             <WindDirectionPicker
                 style={{ alignItems: 'center' }}
                 value={windDir}

@@ -21,7 +21,7 @@ export const TextInputChip: React.FC<TextInputChipProps> = ({
     icon = null,
     label = null,
     
-}: TextInputChipProps ): ReactNode => {
+} ): ReactNode => {
 
     const [curText, setCurText] = useState<string>(text);
 

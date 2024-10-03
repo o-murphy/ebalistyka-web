@@ -46,9 +46,10 @@ const ProjectileCard: React.FC<ProjectileCardProps> = ({ expanded = true }) => {
 
     return (
         <CustomCard title={"Projectile"} expanded={expanded}>
-            <RecalculateChip visible={refreshable} style={{ marginVertical: 8 }} />
+            <RecalculateChip visible={refreshable} style={{ marginVertical: 4 }} />
 
             <TextInputChip 
+                style={{ marginVertical: 4 }}
                 icon={"card-bulleted-outline"} 
                 label={"Projectile name"}
                 text={profileProperties?.cartridgeName ?? "My projectile"}

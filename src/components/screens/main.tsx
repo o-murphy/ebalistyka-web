@@ -8,9 +8,9 @@ import CurrentWindCard from '../cards/currentWindCard';
 import CurrentConditionsCard from '../cards/currentConditionsCard';
 // import { isMobile } from 'react-device-detect';
 import { useTheme } from '../../context/themeContext';
-import { PaperProvider, SegmentedButtons } from 'react-native-paper';
+import { PaperProvider } from 'react-native-paper';
 import TopAppBar from '../widgets/topAppBar';
-import { TrajectoryTable, DragChart, HorizontalTrajectoryChart, AdjustedTrajectoryChart, AdjustedTable, HorizontalWindageChart, AdjustedWindageChart, TrajectoryReticle, AdjustedReticle } from '../widgets/trajectoryData';
+import { ZeroTable, AdjustedTable, DragChart, HorizontalTrajectoryChart, AdjustedTrajectoryChart, HorizontalWindageChart, AdjustedWindageChart, TrajectoryReticle, AdjustedReticle } from '../widgets/trajectoryData';
 import CustomCard from '../cards/customCard';
 import { DataToDisplay, TrajectoryMode, useCalculator } from '../../context/profileContext';
 import CalculationStateCard from '../cards/calculationStateCard';
@@ -19,14 +19,13 @@ import CalculationModeCard from '../cards/calculationModeCard';
 
 
 
-export default function MainScreen() {
+const MainScreen = () => {
 
     const { theme } = useTheme();
     const { hitResult, adjustedResult, trajectoryMode, dataToDisplay } = useCalculator();
 
-
-    const hitResultError = hitResult instanceof Error;
-    const adjustedResultError = hitResult instanceof Error;
+    const curHitResult = trajectoryMode === TrajectoryMode.Zero ? hitResult : adjustedResult
+    const hitResultError = curHitResult instanceof Error;
 
 
     return (
@@ -58,44 +57,40 @@ export default function MainScreen() {
                             alwaysBounceVertical={false}
                             showsVerticalScrollIndicator={false}
                         >
-                            {dataToDisplay === DataToDisplay.DragModel
-                                ?
+                            {dataToDisplay === DataToDisplay.DragModel && (
                                 <CustomCard title='Drag model'>
                                     <DragChart />
                                 </CustomCard>
-                                :
+                            )}
+
+                            {
+                                (!hitResultError && curHitResult && dataToDisplay !== DataToDisplay.DragModel)
+                                &&
                                 (
                                     trajectoryMode === TrajectoryMode.Zero
                                         ?
-                                        (!hitResultError && hitResult ? (
-                                            <CustomCard title='Zero shot'>
-                                                {dataToDisplay === DataToDisplay.Table && <TrajectoryTable />}
-                                                {dataToDisplay === DataToDisplay.Chart && <HorizontalTrajectoryChart />}
-                                                {dataToDisplay === DataToDisplay.Chart && <HorizontalWindageChart />}
-                                                {dataToDisplay === DataToDisplay.Reticle && <TrajectoryReticle />}
-                                            </CustomCard>
+                                        <CustomCard title='Zero shot'>
+                                            {dataToDisplay === DataToDisplay.Table && <ZeroTable />}
+                                            {dataToDisplay === DataToDisplay.Chart && <HorizontalTrajectoryChart />}
+                                            {dataToDisplay === DataToDisplay.Chart && <HorizontalWindageChart />}
+                                            {dataToDisplay === DataToDisplay.Reticle && <TrajectoryReticle />}
 
-                                        ) : <CustomCard title='Zero shot' />)
+                                        </CustomCard>
                                         :
-                                        (!adjustedResultError && adjustedResult ? (
-                                            <CustomCard title='Relative shot'>
-                                                {dataToDisplay === DataToDisplay.Table && <AdjustedTable />}
-                                                {dataToDisplay === DataToDisplay.Chart && <AdjustedTrajectoryChart />}
-                                                {dataToDisplay === DataToDisplay.Chart && <AdjustedWindageChart />}
-                                                {dataToDisplay === DataToDisplay.Reticle && <AdjustedReticle />}
-                                            </CustomCard>
+                                        <CustomCard title='Relative shot'>
+                                            {dataToDisplay === DataToDisplay.Table && <AdjustedTable />}
+                                            {dataToDisplay === DataToDisplay.Chart && <AdjustedTrajectoryChart />}
+                                            {dataToDisplay === DataToDisplay.Chart && <AdjustedWindageChart />}
+                                            {dataToDisplay === DataToDisplay.Reticle && <AdjustedReticle />}
+                                        </CustomCard>
+                                )
+                            }
 
-                                        ) : (
-                                            <CustomCard title='Relative shot' />)
-                                        )
-                                )}
+                            {(hitResultError || !curHitResult) && dataToDisplay !== DataToDisplay.DragModel && <CustomCard title='No data' />}
 
 
                         </ScrollView>
-
-
                     </View>
-
 
                     <ScrollView
                         style={{ ...styles.column, flex: 1, minWidth: 280 }}
@@ -126,3 +121,5 @@ const styles = StyleSheet.create({
         flexDirection: "column",
     }
 });
+
+export default MainScreen;
