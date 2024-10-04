@@ -6,40 +6,41 @@ import getFractionDigits from "../../../utils/fractionConvertor";
 import { useEffect, useState } from "react";
 
 
-export const TrajectoryTargetDistance = () => {
+export const TargetLookAngleField = () => {
     const { calcState, currentConditions, updateCurrentConditions } = useCalculator();
 
     const { preferredUnits } = usePreferredUnits()
 
-    const prefUnit = preferredUnits.distance
-    const accuracy = getFractionDigits(1, UNew.Meter(1).In(prefUnit))
-
     const [refreshable, setRefreshable] = useState(false)
+
     useEffect(() => {
         if ([CalculationState.Complete].includes(calcState)) {
             setRefreshable(false)
         }
     }, [calcState]);
 
+    const prefUnit = preferredUnits.angular
+    const accuracy = getFractionDigits(0.1, UNew.Degree(1).In(prefUnit))
+
     const fieldProps: Partial<MeasureFormFieldProps> = {
-        fKey: "targetDistance",
-        label: "Target distance",
-        icon: "target",
+        fKey: "lookAngle",
+        label: "Look angle",
+        icon: "angle-acute",
         fractionDigits: accuracy,
         step: 1 / (10 ** accuracy),
         suffix: UnitProps[prefUnit].symbol,
-        minValue: UNew.Meter(10).In(prefUnit),
-        maxValue: UNew.Meter(3000).In(prefUnit),
+        minValue: UNew.Degree(-90).In(prefUnit),
+        maxValue: UNew.Degree(90).In(prefUnit),
     }
 
-    const value: number = UNew.Meter(
+    const value: number = UNew.Degree(
         currentConditions?.[fieldProps.fKey] ? 
-        currentConditions[fieldProps.fKey] : 2000
+        currentConditions[fieldProps.fKey] : 0
     ).In(prefUnit)
-    
+
     const onValueChange = (value: number): void => {
         updateCurrentConditions({
-            [fieldProps.fKey]: new Measure.Distance(value, prefUnit).In(Unit.Meter)
+            [fieldProps.fKey]: new Measure.Angular(value, prefUnit).In(Unit.Degree)
         })
         setRefreshable(true)
     }

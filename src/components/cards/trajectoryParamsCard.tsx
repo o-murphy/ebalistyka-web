@@ -1,14 +1,14 @@
 import React from "react";
 import CustomCard from "./customCard";
-import { TrajectoryRangeField, TrajectoryStepField, TrajectoryTargetDistance } from "../widgets/measureFields";
+import { TrajectoryRangeField, TrajectoryStepField } from "../widgets/measureFields";
 
 
-interface ShotParamsCardProps {
+interface TrajectoryCardProps {
     label?: string;
     expanded?: boolean;
 }
 
-const ShotParamsCard: React.FC<ShotParamsCardProps> = ({ label = "Shot properties", expanded = true }) => {
+const TrajectoryParamsCard: React.FC<TrajectoryCardProps> = ({ label = "Shot properties", expanded = true }) => {
 
     return (
         <CustomCard 
@@ -19,9 +19,8 @@ const ShotParamsCard: React.FC<ShotParamsCardProps> = ({ label = "Shot propertie
             
             <TrajectoryRangeField />
             <TrajectoryStepField />
-            <TrajectoryTargetDistance />
         </CustomCard>
     );
 };
 
-export default ShotParamsCard;
+export default TrajectoryParamsCard;

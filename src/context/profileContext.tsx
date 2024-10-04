@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createContext, useState, useContext, useEffect, ReactNode, useCallback } from 'react';
 import parseA7P, { ProfileProps } from '../utils/parseA7P';
-import { CurrentConditionsProps, makeShot, prepareCalculator, PreparedZeroData, shootTheTarget, validateData } from '../utils/ballisticsCalculator';
+import { CurrentConditionsProps, makeShot, prepareCalculator, PreparedZeroData, shootTheTarget } from '../utils/ballisticsCalculator';
 import { HitResult } from 'js-ballistics/dist/v2';
 import debounce from '../utils/debounce';
 
@@ -76,7 +76,7 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
 
   const [inProgress, setInProgress] = useState<boolean>(false)
 
-  const [trajectoryMode, setTrajectoryMode] = useState<TrajectoryMode>(TrajectoryMode.Zero)
+  const [trajectoryMode, setTrajectoryMode] = useState<TrajectoryMode>(TrajectoryMode.Adjusted)
   const [dataToDisplay, setDataToDisplay] = useState<DataToDisplay>(DataToDisplay.Table);
 
   const [measureErr, setMeasureErr] = useState({})
