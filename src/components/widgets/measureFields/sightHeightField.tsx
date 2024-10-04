@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 
 
 export const SightHeightField = () => {
-    const { calcState, profileProperties, updateProfileProperties, fire } = useCalculator();
+    const { calcState, profileProperties, updateProfileProperties } = useCalculator();
     const { preferredUnits } = usePreferredUnits()
 
     const [refreshable, setRefreshable] = useState(false)
@@ -34,7 +34,7 @@ export const SightHeightField = () => {
 
     const value: number = UNew.Millimeter(
         profileProperties?.[fieldProps.fKey] ?
-            profileProperties[fieldProps.fKey] : 2
+            profileProperties[fieldProps.fKey] : 0
     ).In(prefUnit)
 
     const onValueChange = (value: number): void => {

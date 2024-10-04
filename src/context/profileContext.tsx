@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createContext, useState, useContext, useEffect, ReactNode, useCallback } from 'react';
 import parseA7P, { ProfileProps } from '../utils/parseA7P';
-import { CurrentConditionsProps, makeShot, prepareCalculator, PreparedZeroData, shootTheTarget } from '../utils/ballisticsCalculator';
+import { CurrentConditionsProps, makeShot, prepareCalculator, PreparedZeroData, shootTheTarget, validateData } from '../utils/ballisticsCalculator';
 import { HitResult } from 'js-ballistics/dist/v2';
 import debounce from '../utils/debounce';
 
@@ -10,7 +10,8 @@ export enum CalculationState {
   NoData = 0,
   ZeroUpdated = 1,
   ConditionsUpdated = 2,
-  Complete = 3
+  Complete = 3,
+  InvalidData = 4
 }
 
 interface CalculationContextType {
@@ -30,10 +31,11 @@ interface CalculationContextType {
   zero: () => void;
   fire: () => Promise<void>;
   inProgress: boolean;
-  trajectoryMode: TrajectoryMode, 
+  trajectoryMode: TrajectoryMode,
   setTrajectoryMode: React.Dispatch<React.SetStateAction<TrajectoryMode>>,
-  dataToDisplay: DataToDisplay, 
-  setDataToDisplay: React.Dispatch<React.SetStateAction<DataToDisplay>>
+  dataToDisplay: DataToDisplay,
+  setDataToDisplay: React.Dispatch<React.SetStateAction<DataToDisplay>>,
+  updMeasureErr: (props: {fkey: string, isError: boolean}) => void
 }
 
 export enum TrajectoryMode {
@@ -63,19 +65,29 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
     trajectoryStep: 100,
     trajectoryRange: 2000
   });
-  
+
   const [calcState, setCalcState] = useState<CalculationState>(CalculationState.NoData);
   // const [autoRefresh, setAutoRefresh] = useState<boolean>(false);
   const [calculator, setCalculator] = useState<PreparedZeroData | null>(null);
   const [hitResult, setHitResult] = useState<HitResult | Error | null>(null);
   const [adjustedResult, setAdjustedResult] = useState<HitResult | Error | null>(null);
-  
+
   const [isLoaded, setIsLoaded] = useState(false); // Track loading state
 
   const [inProgress, setInProgress] = useState<boolean>(false)
 
-  const [ trajectoryMode, setTrajectoryMode ] = useState<TrajectoryMode>(TrajectoryMode.Zero)
-  const [ dataToDisplay, setDataToDisplay ] = useState<DataToDisplay>(DataToDisplay.Table);
+  const [trajectoryMode, setTrajectoryMode] = useState<TrajectoryMode>(TrajectoryMode.Zero)
+  const [dataToDisplay, setDataToDisplay] = useState<DataToDisplay>(DataToDisplay.Table);
+
+  const [measureErr, setMeasureErr] = useState({})
+
+  const updMeasureErr = ({ fkey, isError }) => {
+    // console.log(fkey, isError)
+    setMeasureErr((prev) => ({
+      ...prev,
+      ...{ [fkey]: isError },
+    }));
+  };
 
   useEffect(() => {
     loadUserData(); // Load data on mount
@@ -100,10 +112,14 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
   }
 
   const fire = async () => {
+    const allFieldsValid = Object.values(measureErr).every(value => value === false);
+    if (!allFieldsValid) {
+      setCalcState(CalculationState.InvalidData)
+      return
+    }
 
     try {
       setInProgress(true);
-    // const currentCalc: PreparedZeroData = autoRefresh ? calculator : zero();
       const currentCalc: PreparedZeroData = zero();
       if (currentCalc) {
         if (!currentCalc.error) {
@@ -223,12 +239,14 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
       zero,
       fire,
       inProgress,
-      
-      trajectoryMode, 
+
+      trajectoryMode,
       setTrajectoryMode,
 
       dataToDisplay,
-      setDataToDisplay
+      setDataToDisplay,
+
+      updMeasureErr,
     }}>
       {children}
     </CalculationContext.Provider>

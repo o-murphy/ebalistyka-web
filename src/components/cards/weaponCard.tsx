@@ -1,11 +1,11 @@
-import { FAB, SegmentedButtons, Tooltip } from "react-native-paper";
+import { SegmentedButtons } from "react-native-paper";
 import React, { useState, useEffect } from "react";
 import CustomCard from "./customCard";
 import { StyleSheet, View } from "react-native";
 import { CalculationState, useCalculator } from "../../context/profileContext";
 import { SightHeightField, TwistField, ZeroDistanceField, ZeroLookAngleField } from "../widgets/measureFields";
 import { TextInputChip } from "../widgets/inputChip";
-import { useTheme } from "../../context/themeContext";
+import { RefreshFAB, RefreshFabState } from "../widgets/refreshFAB";
 
 
 interface WeaponCardProps {
@@ -15,7 +15,6 @@ interface WeaponCardProps {
 const WeaponCard: React.FC<WeaponCardProps> = ({ expanded = true }) => {
     const { profileProperties, updateProfileProperties, calcState, fire } = useCalculator();
 
-    const { theme } = useTheme()
     const [refreshable, setRefreshable] = useState(false)
 
     useEffect(() => {
@@ -57,18 +56,10 @@ const WeaponCard: React.FC<WeaponCardProps> = ({ expanded = true }) => {
                     onValueChange={onTwistChange}
                 />
                 {
-                    refreshable &&
-                    <Tooltip title="Recalculate" enterTouchDelay={0} leaveTouchDelay={0} >
-                        <FAB
-                        visible={refreshable}
-                        style={{ alignSelf: "center",
-                        marginVertical: 4, marginLeft: 4 }}
-                        size={"small"}
-                        icon={"reload"}
-                        onPress={() => fire()}
-                        variant="tertiary"
-                        />
-                    </Tooltip>
+                    refreshable && <RefreshFAB 
+                    state={refreshable ? RefreshFabState.Updated : RefreshFabState.Actual}
+                    style={{marginLeft: 4}}
+                    />
                 }
             </View>
 

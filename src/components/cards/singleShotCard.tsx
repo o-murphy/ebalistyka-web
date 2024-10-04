@@ -1,17 +1,14 @@
-import { Text, Chip, Button, FAB, Icon, TextInput } from "react-native-paper";
-import React, { useEffect, useRef, useState } from "react";
+import { Chip, Icon } from "react-native-paper";
+import React from "react";
 import CustomCard from "./customCard";
 import { StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native";
-import { CalculationState, useCalculator } from "../../context/profileContext";
-import { BulletLengthField, BulletWeightField, CaliberField } from "../widgets/measureFields";
-import { ProfileProps } from "../../utils/parseA7P";
-import RecalculateChip from "../widgets/recalculateChip";
-import { TextInputChip } from "../widgets/inputChip";
+import { useCalculator } from "../../context/profileContext";
 import { useTheme } from "../../context/themeContext";
 import { usePreferredUnits } from "../../context/preferredUnitsContext";
 import { UNew, Unit, UnitProps } from "js-ballistics/dist/v2";
 import { DoubleSpinBox } from "../widgets/doubleSpinBox";
 import { IconSource } from "react-native-paper/src/components/Icon";
+import WindDirectionPicker from "../widgets/windDirectionPicker";
 
 interface SingleShotCardProps {
     expanded?: boolean;

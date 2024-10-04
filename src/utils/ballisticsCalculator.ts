@@ -235,3 +235,10 @@ export const shootTheTarget = (calculator: PreparedZeroData, currentConditions: 
         return error
     }
 }
+
+export const validateData = (profile: ProfileProps, currentConditions: CurrentConditionsProps) => {
+    return (
+        currentConditions.humidity >= 0 &&
+        currentConditions.humidity <= 100
+    )
+}

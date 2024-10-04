@@ -4,7 +4,7 @@ import {
   NativeSyntheticEvent,
   TextInputKeyPressEventData
 } from 'react-native';
-import { TextInput, HelperText } from 'react-native-paper';
+import { TextInput } from 'react-native-paper';
 import { Props as TextInputProps } from "react-native-paper/src/components/TextInput/TextInput";
 import { StyleProp, ViewStyle } from 'react-native';
 
@@ -15,10 +15,9 @@ export interface SpinBoxProps {
   minValue?: number; // Minimum value
   maxValue?: number; // Maximum value
   step?: number; // Step increment/decrement value
-  style?: StyleProp<ViewStyle>; // Style for the container
   inputProps?: TextInputProps; // Additional props for the TextInput
   strict?: boolean;
-  showError?: boolean;
+  onError?: (error: Error) => void; 
 }
 
 
@@ -29,10 +28,9 @@ export const DoubleSpinBox: React.FC<SpinBoxProps> = ({
   minValue: min = 0, // Default min value
   maxValue: max = 100, // Default max value
   step = 1,
-  style,
   inputProps,
   strict = false,
-  showError = true,
+  onError
 }) => {
   const [currentValue, setCurrentValue] = useState<string>(value.toFixed(fixedPoints));
   const [error, setError] = useState<string | null>(null);
@@ -40,6 +38,11 @@ export const DoubleSpinBox: React.FC<SpinBoxProps> = ({
   useEffect(() => {
     setCurrentValue(value.toFixed(fixedPoints))
   }, [value])
+
+  const onErrorSet = (error) => {
+    setError(error)
+    onError?.(error)
+  }
 
   // Handle digit input from keyboard
   const handleInputChange = (text: string) => {
@@ -59,14 +62,14 @@ export const DoubleSpinBox: React.FC<SpinBoxProps> = ({
     let _error = null;
     // Validation
     if (numericValue < min) {
-      _error = `Value must be at least ${min}`;
+      _error = new Error(`Value must be at least ${min}`);
     } else if (numericValue > max) {
-      _error = `Value must be at most ${max}`;
+      _error = new Error(`Value must be at most ${max}`);
     } else {
       _error = null
     }
 
-    setError(_error)
+    onErrorSet(_error)
     setCurrentValue(isNegative && numericValue === 0 ? "-" + newValue : newValue);
 
     if (strict && _error) {
@@ -92,7 +95,6 @@ export const DoubleSpinBox: React.FC<SpinBoxProps> = ({
   };
 
   return (
-    <View style={style}>
       <TextInput
         {...inputProps}
         keyboardType="default"
@@ -101,9 +103,5 @@ export const DoubleSpinBox: React.FC<SpinBoxProps> = ({
         onKeyPress={processKeyPress}
         onChange={e => handleInputChange(e.nativeEvent.text)}
       />
-      {showError && <HelperText type="error" visible={!!error}>
-        {error}
-      </HelperText>}
-    </View>
   );
 };
