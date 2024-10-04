@@ -10,6 +10,7 @@ import { IconSource } from "react-native-paper/src/components/Icon";
 import { DoubleSpinBox, SpinBoxProps } from "../widgets/doubleSpinBox";
 import getFractionDigits from "../../utils/fractionConvertor";
 import { MeasureFormFieldProps } from "../widgets/measureFields/measureField";
+import { TargetShotTable } from "../widgets/trajectoryData/abstract/targetShotTable";
 
 
 interface SingleShotCardProps {
@@ -348,7 +349,7 @@ const TargetWindDirObserver = () => {
             style: [styles.spinBox, styles.inputStyle],
             contentStyle: styles.inputContentStyle,
             outlineStyle: styles.inputOutlineStyle,
-            editable: false,
+            // editable: false,
         },
     }
 
@@ -363,7 +364,7 @@ const TargetWindDirObserver = () => {
 }
 
 const SingleShotCard: React.FC<SingleShotCardProps> = ({ expanded = true }) => {
-    const { profileProperties } = useCalculator();
+    const { profileProperties, adjustedResult } = useCalculator();
     const { preferredUnits } = usePreferredUnits()
 
     const { theme } = useTheme()
@@ -407,6 +408,7 @@ const SingleShotCard: React.FC<SingleShotCardProps> = ({ expanded = true }) => {
                     <TargetWindDirObserver />
                 </View >
             </View >
+            <TargetShotTable hitResult={adjustedResult}/>
         </CustomCard >
     );
 };
