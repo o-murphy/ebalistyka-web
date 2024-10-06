@@ -61,6 +61,8 @@ export const TrajectoryChart: React.FC<WindageChartProps> = ({
     <Text>Can't display chart</Text>
   );
 
+  const hold = results.shot.relativeAngle.In(Unit.Degree)
+
   const heightAccuracy = getFractionDigits(0.1, UNew.Inch(1).In(preferredUnits.drop));
   const dropAdjAccuracy = getFractionDigits(0.01, UNew.MIL(1).In(preferredUnits.adjustment));
   const distanceAccuracy = getFractionDigits(1, UNew.Meter(1).In(preferredUnits.distance));
@@ -90,6 +92,14 @@ export const TrajectoryChart: React.FC<WindageChartProps> = ({
     return parseFloat(windAdj.toFixed(dropAdjAccuracy));
   };
 
+  const prepareZeroSightLine = (row: TrajectoryData) => {
+    const windAdj = findOppositeLeg(
+      row.lookDistance.In(preferredUnits.drop),
+      results.shot.lookAngle.In(Unit.Degree) + hold
+    )
+    return parseFloat(windAdj.toFixed(dropAdjAccuracy));
+  };
+
   const prepareBarrelLine = (row: TrajectoryData) => {
     const barrelHeight = findOppositeLeg(
       row.lookDistance.In(preferredUnits.drop),
@@ -99,12 +109,14 @@ export const TrajectoryChart: React.FC<WindageChartProps> = ({
   }
 
   const result = results.trajectory;
-
+  
   // Mapping the data to Recharts format
   const data = result.map(row => ({
     distance: roundDistance(row.distance),
     velocity: roundVelocity(row.velocity),
     sightLine: prepareSightLine(row),
+    zeroSightLine: prepareZeroSightLine(row),
+
     barrelLine: prepareBarrelLine(row),
     height: roundHeight(row.height),
 
@@ -159,7 +171,19 @@ export const TrajectoryChart: React.FC<WindageChartProps> = ({
           dataKey="sightLine"
           stroke="orange"
           dot={false}
-          name="Sight line"
+          name="Adjusted sight line"
+        />
+
+
+        <Line
+          yAxisId="left"
+          type="monotone"
+          dataKey="zeroSightLine"
+          stroke={theme.colors.onSurfaceVariant}
+          strokeWidth={1}
+          strokeDasharray="5 5"
+          dot={false}
+          name="Zero sight line"
         />
 
         {/* Line for Barrel Line (uses left Y-Axis) */}

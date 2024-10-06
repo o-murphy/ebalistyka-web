@@ -18,7 +18,7 @@ export const ZeroLookAngleField = () => {
     }, [calcState]);
 
     const prefUnit = preferredUnits.angular
-    const accuracy = getFractionDigits(0.01, UNew.MIL(1).In(prefUnit))
+    const accuracy = getFractionDigits(0.1, UNew.Degree(1).In(prefUnit))
 
     const fieldProps: Partial<MeasureFormFieldProps> = {
         fKey: "cZeroWPitch",

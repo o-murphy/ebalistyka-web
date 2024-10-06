@@ -64,9 +64,15 @@ const CalculationStateCard = (cardStyle) => {
             reloadAlert = true;
             showButton = true;
             break;
+        case CalculationState.InvalidData:
+            title = "WARNING!";
+            details = "Enter valid values before calculation";
+            backgroundColor = theme.colors.errorContainer;
+            fontColor = theme.colors.error;
+            break;
         case CalculationState.NoData:
             title = "WARNING! Zero data not initialized";
-            details = "Open .a7p file to start calculations";
+            details = "Open .a7p file to start calculation";
             backgroundColor = theme.colors.primaryContainer;
             fontColor = theme.colors.onPrimaryContainer;
             break;

@@ -15,6 +15,6 @@ export const AdjustedTable = () => {
     const { adjustedResult } = useCalculator()
 
     return (
-      <TrajectoryTable hitResult={adjustedResult}/>
+      <TrajectoryTable hitResult={adjustedResult} reverse={true}/>
     )
 };

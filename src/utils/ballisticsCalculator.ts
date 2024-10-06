@@ -207,7 +207,7 @@ export const shootTheTarget = (calculator: PreparedZeroData, currentConditions: 
                 directionFrom: UNew.Degree(currentConditions.windDirection)
             },
             trajectoryProps: {
-                trajectoryRange: UNew.Meter(currentConditions.trajectoryRange + 1e-9),
+                trajectoryRange: UNew.Meter(currentConditions.targetDistance + 2 * currentConditions.trajectoryStep),
                 trajectoryStep: UNew.Meter(currentConditions.trajectoryStep),
                 
             },

@@ -1,7 +1,7 @@
 import React from "react";
 import CustomCard from "./customCard";
 import { useCalculator } from "../../context/profileContext";
-import { CurrentHumidityField, CurrentLookAngleField, CurrentPressureField, CurrentTemperatureField } from "../widgets/measureFields";
+import { CurrentHumidityField, CurrentPressureField, CurrentTemperatureField } from "../widgets/measureFields";
 
 
 interface AtmoCardProps {
@@ -9,7 +9,7 @@ interface AtmoCardProps {
     expanded?: boolean;
 }
 
-const CurrentConditionsCard: React.FC<AtmoCardProps> = ({ label = "Zero atmosphere", expanded = true }) => {
+const CurrentAtmoCard: React.FC<AtmoCardProps> = ({ label = "Current atmosphere", expanded = true }) => {
 
     const { currentConditions } = useCalculator();
 
@@ -24,9 +24,8 @@ const CurrentConditionsCard: React.FC<AtmoCardProps> = ({ label = "Zero atmosphe
             <CurrentTemperatureField />
             <CurrentPressureField />
             <CurrentHumidityField />
-            <CurrentLookAngleField />
         </CustomCard>
     );
 };
 
-export default CurrentConditionsCard;
+export default CurrentAtmoCard;

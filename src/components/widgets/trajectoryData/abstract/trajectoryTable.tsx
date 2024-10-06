@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { usePreferredUnits } from '../../../../context/preferredUnitsContext';
 
 
-export const TrajectoryTable = ({ hitResult }: { hitResult: HitResult | Error }) => {
+export const TrajectoryTable = ({ hitResult, reverse = false }: { hitResult: HitResult | Error, reverse?: boolean }) => {
   const tableWidth = styles.tableScrollable.width;
 
   const [containerWidth, setContainerWidth] = useState(tableWidth); // State for container width
@@ -18,6 +18,9 @@ export const TrajectoryTable = ({ hitResult }: { hitResult: HitResult | Error })
 
   const { theme } = useTheme()
   const hitResultError = hitResult instanceof Error;
+
+  const trajectory = !hitResultError && hitResult?.trajectory
+  reverse && trajectory.sort((a, b) => b.time - a.time)
 
   const headerStyle = {
     textStyle: tableStyles.cellText,
@@ -82,7 +85,7 @@ export const TrajectoryTable = ({ hitResult }: { hitResult: HitResult | Error })
               {headerUnits.map((item, index) => <HeaderText key={`${index}`}>{UnitProps[item] ? UnitProps[item].symbol : item}</HeaderText>)}
             </DataTable.Header>
 
-            {!hitResultError && hitResult?.trajectory.map((row, index) => (
+            {!hitResultError && trajectory.map((row, index) => (
               <DataTable.Row key={`${index}`} style={tableStyles.row}>
                 <DataTable.Cell {...dataRowStyle(row)}>{row.time.toFixed(3)}</DataTable.Cell>
                 <DataTable.Cell {...dataRowStyle(row)}>{(row.distance).In(preferredUnits.distance).toFixed(0)}</DataTable.Cell>

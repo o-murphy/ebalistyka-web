@@ -6,7 +6,7 @@ import { BulletLengthField } from "./bulletLengthField";
 import { BulletWeightField } from "./bulletWeightField";
 import { MuzzleVelocityField } from "./muzzleVelocityField";
 import { PowderSensField } from "./powderSensField";
-import { CurrentLookAngleField } from "./currentLookAngleField";
+import { TargetLookAngleField } from "./targetLookAngleField";
 import { CurrentTemperatureField } from "./currentTemperatureField";
 import { CurrentPressureField } from "./currentPressureField";
 import { CurrentHumidityField } from "./currentHumidityField";
@@ -14,7 +14,7 @@ import { ZeroTemperatureField } from "./zeroTemperatureField";
 import { WindSpeedField } from "./currentWindSpeedField";
 import { TrajectoryRangeField } from "./trajectoryRangeField";
 import { TrajectoryStepField } from "./trajectoryCalcStep";
-import { TrajectoryTargetDistance } from "./trajectoryTargetDistance";
+import { TargetDistance } from "./targetDistance";
 import { ZeroDistanceField } from "./zeroDistanceField";
 
 export {
@@ -26,7 +26,7 @@ export {
     BulletWeightField,
     MuzzleVelocityField,
     PowderSensField,
-    CurrentLookAngleField,
+    TargetLookAngleField,
     CurrentTemperatureField,
     CurrentPressureField,
     CurrentHumidityField,
@@ -34,6 +34,6 @@ export {
     WindSpeedField,
     TrajectoryRangeField,
     TrajectoryStepField,
-    TrajectoryTargetDistance,
+    TargetDistance,
     ZeroDistanceField,
 };

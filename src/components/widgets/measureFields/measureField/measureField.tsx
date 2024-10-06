@@ -1,11 +1,9 @@
-import React, { useState } from "react";
-import { StyleSheet, View } from "react-native";
-import { Text, FAB, TextInput, Tooltip } from "react-native-paper";
+import React, { useEffect, useState } from "react";
+import { StyleProp, StyleSheet, View, ViewStyle } from "react-native";
+import { TextInput, HelperText } from "react-native-paper";
 import { DoubleSpinBox, SpinBoxProps } from "../../doubleSpinBox";
-import { useTheme } from "../../../../context/themeContext";
+import { RefreshFabState, RefreshFAB } from "../../refreshFAB";
 import { useCalculator } from "../../../../context/profileContext";
-import { fontConfig } from "react-native-paper/src/styles/fonts";
-
 
 export interface MeasureFormFieldProps extends SpinBoxProps {
   fKey?: string;
@@ -13,6 +11,7 @@ export interface MeasureFormFieldProps extends SpinBoxProps {
   suffix?: string;
   icon?: string;
   compact?: boolean;
+  style?: StyleProp<ViewStyle>;
 }
 
 const MeasureFormField: React.FC<MeasureFormFieldProps> = ({
@@ -26,29 +25,31 @@ const MeasureFormField: React.FC<MeasureFormFieldProps> = ({
   step,
   onValueChange,
   compact = false,
+  onError,
 }) => {
 
   const spinBoxProps: SpinBoxProps = {
     value: value,
-    onValueChange: onValueChange ? onValueChange : null,
+    onValueChange: onValueChange,
+    strict: true,
+    onError: onError,
     minValue: minValue,
     maxValue: maxValue,
     fractionDigits: fractionDigits,
     step: step ?? 1,
-    style: [styles.spinBox, { marginVertical: 4 }],
     inputProps: {
       label: !compact ? label : `${label}${suffix && `, ${suffix}`}`,
       mode: "outlined",
       dense: true,
+      style: styles.inputStyle,
       contentStyle: !compact ? { ...styles.inputContentStyle } : { ...styles.inputContentStyleCompact },
       right: !compact && <TextInput.Affix text={suffix} textStyle={inputSideStyles.affix} />,
-      left: <TextInput.Icon icon={icon} size={iconSize} style={inputSideStyles.icon} />,
+      left: <TextInput.Icon icon={icon} /* size={20} */ style={inputSideStyles.icon} />,
     },
-    strict: true
   }
 
   return (
-    <DoubleSpinBox {...spinBoxProps} />
+      <DoubleSpinBox {...spinBoxProps} />
   )
 };
 
@@ -56,47 +57,63 @@ const MeasureFormField: React.FC<MeasureFormFieldProps> = ({
 interface MeasureFormFieldRefreshableProps {
   fieldProps: Partial<MeasureFormFieldProps>;
   value: number;
-  onValueChange: (value: number) => void;
+  onValueChange?: (value: number) => void;
+  onError?: (value: Error) => void;
   refreshable: boolean;
   buttonPosition?: "left" | "right"
 }
 
-export const RefreshFAB = ({ visible, style = null }) => {
-  const { fire } = useCalculator()
 
-  return (
-    <Tooltip title="Recalculate" enterTouchDelay={0} leaveTouchDelay={0} >
-      <FAB
-        visible={visible}
-        style={[
-          {
-            alignSelf: "center",
-          }, style
-        ]}
-        size={"small"}
-        icon={"reload"}
-        onPress={() => fire()}
-        variant="tertiary"
-      />
-    </Tooltip>
-  )
-}
 
-export const MeasureFormFieldRefreshable = ({ fieldProps, value, onValueChange, refreshable, buttonPosition = "right" }) => {
-  const refreshFabStyle = {
-    left: {marginVertical: 4, marginRight: 4},
-    right: {marginVertical: 4, marginLeft: 4}
+
+
+export const MeasureFormFieldRefreshable: React.FC<MeasureFormFieldRefreshableProps> = (
+  { fieldProps, value, onValueChange, onError, refreshable, buttonPosition = "right" }
+) => {
+  const [error, setError] = useState<Error>(null)
+  const { updMeasureErr } = useCalculator()
+  
+  const getFabState = () => {
+    if (!refreshable && !error) {
+      return RefreshFabState.Actual
+    } else if (error) {
+      return RefreshFabState.Error
+    } else {
+      return RefreshFabState.Updated
+    }
   }
+
+  const onErrorSet = (error: Error) => {
+    setError(error)
+    onError?.(error)
+  }
+
+
+  useEffect(() => {
+    updMeasureErr({fkey: fieldProps.fKey, isError: !!error})
+  }, [error])
+
+
+
+  const fabState = getFabState()
+  
   return (
-    <View style={{ flexDirection: "row", alignItems: "center" }}>
-      {buttonPosition === "left" && refreshable && <RefreshFAB visible={refreshable} style={refreshFabStyle.left}/>}
-      <MeasureFormField
-        {...fieldProps}
-        value={value}
-        onValueChange={onValueChange}
-      />
-      {buttonPosition === "right" && refreshable && <RefreshFAB visible={refreshable} style={refreshFabStyle.right}/>}
+    <View style={[styles.column, ]}>
+      <View style={[styles.row, styles.center]}>
+        {buttonPosition === "left" && fabState !== RefreshFabState.Actual && <RefreshFAB state={getFabState()} style={styles.fabLeft}/>}
+        <MeasureFormField
+          {...fieldProps}
+          value={value}
+          onValueChange={onValueChange}
+          onError={onErrorSet}
+        />
+        {buttonPosition === "right" && fabState !== RefreshFabState.Actual && <RefreshFAB state={getFabState()} style={styles.fabRight}/>}
+      </View>
+      {error && <HelperText type="error" visible={!!error}>
+        {error.message}
+      </HelperText>}
     </View>
+
   )
 }
 
@@ -114,12 +131,16 @@ export default React.memo(MeasureFormField, (prevProps, nextProps) => {
 });
 
 export const styles = StyleSheet.create({
-  spinBox: { flex: 1 },
+  inputStyle: {flex: 1},
   inputContentStyle: { paddingRight: 60, textAlign: "right" },
   inputContentStyleCompact: { textAlign: "right" },
-  nameContainer: {
-    flex: 1,
-  },
+
+  center: { flex: 1, alignItems: "center", justifyContent: "center" },
+  row: { flexDirection: "row", marginVertical: 4 }, 
+  column: { flexDirection: "column" },
+
+  fabLeft: { marginRight: 4 },
+  fabRight: { marginLeft: 4 }
 })
 
 
@@ -129,6 +150,3 @@ export const inputSideStyles = StyleSheet.create({
   },
   icon: {},
 });
-
-// export const iconSize = 12;
-export const iconSize = 20;

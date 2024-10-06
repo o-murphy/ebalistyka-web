@@ -5,7 +5,7 @@ import ProjectileCard from '../cards/projectileCard';
 import BulletCard from '../cards/bulletCard';
 import ZeroAtmoCard from '../cards/zeroAtmoCard';
 import CurrentWindCard from '../cards/currentWindCard';
-import CurrentConditionsCard from '../cards/currentConditionsCard';
+import CurrentAtmoCard from '../cards/currentAtmoCard';
 // import { isMobile } from 'react-device-detect';
 import { useTheme } from '../../context/themeContext';
 import { PaperProvider } from 'react-native-paper';
@@ -14,9 +14,10 @@ import { ZeroTable, AdjustedTable, DragChart, HorizontalTrajectoryChart, Adjuste
 import CustomCard from '../cards/customCard';
 import { DataToDisplay, TrajectoryMode, useCalculator } from '../../context/profileContext';
 import CalculationStateCard from '../cards/calculationStateCard';
-import ShotParamsCard from '../cards/shotPropsCard';
+import TrajectoryParamsCard from '../cards/trajectoryParamsCard';
 import CalculationModeCard from '../cards/calculationModeCard';
 import SingleShotCard from '../cards/singleShotCard';
+import TargetCard from '../cards/targetCard';
 
 
 
@@ -59,7 +60,8 @@ const MainScreen = () => {
                             showsVerticalScrollIndicator={false}
                         >
 
-                            {/* {trajectoryMode === TrajectoryMode.Adjusted && <SingleShotCard expanded={true}/>} */} {/* FIXME */}
+                            {/* FIXME */}
+                            {trajectoryMode === TrajectoryMode.Adjusted && <SingleShotCard expanded={true}/>} 
                             
                             {dataToDisplay === DataToDisplay.DragModel && (
                                 <CustomCard title='Drag model'>
@@ -102,9 +104,10 @@ const MainScreen = () => {
                         alwaysBounceVertical={false}
                         showsVerticalScrollIndicator={false}
                     >
-                        <CurrentConditionsCard expanded={true} label='Current conditions' />
-                        <CurrentWindCard expanded={true} label='Current wind' />
-                        <ShotParamsCard expanded={true} label="Shot parameters" />
+                        {trajectoryMode === TrajectoryMode.Zero && <TargetCard expanded={true} />}
+                        {trajectoryMode === TrajectoryMode.Zero && <CurrentWindCard expanded={true} label='Current wind' />}
+                        <CurrentAtmoCard expanded={true} />
+                        <TrajectoryParamsCard expanded={true} label="Shot parameters" />
                     </ScrollView>
 
                 </View>
