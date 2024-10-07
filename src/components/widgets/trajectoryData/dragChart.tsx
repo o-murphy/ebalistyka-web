@@ -75,7 +75,6 @@ const DragChart = () => {
 
     // Generate the combined dataset
     const data = combineDragTables(dragTable, customDragTable);
-    console.log(data); // Check data structure
 
     return (
         <ResponsiveContainer width="100%" height={400}>

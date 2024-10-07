@@ -16,10 +16,8 @@ const TargetCard: React.FC<TargetCardProps> = ({ label = "Target", expanded = tr
             expanded={expanded}
             iconButton={null}
         >
-            
             <TargetDistance />
             <TargetLookAngleField />
-
         </CustomCard>
     );
 };

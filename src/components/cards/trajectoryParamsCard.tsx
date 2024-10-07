@@ -16,7 +16,6 @@ const TrajectoryParamsCard: React.FC<TrajectoryCardProps> = ({ label = "Shot pro
             expanded={expanded}
             iconButton={null}
         >
-            
             <TrajectoryRangeField />
             <TrajectoryStepField />
         </CustomCard>

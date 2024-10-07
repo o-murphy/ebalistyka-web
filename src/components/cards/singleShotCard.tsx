@@ -1,5 +1,5 @@
 import { Chip, Icon } from "react-native-paper";
-import React, { useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import CustomCard from "./customCard";
 import { StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native";
 import { useCalculator } from "../../context/profileContext";
@@ -7,10 +7,11 @@ import { useTheme } from "../../context/themeContext";
 import { usePreferredUnits } from "../../context/preferredUnitsContext";
 import { Angular, Distance, UNew, Unit, UnitProps, Velocity } from "js-ballistics/dist/v2";
 import { IconSource } from "react-native-paper/src/components/Icon";
-import { DoubleSpinBox, SpinBoxProps } from "../widgets/doubleSpinBox";
+import { DoubleSpinBox } from "../widgets/doubleSpinBox";
 import getFractionDigits from "../../utils/fractionConvertor";
 import { MeasureFormFieldProps } from "../widgets/measureFields/measureField";
 import { TargetShotTable } from "../widgets/trajectoryData/abstract/targetShotTable";
+import debounce from "../../utils/debounce";
 
 
 interface SingleShotCardProps {
@@ -59,23 +60,21 @@ const TouchableValueSelector = ({ children, onUp, onDown }) => {
 }
 
 const TargetRangeObserver = () => {
-
     const { fire, updMeasureErr, currentConditions, updateCurrentConditions } = useCalculator();
-
-    const { preferredUnits } = usePreferredUnits()
-
-    const targetRef = useRef(currentConditions)
+    const { preferredUnits } = usePreferredUnits();
+    const targetRef = useRef(currentConditions);
+    
+    const [isFiring, setIsFiring] = useState(false); // Track if firing is in progress
 
     useEffect(() => {
-        if (
-            targetRef.current?.targetDistance !== currentConditions?.targetDistance
-        ) {
-            fire()
+        if (targetRef.current?.targetDistance !== currentConditions?.targetDistance) {
+            setIsFiring(true); // Set firing state to true
+            fire().finally(() => setIsFiring(false)); // Reset firing state after fire completes
         }
-    }, [currentConditions])
+    }, [currentConditions, fire]);
 
-    const prefUnit = preferredUnits.distance
-    const accuracy = getFractionDigits(1, UNew.Meter(1).In(prefUnit))
+    const prefUnit = preferredUnits.distance;
+    const accuracy = useMemo(() => getFractionDigits(1, UNew.Meter(1).In(prefUnit)), [prefUnit]);
 
     const fieldProps: Partial<MeasureFormFieldProps> = {
         fKey: "targetDistance",
@@ -86,27 +85,24 @@ const TargetRangeObserver = () => {
         suffix: UnitProps[prefUnit].symbol,
         minValue: UNew.Meter(10).In(prefUnit),
         maxValue: UNew.Meter(3000).In(prefUnit),
-    }
+    };
 
-    const value: number = UNew.Meter(
-        currentConditions?.[fieldProps.fKey] ?
-            currentConditions[fieldProps.fKey] : 2000
-    ).In(prefUnit)
+    const value: number = useMemo(() => (
+        UNew.Meter(currentConditions?.[fieldProps.fKey] || 2000).In(prefUnit)
+    ), [currentConditions, fieldProps.fKey, prefUnit]);
 
-    const onValueChange = (value: number): void => {
+    const onValueChange = useCallback(
+        debounce((newValue: number): void => {
         updateCurrentConditions({
-            [fieldProps.fKey]: new Distance(value, prefUnit).In(Unit.Meter)
-        })
-    }
+            [fieldProps.fKey]: new Distance(newValue, prefUnit).In(Unit.Meter),
+        });
+    }, 0), [fieldProps.fKey, prefUnit, updateCurrentConditions]);
 
-    // const debounceOnValue = useCallback(debounce(onValueChange, 350), [onValueChange]);
+    const onErrorSet = useCallback((error: Error) => {
+        updMeasureErr({ fkey: fieldProps.fKey, isError: !!error });
+    }, [fieldProps.fKey, updMeasureErr]);
 
-
-    const onErrorSet = (error: Error) => {
-        updMeasureErr({fkey: fieldProps.fKey, isError: !!error})
-    }
-    
-    const spinBoxProps: SpinBoxProps = {
+    const spinBoxProps = {
         value: value,
         onValueChange: onValueChange,
         strict: true,
@@ -122,36 +118,114 @@ const TargetRangeObserver = () => {
             contentStyle: styles.inputContentStyle,
             outlineStyle: styles.inputOutlineStyle,
         },
-    }
+    };
 
     return (
         <TouchableValueSelector 
-            onUp={() => onValueChange(value + spinBoxProps.step)}
-            onDown={() => onValueChange(value - spinBoxProps.step)}
+            onUp={() => {
+                if (!isFiring) onValueChange(value + spinBoxProps.step);
+            }}
+            onDown={() => {
+                if (!isFiring) onValueChange(value - spinBoxProps.step);
+            }}
         >
             <DoubleSpinBox {...spinBoxProps} />
         </TouchableValueSelector>
-    )
-}
+    );
+};
+
+// const TargetRangeObserver = () => {
+
+//     const { fire, updMeasureErr, currentConditions, updateCurrentConditions } = useCalculator();
+
+//     const { preferredUnits } = usePreferredUnits()
+
+//     const targetRef = useRef(currentConditions)
+
+//     useEffect(() => {
+//         if (
+//             targetRef.current?.targetDistance !== currentConditions?.targetDistance
+//         ) {
+//             fire()
+//         }
+//     }, [currentConditions])
+
+//     const prefUnit = preferredUnits.distance
+//     const accuracy = getFractionDigits(1, UNew.Meter(1).In(prefUnit))
+
+//     const fieldProps: Partial<MeasureFormFieldProps> = {
+//         fKey: "targetDistance",
+//         label: "Target distance",
+//         icon: "target",
+//         fractionDigits: accuracy,
+//         step: 10 ** -accuracy * 10,
+//         suffix: UnitProps[prefUnit].symbol,
+//         minValue: UNew.Meter(10).In(prefUnit),
+//         maxValue: UNew.Meter(3000).In(prefUnit),
+//     }
+
+//     const value: number = UNew.Meter(
+//         currentConditions?.[fieldProps.fKey] ?
+//             currentConditions[fieldProps.fKey] : 2000
+//     ).In(prefUnit)
+
+//     const onValueChange = (value: number): void => {
+//         updateCurrentConditions({
+//             [fieldProps.fKey]: new Distance(value, prefUnit).In(Unit.Meter)
+//         })
+//     }
+
+//     // const debounceOnValue = useCallback(debounce(onValueChange, 350), [onValueChange]);
+
+
+//     const onErrorSet = (error: Error) => {
+//         updMeasureErr({fkey: fieldProps.fKey, isError: !!error})
+//     }
+    
+//     const spinBoxProps: SpinBoxProps = {
+//         value: value,
+//         onValueChange: onValueChange,
+//         strict: true,
+//         onError: onErrorSet,
+//         minValue: fieldProps.minValue,
+//         maxValue: fieldProps.maxValue,
+//         fractionDigits: fieldProps.fractionDigits,
+//         step: fieldProps.step ?? 1,
+//         inputProps: {
+//             mode: "outlined",
+//             dense: true,
+//             style: [styles.spinBox, styles.inputStyle],
+//             contentStyle: styles.inputContentStyle,
+//             outlineStyle: styles.inputOutlineStyle,
+//         },
+//     }
+
+//     return (
+//         <TouchableValueSelector 
+//             onUp={() => onValueChange(value + spinBoxProps.step)}
+//             onDown={() => onValueChange(value - spinBoxProps.step)}
+//         >
+//             <DoubleSpinBox {...spinBoxProps} />
+//         </TouchableValueSelector>
+//     )
+// }
 
 const TargetLookAngleObserver = () => {
-
     const { fire, updMeasureErr, currentConditions, updateCurrentConditions } = useCalculator();
-
-    const { preferredUnits } = usePreferredUnits()
-
-    const targetRef = useRef(currentConditions)
+    const { preferredUnits } = usePreferredUnits();
+    const targetRef = useRef(currentConditions);
+    
+    const [isFiring, setIsFiring] = useState(false); // Track if firing is in progress
 
     useEffect(() => {
-        if (
-            targetRef.current?.lookAngle !== currentConditions?.lookAngle
-        ) {
-            fire()
+        if (targetRef.current?.lookAngle !== currentConditions?.lookAngle) {
+            setIsFiring(true); // Set firing state to true
+            fire().finally(() => setIsFiring(false)); // Reset firing state after fire completes
         }
-    }, [currentConditions])
+    }, [currentConditions, fire]);
 
-    const prefUnit = preferredUnits.angular
-    const accuracy = getFractionDigits(0.1, UNew.Degree(1).In(prefUnit))
+    const prefUnit = preferredUnits.angular;
+    const accuracy = useMemo(() => getFractionDigits(0.1, UNew.Degree(1).In(prefUnit)), [prefUnit]);
 
     const fieldProps: Partial<MeasureFormFieldProps> = {
         fKey: "lookAngle",
@@ -162,27 +236,23 @@ const TargetLookAngleObserver = () => {
         suffix: UnitProps[prefUnit].symbol,
         minValue: UNew.Degree(-90).In(prefUnit),
         maxValue: UNew.Degree(90).In(prefUnit),
-    }
+    };
 
-    const value: number = UNew.Degree(
-        currentConditions?.[fieldProps.fKey] ? 
-        currentConditions[fieldProps.fKey] : 0
-    ).In(prefUnit)
+    const value: number = useMemo(() => (
+        UNew.Degree(currentConditions?.[fieldProps.fKey] || 0).In(prefUnit)
+    ), [currentConditions, fieldProps.fKey, prefUnit]);
 
-    const onValueChange = (value: number): void => {
+    const onValueChange = useCallback(debounce((newValue: number): void => {
         updateCurrentConditions({
-            [fieldProps.fKey]: new Angular(value, prefUnit).In(Unit.Degree)
-        })
-    }
+            [fieldProps.fKey]: new Angular(newValue, prefUnit).In(Unit.Degree),
+        });
+    }, 0), [fieldProps.fKey, prefUnit, updateCurrentConditions]);
 
-    // const debounceOnValue = useCallback(debounce(onValueChange, 350), [onValueChange]);
+    const onErrorSet = useCallback((error: Error) => {
+        updMeasureErr({ fkey: fieldProps.fKey, isError: !!error });
+    }, [fieldProps.fKey, updMeasureErr]);
 
-
-    const onErrorSet = (error: Error) => {
-        updMeasureErr({fkey: fieldProps.fKey, isError: !!error})
-    }
-    
-    const spinBoxProps: SpinBoxProps = {
+    const spinBoxProps = {
         value: value,
         onValueChange: onValueChange,
         strict: true,
@@ -198,37 +268,114 @@ const TargetLookAngleObserver = () => {
             contentStyle: styles.inputContentStyle,
             outlineStyle: styles.inputOutlineStyle,
         },
-    }
+    };
 
     return (
         <TouchableValueSelector 
-            onUp={() => onValueChange(value + spinBoxProps.step)}
-            onDown={() => onValueChange(value - spinBoxProps.step)}
+            onUp={() => {
+                if (!isFiring) onValueChange(value + spinBoxProps.step);
+            }}
+            onDown={() => {
+                if (!isFiring) onValueChange(value - spinBoxProps.step);
+            }}
         >
             <DoubleSpinBox {...spinBoxProps} />
         </TouchableValueSelector>
-    )
-}
+    );
+};
+
+// const TargetLookAngleObserver = () => {
+
+//     const { fire, updMeasureErr, currentConditions, updateCurrentConditions } = useCalculator();
+
+//     const { preferredUnits } = usePreferredUnits()
+
+//     const targetRef = useRef(currentConditions)
+
+//     useEffect(() => {
+//         if (
+//             targetRef.current?.lookAngle !== currentConditions?.lookAngle
+//         ) {
+//             fire()
+//         }
+//     }, [currentConditions])
+
+//     const prefUnit = preferredUnits.angular
+//     const accuracy = getFractionDigits(0.1, UNew.Degree(1).In(prefUnit))
+
+//     const fieldProps: Partial<MeasureFormFieldProps> = {
+//         fKey: "lookAngle",
+//         label: "Look angle",
+//         icon: "angle-acute",
+//         fractionDigits: accuracy,
+//         step: 1 / (10 ** accuracy),
+//         suffix: UnitProps[prefUnit].symbol,
+//         minValue: UNew.Degree(-90).In(prefUnit),
+//         maxValue: UNew.Degree(90).In(prefUnit),
+//     }
+
+//     const value: number = UNew.Degree(
+//         currentConditions?.[fieldProps.fKey] ? 
+//         currentConditions[fieldProps.fKey] : 0
+//     ).In(prefUnit)
+
+//     const onValueChange = (value: number): void => {
+//         updateCurrentConditions({
+//             [fieldProps.fKey]: new Angular(value, prefUnit).In(Unit.Degree)
+//         })
+//     }
+
+//     // const debounceOnValue = useCallback(debounce(onValueChange, 350), [onValueChange]);
+
+
+//     const onErrorSet = (error: Error) => {
+//         updMeasureErr({fkey: fieldProps.fKey, isError: !!error})
+//     }
+    
+//     const spinBoxProps: SpinBoxProps = {
+//         value: value,
+//         onValueChange: onValueChange,
+//         strict: true,
+//         onError: onErrorSet,
+//         minValue: fieldProps.minValue,
+//         maxValue: fieldProps.maxValue,
+//         fractionDigits: fieldProps.fractionDigits,
+//         step: fieldProps.step ?? 1,
+//         inputProps: {
+//             mode: "outlined",
+//             dense: true,
+//             style: [styles.spinBox, styles.inputStyle],
+//             contentStyle: styles.inputContentStyle,
+//             outlineStyle: styles.inputOutlineStyle,
+//         },
+//     }
+
+//     return (
+//         <TouchableValueSelector 
+//             onUp={() => onValueChange(value + spinBoxProps.step)}
+//             onDown={() => onValueChange(value - spinBoxProps.step)}
+//         >
+//             <DoubleSpinBox {...spinBoxProps} />
+//         </TouchableValueSelector>
+//     )
+// }
 
 const TargetWindSpeedObserver = () => {
-
     const { fire, updMeasureErr, currentConditions, updateCurrentConditions } = useCalculator();
-
-    const { preferredUnits } = usePreferredUnits()
-
-    const targetRef = useRef(currentConditions)
+    const { preferredUnits } = usePreferredUnits();
+    const targetRef = useRef(currentConditions);
+    
+    const [isFiring, setIsFiring] = useState(false); // Track if firing is in progress
 
     useEffect(() => {
-        if (
-            targetRef.current?.windSpeed !== currentConditions?.windSpeed
-        ) {
-            fire()
+        if (targetRef.current?.windSpeed !== currentConditions?.windSpeed) {
+            setIsFiring(true); // Set firing state to true
+            fire().finally(() => setIsFiring(false)); // Reset firing state after fire completes
         }
-    }, [currentConditions])
+    }, [currentConditions, fire]);
 
-    const prefUnit = preferredUnits.velocity
-
-    const accuracy = getFractionDigits(0.1, UNew.MPS(1).In(prefUnit))
+    const prefUnit = preferredUnits.velocity;
+    const accuracy = useMemo(() => getFractionDigits(0.1, UNew.MPS(1).In(prefUnit)), [prefUnit]);
 
     const fieldProps: Partial<MeasureFormFieldProps> = {
         fKey: "windSpeed",
@@ -239,27 +386,23 @@ const TargetWindSpeedObserver = () => {
         suffix: UnitProps[prefUnit].symbol,
         minValue: UNew.MPS(0).In(preferredUnits.velocity),
         maxValue: UNew.MPS(100).In(preferredUnits.velocity),
-    }
+    };
 
-    const value: number = UNew.MPS(
-        currentConditions?.[fieldProps.fKey] ? 
-        currentConditions[fieldProps.fKey] : 0
-    ).In(prefUnit)
+    const value: number = useMemo(() => (
+        UNew.MPS(currentConditions?.[fieldProps.fKey] || 0).In(prefUnit)
+    ), [currentConditions, fieldProps.fKey, prefUnit]);
 
-    const onValueChange = (value: number): void => {
+    const onValueChange = useCallback(debounce((newValue: number): void => {
         updateCurrentConditions({
-            [fieldProps.fKey]: new Velocity(value, prefUnit).In(Unit.MPS)
-        })
-    }
+            [fieldProps.fKey]: new Velocity(newValue, prefUnit).In(Unit.MPS),
+        });
+    }, 0), [fieldProps.fKey, prefUnit, updateCurrentConditions]);
 
-    // const debounceOnValue = useCallback(debounce(onValueChange, 350), [onValueChange]);
+    const onErrorSet = useCallback((error: Error) => {
+        updMeasureErr({ fkey: fieldProps.fKey, isError: !!error });
+    }, [fieldProps.fKey, updMeasureErr]);
 
-
-    const onErrorSet = (error: Error) => {
-        updMeasureErr({fkey: fieldProps.fKey, isError: !!error})
-    }
-    
-    const spinBoxProps: SpinBoxProps = {
+    const spinBoxProps = {
         value: value,
         onValueChange: onValueChange,
         strict: true,
@@ -275,35 +418,114 @@ const TargetWindSpeedObserver = () => {
             contentStyle: styles.inputContentStyle,
             outlineStyle: styles.inputOutlineStyle,
         },
-    }
+    };
 
     return (
         <TouchableValueSelector 
-            onUp={() => onValueChange(value + spinBoxProps.step)}
-            onDown={() => onValueChange(value - spinBoxProps.step)}
+            onUp={() => {
+                if (!isFiring) onValueChange(value + spinBoxProps.step);
+            }}
+            onDown={() => {
+                if (!isFiring) onValueChange(value - spinBoxProps.step);
+            }}
         >
             <DoubleSpinBox {...spinBoxProps} />
         </TouchableValueSelector>
-    )
-}
+    );
+};
+
+// const TargetWindSpeedObserver = () => {
+
+//     const { fire, updMeasureErr, currentConditions, updateCurrentConditions } = useCalculator();
+
+//     const { preferredUnits } = usePreferredUnits()
+
+//     const targetRef = useRef(currentConditions)
+
+//     useEffect(() => {
+//         if (
+//             targetRef.current?.windSpeed !== currentConditions?.windSpeed
+//         ) {
+//             fire()
+//         }
+//     }, [currentConditions])
+
+//     const prefUnit = preferredUnits.velocity
+
+//     const accuracy = getFractionDigits(0.1, UNew.MPS(1).In(prefUnit))
+
+//     const fieldProps: Partial<MeasureFormFieldProps> = {
+//         fKey: "windSpeed",
+//         label: "Wind speed",
+//         icon: "windsock",
+//         fractionDigits: accuracy,
+//         step: 10 ** -accuracy,
+//         suffix: UnitProps[prefUnit].symbol,
+//         minValue: UNew.MPS(0).In(preferredUnits.velocity),
+//         maxValue: UNew.MPS(100).In(preferredUnits.velocity),
+//     }
+
+//     const value: number = UNew.MPS(
+//         currentConditions?.[fieldProps.fKey] ? 
+//         currentConditions[fieldProps.fKey] : 0
+//     ).In(prefUnit)
+
+//     const onValueChange = (value: number): void => {
+//         updateCurrentConditions({
+//             [fieldProps.fKey]: new Velocity(value, prefUnit).In(Unit.MPS)
+//         })
+//     }
+
+//     // const debounceOnValue = useCallback(debounce(onValueChange, 350), [onValueChange]);
+
+
+//     const onErrorSet = (error: Error) => {
+//         updMeasureErr({fkey: fieldProps.fKey, isError: !!error})
+//     }
+    
+//     const spinBoxProps: SpinBoxProps = {
+//         value: value,
+//         onValueChange: onValueChange,
+//         strict: true,
+//         onError: onErrorSet,
+//         minValue: fieldProps.minValue,
+//         maxValue: fieldProps.maxValue,
+//         fractionDigits: fieldProps.fractionDigits,
+//         step: fieldProps.step ?? 1,
+//         inputProps: {
+//             mode: "outlined",
+//             dense: true,
+//             style: [styles.spinBox, styles.inputStyle],
+//             contentStyle: styles.inputContentStyle,
+//             outlineStyle: styles.inputOutlineStyle,
+//         },
+//     }
+
+//     return (
+//         <TouchableValueSelector 
+//             onUp={() => onValueChange(value + spinBoxProps.step)}
+//             onDown={() => onValueChange(value - spinBoxProps.step)}
+//         >
+//             <DoubleSpinBox {...spinBoxProps} />
+//         </TouchableValueSelector>
+//     )
+// }
 
 const TargetWindDirObserver = () => {
-
     const { fire, updMeasureErr, currentConditions, updateCurrentConditions } = useCalculator();
+    const targetRef = useRef(currentConditions);
 
-    const targetRef = useRef(currentConditions)
+    const [isFiring, setIsFiring] = useState(false); // Track if firing is in progress
 
     useEffect(() => {
-        if (
-            targetRef.current?.windDirection !== currentConditions?.windDirection
-        ) {
-            fire()
+        if (targetRef.current?.windDirection !== currentConditions?.windDirection) {
+            setIsFiring(true); // Set firing state to true
+            fire().finally(() => setIsFiring(false)); // Reset firing state after fire completes
         }
-    }, [currentConditions])
+    }, [currentConditions, fire]);
 
-    const prefUnit = Unit.Degree
-
-    const accuracy = getFractionDigits(1, UNew.Degree(1).In(prefUnit))
+    const prefUnit = Unit.Degree;
+    const accuracy = useMemo(() => getFractionDigits(1, UNew.Degree(1).In(prefUnit)), [prefUnit]);
 
     const fieldProps: Partial<MeasureFormFieldProps> = {
         fKey: "windDirection",
@@ -314,27 +536,23 @@ const TargetWindDirObserver = () => {
         suffix: UnitProps[prefUnit].symbol,
         minValue: 0,
         maxValue: 360,
-    }
+    };
 
-    const value: number = UNew.Degree(
-        currentConditions?.[fieldProps.fKey] ? 
-        currentConditions[fieldProps.fKey] * fieldProps.step : 0
-    ).In(prefUnit)
+    const value: number = useMemo(() => (
+        UNew.Degree(currentConditions?.[fieldProps.fKey] ? currentConditions[fieldProps.fKey] * fieldProps.step : 0).In(prefUnit)
+    ), [currentConditions, fieldProps.fKey, fieldProps.step, prefUnit]);
 
-    const onValueChange = (value: number): void => {
+    const onValueChange = useCallback(debounce((newValue: number): void => {
         updateCurrentConditions({
-            [fieldProps.fKey]: value / fieldProps.step
-        })
-    }
+            [fieldProps.fKey]: newValue / fieldProps.step
+        });
+    }, 0), [fieldProps.fKey, fieldProps.step, updateCurrentConditions]);
 
-    // const debounceOnValue = useCallback(debounce(onValueChange, 350), [onValueChange]);
+    const onErrorSet = useCallback((error: Error) => {
+        updMeasureErr({ fkey: fieldProps.fKey, isError: !!error });
+    }, [fieldProps.fKey, updMeasureErr]);
 
-
-    const onErrorSet = (error: Error) => {
-        updMeasureErr({fkey: fieldProps.fKey, isError: !!error})
-    }
-    
-    const spinBoxProps: SpinBoxProps = {
+    const spinBoxProps = {
         value: value,
         onValueChange: onValueChange,
         strict: true,
@@ -349,38 +567,115 @@ const TargetWindDirObserver = () => {
             style: [styles.spinBox, styles.inputStyle],
             contentStyle: styles.inputContentStyle,
             outlineStyle: styles.inputOutlineStyle,
-            // editable: false,
         },
-    }
+    };
 
     return (
         <TouchableValueSelector 
-            onUp={() => onValueChange(value + spinBoxProps.step)}
-            onDown={() => onValueChange(value - spinBoxProps.step)}
+            onUp={() => {
+                if (!isFiring) onValueChange(value + spinBoxProps.step);
+            }}
+            onDown={() => {
+                if (!isFiring) onValueChange(value - spinBoxProps.step);
+            }}
         >
             <DoubleSpinBox {...spinBoxProps} />
         </TouchableValueSelector>
-    )
-}
+    );
+};
+
+// const TargetWindDirObserver = () => {
+
+//     const { fire, updMeasureErr, currentConditions, updateCurrentConditions } = useCalculator();
+
+//     const targetRef = useRef(currentConditions)
+
+//     useEffect(() => {
+//         if (
+//             targetRef.current?.windDirection !== currentConditions?.windDirection
+//         ) {
+//             fire()
+//         }
+//     }, [currentConditions])
+
+//     const prefUnit = Unit.Degree
+
+//     const accuracy = getFractionDigits(1, UNew.Degree(1).In(prefUnit))
+
+//     const fieldProps: Partial<MeasureFormFieldProps> = {
+//         fKey: "windDirection",
+//         label: "Wind direction",
+//         icon: "windsock",
+//         fractionDigits: accuracy,
+//         step: 30,
+//         suffix: UnitProps[prefUnit].symbol,
+//         minValue: 0,
+//         maxValue: 360,
+//     }
+
+//     const value: number = UNew.Degree(
+//         currentConditions?.[fieldProps.fKey] ? 
+//         currentConditions[fieldProps.fKey] * fieldProps.step : 0
+//     ).In(prefUnit)
+
+//     const onValueChange = (value: number): void => {
+//         updateCurrentConditions({
+//             [fieldProps.fKey]: value / fieldProps.step
+//         })
+//     }
+
+//     // const debounceOnValue = useCallback(debounce(onValueChange, 350), [onValueChange]);
+
+
+//     const onErrorSet = (error: Error) => {
+//         updMeasureErr({fkey: fieldProps.fKey, isError: !!error})
+//     }
+    
+//     const spinBoxProps: SpinBoxProps = {
+//         value: value,
+//         onValueChange: onValueChange,
+//         strict: true,
+//         onError: onErrorSet,
+//         minValue: fieldProps.minValue,
+//         maxValue: fieldProps.maxValue,
+//         fractionDigits: fieldProps.fractionDigits,
+//         step: fieldProps.step ?? 1,
+//         inputProps: {
+//             mode: "outlined",
+//             dense: true,
+//             style: [styles.spinBox, styles.inputStyle],
+//             contentStyle: styles.inputContentStyle,
+//             outlineStyle: styles.inputOutlineStyle,
+//             // editable: false,
+//         },
+//     }
+
+//     return (
+//         <TouchableValueSelector 
+//             onUp={() => onValueChange(value + spinBoxProps.step)}
+//             onDown={() => onValueChange(value - spinBoxProps.step)}
+//         >
+//             <DoubleSpinBox {...spinBoxProps} />
+//         </TouchableValueSelector>
+//     )
+// }
 
 const SingleShotCard: React.FC<SingleShotCardProps> = ({ expanded = true }) => {
     const { profileProperties, adjustedResult } = useCalculator();
-    const { preferredUnits } = usePreferredUnits()
+    const { preferredUnits } = usePreferredUnits();
+    const { theme } = useTheme();
 
-    const { theme } = useTheme()
-
-
+    // Handle loading or error state
     if (!profileProperties) {
-        return (
-            <CustomCard title={"Bullet"} expanded={expanded} />
-        )
+        return <CustomCard title="Bullet" expanded={expanded} />;
     }
 
-    const _styles = {
+    // Memoize styles to prevent recalculation on every render
+    const _styles = useMemo(() => ({
         container: {
             ...styles.column,
             ...styles.center,
-            ...styles.container
+            ...styles.container,
         },
         chipStyle: {
             ...styles.column,
@@ -388,30 +683,89 @@ const SingleShotCard: React.FC<SingleShotCardProps> = ({ expanded = true }) => {
             backgroundColor: theme.colors.surfaceVariant,
         },
         chipTextStyle: {
-            fontSize: "80%"
-        }
-    }
+            fontSize: '80%',
+        },
+    }), [theme.colors.surfaceVariant]);
+
+    // Define chip labels for clarity
+    const chipLabels = [
+        `Range (${UnitProps[preferredUnits.distance].symbol})`,
+        `Look (${UnitProps[preferredUnits.angular].symbol})`,
+        `Wind (${UnitProps[preferredUnits.velocity].symbol})`,
+        `Dir (${UnitProps[Unit.Degree].symbol})`
+    ];
 
     return (
-        <CustomCard title={"Shot params"} expanded={expanded} style={styles.card}>
+        <CustomCard title="Shot params" expanded={expanded} style={styles.card}>
             <View style={_styles.container}>
                 <View style={styles.row}>
-                    <Chip style={_styles.chipStyle} textStyle={_styles.chipTextStyle}>{`Range (${UnitProps[preferredUnits.distance].symbol})`}</Chip>
-                    <Chip style={_styles.chipStyle} textStyle={_styles.chipTextStyle}>{`Look (${UnitProps[preferredUnits.angular].symbol})`}</Chip>
-                    <Chip style={_styles.chipStyle} textStyle={_styles.chipTextStyle}>{`Wind (${UnitProps[preferredUnits.velocity].symbol})`}</Chip>
-                    <Chip style={_styles.chipStyle} textStyle={_styles.chipTextStyle}>{`Dir (${UnitProps[Unit.Degree].symbol})`}</Chip>
+                    {chipLabels.map((label, index) => (
+                        <Chip key={index} style={_styles.chipStyle} textStyle={_styles.chipTextStyle}>
+                            {label}
+                        </Chip>
+                    ))}
                 </View>
                 <View style={styles.row}>
                     <TargetRangeObserver />
                     <TargetLookAngleObserver />
                     <TargetWindSpeedObserver />
                     <TargetWindDirObserver />
-                </View >
-            </View >
-            <TargetShotTable hitResult={adjustedResult}/>
-        </CustomCard >
+                </View>
+            </View>
+            <TargetShotTable hitResult={adjustedResult} />
+        </CustomCard>
     );
 };
+
+// const SingleShotCard: React.FC<SingleShotCardProps> = ({ expanded = true }) => {
+//     const { profileProperties, adjustedResult } = useCalculator();
+//     const { preferredUnits } = usePreferredUnits()
+
+//     const { theme } = useTheme()
+
+
+//     if (!profileProperties) {
+//         return (
+//             <CustomCard title={"Bullet"} expanded={expanded} />
+//         )
+//     }
+
+//     const _styles = {
+//         container: {
+//             ...styles.column,
+//             ...styles.center,
+//             ...styles.container
+//         },
+//         chipStyle: {
+//             ...styles.column,
+//             ...styles.center,
+//             backgroundColor: theme.colors.surfaceVariant,
+//         },
+//         chipTextStyle: {
+//             fontSize: "80%"
+//         }
+//     }
+
+//     return (
+//         <CustomCard title={"Shot params"} expanded={expanded} style={styles.card}>
+//             <View style={_styles.container}>
+//                 <View style={styles.row}>
+//                     <Chip style={_styles.chipStyle} textStyle={_styles.chipTextStyle}>{`Range (${UnitProps[preferredUnits.distance].symbol})`}</Chip>
+//                     <Chip style={_styles.chipStyle} textStyle={_styles.chipTextStyle}>{`Look (${UnitProps[preferredUnits.angular].symbol})`}</Chip>
+//                     <Chip style={_styles.chipStyle} textStyle={_styles.chipTextStyle}>{`Wind (${UnitProps[preferredUnits.velocity].symbol})`}</Chip>
+//                     <Chip style={_styles.chipStyle} textStyle={_styles.chipTextStyle}>{`Dir (${UnitProps[Unit.Degree].symbol})`}</Chip>
+//                 </View>
+//                 <View style={styles.row}>
+//                     <TargetRangeObserver />
+//                     <TargetLookAngleObserver />
+//                     <TargetWindSpeedObserver />
+//                     <TargetWindDirObserver />
+//                 </View >
+//             </View >
+//             <TargetShotTable hitResult={adjustedResult}/>
+//         </CustomCard >
+//     );
+// };
 
 
 const styles = StyleSheet.create({

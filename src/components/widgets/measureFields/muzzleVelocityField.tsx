@@ -3,7 +3,7 @@ import { MeasureFormFieldProps, MeasureFormFieldRefreshable } from "./measureFie
 import { UNew, Unit, UnitProps, Measure } from "js-ballistics/dist/v2"
 import { usePreferredUnits } from "../../../context/preferredUnitsContext";
 import getFractionDigits from "../../../utils/fractionConvertor";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 
 export const MuzzleVelocityField = () => {
@@ -13,15 +13,15 @@ export const MuzzleVelocityField = () => {
     const [refreshable, setRefreshable] = useState(false)
 
     useEffect(() => {
-        if ([CalculationState.Complete].includes(calcState)) {
+        if (calcState === CalculationState.Complete) {
             setRefreshable(false)
         }
     }, [calcState]);
 
-    const prefUnit = preferredUnits.velocity
-    const accuracy = getFractionDigits(1, UNew.MPS(1).In(prefUnit))
+    const prefUnit = useMemo(() => preferredUnits.velocity, [preferredUnits.velocity])
+    const accuracy = useMemo(() => getFractionDigits(1, UNew.MPS(1).In(prefUnit)), [prefUnit])
 
-    const fieldProps: Partial<MeasureFormFieldProps> = {
+    const fieldProps: Partial<MeasureFormFieldProps> = useMemo(() => ({
         fKey: "cMuzzleVelocity",
         label: "Muzzle velocity",
         icon: "speedometer",
@@ -30,19 +30,19 @@ export const MuzzleVelocityField = () => {
         suffix: UnitProps[prefUnit].symbol,
         minValue: UNew.MPS(1.0).In(prefUnit),
         maxValue: UNew.MPS(3000.0).In(prefUnit),
-    }
+    }), [accuracy, prefUnit])
 
-    const value: number = UNew.MPS(
-        profileProperties?.[fieldProps.fKey] ? 
-        profileProperties[fieldProps.fKey] / 10 : 800
-    ).In(prefUnit)
+    const value: number = useMemo(() => UNew.MPS(
+        profileProperties?.cMuzzleVelocity ? 
+        profileProperties.cMuzzleVelocity / 10 : 800
+    ).In(prefUnit), [profileProperties?.cMuzzleVelocity, prefUnit])
 
-    const onValueChange = (value: number): void => {
+    const onValueChange = useCallback((value: number): void => {
         updateProfileProperties({
-            [fieldProps.fKey]: new Measure.Velocity(value, preferredUnits.velocity).In(Unit.MPS) * 10
+            cMuzzleVelocity: new Measure.Velocity(value, preferredUnits.velocity).In(Unit.MPS) * 10
         })
         setRefreshable(true)
-    }
+    }, [profileProperties, prefUnit]);
 
     return (
         <MeasureFormFieldRefreshable 
