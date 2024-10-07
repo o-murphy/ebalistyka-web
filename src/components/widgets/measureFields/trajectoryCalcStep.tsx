@@ -3,7 +3,7 @@ import { MeasureFormFieldProps, MeasureFormFieldRefreshable } from "./measureFie
 import { UNew, Unit, UnitProps, Measure } from "js-ballistics/dist/v2"
 import { usePreferredUnits } from "../../../context/preferredUnitsContext";
 import getFractionDigits from "../../../utils/fractionConvertor";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 
 export const TrajectoryStepField = () => {
@@ -19,10 +19,10 @@ export const TrajectoryStepField = () => {
         }
     }, [calcState]);
 
-    const prefUnit = preferredUnits.distance
-    const accuracy = getFractionDigits(1, UNew.Meter(1).In(prefUnit))
+    const prefUnit = useMemo(() => preferredUnits.distance, [preferredUnits.distance])
+    const accuracy = useMemo(() => getFractionDigits(1, UNew.Meter(1).In(prefUnit)), [prefUnit])
 
-    const fieldProps: Partial<MeasureFormFieldProps> = {
+    const fieldProps: Partial<MeasureFormFieldProps> = useMemo(() => ({
         fKey: "trajectoryStep",
         label: "Trajectory step",
         icon: "delta",
@@ -32,19 +32,19 @@ export const TrajectoryStepField = () => {
         suffix: UnitProps[prefUnit].symbol,
         minValue: UNew.Meter(10).In(prefUnit),
         maxValue: UNew.Meter(500).In(prefUnit),
-    }
+    }), [accuracy, prefUnit])
 
-    const value: number = UNew.Meter(
-        currentConditions?.[fieldProps.fKey] ? 
-        currentConditions[fieldProps.fKey] : 100
-    ).In(prefUnit)
+    const value: number = useMemo(() => UNew.Meter(
+        currentConditions?.trajectoryStep ? 
+        currentConditions.trajectoryStep : 100
+    ).In(prefUnit), [currentConditions?.trajectoryStep, prefUnit])
 
-    const onValueChange = (value: number): void => {
+    const onValueChange = useCallback((value: number): void => {
         updateCurrentConditions({
-            [fieldProps.fKey]: new Measure.Distance(value, prefUnit).In(Unit.Meter)
+            trajectoryStep: new Measure.Distance(value, prefUnit).In(Unit.Meter)
         })
         setRefreshable(true)
-    }
+    }, [updateCurrentConditions, prefUnit]);
 
     return (
         <MeasureFormFieldRefreshable 

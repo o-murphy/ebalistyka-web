@@ -3,7 +3,7 @@ import { MeasureFormFieldProps, MeasureFormFieldRefreshable } from "./measureFie
 import { UNew, Unit, UnitProps, Measure } from "js-ballistics/dist/v2"
 import { usePreferredUnits } from "../../../context/preferredUnitsContext";
 import getFractionDigits from "../../../utils/fractionConvertor";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 
 export const TargetLookAngleField = () => {
@@ -14,13 +14,13 @@ export const TargetLookAngleField = () => {
     const [refreshable, setRefreshable] = useState(false)
 
     useEffect(() => {
-        if ([CalculationState.Complete].includes(calcState)) {
+        if (calcState === CalculationState.Complete) {
             setRefreshable(false)
         }
     }, [calcState]);
 
-    const prefUnit = preferredUnits.angular
-    const accuracy = getFractionDigits(0.1, UNew.Degree(1).In(prefUnit))
+    const prefUnit = useMemo(() => preferredUnits.angular, [preferredUnits.angular])
+    const accuracy = useMemo(() => getFractionDigits(0.1, UNew.Degree(1).In(prefUnit)), [prefUnit])
 
     const fieldProps: Partial<MeasureFormFieldProps> = {
         fKey: "lookAngle",
@@ -33,17 +33,17 @@ export const TargetLookAngleField = () => {
         maxValue: UNew.Degree(90).In(prefUnit),
     }
 
-    const value: number = UNew.Degree(
-        currentConditions?.[fieldProps.fKey] ? 
-        currentConditions[fieldProps.fKey] : 0
-    ).In(prefUnit)
+    const value: number = useMemo(() => UNew.Degree(
+        currentConditions?.lookAngle ? 
+        currentConditions.lookAngle : 0
+    ).In(prefUnit), [currentConditions?.lookAngle, prefUnit])
 
-    const onValueChange = (value: number): void => {
+    const onValueChange = useCallback((value: number): void => {
         updateCurrentConditions({
-            [fieldProps.fKey]: new Measure.Angular(value, prefUnit).In(Unit.Degree)
+            lookAngle: new Measure.Angular(value, prefUnit).In(Unit.Degree)
         })
         setRefreshable(true)
-    }
+    }, [updateCurrentConditions, prefUnit]);
 
     return (
         <MeasureFormFieldRefreshable 
