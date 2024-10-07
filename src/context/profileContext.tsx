@@ -11,7 +11,7 @@ export enum CalculationState {
   ZeroUpdated = 1,
   ConditionsUpdated = 2,
   Complete = 3,
-  InvalidData = 4
+  InvalidData = 4,
 }
 
 interface CalculationContextType {
@@ -35,7 +35,9 @@ interface CalculationContextType {
   setTrajectoryMode: React.Dispatch<React.SetStateAction<TrajectoryMode>>,
   dataToDisplay: DataToDisplay,
   setDataToDisplay: React.Dispatch<React.SetStateAction<DataToDisplay>>,
-  updMeasureErr: (props: {fkey: string, isError: boolean}) => void
+  updMeasureErr: (props: {fkey: string, isError: boolean}) => void,
+  isLoaded: boolean,
+  setIsLoaded: (lodaded: boolean) => void,
 }
 
 export enum TrajectoryMode {
@@ -207,13 +209,13 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
 
       if (profileValue !== null) {
         setProfileProperties(JSON.parse(profileValue));
+        setIsLoaded(true); // Mark as loaded after attempting to load data
       }
 
       if (conditionsValue !== null) {
         setCurrentConditions(JSON.parse(conditionsValue));
       }
 
-      setIsLoaded(true); // Mark as loaded after attempting to load data
     } catch (error) {
       console.error('Failed to load user data:', error);
     }
@@ -247,6 +249,9 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
       setDataToDisplay,
 
       updMeasureErr,
+
+      isLoaded,
+      setIsLoaded,
     }}>
       {children}
     </CalculationContext.Provider>

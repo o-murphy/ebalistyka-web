@@ -3,7 +3,7 @@ import { MeasureFormFieldProps, MeasureFormFieldRefreshable } from "./measureFie
 import { UNew, Unit, UnitProps, Measure } from "js-ballistics/dist/v2"
 import { usePreferredUnits } from "../../../context/preferredUnitsContext";
 import getFractionDigits from "../../../utils/fractionConvertor";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 
 export const ZeroTemperatureField = () => {
@@ -12,13 +12,13 @@ export const ZeroTemperatureField = () => {
 
     const [refreshable, setRefreshable] = useState(false)
     useEffect(() => {
-        if ([CalculationState.Complete].includes(calcState)) {
+        if (calcState === CalculationState.Complete) {
             setRefreshable(false)
         }
     }, [calcState]);
 
-    const prefUnit = preferredUnits.temperature
-    const accuracy = getFractionDigits(1, UNew.Celsius(1).In(prefUnit))
+    const prefUnit = useMemo(() => preferredUnits.temperature, [preferredUnits.temperature])
+    const accuracy = useMemo(() => getFractionDigits(1, UNew.Celsius(1).In(prefUnit)), [prefUnit])
 
     const fieldProps: Partial<MeasureFormFieldProps> = {
         fKey: "cZeroAirTemperature",
@@ -31,20 +31,20 @@ export const ZeroTemperatureField = () => {
         maxValue: UNew.Celsius(50).In(prefUnit),
     }
 
-    const value: number = UNew.Celsius(
-        profileProperties?.[fieldProps.fKey] ?
-            profileProperties[fieldProps.fKey] : 15
-    ).In(prefUnit)
+    const value: number = useMemo(() => UNew.Celsius(
+        profileProperties?.cZeroAirTemperature ?
+            profileProperties.cZeroAirTemperature : 15
+    ).In(prefUnit), [profileProperties?.cZeroAirTemperature, prefUnit])
 
-    const onValueChange = (value: number): void => {
+    const onValueChange = useCallback((value: number): void => {
         updateProfileProperties({
-            [fieldProps.fKey]: new Measure.Temperature(value, prefUnit).In(Unit.Celsius)
+            cZeroAirTemperature: new Measure.Temperature(value, prefUnit).In(Unit.Celsius)
         })
         setRefreshable(true)
-    }
+    }, [updateProfileProperties, prefUnit]);
 
     return (
-        <MeasureFormFieldRefreshable 
+        <MeasureFormFieldRefreshable
             fieldProps={fieldProps}
             value={value}
             onValueChange={onValueChange}

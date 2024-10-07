@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useMemo } from "react";
 import CustomCard from "./customCard";
-import { useCalculator } from "../../context/profileContext";
+import { CalculationState, useCalculator } from "../../context/profileContext";
 import { MuzzleVelocityField, PowderSensField } from "../widgets/measureFields";
 import { TextInputChip } from "../widgets/inputChip";
 
@@ -8,30 +8,31 @@ interface ProjectileCardProps {
     expanded?: boolean;
 }
 
-const ProjectileCard: React.FC<ProjectileCardProps> = ({ expanded = true }) => {
-
+const ProjectileName = () => {
     const { profileProperties, updateProfileProperties } = useCalculator();
+    const text = useMemo(() => profileProperties?.cartridgeName, [profileProperties?.cartridgeName])
+    return (
+        <TextInputChip
+            style={{ marginVertical: 4 }}
+            icon={"card-bulleted-outline"}
+            label={"Projectile name"}
+            text={text ?? "My projectile"}
+            onTextChange={text => updateProfileProperties({ cartridgeName: text })}
+        />
+    )
+}
 
-    if (!profileProperties) {
-        return (
-            <CustomCard title={"Projectile"} expanded={expanded} />
-        )
+const ProjectileCard: React.FC<ProjectileCardProps> = ({ expanded = true }) => {
+    const { isLoaded } = useCalculator()
+
+    if (!isLoaded) {
+        return <CustomCard title={"Weapon"} expanded={expanded} />
     }
-
     return (
         <CustomCard title={"Projectile"} expanded={expanded}>
-
-            <TextInputChip 
-                style={{ marginVertical: 4 }}
-                icon={"card-bulleted-outline"} 
-                label={"Projectile name"}
-                text={profileProperties?.cartridgeName ?? "My projectile"}
-                onTextChange={text => updateProfileProperties({ cartridgeName: text })}
-            />
-
+            <ProjectileName />
             <MuzzleVelocityField />
             <PowderSensField />
-
         </CustomCard>
     );
 };

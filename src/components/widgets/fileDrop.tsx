@@ -1,9 +1,9 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { FileUploader } from "react-drag-drop-files";
 import parseA7P, { ProfileProps } from "../../utils/parseA7P";
 import { StyleSheet, StyleProp, ViewProps } from "react-native";
 import { Button } from "react-native-paper";
-import { CalculationContext } from "../../context/profileContext";
+import { useCalculator } from "../../context/profileContext";
 
 // Define the allowed file types for upload
 const fileTypes = ["A7P"];
@@ -16,7 +16,7 @@ function A7PFileUploader({ style = null }: A7PFileUploaderProps) {
   const [error, setError] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
 
-  const { profileProperties, setProfileProperties, updateProfileProperties } = useContext(CalculationContext);
+  const { profileProperties, setProfileProperties, updateProfileProperties, setIsLoaded } = useCalculator();
 
   const onSuccess = (data: ProfileProps) => {
     if (profileProperties) {
@@ -24,6 +24,7 @@ function A7PFileUploader({ style = null }: A7PFileUploaderProps) {
     } else {
       setProfileProperties(data)
     }
+    setIsLoaded(true); // Mark as loaded after attempting to load data
   }
 
   // Handle file change

@@ -3,7 +3,7 @@ import { MeasureFormFieldProps, MeasureFormFieldRefreshable } from "./measureFie
 import { UNew, Unit, UnitProps, Measure } from "js-ballistics/dist/v2"
 import { usePreferredUnits } from "../../../context/preferredUnitsContext";
 import getFractionDigits from "../../../utils/fractionConvertor";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 
 export const ZeroLookAngleField = () => {
@@ -11,16 +11,17 @@ export const ZeroLookAngleField = () => {
     const { preferredUnits } = usePreferredUnits()
 
     const [refreshable, setRefreshable] = useState(false)
+
     useEffect(() => {
-        if ([CalculationState.Complete].includes(calcState)) {
+        if (calcState === CalculationState.Complete) {
             setRefreshable(false)
         }
     }, [calcState]);
 
-    const prefUnit = preferredUnits.angular
-    const accuracy = getFractionDigits(0.1, UNew.Degree(1).In(prefUnit))
+    const prefUnit = useMemo(() => preferredUnits.angular, [preferredUnits.angular])
+    const accuracy = useMemo(() => getFractionDigits(0.1, UNew.Degree(1).In(prefUnit)), [prefUnit])
 
-    const fieldProps: Partial<MeasureFormFieldProps> = {
+    const fieldProps: Partial<MeasureFormFieldProps> = useMemo(() => ({
         fKey: "cZeroWPitch",
         label: "Look angle",
         icon: "angle-acute",
@@ -29,19 +30,19 @@ export const ZeroLookAngleField = () => {
         suffix: UnitProps[prefUnit].symbol,
         minValue: UNew.Degree(-90).In(prefUnit),
         maxValue: UNew.Degree(90).In(prefUnit),
-    }
+    }), [accuracy, prefUnit])
 
-    const value: number = UNew.Degree(
-        profileProperties?.[fieldProps.fKey] ?
-            profileProperties[fieldProps.fKey] / 10 : 0
-    ).In(prefUnit)
+    const value: number = useMemo(() => UNew.Degree(
+        profileProperties?.cZeroWPitch ?
+            profileProperties.cZeroWPitch / 10 : 0
+    ).In(prefUnit), [profileProperties?.cZeroWPitch, prefUnit])
 
-    const onValueChange = (value: number): void => {
+    const onValueChange = useCallback((value: number): void => {
         updateProfileProperties({
-            [fieldProps.fKey]: new Measure.Angular(value, prefUnit).In(Unit.Degree) * 10
+            cZeroWPitch: new Measure.Angular(value, prefUnit).In(Unit.Degree) * 10
         })
         setRefreshable(true)
-    }
+    }, [updateProfileProperties, prefUnit]);
 
     return (
         <MeasureFormFieldRefreshable 

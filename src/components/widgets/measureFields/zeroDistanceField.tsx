@@ -3,7 +3,7 @@ import { MeasureFormFieldProps, MeasureFormFieldRefreshable } from "./measureFie
 import { UNew, Unit, UnitProps, Distance } from "js-ballistics/dist/v2"
 import { usePreferredUnits } from "../../../context/preferredUnitsContext";
 import getFractionDigits from "../../../utils/fractionConvertor";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 
 export const ZeroDistanceField = () => {
@@ -17,11 +17,10 @@ export const ZeroDistanceField = () => {
         }
     }, [calcState]);
 
-    const prefUnit = preferredUnits.distance
-    const accuracy = getFractionDigits(1, UNew.Meter(1).In(prefUnit))
+    const prefUnit = useMemo(() => preferredUnits.distance, [preferredUnits.distance])
+    const accuracy = useMemo(() => getFractionDigits(1, UNew.Meter(1).In(prefUnit)), [prefUnit])
 
-    const fieldProps: Partial<MeasureFormFieldProps> = {
-        // fKey: "trajectoryRange",
+    const fieldProps: Partial<MeasureFormFieldProps> = useMemo(() => ({
         label: "Zero distance",
         icon: "arrow-left-right",
         fractionDigits: accuracy,
@@ -29,13 +28,13 @@ export const ZeroDistanceField = () => {
         suffix: UnitProps[prefUnit].symbol,
         minValue: UNew.Meter(10).In(prefUnit),
         maxValue: UNew.Meter(3000).In(prefUnit),
-    }
+    }), [accuracy, prefUnit])
 
-    const value: number = UNew.Meter(
-        profileProperties.distances[profileProperties.cZeroDistanceIdx] / 100
-    ).In(prefUnit)
+    const value: number = useMemo(() => UNew.Meter(
+        profileProperties?.distances[profileProperties.cZeroDistanceIdx] / 100
+    ).In(prefUnit), [profileProperties?.distances, profileProperties?.cZeroDistanceIdx, prefUnit])
 
-    const onValueChange = (value: number): void => {
+    const onValueChange = useCallback((value: number): void => {
         const distances = profileProperties.distances
         const newValue = new Distance(value * 100, prefUnit).In(Unit.Meter)
         if (!distances.includes(newValue)) {
@@ -47,7 +46,7 @@ export const ZeroDistanceField = () => {
             cZeroDistanceIdx: distances.indexOf(newValue)
         });
         setRefreshable(true)
-    }
+    }, [updateProfileProperties, prefUnit]);
 
     return (
         <MeasureFormFieldRefreshable 

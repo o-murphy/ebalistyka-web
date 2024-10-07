@@ -60,7 +60,6 @@ const MainScreen = () => {
                             showsVerticalScrollIndicator={false}
                         >
 
-                            {/* FIXME */}
                             {trajectoryMode === TrajectoryMode.Adjusted && <SingleShotCard expanded={true}/>} 
                             
                             {dataToDisplay === DataToDisplay.DragModel && (

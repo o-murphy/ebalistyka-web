@@ -1,5 +1,5 @@
 import { SegmentedButtons } from "react-native-paper";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import CustomCard from "./customCard";
 import { StyleSheet, View } from "react-native";
 import { CalculationState, useCalculator } from "../../context/profileContext";
@@ -12,60 +12,69 @@ interface WeaponCardProps {
     expanded?: boolean;
 }
 
-const WeaponCard: React.FC<WeaponCardProps> = ({ expanded = true }) => {
-    const { profileProperties, updateProfileProperties, calcState, fire } = useCalculator();
+const WeaponName = () => {
+    const { profileProperties, updateProfileProperties } = useCalculator();
+    const text = useMemo(() => profileProperties?.cartridgeName, [profileProperties?.cartridgeName])
+    return (
+        <TextInputChip
+            style={{ marginVertical: 4 }}
+            icon={"card-bulleted-outline"}
+            label={"Weapon name"}
+            text={text ?? "My projectile"}
+            onTextChange={text => updateProfileProperties({ profileName: text })}
+        />
+    )
+}
 
+const TwistSwitch = () => {
+    const { profileProperties, updateProfileProperties, calcState } = useCalculator();
     const [refreshable, setRefreshable] = useState(false)
 
     useEffect(() => {
-        if ([CalculationState.Complete].includes(calcState)) {
+        if (calcState === CalculationState.Complete) {
             setRefreshable(false)
         }
     }, [calcState]);
 
-    const onTwistChange = (value) => {
+    const twist = useMemo(() => profileProperties?.twistDir, [profileProperties?.twistDir])
+
+    const onTwistChange = useCallback((value: string): void => {
         updateProfileProperties({ twistDir: value })
         setRefreshable(true)
-    }
-
-    if (!profileProperties) {
-        return (
-            <CustomCard title={"Weapon"} expanded={expanded} />
-        );
-    }
+    }, [updateProfileProperties])
 
     return (
-        <CustomCard title={"Weapon"} expanded={expanded}>
-
-            <TextInputChip
-                style={{ marginVertical: 4 }}
-                icon={"card-bulleted-outline"}
-                label={"Weapon name"}
-                text={profileProperties?.profileName ?? "My rifle"}
-                onTextChange={text => updateProfileProperties({ profileName: text })}
+        <View style={styles.row}>
+        <SegmentedButtons
+            style={[styles.segment]}
+            buttons={twistStates}
+            value={twist}
+            onValueChange={onTwistChange}
+        />
+        {
+            refreshable && <RefreshFAB
+                state={refreshable ? RefreshFabState.Updated : RefreshFabState.Actual}
+                style={{ marginLeft: 4 }}
             />
+        }
+    </View>
+    )
+}
 
+const WeaponCard: React.FC<WeaponCardProps> = ({ expanded = true }) => {
+    const { isLoaded } = useCalculator()
+
+    if (!isLoaded) {
+        return <CustomCard title={"Weapon"} expanded={expanded} />
+    }
+    return (
+        <CustomCard title={"Weapon"} expanded={expanded}>
+            <WeaponName />
             <SightHeightField />
             <TwistField />
-
-            <View style={styles.row}>
-                <SegmentedButtons
-                    style={[styles.segment]}
-                    buttons={twistStates}
-                    value={profileProperties?.twistDir}
-                    onValueChange={onTwistChange}
-                />
-                {
-                    refreshable && <RefreshFAB 
-                    state={refreshable ? RefreshFabState.Updated : RefreshFabState.Actual}
-                    style={{marginLeft: 4}}
-                    />
-                }
-            </View>
-
+            <TwistSwitch />
             <ZeroLookAngleField />
             <ZeroDistanceField />
-
         </CustomCard>
     );
 };

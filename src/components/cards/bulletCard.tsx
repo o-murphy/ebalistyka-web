@@ -1,8 +1,8 @@
 import { Text, Chip } from "react-native-paper";
-import React from "react";
+import React, { useMemo } from "react";
 import CustomCard from "./customCard";
 import { StyleSheet, View } from "react-native";
-import { useCalculator } from "../../context/profileContext";
+import { CalculationState, useCalculator } from "../../context/profileContext";
 import { BulletLengthField, BulletWeightField, CaliberField } from "../widgets/measureFields";
 import { TextInputChip } from "../widgets/inputChip";
 
@@ -10,51 +10,58 @@ interface BulletCardProps {
     expanded?: boolean;
 }
 
-const BulletCard: React.FC<BulletCardProps> = ({ expanded = true }) => {
-    const { profileProperties, updateProfileProperties, calcState } = useCalculator();
+const BulletName = () => {
+    const { profileProperties, updateProfileProperties } = useCalculator();
+    const text = useMemo(() => profileProperties?.bulletName, [profileProperties?.bulletName])
+    return (
+        <TextInputChip
+            style={{ marginVertical: 4 }}
+            icon={"card-bulleted-outline"}
+            label={"Bullet name"}
+            text={text ?? "My bullet"}
+            onTextChange={text => updateProfileProperties({ bulletName: text })}
+        />
+    )
+}
 
+const DragModelEdit = () => {
     const editDragModel = () => {
         // navigate("DragModelScreen")
         console.log("Edit drag model");
     };
 
-    if (!profileProperties) {
-        return (
-            <CustomCard title={"Bullet"} expanded={expanded} />
-        )
-    }
+    return (
+        <View style={styles.row}>
+        <Text style={[styles.column, { flex: 1 }, styles.label]}>
+            {"Drag model"}
+        </Text>
+        <Chip
+            icon={"function"}
+            closeIcon="square-edit-outline"
+            style={[styles.column, { flex: 2 }]}
+            textStyle={{ fontSize: 14 }}
+            onPress={editDragModel}
+            onClose={editDragModel}
+        >
+            {"<PlaceHolder>"}
+        </Chip>
+    </View>
+    )
+}
 
+const BulletCard: React.FC<BulletCardProps> = ({ expanded = true }) => {
+    const { isLoaded } = useCalculator()
+
+    if (!isLoaded) {
+        return <CustomCard title={"Weapon"} expanded={expanded} />
+    }
     return (
         <CustomCard title={"Bullet"} expanded={expanded}>
-
-            <TextInputChip 
-                style={{ marginVertical: 4 }}
-                icon={"card-bulleted-outline"} 
-                label={"Bullet name"}
-                text={profileProperties?.bulletName ?? "My bullet"}
-                onTextChange={text => updateProfileProperties({ bulletName: text })}
-            />
-
+            <BulletName />
             <CaliberField />
             <BulletWeightField />
             <BulletLengthField />
-
-            <View style={styles.row}>
-                <Text style={[styles.column, { flex: 1 }, styles.label]}>
-                    {"Drag model"}
-                </Text>
-                <Chip
-                    icon={"function"}
-                    closeIcon="square-edit-outline"
-                    style={[styles.column, { flex: 2 }]}
-                    textStyle={{ fontSize: 14 }}
-                    onPress={editDragModel}
-                    onClose={editDragModel}
-                >
-                    {"<PlaceHolder>"}
-                    {/* {`0.318 G7`} */}
-                </Chip>
-            </View>
+            <DragModelEdit />
         </CustomCard>
     );
 };

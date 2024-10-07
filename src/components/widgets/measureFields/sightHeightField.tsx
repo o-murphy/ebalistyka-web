@@ -3,7 +3,7 @@ import { MeasureFormFieldProps, MeasureFormFieldRefreshable } from "./measureFie
 import { UNew, Unit, UnitProps, Measure } from "js-ballistics/dist/v2"
 import { usePreferredUnits } from "../../../context/preferredUnitsContext";
 import getFractionDigits from "../../../utils/fractionConvertor";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 
 export const SightHeightField = () => {
@@ -13,15 +13,15 @@ export const SightHeightField = () => {
     const [refreshable, setRefreshable] = useState(false)
 
     useEffect(() => {
-        if ([CalculationState.Complete].includes(calcState)) {
+        if (calcState === CalculationState.Complete) {
             setRefreshable(false)
         }
     }, [calcState]);
 
-    const prefUnit = preferredUnits.sizes
-    const accuracy = getFractionDigits(0.1, UNew.Inch(1).In(prefUnit))
+    const prefUnit = useMemo(() => preferredUnits.sizes, [preferredUnits.sizes])
+    const accuracy = useMemo(() => getFractionDigits(0.1, UNew.Inch(1).In(prefUnit)), [prefUnit])
 
-    const fieldProps: Partial<MeasureFormFieldProps> = {
+    const fieldProps: Partial<MeasureFormFieldProps> = useMemo(() => ({
         fKey: "scHeight",
         label: "Sight height",
         icon: "crosshairs",
@@ -30,19 +30,19 @@ export const SightHeightField = () => {
         suffix: UnitProps[prefUnit].symbol,
         minValue: UNew.Inch(-5).In(prefUnit),
         maxValue: UNew.Inch(5).In(prefUnit),
-    }
+    }), [accuracy, prefUnit])
 
-    const value: number = UNew.Millimeter(
-        profileProperties?.[fieldProps.fKey] ?
-            profileProperties[fieldProps.fKey] : 0
-    ).In(prefUnit)
+    const value: number = useMemo(() => UNew.Millimeter(
+        profileProperties?.scHeight ?
+            profileProperties.scHeight : 0
+    ).In(prefUnit), [profileProperties?.scHeight, prefUnit])
 
-    const onValueChange = (value: number): void => {
+    const onValueChange = useCallback((value: number): void => {
         updateProfileProperties({
-            [fieldProps.fKey]: new Measure.Distance(value, prefUnit).In(Unit.Millimeter)
-        })
-        setRefreshable(true)
-    }
+            scHeight: new Measure.Distance(value, prefUnit).In(Unit.Millimeter)
+        });
+        setRefreshable(true);
+    }, [updateProfileProperties, prefUnit]);
 
     return (
         <MeasureFormFieldRefreshable 

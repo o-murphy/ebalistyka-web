@@ -1,6 +1,6 @@
 import React from "react";
 import CustomCard from "./customCard";
-import { useCalculator } from "../../context/profileContext";
+import { CalculationState, useCalculator } from "../../context/profileContext";
 import { ZeroTemperatureField } from "../widgets/measureFields";
 import { ZeroPressureField } from "../widgets/measureFields/zeroPressureField";
 import { ZeroHumidityField } from "../widgets/measureFields/zeroHumidityField";
@@ -11,24 +11,16 @@ interface AtmoCardProps {
 }
 
 const ZeroAtmoCard: React.FC<AtmoCardProps> = ({ label = "Zero atmosphere", expanded = true }) => {
+    const { isLoaded } = useCalculator()
 
-    const { profileProperties } = useCalculator();
-
-    if (!profileProperties) {
-        return (
-            <CustomCard title={"Zero atmosphere"} expanded={expanded}>
-                {/* <ActivityIndicator animating={true} /> */}
-            </CustomCard>
-        )
+    if (!isLoaded) {
+        return <CustomCard title={"Weapon"} expanded={expanded} />
     }
-
     return (
         <CustomCard title={label} expanded={expanded}>
-
             <ZeroTemperatureField />
             <ZeroPressureField />
             <ZeroHumidityField />
-
         </CustomCard>
     );
 };

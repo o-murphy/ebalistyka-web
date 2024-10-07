@@ -6,7 +6,7 @@ import { useState } from 'react';
 
 
 export const TargetShotTable = ({ hitResult, reverse = false }: { hitResult: HitResult | Error, reverse?: boolean }) => {
-  const tableWidth = styles.tableScrollable.width;
+  const tableWidth = styles.tableScrollable.maxWidth;
 
   const [containerWidth, setContainerWidth] = useState(tableWidth); // State for container width
 

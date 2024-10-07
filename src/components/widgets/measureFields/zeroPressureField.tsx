@@ -3,7 +3,7 @@ import { MeasureFormFieldProps, MeasureFormFieldRefreshable } from "./measureFie
 import { UNew, Unit, UnitProps, Measure } from "js-ballistics/dist/v2"
 import { usePreferredUnits } from "../../../context/preferredUnitsContext";
 import getFractionDigits from "../../../utils/fractionConvertor";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 
 export const ZeroPressureField = () => {
@@ -12,15 +12,16 @@ export const ZeroPressureField = () => {
 
     const [refreshable, setRefreshable] = useState(false)
     useEffect(() => {
-        if ([CalculationState.Complete].includes(calcState)) {
+        if (calcState === CalculationState.Complete) {
             setRefreshable(false)
         }
     }, [calcState]);
 
-    const prefUnit = preferredUnits.pressure
-    const accuracy = getFractionDigits(1, UNew.hPa(1).In(prefUnit))
 
-    const fieldProps: Partial<MeasureFormFieldProps> = {
+    const prefUnit = useMemo(() => preferredUnits.pressure, [preferredUnits.pressure])
+    const accuracy = useMemo(() => getFractionDigits(1, UNew.hPa(1).In(prefUnit)), [prefUnit])
+
+    const fieldProps: Partial<MeasureFormFieldProps> = useMemo(() => ({
         fKey: "cZeroAirPressure",
         label: "Pressure",
         icon: "speedometer",
@@ -29,22 +30,22 @@ export const ZeroPressureField = () => {
         suffix: UnitProps[prefUnit].symbol,
         minValue: UNew.hPa(500).In(prefUnit),
         maxValue: UNew.hPa(1300).In(prefUnit),
-    }
+    }), [accuracy, prefUnit])
 
-    const value: number = UNew.hPa(
-        profileProperties?.[fieldProps.fKey] ?
-            profileProperties[fieldProps.fKey] / 10 : 1000
-    ).In(prefUnit)
+    const value: number = useMemo(() => UNew.hPa(
+        profileProperties?.cZeroAirPressure ?
+            profileProperties.cZeroAirPressure / 10 : 1000
+    ).In(prefUnit), [profileProperties?.cZeroAirPressure, prefUnit])
 
-    const onValueChange = (value: number): void => {
+    const onValueChange = useCallback((value: number): void => {
         updateProfileProperties({
-            [fieldProps.fKey]: new Measure.Pressure(value, prefUnit).In(Unit.hPa) * 10
+            cZeroAirPressure: new Measure.Pressure(value, prefUnit).In(Unit.hPa) * 10
         })
         setRefreshable(true)
-    }
+    }, [updateProfileProperties, prefUnit]);
 
     return (
-        <MeasureFormFieldRefreshable 
+        <MeasureFormFieldRefreshable
             fieldProps={fieldProps}
             value={value}
             onValueChange={onValueChange}
