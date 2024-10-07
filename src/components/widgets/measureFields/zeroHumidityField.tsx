@@ -13,7 +13,7 @@ export const ZeroHumidityField = () => {
         }
     }, [calcState]);
 
-    const fieldProps: Partial<MeasureFormFieldProps> = {
+    const fieldProps: Partial<MeasureFormFieldProps> = useMemo(() => ({
         fKey: "cZeroAirHumidity",
         label: "Humidity",
         suffix: "%",
@@ -22,7 +22,7 @@ export const ZeroHumidityField = () => {
         step: 1,
         minValue: 0,
         maxValue: 100,
-    }
+    }), [])
 
     const value: number = useMemo(
         () => profileProperties?.cZeroAirHumidity ? profileProperties.cZeroAirHumidity : 0,
@@ -30,7 +30,7 @@ export const ZeroHumidityField = () => {
 
     const onValueChange = useCallback((value: number): void => {
         updateProfileProperties({
-            [fieldProps.fKey]: value
+            cZeroAirHumidity: value
         })
         setRefreshable(true)
     }, [updateProfileProperties]);

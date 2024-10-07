@@ -3,7 +3,7 @@ import { MeasureFormFieldProps, MeasureFormFieldRefreshable } from "./measureFie
 import { UNew, Unit, UnitProps, Measure } from "js-ballistics/dist/v2"
 import { usePreferredUnits } from "../../../context/preferredUnitsContext";
 import getFractionDigits from "../../../utils/fractionConvertor";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 export const CurrentPressureField = () => {
     const { calcState, currentConditions, updateCurrentConditions } = useCalculator();
@@ -13,15 +13,15 @@ export const CurrentPressureField = () => {
     const [refreshable, setRefreshable] = useState(false)
 
     useEffect(() => {
-        if ([CalculationState.Complete].includes(calcState)) {
+        if (calcState === CalculationState.Complete) {
             setRefreshable(false)
         }
     }, [calcState]);
 
-    const prefUnit = preferredUnits.pressure
-    const accuracy = getFractionDigits(1, UNew.hPa(1).In(prefUnit))
+    const prefUnit = useMemo(() => preferredUnits.pressure, [preferredUnits.pressure])
+    const accuracy = useMemo(() => getFractionDigits(1, UNew.hPa(1).In(prefUnit)), [prefUnit])
 
-    const fieldProps: Partial<MeasureFormFieldProps> = {
+    const fieldProps: Partial<MeasureFormFieldProps> = useMemo(() => ({
         fKey: "pressure",
         label: "Pressure",
         icon: "speedometer",
@@ -30,19 +30,19 @@ export const CurrentPressureField = () => {
         suffix: UnitProps[prefUnit].symbol,
         minValue: UNew.hPa(500).In(prefUnit),
         maxValue:UNew.hPa(1300).In(prefUnit),
-    }
+    }), [accuracy, prefUnit])
 
-    const value: number = UNew.hPa(
-        currentConditions?.[fieldProps.fKey] ? 
-        currentConditions[fieldProps.fKey] : 1000
-    ).In(prefUnit)
+    const value: number = useMemo(() => UNew.hPa(
+        currentConditions?.pressure ? 
+        currentConditions.pressure : 1000
+    ).In(prefUnit), [currentConditions?.pressure, prefUnit])
 
-    const onValueChange = (value: number): void => {
+    const onValueChange = useCallback((value: number): void => {
         updateCurrentConditions({
-            [fieldProps.fKey]: new Measure.Pressure(value, prefUnit).In(Unit.hPa)
+            pressure: new Measure.Pressure(value, prefUnit).In(Unit.hPa)
         })
         setRefreshable(true)
-    }
+    }, [currentConditions, prefUnit]);
 
     return (
         <MeasureFormFieldRefreshable 

@@ -3,7 +3,7 @@ import { MeasureFormFieldProps, MeasureFormFieldRefreshable } from "./measureFie
 import { UNew, Unit, UnitProps, Measure } from "js-ballistics/dist/v2"
 import { usePreferredUnits } from "../../../context/preferredUnitsContext";
 import getFractionDigits from "../../../utils/fractionConvertor";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 
 export const CurrentTemperatureField = () => {
@@ -14,15 +14,15 @@ export const CurrentTemperatureField = () => {
     const [refreshable, setRefreshable] = useState(false)
 
     useEffect(() => {
-        if ([CalculationState.Complete].includes(calcState)) {
+        if (calcState === CalculationState.Complete) {
             setRefreshable(false)
         }
     }, [calcState]);
 
-    const prefUnit = preferredUnits.temperature
-    const accuracy = getFractionDigits(1, UNew.Celsius(1).In(prefUnit))
+    const prefUnit = useMemo(() => preferredUnits.temperature, [preferredUnits.temperature])
+    const accuracy = useMemo(() => getFractionDigits(1, UNew.Celsius(1).In(prefUnit)), [prefUnit])
 
-    const fieldProps: Partial<MeasureFormFieldProps> = {
+    const fieldProps: Partial<MeasureFormFieldProps> = useMemo(() => ({
         fKey: "temperature",
         label: "Temperature",
         icon: "thermometer",
@@ -31,19 +31,19 @@ export const CurrentTemperatureField = () => {
         suffix: UnitProps[prefUnit].symbol,
         minValue: UNew.Celsius(-50).In(prefUnit),
         maxValue: UNew.Celsius(50).In(prefUnit),
-    }
+    }), [accuracy, prefUnit])
 
-    const value: number = UNew.Celsius(
-        currentConditions?.[fieldProps.fKey] ? 
-        currentConditions[fieldProps.fKey] : 15
-    ).In(prefUnit)
+    const value: number = useMemo(() => UNew.Celsius(
+        currentConditions?.temperature ? 
+        currentConditions.temperature : 15
+    ).In(prefUnit), [currentConditions?.temperature, prefUnit])
 
-    const onValueChange = (value: number): void => {
+    const onValueChange = useCallback((value: number): void => {
         updateCurrentConditions({
-            [fieldProps.fKey]: new Measure.Temperature(value, prefUnit).In(Unit.Celsius)
+            temperature: new Measure.Temperature(value, prefUnit).In(Unit.Celsius)
         })
         setRefreshable(true)
-    }
+    }, [currentConditions, prefUnit]);
 
     return (
         <MeasureFormFieldRefreshable 

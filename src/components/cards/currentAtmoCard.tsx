@@ -10,15 +10,6 @@ interface AtmoCardProps {
 }
 
 const CurrentAtmoCard: React.FC<AtmoCardProps> = ({ label = "Current atmosphere", expanded = true }) => {
-
-    const { currentConditions } = useCalculator();
-
-    if (!currentConditions) {
-        return (
-            <CustomCard title={label} expanded={expanded} />
-        )
-    }
-
     return (
         <CustomCard title={label} expanded={expanded}>
             <CurrentTemperatureField />

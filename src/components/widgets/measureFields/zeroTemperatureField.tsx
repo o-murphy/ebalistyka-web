@@ -20,7 +20,7 @@ export const ZeroTemperatureField = () => {
     const prefUnit = useMemo(() => preferredUnits.temperature, [preferredUnits.temperature])
     const accuracy = useMemo(() => getFractionDigits(1, UNew.Celsius(1).In(prefUnit)), [prefUnit])
 
-    const fieldProps: Partial<MeasureFormFieldProps> = {
+    const fieldProps: Partial<MeasureFormFieldProps> = useMemo(() => ({
         fKey: "cZeroAirTemperature",
         label: "Temperature",
         icon: "thermometer",
@@ -29,7 +29,7 @@ export const ZeroTemperatureField = () => {
         suffix: UnitProps[prefUnit].symbol,
         minValue: UNew.Celsius(-50).In(prefUnit),
         maxValue: UNew.Celsius(50).In(prefUnit),
-    }
+    }), [accuracy, prefUnit])
 
     const value: number = useMemo(() => UNew.Celsius(
         profileProperties?.cZeroAirTemperature ?
