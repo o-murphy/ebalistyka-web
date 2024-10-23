@@ -28,10 +28,10 @@ const LeftColumn = () => {
             alwaysBounceVertical={false}
             showsVerticalScrollIndicator={false}
         >
-            <WeaponCard expanded={true} />
-            <ProjectileCard expanded={true} />
-            <BulletCard expanded={true} />
-            <ZeroAtmoCard expanded={false} />
+            <WeaponCard />
+            <ProjectileCard />
+            <BulletCard />
+            <ZeroAtmoCard />
         </ScrollView>
     )
 }
@@ -48,21 +48,20 @@ const RightColumn = () => {
             alwaysBounceVertical={false}
             showsVerticalScrollIndicator={false}
         >
-            {trajectoryMode === TrajectoryMode.Zero && <TargetCard expanded={true} />}
-            {trajectoryMode === TrajectoryMode.Zero && <CurrentWindCard expanded={true} label='Current wind' />}
-            <CurrentAtmoCard expanded={true} />
-            <TrajectoryParamsCard expanded={true} label="Shot parameters" />
+            {trajectoryMode === TrajectoryMode.Zero && <TargetCard />}
+            {trajectoryMode === TrajectoryMode.Zero && <CurrentWindCard />}
+            <CurrentAtmoCard />
+            <TrajectoryParamsCard />
         </ScrollView>
     )
 }
 
-const CenterColumn = ({ children }) => {
+const CenterColumn = () => {
     return (
         <View style={{ ...styles.column, flex: 4, minWidth: 240, }}>
-
             <CalculationStateCard cardStyle={{ ...styles.column, }} />
             <CalculationModeCard cardStyle={{ ...styles.column }} />
-            {children}
+            <ResultInfo />
         </View>
 
     )
@@ -103,34 +102,36 @@ const DragChartCard = () => {
 }
 
 
-const ResultColumn = () => {
+const ResultView = () => {
     const { hitResult, adjustedResult, trajectoryMode, dataToDisplay } = useCalculator();
 
-    const renderTrajectory = () => {
-    
-        const curHitResult = useMemo(() => (
-            trajectoryMode === TrajectoryMode.Zero ? hitResult : adjustedResult
-        ), [hitResult, adjustedResult, trajectoryMode]);
-    
-        const hitResultError = useMemo(() => curHitResult instanceof Error, [curHitResult]);
-    
-        if (hitResultError || !curHitResult) {
-            return dataToDisplay !== DataToDisplay.DragModel && <CustomCard title='No data' />;
-        }
-        return trajectoryMode === TrajectoryMode.Zero ? <ZeroTrajectory /> : <AdjustedTrajectory />;
-    };
+    const curHitResult = useMemo(() => (
+        trajectoryMode === TrajectoryMode.Zero ? hitResult : adjustedResult
+    ), [hitResult, adjustedResult, trajectoryMode]);
+
+    const hitResultError = useMemo(() => curHitResult instanceof Error, [curHitResult]);
+
+    if (hitResultError || !curHitResult) {
+        return dataToDisplay !== DataToDisplay.DragModel && <CustomCard title='No data' />;
+    }
+    return trajectoryMode === TrajectoryMode.Zero ? <ZeroTrajectory /> : <AdjustedTrajectory />;
+};
+
+
+const ResultInfo = () => {
+    const { trajectoryMode, dataToDisplay } = useCalculator();
 
     return (
         <ScrollView
-        style={styles.column}
-        keyboardShouldPersistTaps="always"
-        alwaysBounceVertical={false}
-        showsVerticalScrollIndicator={false}
-    >
-        {trajectoryMode === TrajectoryMode.Adjusted && <SingleShotCard expanded={true} />}
-        {dataToDisplay === DataToDisplay.DragModel && <DragChartCard />}
-        {renderTrajectory()}
-    </ScrollView>
+            style={styles.column}
+            keyboardShouldPersistTaps="always"
+            alwaysBounceVertical={false}
+            showsVerticalScrollIndicator={false}
+        >
+            {trajectoryMode === TrajectoryMode.Adjusted && <SingleShotCard />}
+            {dataToDisplay === DataToDisplay.DragModel && <DragChartCard />}
+            <ResultView />
+        </ScrollView>
     )
 }
 
@@ -143,9 +144,7 @@ const MainScreen = () => {
             <TopAppBar />
             <View style={[styles.row, { backgroundColor: theme.colors.background }]}>
                 <LeftColumn />
-                <CenterColumn>
-                <ResultColumn />
-                </CenterColumn>
+                <CenterColumn />
                 <RightColumn />
             </View>
         </PaperProvider>

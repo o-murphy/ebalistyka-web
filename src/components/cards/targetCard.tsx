@@ -9,12 +9,9 @@ interface TargetCardProps {
 }
 
 const TargetCard: React.FC<TargetCardProps> = ({ label = "Target", expanded = true }) => {
-
-    console.log("render target card")
-
     return (
-        <CustomCard 
-            title={label} 
+        <CustomCard
+            title={label}
             expanded={expanded}
             iconButton={null}
         >

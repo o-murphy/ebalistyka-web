@@ -9,10 +9,9 @@ interface TrajectoryCardProps {
 }
 
 const TrajectoryParamsCard: React.FC<TrajectoryCardProps> = ({ label = "Shot properties", expanded = true }) => {
-
     return (
-        <CustomCard 
-            title={label} 
+        <CustomCard
+            title={label}
             expanded={expanded}
             iconButton={null}
         >

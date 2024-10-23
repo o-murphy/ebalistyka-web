@@ -14,13 +14,13 @@ interface WindCardProps {
     expanded?: boolean;
 }
 
-const CurrentWindCard: React.FC<WindCardProps> = ({ label = "Zero wind direction and speed", expanded = true }) => {
+const CurrentWindCard: React.FC<WindCardProps> = ({ label = "Current wind", expanded = true }) => {
     const { currentConditions, updateCurrentConditions, calcState, fire } = useCalculator();
     const [windDir, setWindDir] = useState(currentConditions.windDirection);
     const [isHovered, setIsHovered] = useState(false);
     const [refreshable, setRefreshable] = useState(false);
     const initialWindDir = useRef(currentConditions.windDirection);
-    const {theme} = useTheme()
+    const { theme } = useTheme()
 
     useEffect(() => {
         if (currentConditions.windDirection !== initialWindDir.current) {
@@ -63,13 +63,13 @@ const CurrentWindCard: React.FC<WindCardProps> = ({ label = "Zero wind direction
                     // onMouseEnter={() => setIsHovered(true)}
                     // onMouseLeave={() => setIsHovered(false)}
                     onMouseDown={() => setIsHovered(true)}
-                    onMouseUp={() => {handleMouseUp(); setIsHovered(false)}}
+                    onMouseUp={() => { handleMouseUp(); setIsHovered(false) }}
                 >
                     {!isHovered ? (
                         <FAB
                             icon={() => (
                                 <View style={{ transform: [{ rotate: `${180 + windDir * 30}deg` }] }}>
-                                    <Icon size={28} source={"navigation-outline"} color={theme.colors.secondary}/>
+                                    <Icon size={28} source={"navigation-outline"} color={theme.colors.secondary} />
                                 </View>
                             )}
                             size="small"
