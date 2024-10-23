@@ -103,9 +103,7 @@ const DragChartCard = () => {
 }
 
 
-
-const MainScreen = () => {
-    const { theme } = useTheme();
+const ResultColumn = () => {
     const { hitResult, adjustedResult, trajectoryMode, dataToDisplay } = useCalculator();
 
     const renderTrajectory = () => {
@@ -123,66 +121,36 @@ const MainScreen = () => {
     };
 
     return (
+        <ScrollView
+        style={styles.column}
+        keyboardShouldPersistTaps="always"
+        alwaysBounceVertical={false}
+        showsVerticalScrollIndicator={false}
+    >
+        {trajectoryMode === TrajectoryMode.Adjusted && <SingleShotCard expanded={true} />}
+        {dataToDisplay === DataToDisplay.DragModel && <DragChartCard />}
+        {renderTrajectory()}
+    </ScrollView>
+    )
+}
+
+
+const MainScreen = () => {
+    const { theme } = useTheme();
+
+    return (
         <PaperProvider theme={theme}>
             <TopAppBar />
             <View style={[styles.row, { backgroundColor: theme.colors.background }]}>
                 <LeftColumn />
                 <CenterColumn>
-                    <ScrollView
-                        style={styles.column}
-                        keyboardShouldPersistTaps="always"
-                        alwaysBounceVertical={false}
-                        showsVerticalScrollIndicator={false}
-                    >
-                        {trajectoryMode === TrajectoryMode.Adjusted && <SingleShotCard expanded={true} />}
-                        {dataToDisplay === DataToDisplay.DragModel && <DragChartCard />}
-                        {renderTrajectory()}
-                    </ScrollView>
+                <ResultColumn />
                 </CenterColumn>
                 <RightColumn />
             </View>
         </PaperProvider>
     );
 };
-
-// const MainScreen = () => {
-
-//     const { theme } = useTheme();
-//     const { hitResult, adjustedResult, trajectoryMode, dataToDisplay } = useCalculator();
-
-//     const curHitResult = trajectoryMode === TrajectoryMode.Zero ? hitResult : adjustedResult
-//     const hitResultError = curHitResult instanceof Error;
-
-//     return (
-//         <PaperProvider theme={theme}>
-//             <TopAppBar />
-//             <View style={{ ...styles.row, backgroundColor: theme.colors.background }}>
-//                 <LeftColumn />
-//                 <CenterColumn>
-//                     <ScrollView style={{ ...styles.column, }}
-//                         keyboardShouldPersistTaps="always"
-//                         alwaysBounceVertical={false}
-//                         showsVerticalScrollIndicator={false}
-//                     >
-
-//                         {trajectoryMode === TrajectoryMode.Adjusted && <SingleShotCard expanded={true} />}
-//                         {dataToDisplay === DataToDisplay.DragModel && <DragChartCard />}
-
-//                         {
-//                             (!hitResultError && curHitResult && dataToDisplay !== DataToDisplay.DragModel)
-//                             &&
-//                             (trajectoryMode === TrajectoryMode.Zero ? <ZeroTrajectory /> : <AdjustedTrajectory />)
-//                         }
-
-//                         {(hitResultError || !curHitResult) && dataToDisplay !== DataToDisplay.DragModel && <CustomCard title='No data' />}
-
-//                     </ScrollView>
-//                 </CenterColumn>
-//                 <RightColumn />
-//             </View>
-//         </PaperProvider>
-//     );
-// }
 
 const styles = StyleSheet.create({
     row: {
