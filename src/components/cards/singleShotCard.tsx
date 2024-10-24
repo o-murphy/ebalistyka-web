@@ -15,7 +15,7 @@ interface SingleShotCardProps {
 }
 
 
-const SingleShotChips = ({chipLabels}) => {
+const SingleShotChips = ({ chipLabels }) => {
     const [chipTextStyle, setChipTextStyle] = useState({ fontSize: 12 });
     const { theme } = useTheme();
 
@@ -36,14 +36,14 @@ const SingleShotChips = ({chipLabels}) => {
 
     return (
         <View style={styles.row} onLayout={handleLayout}>
-        {chipLabels.map((label, index) => (
-            // <Chip key={index} style={_styles.chipStyle} textStyle={_styles.chipTextStyle}>
-            <Chip key={index} style={_styles.chipStyle} textStyle={chipTextStyle}>
+            {chipLabels.map((label, index) => (
+                // <Chip key={index} style={_styles.chipStyle} textStyle={_styles.chipTextStyle}>
+                <Chip key={index} style={_styles.chipStyle} textStyle={chipTextStyle}>
 
-                {label}
-            </Chip>
-        ))}
-    </View>
+                    {label}
+                </Chip>
+            ))}
+        </View>
     )
 }
 
@@ -74,17 +74,21 @@ const SingleShotCard: React.FC<SingleShotCardProps> = ({ expanded = true }) => {
     });
 
     return (
-        <CustomCard title="Shot params" expanded={expanded} style={styles.card}>
-            <View style={_styles.container}>
-                <SingleShotChips chipLabels={chipLabels}/>
-                <View style={styles.row}>
-                    <TargetRangeClickable />
-                    <TargetLookAngleClickable />
-                    <TargetWindSpeedClickable />
-                    <TargetWindDirClickable />
+        <CustomCard title="Shot params" expanded={expanded} style={[styles.card]}>
+            <View style={[styles.row]} >
+                <View style={[_styles.container, styles.selector]}>
+                    <SingleShotChips chipLabels={chipLabels} />
+                    <View style={[styles.row]}>
+                        <TargetRangeClickable />
+                        <TargetLookAngleClickable />
+                        <TargetWindSpeedClickable />
+                        <TargetWindDirClickable />
+                    </View>
+                </View>
+                <View style={[_styles.container, styles.selector, { marginHorizontal: 8 }]}>
+                    <TargetShotTable hitResult={adjustedResult} />
                 </View>
             </View>
-            <TargetShotTable hitResult={adjustedResult} />
         </CustomCard>
     );
 };
@@ -98,17 +102,23 @@ const styles = StyleSheet.create({
     },
     row: {
         flexDirection: "row",
+        flexWrap: "wrap",
         marginVertical: 4,
         width: "100%",
+        alignItems: "center",
+        justifyContent: "center"
     },
     column: {
         flexDirection: "column",
         marginHorizontal: 4,
-        height: "100%"
+        flex: 1,
     },
     container: {
         alignSelf: "center",
-        maxWidth: 400
+        maxWidth: 400,
+    },
+    selector: {
+        minWidth: 300,
     },
     card: {
         overflow: "hidden"
