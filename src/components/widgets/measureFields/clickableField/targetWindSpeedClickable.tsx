@@ -28,7 +28,6 @@ const TargetWindSpeedClickable = () => {
     const accuracy = useMemo(() => getFractionDigits(0.1, UNew.MPS(1).In(prefUnit)), [prefUnit]);
 
     const fieldProps: Partial<MeasureFormFieldProps> = {
-        fKey: "windSpeed",
         label: "Wind speed",
         icon: "windsock",
         fractionDigits: accuracy,
@@ -39,19 +38,16 @@ const TargetWindSpeedClickable = () => {
     };
 
     const value: number = useMemo(() => (
-        UNew.MPS(currentConditions?.[fieldProps.fKey] || 0).In(prefUnit)
-    ), [currentConditions, fieldProps.fKey, prefUnit]);
+        UNew.MPS(currentConditions?.windSpeed || 0).In(prefUnit)
+    ), [currentConditions, prefUnit]);
 
-    const onValueChange = useCallback(
-        debounce((newValue: number): void => {
-            updateCurrentConditions({
-                [fieldProps.fKey]: new Velocity(newValue, prefUnit).In(Unit.MPS),
-            });
-        }, 0), [fieldProps.fKey, prefUnit]);
+    const onValueChange = (newValue) => updateCurrentConditions({
+        windSpeed: new Velocity(newValue, prefUnit).In(Unit.MPS)
+    })
 
     const onErrorSet = useCallback((error: Error) => {
-        updMeasureErr({ fkey: fieldProps.fKey, isError: !!error });
-    }, [fieldProps.fKey, updMeasureErr]);
+        updMeasureErr({ fkey: "windSpeed", isError: !!error });
+    }, [updMeasureErr]);
 
     const spinBoxProps: SpinBoxProps = {
         value: value,

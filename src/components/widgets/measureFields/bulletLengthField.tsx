@@ -12,7 +12,7 @@ export const BulletLengthField = () => {
 
     const [refreshable, setRefreshable] = useState(false)
     useEffect(() => {
-        if ([CalculationState.Complete].includes(calcState)) {
+        if (calcState === CalculationState.Complete) {
             setRefreshable(false)
         }
     }, [calcState]);

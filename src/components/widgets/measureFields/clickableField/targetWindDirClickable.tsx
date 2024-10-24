@@ -4,7 +4,6 @@ import { UNew, Unit, UnitProps } from "js-ballistics/dist/v2";
 import { DoubleSpinBox, SpinBoxProps } from "../../doubleSpinBox";
 import getFractionDigits from "../../../../utils/fractionConvertor";
 import { MeasureFormFieldProps } from "../measureField";
-import debounce from "../../../../utils/debounce";
 import { StyleSheet } from "react-native";
 import { TouchableValueSelector } from "./touchableSelector";
 
@@ -37,19 +36,18 @@ const TargetWindDirClickable = () => {
     };
 
     const value: number = useMemo(() => (
-        UNew.Degree(currentConditions?.[fieldProps.fKey] ? currentConditions[fieldProps.fKey] * fieldProps.step : 0).In(prefUnit)
-    ), [currentConditions, fieldProps.fKey, fieldProps.step, prefUnit]);
+        UNew.Degree(currentConditions?.windDirection ? currentConditions.windDirection * fieldProps.step : 0).In(prefUnit)
+    ), [currentConditions]);
 
-    const onValueChange = useCallback(
-        debounce((newValue: number): void => {
-            updateCurrentConditions({
-                [fieldProps.fKey]: newValue / fieldProps.step
-            });
-        }, 0), [fieldProps.fKey, fieldProps.step]);
+    const onValueChange = (newValue) => {
+        updateCurrentConditions({
+            windDirection: newValue / fieldProps.step
+        });
+    };
 
     const onErrorSet = useCallback((error: Error) => {
-        updMeasureErr({ fkey: fieldProps.fKey, isError: !!error });
-    }, [fieldProps.fKey, updMeasureErr]);
+        updMeasureErr({ fkey: "windDirection", isError: !!error });
+    }, [updMeasureErr]);
 
     const spinBoxProps: SpinBoxProps = {
         value: value,

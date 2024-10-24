@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { NativeSyntheticEvent, TextInputKeyPressEventData } from 'react-native';
 import { TextInput } from 'react-native-paper';
 import { Props as TextInputProps } from "react-native-paper/src/components/TextInput/TextInput";
@@ -31,7 +31,7 @@ export const DoubleSpinBox: React.FC<SpinBoxProps> = ({
   debounceDelay = 500
 }) => {
   const [currentValue, setCurrentValue] = useState<string>(value.toFixed(fixedPoints));
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | Error | null>(null);
 
   useEffect(() => {
     setCurrentValue(value.toFixed(fixedPoints))

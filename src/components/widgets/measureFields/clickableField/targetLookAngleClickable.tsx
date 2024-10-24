@@ -5,10 +5,8 @@ import { Angular, UNew, Unit, UnitProps } from "js-ballistics/dist/v2";
 import { DoubleSpinBox, SpinBoxProps } from "../../doubleSpinBox";
 import getFractionDigits from "../../../../utils/fractionConvertor";
 import { MeasureFormFieldProps } from "../measureField";
-// import debounce from "../../../../utils/debounce";
 import { StyleSheet } from "react-native";
 import { TouchableValueSelector } from "./touchableSelector";
-import useDebouncedValue from "../../../../utils/debounceValue";
 
 
 const TargetLookAngleClickable = () => {
@@ -29,6 +27,7 @@ const TargetLookAngleClickable = () => {
     const accuracy = useMemo(() => getFractionDigits(0.1, UNew.Degree(1).In(prefUnit)), [prefUnit]);
 
     const fieldProps: Partial<MeasureFormFieldProps> = {
+        fKey: "lookAngle",
         label: "Look angle",
         icon: "angle-acute",
         fractionDigits: accuracy,
@@ -39,22 +38,22 @@ const TargetLookAngleClickable = () => {
     };
 
     const value: number = useMemo(() => (
-        UNew.Degree(currentConditions?.lookAngle || 0).In(prefUnit)
-    ), [currentConditions?.lookAngle, prefUnit]);
+        UNew.Degree(currentConditions?.[fieldProps.fKey] || 0).In(prefUnit)
+    ), [currentConditions?.[fieldProps.fKey], prefUnit]);
 
-    const [debouncedValue, setDebouncedValue] = useDebouncedValue(value, 500, (newValue) => {
+    const onValueChange = (newValue) => {
         updateCurrentConditions({
-            "lookAngle": new Angular(newValue, prefUnit).In(Unit.Degree),
+            [fieldProps.fKey]: new Angular(newValue, prefUnit).In(Unit.Degree),
         });
-    });
+    }
 
     const onErrorSet = useCallback((error: Error) => {
         updMeasureErr({ fkey: fieldProps.fKey, isError: !!error });
-    }, [fieldProps.fKey, updMeasureErr]);
+    }, [updMeasureErr]);
 
-    const spinBoxProps: SpinBoxProps  = {
-        value: debouncedValue,
-        onValueChange: setDebouncedValue,
+    const spinBoxProps: SpinBoxProps = {
+        value: value,
+        onValueChange: onValueChange,
         strict: true,
         onError: onErrorSet,
         minValue: fieldProps.minValue,
@@ -73,10 +72,10 @@ const TargetLookAngleClickable = () => {
     return (
         <TouchableValueSelector
             onUp={() => {
-                if (!isFiring) setDebouncedValue(debouncedValue + spinBoxProps.step);
+                if (!isFiring) onValueChange(value + spinBoxProps.step);
             }}
             onDown={() => {
-                if (!isFiring) setDebouncedValue(debouncedValue - spinBoxProps.step);
+                if (!isFiring) onValueChange(value - spinBoxProps.step);
             }}
         >
             <DoubleSpinBox {...spinBoxProps} />

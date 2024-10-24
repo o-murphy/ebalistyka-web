@@ -7,16 +7,19 @@ import getFractionDigits from "../../../../utils/fractionConvertor";
 import { MeasureFormFieldProps } from "../../../widgets/measureFields/measureField";
 import { StyleSheet } from "react-native";
 import { TouchableValueSelector } from "./touchableSelector";
-import useDebouncedValue from "../../../../utils/debounceValue";
 
 
 const TargetRangeClickable = () => {
+
     const { fire, updMeasureErr, currentConditions, updateCurrentConditions } = useCalculator();
-    const { preferredUnits } = usePreferredUnits();
+    const { preferredUnits } = usePreferredUnits()
+
     const targetRef = useRef(currentConditions);
 
     const [isFiring, setIsFiring] = useState(false); // Track if firing is in progress
-
+    const [error, setError] = useState<Error>(null)
+    const errRef = useRef(error)
+    
     useEffect(() => {
         if (targetRef.current?.targetDistance !== currentConditions?.targetDistance) {
             setIsFiring(true); // Set firing state to true
@@ -28,6 +31,7 @@ const TargetRangeClickable = () => {
     const accuracy = useMemo(() => getFractionDigits(1, UNew.Meter(1).In(prefUnit)), [prefUnit]);
 
     const fieldProps: Partial<MeasureFormFieldProps> = {
+        fKey: "targetDistance",
         label: "Target distance",
         icon: "target",
         fractionDigits: accuracy,
@@ -38,24 +42,25 @@ const TargetRangeClickable = () => {
     };
 
     const value: number = useMemo(() => (
-        UNew.Meter(currentConditions?.targetDistance || 2000).In(prefUnit)
-    ), [currentConditions?.targetDistance, prefUnit]);
+        UNew.Meter(currentConditions?.[fieldProps.fKey] || 2000).In(prefUnit)
+    ), [currentConditions?.[fieldProps.fKey], preferredUnits.distance]);
 
-    const [debouncedValue, setDebouncedValue] = useDebouncedValue(value, 500, (newValue) => {
+    const onValueChange = (newValue) => {
+        console.log("bchange")
         updateCurrentConditions({
-            targetDistance: new Distance(newValue, prefUnit).In(Unit.Meter),
+            [fieldProps.fKey]: new Distance(newValue, prefUnit).In(Unit.Meter),
         });
-    });
-
-    const onErrorSet = useCallback((error: Error) => {
-        updMeasureErr({ fkey: fieldProps.fKey, isError: !!error });
-    }, [fieldProps.fKey, updMeasureErr]);
+    }
+    
+    useEffect(() => {
+        updMeasureErr({fkey: fieldProps.fKey, isError: !!error})
+    }, [error])
 
     const spinBoxProps: SpinBoxProps = {
-        value: debouncedValue,
-        onValueChange: setDebouncedValue,
+        value: value,
+        onValueChange: onValueChange,
         strict: true,
-        onError: onErrorSet,
+        onError: setError,
         minValue: fieldProps.minValue,
         maxValue: fieldProps.maxValue,
         fractionDigits: fieldProps.fractionDigits,
@@ -72,10 +77,10 @@ const TargetRangeClickable = () => {
     return (
         <TouchableValueSelector
             onUp={() => {
-                if (!isFiring) setDebouncedValue(debouncedValue + spinBoxProps.step);
+                if (!isFiring) onValueChange(value + spinBoxProps.step);
             }}
             onDown={() => {
-                if (!isFiring) setDebouncedValue(debouncedValue - spinBoxProps.step);
+                if (!isFiring) onValueChange(value - spinBoxProps.step);
             }}
         >
             <DoubleSpinBox {...spinBoxProps} />
