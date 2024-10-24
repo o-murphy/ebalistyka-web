@@ -1,12 +1,8 @@
-import { useEffect, useState } from 'react';
-import {
-  View,
-  NativeSyntheticEvent,
-  TextInputKeyPressEventData
-} from 'react-native';
+import { useCallback, useEffect, useState } from 'react';
+import { NativeSyntheticEvent, TextInputKeyPressEventData } from 'react-native';
 import { TextInput } from 'react-native-paper';
 import { Props as TextInputProps } from "react-native-paper/src/components/TextInput/TextInput";
-import { StyleProp, ViewStyle } from 'react-native';
+import { debounce } from 'lodash';
 
 export interface SpinBoxProps {
   value?: number;
@@ -18,6 +14,7 @@ export interface SpinBoxProps {
   inputProps?: TextInputProps; // Additional props for the TextInput
   strict?: boolean;
   onError?: (error: Error) => void; 
+  debounceDelay?: number;
 }
 
 
@@ -30,7 +27,8 @@ export const DoubleSpinBox: React.FC<SpinBoxProps> = ({
   step = 1,
   inputProps,
   strict = false,
-  onError
+  onError = null,
+  debounceDelay = 500
 }) => {
   const [currentValue, setCurrentValue] = useState<string>(value.toFixed(fixedPoints));
   const [error, setError] = useState<string | null>(null);
@@ -44,13 +42,21 @@ export const DoubleSpinBox: React.FC<SpinBoxProps> = ({
     onError?.(error)
   }
 
+  // Debounced callback for onValueChange
+  const debouncedValueChange = useCallback(
+    debounce((numericValue: number) => {
+      if (onValueChange) onValueChange(numericValue);
+    }, debounceDelay),
+    [onValueChange]
+  );
+
   // Handle digit input from keyboard
   const handleInputChange = (text: string) => {
     const sanitizedText = text.replace(/(?!^-)[^0-9]/g, '');
 
     if (sanitizedText === '') {
       setCurrentValue('0'.padEnd(fixedPoints + 1, '0'));
-      onValueChange?.(0);
+      debouncedValueChange(0);
       return;
     }
 
@@ -75,7 +81,7 @@ export const DoubleSpinBox: React.FC<SpinBoxProps> = ({
     if (strict && _error) {
       return;
     }
-    onValueChange?.(numericValue);
+    debouncedValueChange(numericValue);
   };
 
   // Add input at the end of the text or handle backspace

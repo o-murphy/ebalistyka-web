@@ -221,8 +221,8 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
     }
   };
 
-  const debouncedProfileUpdate = useCallback(debounce(updateProfileProperties, 350), [updateProfileProperties]);
-  const debouncedUpdateConditions = useCallback(debounce(updateCurrentConditions, 350), [updateCurrentConditions]);
+  const debouncedProfileUpdate = useCallback(debounce(updateProfileProperties, 0), [updateProfileProperties]);
+  const debouncedUpdateConditions = useCallback(debounce(updateCurrentConditions, 0), [updateCurrentConditions]);
 
   return (
     <CalculationContext.Provider value={{
