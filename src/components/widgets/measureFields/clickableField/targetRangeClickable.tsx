@@ -18,7 +18,6 @@ const TargetRangeClickable = () => {
 
     const [isFiring, setIsFiring] = useState(false); // Track if firing is in progress
     const [error, setError] = useState<Error>(null)
-    const errRef = useRef(error)
     
     useEffect(() => {
         if (targetRef.current?.targetDistance !== currentConditions?.targetDistance) {
@@ -46,7 +45,6 @@ const TargetRangeClickable = () => {
     ), [currentConditions?.[fieldProps.fKey], preferredUnits.distance]);
 
     const onValueChange = (newValue) => {
-        console.log("bchange")
         updateCurrentConditions({
             [fieldProps.fKey]: new Distance(newValue, prefUnit).In(Unit.Meter),
         });

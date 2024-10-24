@@ -1,4 +1,5 @@
-import { TrajectoryData, UNew, Unit } from "js-ballistics/dist/v2"
+import { Distance, TrajectoryData, UNew, Unit } from "js-ballistics/dist/v2"
+import { usePreferredUnits } from "../../../context/preferredUnitsContext"
 import { useCalculator } from "../../../context/profileContext"
 import { Reticle } from "./abstract"
 
@@ -16,27 +17,21 @@ export const TrajectoryReticle = () => {
 }
 
 export const AdjustedReticle = () => {
-    // const { adjustedResult } = useCalculator()
-
-
-    // if (!(adjustedResult instanceof Error)) {
-    //     const trajectory = adjustedResult?.trajectory.map(row => {
-    //         return {
-    //             ...row, dropAdjustment: UNew.Radian(row.dropAdjustment.In(Unit.Radian) - adjustedResult.shot.relativeAngle.In(Unit.Radian))
-    //         }
-    //     })
-    //     trajectory.shift()
-    //     return (
-    //         <Reticle trajectory={trajectory}/>
-    //     )  
-    // }
-    // return null
     const { adjustedResult } = useCalculator()
+
     if (!(adjustedResult instanceof Error)) {
-        const trajectory = [...adjustedResult?.trajectory]
-        trajectory.shift()
+
+        const hold = adjustedResult.shot.relativeAngle
+        const trajectory: TrajectoryData[] = [...adjustedResult?.trajectory]
+        const holdRow = trajectory.reduce((min, item) => item.dropAdjustment < min.dropAdjustment ? item : min, trajectory[0]);
+
+        const holdPoint = {
+            ...holdRow,
+            dropAdjustment: UNew.Radian(-hold.rawValue)
+        }
+
         return (
-            <Reticle trajectory={trajectory}/>
+            <Reticle trajectory={[holdPoint]} step={1}/>
         )
     }
     return null

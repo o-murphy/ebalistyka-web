@@ -8,6 +8,7 @@ import { usePreferredUnits } from "../../context/preferredUnitsContext";
 import { Unit, UnitProps } from "js-ballistics/dist/v2";
 import { TargetShotTable } from "../widgets/trajectoryData/abstract/targetShotTable";
 import { TargetRangeClickable, TargetLookAngleClickable, TargetWindSpeedClickable, TargetWindDirClickable } from "../widgets/measureFields/clickableField";
+import { HitResult } from "js-ballistics/dist/v2";
 
 
 interface SingleShotCardProps {
@@ -85,9 +86,9 @@ const SingleShotCard: React.FC<SingleShotCardProps> = ({ expanded = true }) => {
                         <TargetWindDirClickable />
                     </View>
                 </View>
-                <View style={[_styles.container, styles.selector, { marginHorizontal: 8 }]}>
+                {(adjustedResult instanceof HitResult) && <View style={[_styles.container, styles.selector, { marginHorizontal: 8 }]}>
                     <TargetShotTable hitResult={adjustedResult} />
-                </View>
+                </View>}
             </View>
         </CustomCard>
     );

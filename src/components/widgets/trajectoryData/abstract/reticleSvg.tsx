@@ -10,10 +10,11 @@ import { TrajectoryData, UNew, Unit } from 'js-ballistics/dist/v2';
 
 interface ReticleProps {
     trajectory: TrajectoryData[] | any[];
+    step?: number;
 }
 
 
-export const Reticle: React.FC<ReticleProps> = ({ trajectory }) => {
+export const Reticle: React.FC<ReticleProps> = ({ trajectory, step = 100 }) => {
 
     const Mil1 = 20
 
@@ -24,7 +25,7 @@ export const Reticle: React.FC<ReticleProps> = ({ trajectory }) => {
     const trajStep = parseFloat((UNew.Meter(currentConditions.trajectoryStep).In(preferredUnits.distance) / 10).toFixed(0)) * 10
     const filterValues = (value) => {
         const numericValue = parseFloat(value.distance.In(preferredUnits.distance).toFixed(0))
-        return numericValue % 100 === 0
+        return numericValue % step === 0
     }
 
     const preparedData = trajectory.filter(filterValues).map((value) => {
@@ -67,7 +68,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         // backgroundColor: 'gray', // To visually check the container
-        maxWidth: 640, // Container width
+        maxWidth: 480, // Container width
         // height: 640, // Container height
         aspectRatio: 1,
         position: 'relative', // Necessary for absolute positioning of child elements

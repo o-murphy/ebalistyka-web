@@ -13,6 +13,7 @@ const TargetWindDirClickable = () => {
     const targetRef = useRef(currentConditions);
 
     const [isFiring, setIsFiring] = useState(false); // Track if firing is in progress
+    const [error, setError] = useState<Error>(null)
 
     useEffect(() => {
         if (targetRef.current?.windDirection !== currentConditions?.windDirection) {
@@ -45,15 +46,19 @@ const TargetWindDirClickable = () => {
         });
     };
 
-    const onErrorSet = useCallback((error: Error) => {
-        updMeasureErr({ fkey: "windDirection", isError: !!error });
-    }, [updMeasureErr]);
+    // const onErrorSet = useCallback((error: Error) => {
+    //     updMeasureErr({ fkey: "windDirection", isError: !!error });
+    // }, [updMeasureErr]);
+
+    useEffect(() => {
+        updMeasureErr({fkey: fieldProps.fKey, isError: !!error})
+    }, [error])
 
     const spinBoxProps: SpinBoxProps = {
         value: value,
         onValueChange: onValueChange,
         strict: true,
-        onError: onErrorSet,
+        onError: setError,
         minValue: fieldProps.minValue,
         maxValue: fieldProps.maxValue,
         fractionDigits: fieldProps.fractionDigits,
