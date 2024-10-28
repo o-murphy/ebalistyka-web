@@ -3,6 +3,7 @@ import A7PFileUploader from "./fileDrop"
 import { useTheme } from "../../context/themeContext"
 import SettingsUnitCard from "../cards/settingsCard"
 import { useState } from "react"
+import { isMobile } from "react-device-detect"
 
 const TopAppBar = () => {
 
@@ -22,7 +23,7 @@ const TopAppBar = () => {
             <A7PFileUploader />
             <Appbar.Action icon="cog-outline" onPress={() => setSettingsVisible(true)} />
 
-            <SettingsUnitCard visibility={[settingsVisible, setSettingsVisible]}/>
+            <SettingsUnitCard visibility={[settingsVisible, setSettingsVisible]} />
 
         </Appbar.Header>
     )

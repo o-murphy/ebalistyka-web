@@ -1,23 +1,24 @@
 import React from 'react';
 import { ProfileProvider } from './src/context/profileContext';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import MainScreen from './src/components/screens/main';
-// import { isMobile } from 'react-device-detect';
+import { isMobile } from 'react-device-detect';
 import { ThemeProvider } from './src/context/themeContext';
 import { PreferredUnitsProvider } from './src/context/preferredUnitsContext';
+import MobileView from './src/components/views/mobile';
+import MainScreen from './src/components/views/main';
 
 
 export default function App() {
-
+  console.log(isMobile)
   return (
-    <SafeAreaProvider>
-      <ThemeProvider>
-        <PreferredUnitsProvider>
-          <ProfileProvider>
-            <MainScreen />
-          </ProfileProvider>
-        </PreferredUnitsProvider>
-      </ThemeProvider>
-    </SafeAreaProvider>
+    <ThemeProvider>
+      <PreferredUnitsProvider>
+        <ProfileProvider>
+          <SafeAreaProvider style={{ flex: 1 }}>
+            {isMobile ? <MobileView /> : <MainScreen />}
+          </SafeAreaProvider>
+        </ProfileProvider>
+      </PreferredUnitsProvider>
+    </ThemeProvider>
   );
 }

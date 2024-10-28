@@ -1,18 +1,14 @@
 import { useState } from "react";
 import { FileUploader } from "react-drag-drop-files";
 import parseA7P, { ProfileProps } from "../../utils/parseA7P";
-import { StyleSheet, StyleProp, ViewProps } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { Button } from "react-native-paper";
 import { useCalculator } from "../../context/profileContext";
 
 // Define the allowed file types for upload
 const fileTypes = ["A7P"];
 
-interface A7PFileUploaderProps {
-  style?: StyleProp<ViewProps>;
-}
-
-function A7PFileUploader({ style = null }: A7PFileUploaderProps) {
+const A7PFileUploader = () => {
   const [error, setError] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
 
@@ -71,26 +67,28 @@ function A7PFileUploader({ style = null }: A7PFileUploaderProps) {
 
   // Return the file uploader component
   return (
-    <FileUploader
-      error={!!error}
-      handleChange={handleChange}
-      name={"file"}
-      types={fileTypes}
-      style={style}
-      maxSize={1}
-      onTypeError={(error: string) => setError(error)}
-      onSizeError={(error: string) => setError(error)}
-    >
-      <Button
-        icon={icon}
-        mode={'outlined'}
-        onPress={() => console.log('Pressed')}
-        style={styles.btnStyle}
-        contentStyle={styles.btnContentStyle}
+    <View style={{flex: 1, maxWidth: 300, overflow: "hidden"}}>
+      <FileUploader
+        error={!!error}
+        handleChange={handleChange}
+        name={"file"}
+        types={fileTypes}
+        style={null}
+        maxSize={1}
+        onTypeError={(error: string) => setError(error)}
+        onSizeError={(error: string) => setError(error)}
       >
-        {fileName ? fileName : label}
-      </Button>
-    </FileUploader>
+        <Button
+          icon={icon}
+          mode={'outlined'}
+          onPress={() => console.log('Pressed')}
+          style={styles.btnStyle}
+          contentStyle={styles.btnContentStyle}
+        >
+          {fileName ? fileName : label}
+        </Button>
+      </FileUploader>
+    </View>
   );
 }
 
