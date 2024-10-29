@@ -1,21 +1,54 @@
-import {useTheme} from "react-native-paper";
-import React from "react";
-import {StyleProp, StyleSheet, View, ViewStyle} from "react-native";
+import { useTheme } from "react-native-paper";
+import React, { useEffect, useState } from "react";
+import { StyleProp, StyleSheet, View, ViewStyle } from "react-native";
 import CircularSlider from "./circularSlider/web";
+import CircularSliderNative from "./circularSlider/circularSliderNative";
+import { DeviceType, getDeviceTypeAsync } from "expo-device";
 
 
-export default function WindDirectionPicker({value, onChange, style = null, diameter = 198}: {
-    value: number, 
+function degreesToTime(angle) {
+    // Normalize the angle to be within 0-360 degrees
+    angle = angle % 360;
+
+    // Calculate hours and minutes
+    const hours = Math.floor(angle / 30); // 30 degrees per hour
+    const minutes = Math.round(((angle % 30) / 30) * 60); // Remaining degrees converted to minutes
+
+    // Normalize hours in 12-hour format
+    const normalizedHours = hours % 12;
+
+    // const formattedHours = normalizedHours === 0 ? 12 : normalizedHours; // Convert 0 hours to 12
+    const formattedHours = String(normalizedHours === 0 ? 12 : normalizedHours).padStart(2, '0'); // Convert 0 hours to 12 and pad with zero
+
+    // Format minutes to be two digits
+    const formattedMinutes = String(minutes).padStart(2, '0');
+
+    return `${formattedHours}:${formattedMinutes}`;
+}
+
+function meterText(value) {
+    return  `${(value * 30).toFixed(0)}° (${degreesToTime(value * 30)})`
+}
+
+export default function WindDirectionPicker({ value, onChange, style = null, diameter = 198 }: {
+    value: number,
     onChange: (value: number) => void,
     style?: StyleProp<ViewStyle>,
     diameter?: number
 }) {
 
+    const [devType, setDevType] = useState(DeviceType.PHONE)
+
+    useEffect(() => {
+        getDeviceTypeAsync().then((deviceType) => {
+            setDevType(deviceType);
+        });
+    }, []);
+
     const theme = useTheme()
 
     const sliderProps = {
-        coerceToInt: true,
-        // capMode: "triangle",
+        coerceToInt: false,
 
         handleSize: diameter / 22,
         arcWidth: diameter / 11,
@@ -31,34 +64,47 @@ export default function WindDirectionPicker({value, onChange, style = null, diam
     const sliderValues = {
         minValue: 0,
         maxValue: 12,
-        meterText: `${value * 30}° (${value}h)`
+        meterText: meterText(value)
+    }
+
+    const sliderValueHandler = {
+        value: value,
+        onChange: (v) => {onChange(Math.round(v * 10) / 10); console.log(v)}
     }
 
     return (
         <View style={[style, styles.noSelect]}>
-            <CircularSlider
-                value={value}
-                onChange={onChange}
-                {...sliderProps}
-                {...sliderValues}
-                // style={styles.slider}
-                dialDiameter={diameter}
-                angleType={{
-                    direction: "cw",
-                    axis: "+y"
-                }}
-            />
+            {
+                devType === DeviceType.PHONE
+                    ?
+                    <CircularSliderNative
+                        {...sliderValueHandler}
+                        {...sliderValues}
+                        {...{ ...sliderProps, capMode: "triangle" }}
+                        dialDiameter={diameter - 30}
+                        angleType={{
+                            direction: "cw",
+                            axis: "+y"
+                        }}
+                    />
+                    :
+                    <CircularSlider
+                        {...sliderValueHandler}
+                        {...sliderProps}
+                        {...sliderValues}
+                        style={styles.slider}
+                        dialDiameter={diameter}
+                        angleType={{
+                            direction: "cw",
+                            axis: "+y"
+                        }}
+                    />
+            }
         </View>
     )
 }
 
 const styles = StyleSheet.create({
-    // container: {
-    //     // flex: 1,
-    //     justifyContent: 'center',
-    //     alignItems: 'center',
-    //     paddingBottom: 40,
-    // },
     text: {
         marginTop: -110,
         fontWeight: "bold",

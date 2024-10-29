@@ -19,9 +19,6 @@ import { ShotInfoScreen, ShotInfoTopAppBar } from './shotInfoScreen';
 const Stack = createNativeStackNavigator();
 
 
-
-
-
 export default function RootScreenManager({ ...props }) {
 
     return (

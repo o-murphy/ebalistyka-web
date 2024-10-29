@@ -10,7 +10,7 @@ import { DeviceType, getDeviceTypeAsync } from "expo-device";
 
 export default function App() {
 
-  const [devType, setDevType] = useState(DeviceType.UNKNOWN)
+  const [devType, setDevType] = useState(DeviceType.PHONE)
 
   useEffect(() => {
     getDeviceTypeAsync().then((deviceType) => {
@@ -22,7 +22,7 @@ export default function App() {
     <ThemeProvider>
       <PreferredUnitsProvider>
         <ProfileProvider>
-          <SafeAreaProvider style={{ flex: 1 }}>
+          <SafeAreaProvider >
             {devType === DeviceType.PHONE ? <MobileView /> : <MainScreen />}
           </SafeAreaProvider>
         </ProfileProvider>

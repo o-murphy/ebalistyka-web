@@ -110,7 +110,7 @@ export default function SettingsUnitCard({ visibility }) {
                 {/* <Dialog.Content> */}
 
                 <Dialog.ScrollArea>
-                      <ScrollView contentContainerStyle={{ padding: 24 }}>
+                      <ScrollView contentContainerStyle={{ padding: 24 }} showsVerticalScrollIndicator={false}>
 
 
                     {/* <View style={{ flex: 1, flexDirection: "column" }}> */}
@@ -271,17 +271,14 @@ const styles = StyleSheet.create({
     },
     row: {
         flex: 1,
-        flexDirection: "row",
         marginVertical: 4,
         justifyContent: "center",
     },
     doubleSpinBox: {
-        // justifyContent: "center",
         flex: 1,
     },
     nameContainer: {
         flex: 1,
-        // marginVertical: 4,
     },
     label: {
         // fontSize: 14,

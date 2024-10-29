@@ -25,8 +25,8 @@ export const HomeScreen = ({ navigation }) => {
     const onLayout = (event) => {
         const { width, height } = event.nativeEvent.layout;
         // Set sizeMultiplier based on your logic, e.g., using width
-        console.log(height)
-        setPickerDiameter(height); // Adjust the divisor based on your requirement
+        console.log("Wind pick layout", height, width)
+        setPickerDiameter(Math.min(height, width)); // Adjust the divisor based on your requirement
     };
 
     return (
@@ -37,7 +37,7 @@ export const HomeScreen = ({ navigation }) => {
             contentContainerStyle={_styles.scrollViewContainer}
         >
             <View style={{
-                height: "60%", maxHeight: 420, padding: 8,
+                minHeight: 360, maxHeight: 420, padding: 8,
                 backgroundColor: theme.colors.elevation.level1,
                 borderBottomRightRadius: 32, borderBottomLeftRadius: 32
             }}>
@@ -48,7 +48,8 @@ export const HomeScreen = ({ navigation }) => {
                     <Chip
                         closeIcon={"square-edit-outline"}
                         onClose={() => { }}
-                        style={{ flex: 1, marginRight: 8 }}
+                        style={{ flex: 1, marginRight: 8, justifyContent: "center", alignItems: "center" }}
+                        // textStyle={{textAlign: "center"}}
                     >
                         {"<profile name>"}
                     </Chip>
@@ -80,9 +81,10 @@ export const HomeScreen = ({ navigation }) => {
 
                     <Text style={{
                         position: "absolute",
-                        top: pickerDiameter / 2 - 32,
-                        alignSelf: "center"
-                    }} >Wind direction</Text>
+                        top: pickerDiameter / 2 - 44,
+                        alignSelf: "center",
+                        textAlign: "center"
+                    }} >{"Wind\ndirection"}</Text>
 
 
                     <WindDirectionPicker

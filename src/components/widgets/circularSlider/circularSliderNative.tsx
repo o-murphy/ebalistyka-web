@@ -269,12 +269,14 @@ export default function CircularSliderNative({...props}: CircularSliderProps) {
         const sin = Math.sin(value * stepRad)
         const cos = Math.cos(value * stepRad)
         return ({
-            key: value,
-            x: numX + (trackInnerRadius - strokeWidth / 2) * sin,
-            y: numY - (trackInnerRadius - strokeWidth / 2) * cos,
-            fontSize: 12,
-            fill: handleColor,
-            textAnchor: "middle"
+            key: `${value}`,
+            props: {
+                x: numX + (trackInnerRadius - strokeWidth / 2) * sin,
+                y: numY - (trackInnerRadius - strokeWidth / 2) * cos,
+                fontSize: 12,
+                fill: handleColor,
+                textAnchor: "middle"    
+            }
         })
     }
 
@@ -283,11 +285,13 @@ export default function CircularSliderNative({...props}: CircularSliderProps) {
         const cos = Math.cos(value * stepRad)
         return ({
             key: `ticks${value}`,
-            x1: numX + (trackInnerRadius + 2 / 3 * strokeWidth) * sin,
-            y1: numX - (trackInnerRadius + 2 / 3 * strokeWidth) * cos,
-            x2: numX + (trackInnerRadius + strokeWidth) * sin,
-            y2: numX - (trackInnerRadius + strokeWidth) * cos,
-            stroke: handleColor,
+            props: {
+                x1: numX + (trackInnerRadius + 2 / 3 * strokeWidth) * sin,
+                y1: numX - (trackInnerRadius + 2 / 3 * strokeWidth) * cos,
+                x2: numX + (trackInnerRadius + strokeWidth) * sin,
+                y2: numX - (trackInnerRadius + strokeWidth) * cos,
+                stroke: handleColor,
+            }
         })
     }
 
@@ -349,8 +353,8 @@ export default function CircularSliderNative({...props}: CircularSliderProps) {
             )}
 
             <Text {...meterTextProps}>{meterText}</Text>
-            {numbers.map(value => <Line {...ticksProps(value)} />)}
-            {numbers.map(value => <Text {...numbersProps(value)}>{value}</Text>)}
+            {numbers.map(value => <Line key={ticksProps(value).key} {...ticksProps(value).props} />)}
+            {numbers.map(value => <Text key={numbersProps(value).key} {...numbersProps(value).props}>{value}</Text>)}
             {controllable && <React.Fragment>{createHandle(handlePosition)}</React.Fragment>}
             {handle2Position && <React.Fragment>{createHandle(handle2Position)}</React.Fragment>}
         </Svg>

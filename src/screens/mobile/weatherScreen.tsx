@@ -105,8 +105,8 @@ export const WeatherScreen = ({ navigation }) => {
 
 
 
-                <View style={{ padding: 16, flexDirection: "row", justifyContent: "space-between" }}>
-                    <Text>Use powder sens.</Text>
+                <View style={{ padding: 16, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                    <Text variant="labelLarge">Use powder sensitivity</Text>
                     <Switch 
                         value={usePowderSens}
                         onValueChange={onTogglePowderSens}

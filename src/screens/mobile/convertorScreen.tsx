@@ -45,9 +45,7 @@ export const ConvertorScreen = ({ navigation }) => {
             showsVerticalScrollIndicator={true}
 
             contentContainerStyle={{
-                // height: "60%", maxHeight: 420, 
-                padding: 8,
-                paddingBottom: 16,
+                overflow: "hidden",
                 backgroundColor: theme.colors.elevation.level1,
                 borderBottomRightRadius: 32, borderBottomLeftRadius: 32,
             }}
