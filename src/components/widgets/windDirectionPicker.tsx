@@ -72,7 +72,7 @@ export default function WindDirectionPicker({ value, onChange, style = null, dia
     }
 
     return (
-        <View style={[style, styles.noSelect]}>
+        <View style={[style, styles.noSelect]} >
             {
                 devType === DeviceType.PHONE
                     ?
