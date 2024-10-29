@@ -2,19 +2,25 @@ import { ScrollView, StyleSheet } from "react-native";
 import { useTheme } from "../../../context/themeContext";
 import { TopContainer } from "./components/topContainer";
 import { BotContainer } from "./components/botContainer";
+import { styles } from "../../../components/widgets/measureFields/measureField/measureField";
 
 export const HomeScreen = ({ navigation }) => {
     const { theme } = useTheme();
 
     const _styles = StyleSheet.create({
+        scrollView: {
+            flex: 1, 
+            paddingBottom: 64, 
+            backgroundColor: theme.colors.secondaryContainer
+        },
         scrollViewContainer: {
-            flex: 1,
-            backgroundColor: theme.colors.secondaryContainer,
+            // backgroundColor: theme.colors.secondaryContainer
         },
     });
 
     return (
         <ScrollView
+            style={_styles.scrollView}
             keyboardShouldPersistTaps="always"
             alwaysBounceVertical={false}
             showsVerticalScrollIndicator={true}

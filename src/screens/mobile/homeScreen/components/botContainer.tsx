@@ -1,20 +1,41 @@
 import { StyleSheet, View } from "react-native"
-import { Divider, Icon, Text } from "react-native-paper"
+import { Text } from "react-native-paper"
 import { useCalculator } from "../../../../context/profileContext"
-import { useEffect } from "react"
-import { useTheme } from "../../../../context/themeContext";
-import HorusTremor5 from '../../../../../assets/HorusTremor5'; // Your base SVG
+import { useEffect, useState } from "react"
+import { HitResult } from "js-ballistics/dist/v2";
+import { HoldValuesContainer } from "./holdValuesContainer";
+import { HoldReticleContainer } from "./holdReticleContainer";
 
+
+const adjustmentSort = (closest, item) => {
+    return Math.abs(item.dropAdjustment.rawValue) < Math.abs(closest.dropAdjustment.rawValue) ? item : closest
+}
 
 
 export const BotContainer = () => {
-    const { profileProperties, adjustedResult, isLoaded, fire } = useCalculator()
-    const { theme } = useTheme()
+    const { profileProperties, currentConditions, adjustedResult, fire } = useCalculator()
+    const [hold, setHold] = useState(null)
 
     useEffect(() => {
-        fire()
-    }, [isLoaded])
+        if (profileProperties && currentConditions) {
+            fire()
+        }
+    }, [profileProperties, currentConditions])
 
+    useEffect(() => {
+        if (adjustedResult instanceof HitResult) {
+            console.log(currentConditions.windDirection)
+            const trajectory = adjustedResult?.trajectory
+            const holdRow = trajectory.slice(1).reduce(
+                adjustmentSort, trajectory[1]
+            );
+
+            setHold({
+                hold: adjustedResult?.shot?.relativeAngle,
+                wind: holdRow.windageAdjustment
+            })
+        }
+    }, [adjustedResult])
 
     const shortInfo = [
         `${(profileProperties?.bWeight / 10).toFixed(1)} gr.`,
@@ -28,57 +49,28 @@ export const BotContainer = () => {
             <Text style={styles.shortInfo} variant="labelMedium">
                 {profileProperties && shortInfo.join('; ')}
             </Text>
-            <View style={styles.shotResultContainer}>
-                <View style={styles.shotResultReticleContainer}>
-                    <HorusTremor5 style={{flex: 1, width: "100%"}} color={theme.colors.onPrimary} viewBox="-80 -40 160 160" />
-                </View>
-
-
-                <View style={styles.shotResultHoldContainer}>
-                    <View style={{ flexDirection: "row", alignItems: "center"  }}>
-                        <Icon size={28} color={theme.colors.onPrimary} source={"arrow-up"} />
-                        <View>
-                            <Text style={{ color: theme.colors.onPrimary, textAlign: "left", }} variant={"labelLarge"} >5.20 MRAD</Text>
-                            <Text style={{ color: theme.colors.onPrimary, textAlign: "left", }} variant={"labelLarge"} >17.88 MOA</Text>
-                            <Text style={{ color: theme.colors.onPrimary, textAlign: "left", }} variant={"labelLarge"} >5.20 MIL</Text>
-                            <Text style={{ color: theme.colors.onPrimary, textAlign: "left", }} variant={"labelMedium"} >52.0 cm/100m</Text>
-                        </View>
-                    </View>
-
-                    <Divider bold style={{ height: 2, width: "80%", backgroundColor: theme.colors.onPrimary }} />
-
-                    <View style={{ flexDirection: "row", alignItems: "center" }}>
-                        <Icon size={28} color={theme.colors.onPrimary} source={"arrow-left"} />
-                        <View>
-                            <Text style={{ color: theme.colors.onPrimary, textAlign: "left", }} variant={"labelLarge"} >0.14 MRAD</Text>
-                            <Text style={{ color: theme.colors.onPrimary, textAlign: "left", }} variant={"labelLarge"} >0.48 MOA</Text>
-                            <Text style={{ color: theme.colors.onPrimary, textAlign: "left", }} variant={"labelLarge"} >0.14 MIL</Text>
-                            <Text style={{ color: theme.colors.onPrimary, textAlign: "left", }} variant={"labelMedium"} >1.4 cm/100m</Text>
-                        </View>
-                    </View>
-
-                </View>
+            <View style={[styles.shotResultContainer]}>
+                <HoldReticleContainer hold={hold} />
+                <HoldValuesContainer hold={hold} />
             </View>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
-    botContainer: { flexDirection: "column", padding: 8 },
-    shortInfo: { textAlign: "center" },
-    shotResultContainer: { flexDirection: "row", marginBottom: 64, padding: 16, justifyContent: "space-between" },
-    shotResultReticleContainer: { 
-        aspectRatio: 1, 
-        width: "55%", 
-        borderRadius: 32, 
-        backgroundColor: "white",
-        overflow: "hidden" 
+    botContainer: {
+        flexDirection: "column",
+        padding: 8
     },
-    shotResultHoldContainer: {
-        width: "40%",
-        borderRadius: 16,
-        backgroundColor: "white",
-        alignItems: "center",
-        justifyContent: "center",
+    shortInfo: {
+        textAlign: "center",
+        paddingHorizontal: 16,
+        paddingVertical: 8
+    },
+    shotResultContainer: {
+        flexDirection: "row",
+        paddingHorizontal: 16,
+        paddingVertical: 8,
+        justifyContent: "space-between"
     },
 });

@@ -24,7 +24,7 @@ export default function App() {
     <ThemeProvider>
       <PreferredUnitsProvider>
         <ProfileProvider>
-          <SafeAreaProvider >
+          <SafeAreaProvider>
             {devType === DeviceType.PHONE ? <MobileView /> : <MainScreen />}
           </SafeAreaProvider>
         </ProfileProvider>

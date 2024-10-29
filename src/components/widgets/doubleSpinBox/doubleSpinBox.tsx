@@ -40,7 +40,6 @@ export const DoubleSpinBox: React.FC<SpinBoxProps> = ({
 
   // const inputAccessoryViewID = generateRandomId();
 
-
   useEffect(() => {
     setCurrentValue(value.toFixed(fixedPoints))
   }, [value])

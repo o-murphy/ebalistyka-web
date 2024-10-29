@@ -2,7 +2,7 @@
 	<rect x="-320" y="-320" width="640" height="640" fill="None" />
 	<defs>
 		<text id="defTitle" font-size="3" text-anchor="middle" dominant-baseline="middle" fill="#000000">
-			Horus TREMOR5
+			HT5
 		</text>
 		<circle id="defDot0.3" r="0.3" fill="#000000" />
 		<circle id="defDot0.5" r="0.5" fill="#000000" />

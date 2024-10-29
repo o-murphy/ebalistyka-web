@@ -30,11 +30,12 @@ function meterText(value) {
     return  `${(value * 30).toFixed(0)}° (${degreesToTime(value * 30)})`
 }
 
-export default function WindDirectionPicker({ value, onChange, style = null, diameter = 198 }: {
+export default function WindDirectionPicker({ value, onChange, style = null, diameter = 198, ...props }: {
     value: number,
     onChange: (value: number) => void,
     style?: StyleProp<ViewStyle>,
-    diameter?: number
+    diameter?: number,
+    props: any
 }) {
 
     const [devType, setDevType] = useState(DeviceType.PHONE)
@@ -72,7 +73,7 @@ export default function WindDirectionPicker({ value, onChange, style = null, dia
     }
 
     return (
-        <View style={[style, styles.noSelect]} >
+        <View style={[style, styles.noSelect]} {...props}>
             {
                 devType === DeviceType.PHONE
                     ?

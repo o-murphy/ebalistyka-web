@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Svg, Circle, Text } from 'react-native-svg';
-import HorusTremor5 from '../../../../../assets/HorusTremor5'; // Your base SVG
+import HT5 from '../../../../../assets/HT5'; // Your base SVG
 import { useCalculator } from '../../../../context/profileContext';
 import { useTheme } from '../../../../context/themeContext';
 import { usePreferredUnits } from '../../../../context/preferredUnitsContext';
@@ -39,7 +39,7 @@ export const Reticle: React.FC<ReticleProps> = ({ trajectory, step = 100 }) => {
     return (
         <View style={[styles.container,]}>
             {/* Base SVG Component */}
-            <HorusTremor5 style={styles.svg} color={theme.colors.onSurface} viewBox="-160 -80 320 320" />
+            <HT5 style={styles.svg} color={theme.colors.onSurface} viewBox="-160 -80 320 320" />
 
             {/* Custom SVG Elements */}
             {<Svg style={styles.svgOverlay} viewBox="-160 -80 320 320">
