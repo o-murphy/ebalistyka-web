@@ -23,7 +23,7 @@ export const AdjustedReticle = () => {
 
         const hold = adjustedResult.shot.relativeAngle
         const trajectory: TrajectoryData[] = [...adjustedResult?.trajectory]
-        const holdRow = trajectory.reduce((min, item) => item.dropAdjustment < min.dropAdjustment ? item : min, trajectory[0]);
+        const holdRow = trajectory.slice(1).reduce((closest, item) => Math.abs(item.dropAdjustment.rawValue) < Math.abs(closest.dropAdjustment.rawValue) ? item : closest, trajectory[1]);
 
         const holdPoint = {
             ...holdRow,

@@ -20,17 +20,26 @@ export const TrajectoryTable = ({ hitResult, reverse = false }: { hitResult: Hit
   const hitResultError = hitResult instanceof Error;
 
   const trajectory = !hitResultError && hitResult?.trajectory
-  reverse && trajectory.sort((a, b) => b.time - a.time)
 
   const headerStyle = {
     textStyle: tableStyles.cellText,
     style: theme?.dark ? tableStyles.cellDark : tableStyles.cellLight,
   }
 
+  const holdRow = trajectory.slice(1).reduce((closest, item) => Math.abs(item.dropAdjustment.rawValue) < Math.abs(closest.dropAdjustment.rawValue) ? item : closest, trajectory[1]);
+
+  // reverse && trajectory.sort((a, b) => b.time - a.time)
+
+
   const dataRowStyle = (row: TrajectoryData): Object => {
-    const rawAdj = parseFloat(row.dropAdjustment.rawValue.toFixed(4))
+    // const rawAdj = parseFloat(row.dropAdjustment.rawValue.toFixed(4))
+    // return {
+    //   textStyle: rawAdj === 0 ? tableStyles.cellZeroText : tableStyles.cellText,
+    //   style: theme?.dark ? tableStyles.cellDark : tableStyles.cellLight,
+    // }
+    
     return {
-      textStyle: rawAdj === 0 ? tableStyles.cellZeroText : tableStyles.cellText,
+      textStyle: row === holdRow ? tableStyles.cellZeroText : tableStyles.cellText,
       style: theme?.dark ? tableStyles.cellDark : tableStyles.cellLight,
     }
   }
@@ -72,6 +81,7 @@ export const TrajectoryTable = ({ hitResult, reverse = false }: { hitResult: Hit
 
   return (
     <View onLayout={(event) => setContainerWidth(event.nativeEvent.layout.width)}>
+
       <ScrollView horizontal={isScrollable}>
 
         <View style={isScrollable ? styles.tableScrollable : styles.tableFullWidth}>

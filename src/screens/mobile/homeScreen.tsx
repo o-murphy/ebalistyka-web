@@ -3,6 +3,7 @@ import { useTheme } from "../../context/themeContext";
 import { Chip, FAB, Icon, Text } from "react-native-paper";
 import WindDirectionPicker from "../../components/widgets/windDirectionPicker";
 import { useState } from "react";
+import { useCalculator } from "../../context/profileContext";
 
 export const HomeScreen = ({ navigation }) => {
     const { theme } = useTheme();
@@ -100,7 +101,7 @@ export const HomeScreen = ({ navigation }) => {
                     <FAB
                         icon={"information-outline"}
                         size="small"
-                        onPress={() => console.log('Info')}
+                        onPress={() => navigation.navigate("ShotInfo")}
                         style={{
                             position: "absolute",
                             top: 28,
@@ -152,7 +153,7 @@ export const HomeScreen = ({ navigation }) => {
                         size="small"
                         icon={"windsock"}
                         onPress={() => console.log('Wind')}
-                        label={"805 m/s"}
+                        label={"0 m/s"}
                         style={styles.fabStyle}
                     />
                     <FAB
@@ -179,9 +180,7 @@ export const HomeScreen = ({ navigation }) => {
 
             </View>
             <View style={{height: "50%", maxHeight: "50%", overflow: "hidden"}}>
-                <Text variant="displayLarge">
-                    Placeholder Placeholder Placeholder Placeholder Placeholder Placeholder Placeholder Placeholder Placeholder Placeholder Placeholder
-                </Text>
+
             </View>
 
         </ScrollView>

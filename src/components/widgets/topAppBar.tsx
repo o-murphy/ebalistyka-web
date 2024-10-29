@@ -4,8 +4,9 @@ import { useTheme } from "../../context/themeContext"
 import SettingsUnitCard from "../cards/settingsCard"
 import { useEffect, useState } from "react"
 import { DeviceType, getDeviceTypeAsync } from "expo-device";
+import { NativeStackHeaderProps } from "@react-navigation/native-stack"
 
-const TopAppBar = () => {
+const TopAppBar = ({...props}: NativeStackHeaderProps) => {
 
     const [devType, setDevType] = useState(DeviceType.UNKNOWN)
 

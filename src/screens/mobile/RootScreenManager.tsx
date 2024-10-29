@@ -10,9 +10,10 @@ import BotAppBar from "../../components/widgets/botAppBar";
 
 import { navigationRef } from "./RootNavigation";
 import { HomeScreen } from './homeScreen';
-import { WeatherScreen } from './weatherScreen';
-import { TrajectoryTableScreen } from './trajectoryTableScreen';
-import { ConvertorScreen } from './convertorScreen';
+import { WeatherScreen, WeatherTopAppBar } from './weatherScreen';
+import { TablesScreen, TablesTopAppBar } from './tablesScreen';
+import { ConvertorScreen, ConvertorTopAppBar } from './convertorScreen';
+import { ShotInfoScreen, ShotInfoTopAppBar } from './shotInfoScreen';
 
 
 const Stack = createNativeStackNavigator();
@@ -28,15 +29,17 @@ export default function RootScreenManager({ ...props }) {
             <Stack.Navigator
                 initialRouteName="Home"
                 screenOptions={{
-                    header: (props) => <TopAppBar />
+                    header: (props) => <TopAppBar {...props} />
                     // headerShown: false, 
                 }}
             >
 
-                <Stack.Screen name="Home" component={HomeScreen} />
-                <Stack.Screen name="Weather" component={WeatherScreen} />
-                <Stack.Screen name="Table" component={TrajectoryTableScreen} />
-                <Stack.Screen name="Convertor" component={ConvertorScreen} />
+                <Stack.Screen name="Home" component={HomeScreen} options={{header: (props) => <TopAppBar {...props} />}} />
+                <Stack.Screen name="Weather" component={WeatherScreen} options={{header: (props) => <WeatherTopAppBar {...props} />}} />
+                <Stack.Screen name="Table" component={TablesScreen} options={{header: (props) => <TablesTopAppBar {...props} />}} />
+                <Stack.Screen name="Convertor" component={ConvertorScreen} options={{header: (props) => <ConvertorTopAppBar {...props} />}} />
+                
+                <Stack.Screen name="ShotInfo" component={ShotInfoScreen} options={{header: (props) => <ShotInfoTopAppBar {...props} />}} />
                 
             </Stack.Navigator>
             <BotAppBar />

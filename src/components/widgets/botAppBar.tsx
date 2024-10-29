@@ -3,11 +3,13 @@ import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
+import { NativeStackHeaderProps } from "@react-navigation/native-stack";
 
 const BOTTOM_APPBAR_HEIGHT = 64;
 const MEDIUM_FAB_HEIGHT = 40;
 
 const BotAppBar = () => {
+
     const { bottom } = useSafeAreaInsets();
     const navigation: any = useNavigation()
     const theme = useTheme();
@@ -59,7 +61,7 @@ const BotAppBar = () => {
         <FAB
           mode="flat"
           size="small"
-          icon="plus"
+          icon="file"
           onPress={() => {}}
           style={[
             styles.fab,
