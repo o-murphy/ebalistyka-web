@@ -9,7 +9,7 @@ import TopAppBar from "../../components/widgets/topAppBar";
 import BotAppBar from "../../components/widgets/botAppBar";
 
 import { navigationRef } from "./RootNavigation";
-import { HomeScreen } from './homeScreen';
+import { HomeScreen } from './homeScreen/homeScreen';
 import { WeatherScreen, WeatherTopAppBar } from './weatherScreen';
 import { TablesScreen, TablesTopAppBar } from './tablesScreen';
 import { ConvertorScreen, ConvertorTopAppBar } from './convertorScreen';

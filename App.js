@@ -5,6 +5,8 @@ import { ThemeProvider } from './src/context/themeContext';
 import { PreferredUnitsProvider } from './src/context/preferredUnitsContext';
 import MobileView from './src/components/views/mobile';
 import MainScreen from './src/components/views/main';
+
+import { Platform } from 'react-native';
 import { DeviceType, getDeviceTypeAsync } from "expo-device";
 
 
@@ -17,7 +19,7 @@ export default function App() {
       setDevType(deviceType);
     });
   }, []);
-
+  console.log(DeviceType[devType], Platform.OS)
   return (
     <ThemeProvider>
       <PreferredUnitsProvider>

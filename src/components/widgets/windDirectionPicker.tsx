@@ -38,14 +38,13 @@ export default function WindDirectionPicker({ value, onChange, style = null, dia
 }) {
 
     const [devType, setDevType] = useState(DeviceType.PHONE)
+    const theme = useTheme()
 
     useEffect(() => {
         getDeviceTypeAsync().then((deviceType) => {
             setDevType(deviceType);
         });
     }, []);
-
-    const theme = useTheme()
 
     const sliderProps = {
         coerceToInt: false,
@@ -69,7 +68,7 @@ export default function WindDirectionPicker({ value, onChange, style = null, dia
 
     const sliderValueHandler = {
         value: value,
-        onChange: (v) => {onChange(Math.round(v * 10) / 10); console.log(v)}
+        onChange: (value) => onChange(Math.round(value * 10) / 10)
     }
 
     return (

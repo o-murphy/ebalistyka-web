@@ -5,6 +5,8 @@ import SettingsUnitCard from "../cards/settingsCard"
 import { useEffect, useState } from "react"
 import { DeviceType, getDeviceTypeAsync } from "expo-device";
 import { NativeStackHeaderProps } from "@react-navigation/native-stack"
+import { Platform } from 'react-native';
+import FileUploadButton from "./fileUpdoader";
 
 const TopAppBar = ({...props}: NativeStackHeaderProps) => {
 
@@ -29,7 +31,9 @@ const TopAppBar = ({...props}: NativeStackHeaderProps) => {
                 onPress={() => toggleNightMode()}
             />
             <Appbar.Content title="E-Balistyka" />
-            {/* {devType === DeviceType.DESKTOP && <A7PFileUploader /> /* NOTE: there is an unsupported widget*/}
+
+            {Platform.OS === 'web' && <FileUploadButton />}
+
             <Appbar.Action icon="cog-outline" onPress={() => setSettingsVisible(true)} />
 
             <SettingsUnitCard visibility={[settingsVisible, setSettingsVisible]} />
