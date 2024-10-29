@@ -1,13 +1,14 @@
 import {useTheme} from "react-native-paper";
 import React from "react";
-import {StyleSheet, View} from "react-native";
+import {StyleProp, StyleSheet, View, ViewStyle} from "react-native";
 import CircularSlider from "./circularSlider/web";
 
 
-export default function WindDirectionPicker({value, onChange, style}: {
+export default function WindDirectionPicker({value, onChange, style = null, diameter = 198}: {
     value: number, 
     onChange: (value: number) => void,
-    style?: null
+    style?: StyleProp<ViewStyle>,
+    diameter?: number
 }) {
 
     const theme = useTheme()
@@ -16,10 +17,10 @@ export default function WindDirectionPicker({value, onChange, style}: {
         coerceToInt: true,
         // capMode: "triangle",
 
-        handleSize: 9,
-        arcWidth: 18,
-        strokeWidth: 18,
-        meterTextSize: 18,
+        handleSize: diameter / 22,
+        arcWidth: diameter / 11,
+        strokeWidth: diameter / 11,
+        meterTextSize: diameter / 11,
 
         handleColor: theme.colors.outline,
         arcColor: theme.colors.secondaryContainer,
@@ -41,7 +42,7 @@ export default function WindDirectionPicker({value, onChange, style}: {
                 {...sliderProps}
                 {...sliderValues}
                 // style={styles.slider}
-                dialDiameter={200}
+                dialDiameter={diameter}
                 angleType={{
                     direction: "cw",
                     axis: "+y"

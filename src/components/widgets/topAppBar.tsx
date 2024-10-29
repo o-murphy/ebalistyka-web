@@ -2,10 +2,18 @@ import { Appbar } from "react-native-paper"
 import A7PFileUploader from "./fileDrop"
 import { useTheme } from "../../context/themeContext"
 import SettingsUnitCard from "../cards/settingsCard"
-import { useState } from "react"
-import { isMobile } from "react-device-detect"
+import { useEffect, useState } from "react"
+import { DeviceType, getDeviceTypeAsync } from "expo-device";
 
 const TopAppBar = () => {
+
+    const [devType, setDevType] = useState(DeviceType.UNKNOWN)
+
+    useEffect(() => {
+      getDeviceTypeAsync().then((deviceType) => {
+        setDevType(deviceType);
+      });
+    }, []);
 
     const { theme, toggleNightMode } = useTheme()
     const [settingsVisible, setSettingsVisible] = useState(false)
@@ -20,7 +28,7 @@ const TopAppBar = () => {
                 onPress={() => toggleNightMode()}
             />
             <Appbar.Content title="E-Balistyka" />
-            <A7PFileUploader />
+            {devType === DeviceType.DESKTOP && <A7PFileUploader /> /* NOTE: there is an unsupported widget*/}
             <Appbar.Action icon="cog-outline" onPress={() => setSettingsVisible(true)} />
 
             <SettingsUnitCard visibility={[settingsVisible, setSettingsVisible]} />

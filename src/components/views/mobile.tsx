@@ -1,8 +1,7 @@
 import React from 'react';
 import { useTheme } from '../../context/themeContext';
 import { PaperProvider } from 'react-native-paper';
-import RootScreenManager from '../../screens/RootScreenManager';
-import { StatusBar } from 'expo-status-bar';
+import RootScreenManager from '../../screens/mobile/RootScreenManager';
 
 
 const MobileView = () => {

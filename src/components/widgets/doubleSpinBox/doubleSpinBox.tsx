@@ -13,9 +13,14 @@ export interface SpinBoxProps {
   step?: number; // Step increment/decrement value
   inputProps?: TextInputProps; // Additional props for the TextInput
   strict?: boolean;
-  onError?: (error: Error) => void; 
+  onError?: (error: Error) => void;
   debounceDelay?: number;
 }
+
+
+// const generateRandomId = () => {
+//   return `id-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+// };
 
 
 export const DoubleSpinBox: React.FC<SpinBoxProps> = ({
@@ -32,6 +37,9 @@ export const DoubleSpinBox: React.FC<SpinBoxProps> = ({
 }) => {
   const [currentValue, setCurrentValue] = useState<string>(value.toFixed(fixedPoints));
   const [error, setError] = useState<string | Error | null>(null);
+
+  // const inputAccessoryViewID = generateRandomId();
+
 
   useEffect(() => {
     setCurrentValue(value.toFixed(fixedPoints))
@@ -101,13 +109,44 @@ export const DoubleSpinBox: React.FC<SpinBoxProps> = ({
   };
 
   return (
+    <>
       <TextInput
         {...inputProps}
-        keyboardType="default"
+        // keyboardType="default"  // NOTE: android only
+        keyboardType="numbers-and-punctuation"  // NOTE: ios only
+        returnKeyType="done" // Customize return key type
+
         error={!!error}
         value={currentValue}
         onKeyPress={processKeyPress}
         onChange={e => handleInputChange(e.nativeEvent.text)}
+
+        // inputAccessoryViewID={inputAccessoryViewID}
       />
+
+      {/* NOTE: Additional keys for IOS keyboard*/}
+      {/* <InputAccessoryView nativeID={inputAccessoryViewID}
+      >
+        <View style={{
+          width: Dimensions.get('window').width,
+          height: 48,
+          flexDirection: 'row',
+          justifyContent: 'flex-end',
+          alignItems: 'center',
+          backgroundColor: '#000000',
+          paddingHorizontal: 8,
+        }}>
+          <IconButton
+            icon={"minus-thick"}
+            onPress={() => { console.log("minus"); handleInputChange(!currentValue.includes('-') ? '-' + currentValue : currentValue.slice(1));}}
+          />
+          <IconButton
+            icon={"chevron-down-box"}
+            onPress={() => {console.log("close")}}
+          />
+        </View>
+      </InputAccessoryView> */}
+    </>
+
   );
 };

@@ -5,6 +5,7 @@ import { StyleSheet, View } from "react-native";
 import { Button } from "react-native-paper";
 import { useCalculator } from "../../context/profileContext";
 
+
 // Define the allowed file types for upload
 const fileTypes = ["A7P"];
 

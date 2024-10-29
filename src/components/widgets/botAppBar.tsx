@@ -31,6 +31,14 @@ const BotAppBar = () => {
         navigation.navigate("Weather")
     }
 
+    const onTablePress = () => {
+        navigation.navigate("Table")
+    }
+
+    const onConvertorPress = () => {
+        navigation.navigate("Convertor")
+    }
+
     return (
         <Appbar
             elevated={true}
@@ -45,9 +53,9 @@ const BotAppBar = () => {
         >
         <Appbar.Action icon="home" onPress={onHomePress} />
         <Appbar.Action icon="weather-partly-cloudy" onPress={onWeatherPress} />
-        <Appbar.Action icon="table" onPress={() => {}} />
-        <Appbar.Action icon="calculator" onPress={() => {}} />
-        <Appbar.Action icon="cog" onPress={() => {}} />
+        <Appbar.Action icon="table" onPress={onTablePress} />
+        <Appbar.Action icon="calculator" onPress={onConvertorPress} />
+
         <FAB
           mode="flat"
           size="small"

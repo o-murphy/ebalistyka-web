@@ -1,21 +1,29 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { ProfileProvider } from './src/context/profileContext';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { isMobile } from 'react-device-detect';
 import { ThemeProvider } from './src/context/themeContext';
 import { PreferredUnitsProvider } from './src/context/preferredUnitsContext';
 import MobileView from './src/components/views/mobile';
 import MainScreen from './src/components/views/main';
+import { DeviceType, getDeviceTypeAsync } from "expo-device";
 
 
 export default function App() {
-  console.log(isMobile)
+
+  const [devType, setDevType] = useState(DeviceType.UNKNOWN)
+
+  useEffect(() => {
+    getDeviceTypeAsync().then((deviceType) => {
+      setDevType(deviceType);
+    });
+  }, []);
+
   return (
     <ThemeProvider>
       <PreferredUnitsProvider>
         <ProfileProvider>
           <SafeAreaProvider style={{ flex: 1 }}>
-            {isMobile ? <MobileView /> : <MainScreen />}
+            {devType === DeviceType.PHONE ? <MobileView /> : <MainScreen />}
           </SafeAreaProvider>
         </ProfileProvider>
       </PreferredUnitsProvider>
