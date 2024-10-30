@@ -59,7 +59,7 @@ export const TopContainer = () => {
 
 const styles = StyleSheet.create({
     topContainer: {
-        minHeight: 500,
+        minHeight: 420,
         padding: 8,
         borderBottomRightRadius: 32, borderBottomLeftRadius: 32
     },
