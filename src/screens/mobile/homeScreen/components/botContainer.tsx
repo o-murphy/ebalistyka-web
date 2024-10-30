@@ -13,14 +13,8 @@ const adjustmentSort = (closest, item) => {
 
 
 export const BotContainer = () => {
-    const { profileProperties, currentConditions, adjustedResult, fire } = useCalculator()
+    const { profileProperties, currentConditions, adjustedResult } = useCalculator()
     const [hold, setHold] = useState(null)
-
-    useEffect(() => {
-        if (profileProperties && currentConditions) {
-            fire()
-        }
-    }, [profileProperties, currentConditions])
 
     useEffect(() => {
         if (adjustedResult instanceof HitResult) {

@@ -99,14 +99,25 @@ export const Indicator = ({top}) => {
   );
 };
 
-export const RulerSlider = () => {
+export interface RulerSliderProps {
+  minValue?: number;
+  maxValue?: number;
+  width?: number;
+  height?: number;
+  fraction?: number;  
+  snapTickSize?: number;
+}
 
-  const minValue = 0;
-  const maxValue = 2000;
-  const width = 100;
-  const height = 300;
-  const fraction = 0;  
-  const snapTickSize = 0.4;
+export const RulerSlider: React.FC<RulerSliderProps> = ({...props}) => {
+
+  const {
+    minValue = 0,
+    maxValue = 3000,
+    width = 100,
+    height = 300,
+    fraction = 0,
+    snapTickSize = 0.4
+  } = props;
 
   const scrollableHeight = snapTickSize * (maxValue - minValue)
 

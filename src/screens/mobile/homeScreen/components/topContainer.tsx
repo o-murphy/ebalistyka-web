@@ -15,22 +15,22 @@ export const TopContainer = () => {
 
     const { theme } = useTheme()
 
-    const bigFABs = {
-        windSpeed: {
-            size: "medium",
-            icon: "windsock",
-            style: styles.shotPropsFab
-        },
-        lookAngle: {
-            size: "medium",
-            icon: "angle-acute",
-            style: styles.shotPropsFab
-        },
-        targetDistance: {
-            size: "medium",
-            icon: "map-marker-distance",
-            style: styles.shotPropsFab
-        },
+    const windSpeedProps = {
+        size: "medium",
+        icon: "windsock",
+        style: styles.shotPropsFab,
+    }
+
+    const lookAngleProps = {
+        size: "medium",
+        icon: "angle-acute",
+        style: styles.shotPropsFab
+    }
+
+    const targetDistanceProps = {
+        size: "medium",
+        icon: "map-marker-distance",
+        style: styles.shotPropsFab
     }
 
     const topContainerStyle = {
@@ -44,9 +44,9 @@ export const TopContainer = () => {
             <ShotPropertiesContainer />
 
             <View style={styles.shotPropsFabContainer}>
-                <WindSpeedDialog button={<FAB {...bigFABs['windSpeed']} />}/>
-                <LookAngleDialog button={<FAB {...bigFABs['lookAngle']} />}/>
-                <TargetDistanceDialog button={<FAB {...bigFABs['targetDistance']} />}/>
+                <WindSpeedDialog button={<FAB {...windSpeedProps} />}/>
+                <LookAngleDialog button={<FAB {...lookAngleProps} />}/>
+                <TargetDistanceDialog button={<FAB {...targetDistanceProps} />}/>
             </View>
 
             <View style={styles.shotPropsFabContainer}>
