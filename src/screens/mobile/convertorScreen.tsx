@@ -55,7 +55,7 @@ export const ConvertorScreen = ({ navigation }) => {
                 <Divider />
                 <List.Item title="Velocity" left={props => <List.Icon {...props} icon="speedometer" />} onPress={() => console.log("v conv")} />
                 <Divider />
-                <List.Item title="Length" left={props => <List.Icon {...props} icon="arrow-expand-horizontal" />} onPress={() => console.log("l conv")} />
+                <List.Item title="Length" left={props => <List.Icon {...props} icon="ruler" />} onPress={() => console.log("l conv")} />
                 <Divider />
                 <List.Item title="Weight" left={props => <List.Icon {...props} icon="weight" />} onPress={() => console.log("w conv")} />
                 <Divider />

@@ -24,7 +24,7 @@ export const BulletLengthField = () => {
     const fieldProps: Partial<MeasureFormFieldProps> = {
         fKey: "bLength",
         label: "Length",
-        icon: "arrow-expand-horizontal",
+        icon: "ruler",
         fractionDigits: accuracy,
         step: 1 / (10 ** accuracy),
         suffix: UnitProps[prefUnit].symbol,
