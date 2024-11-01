@@ -5,6 +5,8 @@ import { UNew, Unit, UnitProps, Velocity, Angular, Distance } from "js-ballistic
 import { usePreferredUnits } from "../../../../context/preferredUnitsContext";
 import { DoubleSpinBox, SpinBoxProps } from "../../../../components/widgets/doubleSpinBox";
 import getFractionDigits from "../../../../utils/fractionConvertor";
+import { RulerSlider } from "../../../../components/widgets/ruler/ruler";
+import { View } from "react-native";
 
 
 // Define UnitType and UnitTypeClass to accept class types for handling units
@@ -75,7 +77,7 @@ const ValueDialog: React.FC<ValueDialogProps> = ({
             ref: inputRef,
             mode: "outlined",
             dense: true,
-            style: { flex: 1 },
+            style: { width: 100 },
             contentStyle: { textAlign: "center" },
             right: <TextInput.Affix text={UnitProps[prefUnit].symbol} textStyle={{ textAlign: "right" }} />,
         },
@@ -98,16 +100,30 @@ const ValueDialog: React.FC<ValueDialogProps> = ({
         }
     };
 
+    const scrollWheelProps = useMemo(() => ({
+        minValue: fieldProps.minValue,
+        maxValue: fieldProps.maxValue,
+        width: 200,
+        height: 350,
+        fraction: fieldProps.fractionDigits,  
+        step: fieldProps.step,
+
+        value: localValue,
+        onChange: setLocalValue
+    }), [fieldProps, localValue, setLocalValue])
+
     return (
         <>
             {React.cloneElement(button, { label: labelWithUnit, onPress: showDialog })}
             <Portal>
-                <Dialog visible={visible} onDismiss={hideDialog} style={{ alignSelf: "center", width: 300 }}>
+                <Dialog visible={visible} onDismiss={hideDialog} style={{ alignSelf: "center", width: 250 }}>
                     <Dialog.Content style={{ alignItems: "center", justifyContent: "center"}}>
                         <Icon size={40} source={icon} />
                         <Text variant="bodyLarge" style={{ marginVertical: 8 }}>{label}</Text>
+
                         <DoubleSpinBox value={localValue} onValueChange={setLocalValue} onError={setError} {...fieldProps} />
                         {error && <HelperText type="error" visible={!!error}>{error.message}</HelperText>}
+                        <RulerSlider {...scrollWheelProps} style={{marginVertical: 16}}/>
                     </Dialog.Content>
                     <Dialog.Actions>
                         <FAB size="small" icon="check" variant="secondary" onPress={onSubmit} />

@@ -30,7 +30,7 @@ export const ShotPropertiesContainer = () => {
         setLayoutSize({ width, height }); // Adjust the divisor based on your requirement
     };
 
-    const onWheelRelease = () => {
+    const onWheelTouchRelease = () => {
         updateCurrentConditions({windDirection: windDir})
     }
 
@@ -81,7 +81,7 @@ export const ShotPropertiesContainer = () => {
             onChange={onWinDirChange}
             diameter={dialDiameter}
 
-            onTouchEnd={onWheelRelease}
+            onTouchEnd={onWheelTouchRelease}
         />
         {smallFABs.map((props, index) => <FAB key={`${index}`} {...props} />)}
     </View>
