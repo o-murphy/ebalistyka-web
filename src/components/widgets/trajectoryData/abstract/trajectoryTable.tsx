@@ -1,9 +1,11 @@
 import { DataTable, Text } from 'react-native-paper';
-import { HitResult, TrajectoryData, UnitProps } from 'js-ballistics/dist/v2';
+import { HitResult, TrajectoryData, UNew, UnitProps } from 'js-ballistics/dist/v2';
 import { StyleSheet, ScrollView, View } from 'react-native';
 import { useTheme } from '../../../../context/themeContext';
 import { useState } from 'react';
 import { usePreferredUnits } from '../../../../context/preferredUnitsContext';
+import { useCalculator } from '../../../../context/profileContext';
+import { Unit } from 'js-ballistics';
 
 
 export const TrajectoryTable = ({ hitResult, reverse = false }: { hitResult: HitResult | Error, reverse?: boolean }) => {
@@ -12,6 +14,9 @@ export const TrajectoryTable = ({ hitResult, reverse = false }: { hitResult: Hit
   const [containerWidth, setContainerWidth] = useState(tableWidth); // State for container width
 
   const { preferredUnits } = usePreferredUnits()
+  const { currentConditions } = useCalculator()
+
+
 
   const isScrollable = containerWidth < tableWidth;
 
@@ -19,7 +24,38 @@ export const TrajectoryTable = ({ hitResult, reverse = false }: { hitResult: Hit
   const { theme } = useTheme()
   const hitResultError = hitResult instanceof Error;
 
-  const trajectory = !hitResultError && hitResult?.trajectory
+  // const trajectory = !hitResultError && hitResult?.trajectory.filter(row => 
+  //   row => Math.round(row.distance.rawValue * 100) / 100 % trajectoryStepRaw === 0
+
+  // )
+
+  let trajectory = [];
+
+  if (!hitResultError) {
+    
+    const trajectoryStepRaw = UNew.Meter(currentConditions.trajectoryStep).rawValue
+    // const trajectoryRangeRaw = UNew.Meter(currentConditions.trajectoryRange).rawValue
+    const trajectoryRangeRaw = hitResult.trajectory[hitResult.trajectory.length - 1].distance.rawValue
+
+    for (let i = 0; i <= trajectoryRangeRaw; i += trajectoryStepRaw) {
+      // Find all values in `hitResult.trajectory` that are closest to `i`
+      const closestValues = hitResult?.trajectory.filter(item => {
+        // Calculate the absolute difference between the current increment `i` and the item's distance
+        const distance = item.distance.rawValue; // Adjust as necessary for your actual distance value
+        const difference = Math.abs(distance - i);
+        
+        // Define how "close" is acceptable (for example, within a certain threshold)
+        // return difference <= (trajectoryStepRaw / 2); // Adjust the threshold if needed
+        return difference <= 1; // Adjust the threshold if needed
+      });
+    
+      // Combine closest values into the trajectory array
+      trajectory = trajectory.concat(closestValues);
+    }
+  
+  }
+
+  console.log("Filtered", trajectory.length)
 
   const headerStyle = {
     textStyle: tableStyles.cellText,
@@ -105,8 +141,6 @@ export const TrajectoryTable = ({ hitResult, reverse = false }: { hitResult: Hit
                 <DataTable.Cell {...dataRowStyle(row)}>{row.dropAdjustment.In(preferredUnits.adjustment).toFixed(2)}</DataTable.Cell>
                 <DataTable.Cell {...dataRowStyle(row)}>{row.windage.In(preferredUnits.drop).toFixed(1)}</DataTable.Cell>
                 <DataTable.Cell {...dataRowStyle(row)}>{row.windageAdjustment.In(preferredUnits.adjustment).toFixed(2)}</DataTable.Cell>
-                {/* <DataTable.Cell {...dataRowStyle(row)}>{row.lookDistance.In(preferredUnits.distance).toFixed(0)}</DataTable.Cell> */}
-                {/* <DataTable.Cell {...dataRowStyle(row)}>{row.angle.In(preferredUnits.angular).toFixed(2)}</DataTable.Cell> */}
                 <DataTable.Cell {...dataRowStyle(row)}>{row.mach.toFixed(2)}</DataTable.Cell>
                 <DataTable.Cell {...dataRowStyle(row)}>{row.densityFactor.toFixed(2)}</DataTable.Cell>
                 <DataTable.Cell {...dataRowStyle(row)}>{row.drag.toFixed(3)}</DataTable.Cell>

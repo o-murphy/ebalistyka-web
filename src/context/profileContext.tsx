@@ -117,32 +117,67 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
   const fire = async () => {
     const allFieldsValid = Object.values(measureErr).every(value => value === false);
     if (!allFieldsValid) {
-      setCalcState(CalculationState.InvalidData)
-      return
+      setCalcState(CalculationState.InvalidData);
+      return;
     }
-
-    try {
-      setInProgress(true);
-      const currentCalc: PreparedZeroData = zero();
-      if (currentCalc) {
-        if (!currentCalc.error) {
-          const result = makeShot(currentCalc, currentConditions);
-          const adjustedResult = shootTheTarget(currentCalc, currentConditions);
-          setHitResult(result);
-          setAdjustedResult(adjustedResult);
-          setCalcState(result instanceof Error ? CalculationState.Error : CalculationState.Complete);
-        } else {
-          setHitResult(currentCalc.error);
-          setCalcState(CalculationState.Error);
+  
+    setInProgress(true); // Set loading state before beginning async operations
+  
+    // Wrap main calculation in a setTimeout to allow the UI to update first
+    setTimeout(async () => {
+      try {
+        const currentCalc: PreparedZeroData = zero();
+        if (currentCalc) {
+          if (!currentCalc.error) {
+            const result = makeShot(currentCalc, currentConditions);
+            const adjustedResult = shootTheTarget(currentCalc, currentConditions);
+            console.log("ZERO result", result)
+            setHitResult(result);
+            setAdjustedResult(adjustedResult);
+            setCalcState(result instanceof Error ? CalculationState.Error : CalculationState.Complete);
+          } else {
+            setHitResult(currentCalc.error);
+            setCalcState(CalculationState.Error);
+          }
         }
+      } catch (error) {
+        console.error('Error during fire:', error);
+        setCalcState(CalculationState.Error);
+      } finally {
+        setInProgress(false); // Ensure loading state is reset after calculations
       }
-    } catch (error) {
-      console.error('Error during fire:', error);
-      setCalcState(CalculationState.Error);
-    } finally {
-      setInProgress(false); // Set loading to false when the fire function ends
-    }
+    }, 10);
   };
+
+  // const fire = async () => {
+  //   const allFieldsValid = Object.values(measureErr).every(value => value === false);
+  //   if (!allFieldsValid) {
+  //     setCalcState(CalculationState.InvalidData)
+  //     return
+  //   }
+
+  //   try {
+  //     setInProgress(true);
+  //     const currentCalc: PreparedZeroData = zero();
+  //     if (currentCalc) {
+  //       if (!currentCalc.error) {
+  //         const result = makeShot(currentCalc, currentConditions);
+  //         const adjustedResult = shootTheTarget(currentCalc, currentConditions);
+  //         setHitResult(result);
+  //         setAdjustedResult(adjustedResult);
+  //         setCalcState(result instanceof Error ? CalculationState.Error : CalculationState.Complete);
+  //       } else {
+  //         setHitResult(currentCalc.error);
+  //         setCalcState(CalculationState.Error);
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.error('Error during fire:', error);
+  //     setCalcState(CalculationState.Error);
+  //   } finally {
+  //     setInProgress(false); // Set loading to false when the fire function ends
+  //   }
+  // };
 
   const fetchBinaryFile = async (file: string) => {
     try {

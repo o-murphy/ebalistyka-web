@@ -1,6 +1,6 @@
 import { ScrollView, StyleSheet, View } from "react-native";
 import { useTheme } from "../../context/themeContext";
-import { Appbar, Chip, Divider, Text } from "react-native-paper";
+import { Appbar, Chip, Divider, List, Text } from "react-native-paper";
 import { NativeStackHeaderProps } from "@react-navigation/native-stack";
 import { useCalculator } from "../../context/profileContext";
 import { UNew, Atmo, HitResult, UnitProps } from "js-ballistics/dist/v2";
@@ -25,13 +25,13 @@ export const ShotInfoTopAppBar = ({ ...props }: NativeStackHeaderProps) => {
 }
 
 
-const InfoRow = ({ title, value, icon = null }) => (
+const InfoRow = ({ title, value, icon = null, last = false }) => (
     <View>
-        <View style={{ flexDirection: "row", justifyContent: "space-around", alignItems: "center", marginVertical: 8, marginHorizontal: 16 }}>
-            <Text style={{ flex: 2 }}>{title}</Text>
-            <Chip style={{ flex: 1 }} icon={icon} >{value}</Chip>
-        </View>
-        <Divider />
+    <View style={{ flexDirection: "row", justifyContent: "space-around", alignItems: "center", marginVertical: 8, marginHorizontal: 16 }}>
+        <Text style={{ flex: 2 }}>{title}</Text>
+        <Chip style={{ flex: 1 }} icon={icon} >{value}</Chip>
+    </View>
+    {!last && <Divider />}
     </View>
 )
 
@@ -135,7 +135,8 @@ export const ShotInfoScreen = ({ navigation }) => {
         {
             title: "Windage in clicks",
             value: '<NaN>',
-            icon: "arrow-expand-vertical"
+            icon: "arrow-expand-vertical",
+            last: true
         },
     ]
 
@@ -150,10 +151,12 @@ export const ShotInfoScreen = ({ navigation }) => {
                 overflow: "hidden",
                 backgroundColor: theme.colors.elevation.level1,
                 borderBottomRightRadius: 32, borderBottomLeftRadius: 32,
+                paddingBottom: 16
             }}
         >
-
-            {rows.map((item, index) => <InfoRow key={`${index}`} {...item} />)}
+            <View>
+                {rows.map((item, index) => <InfoRow key={`${index}`} {...item} />)}
+            </View>
 
         </ScrollView>
     )

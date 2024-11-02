@@ -1,6 +1,6 @@
-import { ScrollView, StyleSheet } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 import { useTheme } from "../../context/themeContext";
-import { Appbar } from "react-native-paper";
+import { Appbar, Button } from "react-native-paper";
 import { NativeStackHeaderProps } from "@react-navigation/native-stack";
 import { useEffect, useState } from "react";
 import SettingsUnitCard from "../../components/cards/settingsCard";
@@ -36,21 +36,27 @@ export const TablesTopAppBar = ({...props}: NativeStackHeaderProps) => {
 
 export const TablesScreen = ({ navigation }) => {
     const { theme } = useTheme();
-    const { hitResult, isLoaded, fire } = useCalculator()
+    const { hitResult } = useCalculator()
 
     const styles = StyleSheet.create({
         scrollViewContainer: {
-            backgroundColor: theme.colors.background,
-            marginBottom: 64,
+            // flex: 1
+            // backgroundColor: theme.colors.background,
+            // marginBottom: 64,
+            overflow: "hidden",
+            borderBottomRightRadius: 32, borderBottomLeftRadius: 32,
+            paddingBottom: 16
         },
     });
-    console.log(hitResult)
-    useEffect(() => {
-        fire()
-    }, [isLoaded])
     
     return (
-        <ScrollView
+        <View style={{
+            flex: 1,
+            backgroundColor: theme.colors.background,
+            marginBottom: 64,
+
+        }}>
+            <ScrollView
             style={styles.scrollViewContainer}
             keyboardShouldPersistTaps="always"
             alwaysBounceVertical={false}
@@ -61,11 +67,16 @@ export const TablesScreen = ({ navigation }) => {
                 flex: 1,
                 padding: 8,
                 paddingBottom: 16,
-                backgroundColor: theme.colors.elevation.level1,
-                // borderBottomRightRadius: 32, borderBottomLeftRadius: 32,
+                // backgroundColor: theme.colors.elevation.level1,
+
             }}
         >
             {(hitResult instanceof HitResult) && <ZeroTable />}
         </ScrollView>
+        <View style={{flexDirection: "row", alignItems: "center", padding: 16, justifyContent: "space-around"}}>
+            <Button mode="elevated" style={{width: "40%"}}>Settings</Button>
+            <Button mode="elevated" style={{width: "40%"}}>Export</Button>
+        </View>
+        </View>
     )
 }

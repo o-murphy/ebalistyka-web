@@ -5,6 +5,7 @@ import { useEffect, useState } from "react"
 import { HitResult } from "js-ballistics/dist/v2";
 import { HoldValuesContainer } from "./holdValuesContainer";
 import { HoldReticleContainer } from "./holdReticleContainer";
+import { BusyOverlayRelative } from "../../busyOverlay";
 
 
 const adjustmentSort = (closest, item) => {

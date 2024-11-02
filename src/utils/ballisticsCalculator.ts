@@ -180,7 +180,9 @@ export const makeShot = (calculator: PreparedZeroData, currentConditions: Curren
 
         const hit = calc.fire({
             shot: targetShot,
-            ...shotData.trajectoryProps
+            ...shotData.trajectoryProps,
+                        extraData: true
+
         });
 
         return hit;
@@ -229,7 +231,7 @@ export const shootTheTarget = (calculator: PreparedZeroData, currentConditions: 
         console.log(`Elevalion: ${newElevation.to(Unit.MIL)} at ${shotData.targetDistance.to(Unit.Meter)}`)
         console.log(`Hold: ${hold.to(Unit.MIL)} at ${shotData.targetDistance.to(Unit.Meter)}`)
         newShot.relativeAngle = hold
-        const adjustedHit = calc.fire({shot: newShot, ...shotData.trajectoryProps})
+        const adjustedHit = calc.fire({shot: newShot, ...shotData.trajectoryProps, extraData: true})
         return adjustedHit
     } catch (error) {
         return error

@@ -28,6 +28,8 @@ interface ValueDialogProps {
     unitTypeClass: UnitClass; // Unit class type (e.g., Velocity, Angular)
     defUnit: Unit; // Default unit of measurement
     range: UnitRange; // Range object with min, max, and fraction
+    autofocus?: boolean;
+    enableSlider?: boolean;
 }
 
 const useCurrentValue = (
@@ -39,6 +41,26 @@ const useCurrentValue = (
     return new unitTypeClass(value, defUnit).In(prefUnit);
 };
 
+
+const ValueSlider = ({fieldProps, value, onChange}) => {
+
+    const scrollWheelProps = useMemo(() => ({
+        minValue: fieldProps.minValue,
+        maxValue: fieldProps.maxValue,
+        width: 200,
+        height: 350,
+        fraction: fieldProps.fractionDigits,  
+        step: fieldProps.step,
+
+        value: value,
+        onChange: onChange
+    }), [fieldProps, value, onChange])
+
+    return (
+        <RulerSlider {...scrollWheelProps} style={{marginVertical: 16}}/>
+    )
+}
+
 const ValueDialog: React.FC<ValueDialogProps> = ({
     button,
     fieldKey,
@@ -48,13 +70,15 @@ const ValueDialog: React.FC<ValueDialogProps> = ({
     unitTypeClass,
     defUnit,
     range,
+    autofocus = false,
+    enableSlider = false,
 }) => {
     const { currentConditions, updateCurrentConditions } = useCalculator();
     const { preferredUnits } = usePreferredUnits();
     const [visible, setVisible] = useState(false);
     const [localValue, setLocalValue] = useState(0);
     const [error, setError] = useState<Error | null>(null);
-    const inputRef = useCallback((node) => node?.focus(), []);
+    const inputRef = useCallback((node) => autofocus && node?.focus(), []);
 
     const prefUnit = useMemo(() => preferredUnits[unitType], [preferredUnits, unitType]);
     const accuracy = useMemo(
@@ -100,17 +124,17 @@ const ValueDialog: React.FC<ValueDialogProps> = ({
         }
     };
 
-    const scrollWheelProps = useMemo(() => ({
-        minValue: fieldProps.minValue,
-        maxValue: fieldProps.maxValue,
-        width: 200,
-        height: 350,
-        fraction: fieldProps.fractionDigits,  
-        step: fieldProps.step,
+    // const scrollWheelProps = useMemo(() => ({
+    //     minValue: fieldProps.minValue,
+    //     maxValue: fieldProps.maxValue,
+    //     width: 200,
+    //     height: 350,
+    //     fraction: fieldProps.fractionDigits,  
+    //     step: fieldProps.step,
 
-        value: localValue,
-        onChange: setLocalValue
-    }), [fieldProps, localValue, setLocalValue])
+    //     value: localValue,
+    //     onChange: setLocalValue
+    // }), [fieldProps, localValue, setLocalValue])
 
     return (
         <>
@@ -123,7 +147,8 @@ const ValueDialog: React.FC<ValueDialogProps> = ({
 
                         <DoubleSpinBox value={localValue} onValueChange={setLocalValue} onError={setError} {...fieldProps} />
                         {error && <HelperText type="error" visible={!!error}>{error.message}</HelperText>}
-                        <RulerSlider {...scrollWheelProps} style={{marginVertical: 16}}/>
+                        {/* <RulerSlider {...scrollWheelProps} style={{marginVertical: 16}}/> */}
+                        {enableSlider && <ValueSlider fieldProps={fieldProps} value={localValue} onChange={setLocalValue}/>}
                     </Dialog.Content>
                     <Dialog.Actions>
                         <FAB size="small" icon="check" variant="secondary" onPress={onSubmit} />
@@ -149,6 +174,7 @@ export const WindSpeedDialog: React.FC<DialogValuePickerProps> = ({ button }) =>
         unitTypeClass={Velocity}
         defUnit={Unit.MPS}
         range={{ min: UNew.MPS(0), max: UNew.MPS(100), fraction: 0.1 }}
+        enableSlider={true}
     />
 );
 
@@ -162,6 +188,7 @@ export const LookAngleDialog: React.FC<DialogValuePickerProps> = ({ button }) =>
         unitTypeClass={Angular}
         defUnit={Unit.Degree}
         range={{ min: UNew.Degree(-90), max: UNew.Degree(90), fraction: 0.1 }}
+        enableSlider={true}
     />
 );
 
@@ -175,5 +202,6 @@ export const TargetDistanceDialog: React.FC<DialogValuePickerProps> = ({ button 
         unitTypeClass={Distance}
         defUnit={Unit.Meter}
         range={{ min: UNew.Meter(10), max: UNew.Meter(3000), fraction: 1 }}
+        enableSlider={true}
     />
 );
