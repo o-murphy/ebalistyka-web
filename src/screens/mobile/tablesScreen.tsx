@@ -7,6 +7,7 @@ import SettingsUnitCard from "../../components/cards/settingsCard";
 import { ZeroTable } from "../../components/widgets/trajectoryData";
 import { useCalculator } from "../../context/profileContext";
 import { HitResult } from "js-ballistics/dist/v2";
+import ResponsiveTableView from "../../components/widgets/tableView/tableView";
 
 
 export const TablesTopAppBar = ({...props}: NativeStackHeaderProps) => {
@@ -56,23 +57,8 @@ export const TablesScreen = ({ navigation }) => {
             marginBottom: 64,
 
         }}>
-            <ScrollView
-            style={styles.scrollViewContainer}
-            keyboardShouldPersistTaps="always"
-            alwaysBounceVertical={false}
-            showsVerticalScrollIndicator={true}
-
-            contentContainerStyle={{
-                // height: "60%", maxHeight: 420, 
-                flex: 1,
-                padding: 8,
-                paddingBottom: 16,
-                // backgroundColor: theme.colors.elevation.level1,
-
-            }}
-        >
-            {(hitResult instanceof HitResult) && <ZeroTable />}
-        </ScrollView>
+            {/* {(hitResult instanceof HitResult) && <ZeroTable />} */}
+            <ResponsiveTableView />
         <View style={{flexDirection: "row", alignItems: "center", padding: 16, justifyContent: "space-around"}}>
             <Button mode="elevated" style={{width: "40%"}}>Settings</Button>
             <Button mode="elevated" style={{width: "40%"}}>Export</Button>
