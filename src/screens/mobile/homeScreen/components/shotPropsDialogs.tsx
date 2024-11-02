@@ -42,7 +42,7 @@ const useCurrentValue = (
 };
 
 
-const ValueSlider = ({fieldProps, value, onChange}) => {
+const ValueSlider = ({fieldProps, value, onChange, style = null}) => {
 
     const scrollWheelProps = useMemo(() => ({
         minValue: fieldProps.minValue,
@@ -57,7 +57,7 @@ const ValueSlider = ({fieldProps, value, onChange}) => {
     }), [fieldProps, value, onChange])
 
     return (
-        <RulerSlider {...scrollWheelProps} style={{marginVertical: 16}}/>
+            <RulerSlider {...scrollWheelProps} style={style} />
     )
 }
 
@@ -124,31 +124,21 @@ const ValueDialog: React.FC<ValueDialogProps> = ({
         }
     };
 
-    // const scrollWheelProps = useMemo(() => ({
-    //     minValue: fieldProps.minValue,
-    //     maxValue: fieldProps.maxValue,
-    //     width: 200,
-    //     height: 350,
-    //     fraction: fieldProps.fractionDigits,  
-    //     step: fieldProps.step,
-
-    //     value: localValue,
-    //     onChange: setLocalValue
-    // }), [fieldProps, localValue, setLocalValue])
-
     return (
         <>
             {React.cloneElement(button, { label: labelWithUnit, onPress: showDialog })}
             <Portal>
                 <Dialog visible={visible} onDismiss={hideDialog} style={{ alignSelf: "center", width: 250 }}>
-                    <Dialog.Content style={{ alignItems: "center", justifyContent: "center"}}>
-                        <Icon size={40} source={icon} />
-                        <Text variant="bodyLarge" style={{ marginVertical: 8 }}>{label}</Text>
+                    <Dialog.Icon  icon={icon} />
+                    <Dialog.Title style={{textAlign: "center"}}>{label}</Dialog.Title>
 
+                    <Dialog.Content 
+                        style={{ alignItems: "center", justifyContent: "center"}}
+                    >
                         <DoubleSpinBox value={localValue} onValueChange={setLocalValue} onError={setError} {...fieldProps} />
                         {error && <HelperText type="error" visible={!!error}>{error.message}</HelperText>}
                         {/* <RulerSlider {...scrollWheelProps} style={{marginVertical: 16}}/> */}
-                        {enableSlider && <ValueSlider fieldProps={fieldProps} value={localValue} onChange={setLocalValue}/>}
+                        {enableSlider && <ValueSlider fieldProps={fieldProps} value={localValue} onChange={setLocalValue} style={{paddingTop: 16}}/>}
                     </Dialog.Content>
                     <Dialog.Actions>
                         <FAB size="small" icon="check" variant="secondary" onPress={onSubmit} />
