@@ -1,12 +1,11 @@
-import { StyleSheet, View } from "react-native";
-import { useTheme } from "../../context/themeContext";
-import { Appbar, Button, List, Text } from "react-native-paper";
+import { View } from "react-native";
+import { useTheme } from "../../../context/themeContext";
+import { Appbar, Button, Text } from "react-native-paper";
 import { NativeStackHeaderProps } from "@react-navigation/native-stack";
 import { useState } from "react";
-import SettingsUnitCard from "../../components/cards/settingsCard";
-import { useCalculator } from "../../context/profileContext";
-import ResponsiveTableView from "../../components/widgets/tableView/tableView";
-import { HitResult, TrajectoryData, TrajFlag } from "js-ballistics/dist/v2";
+import SettingsUnitCard from "../../../components/cards/settingsCard";
+import { useCalculator } from "../../../context/profileContext";
+import { TrajectoryTable, ZerosDataTable } from "../../../components/widgets/tableView/tableView";
 
 
 export const TablesTopAppBar = ({ ...props }: NativeStackHeaderProps) => {
@@ -38,16 +37,21 @@ export const TablesScreen = ({ navigation }) => {
     const { theme } = useTheme();
     const { hitResult } = useCalculator()
 
-    const [expandedIndex, setExpandedIndex] = useState(0)
-
     return (
         <View style={{
             flex: 1,
             backgroundColor: theme.colors.background,
             marginBottom: 64,
         }}>
+            <View style={{height: 40, justifyContent: "center"}}>
+                <Text style={{textAlign: "center"}}>Zero crossing points</Text>
+            </View>
+            <ZerosDataTable hitResult={hitResult} />
 
-            <ResponsiveTableView hitResult={hitResult} style={{ flex: 1 }} />
+            <View style={{height: 40, justifyContent: "center"}}>
+                <Text style={{textAlign: "center"}}>Trajectory</Text>
+            </View>
+            <TrajectoryTable hitResult={hitResult} style={{ flex: 1 }} />
 
             <View style={{ flexDirection: "row", alignItems: "center", padding: 16, justifyContent: "space-around" }}>
                 <Button mode="elevated" style={{ width: "40%" }}>Settings</Button>

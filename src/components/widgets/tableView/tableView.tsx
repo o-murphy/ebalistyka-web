@@ -1,37 +1,36 @@
 import React, { useState } from 'react';
-import { View, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, ScrollView, StyleSheet, TouchableOpacity, Pressable, StyleProp, TextStyle, ViewStyle } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import { Table, Row } from 'react-native-table-component';
 import { useCalculator } from '../../../context/profileContext';
-import { HitResult, UNew, UnitProps } from 'js-ballistics/dist/v2';
+import { HitResult, TrajFlag, UNew, Unit, UnitProps } from 'js-ballistics/dist/v2';
 import { usePreferredUnits } from '../../../context/preferredUnitsContext';
 import { RowDetailsDialog } from './rowDetaisDialog';
+import { forEach } from 'lodash';
 
 
 
-const ResponsiveTableView = ({ hitResult, style = null }) => {
 
-    const theme = useTheme()
-    const { currentConditions } = useCalculator()
+
+interface TableDataType {
+    data: string[];
+    style?: StyleProp<ViewStyle>;
+    textStyle?: StyleProp<TextStyle>;
+}
+
+
+interface ResponsiveTableViewProps {
+    tableHeaders: string[];
+    tableData: TableDataType[];
+    style?: StyleProp<ViewStyle>;
+}
+
+
+const useTableHeaders = () => {
+
     const { preferredUnits } = usePreferredUnits()
-    const [selection, setSelection] = useState(null)
-    const [longPressed, setLongPressed] = useState(null)
-    const [detailsVisible, setDetailsVisible] = useState(false)
 
-
-    if (!(hitResult instanceof HitResult)) return <></>
-
-    const select = (index) => {
-        setSelection(index)
-    }
-
-    const handleLongPress = (event, index) => {
-        setLongPressed(index)
-        setDetailsVisible(true)
-    }
-
-
-    const tableHead = [
+    return [
         `Time, s`,
         `Range, ${UnitProps[preferredUnits.distance].symbol}`,
         `V, ${UnitProps[preferredUnits.velocity].symbol}`,
@@ -41,115 +40,96 @@ const ResponsiveTableView = ({ hitResult, style = null }) => {
         `Windage, ${UnitProps[preferredUnits.drop].symbol}`,
         `Wind. adjustment, ${UnitProps[preferredUnits.adjustment].symbol}`,
         "Mach",
-        // "Density", 
         "Drag",
         `Energy, ${UnitProps[preferredUnits.energy].symbol}`
     ];
+}
 
-    let trajectory = [];
 
-    if (hitResult instanceof HitResult) {
+const useMappedTableData = (row) => {
+    const { preferredUnits } = usePreferredUnits()
 
-        const trajectoryStepRaw = UNew.Meter(currentConditions.trajectoryStep).rawValue
-        // const trajectoryRangeRaw = UNew.Meter(currentConditions.trajectoryRange).rawValue
-        const trajectoryRangeRaw = hitResult.trajectory[hitResult.trajectory.length - 1].distance.rawValue
+    return [
+        row.time.toFixed(3),
+        (row.distance).In(preferredUnits.distance).toFixed(0),
+        row.velocity.In(preferredUnits.velocity).toFixed(0),
+        row.height.In(preferredUnits.drop).toFixed(1),
+        row.targetDrop.In(preferredUnits.drop).toFixed(1),
+        row.dropAdjustment.In(preferredUnits.adjustment).toFixed(2),
+        row.windage.In(preferredUnits.drop).toFixed(1),
+        row.windageAdjustment.In(preferredUnits.adjustment).toFixed(2),
+        row.mach.toFixed(2),
+        row.drag.toFixed(3),
+        row.energy.In(preferredUnits.energy).toFixed(0),
+    ]
+}
 
-        for (let i = 0; i <= trajectoryRangeRaw; i += trajectoryStepRaw) {
-            // Find all values in `hitResult.trajectory` that are closest to `i`
-            const closestValues = hitResult?.trajectory.filter(item => {
-                // Calculate the absolute difference between the current increment `i` and the item's distance
-                const distance = item.distance.rawValue; // Adjust as necessary for your actual distance value
-                const difference = Math.abs(distance - i);
 
-                // Define how "close" is acceptable (for example, within a certain threshold)
-                // return difference <= (trajectoryStepRaw / 2); // Adjust the threshold if needed
-                return difference <= 1; // Adjust the threshold if needed
-            });
+export const ResponsiveTableView: React.FC<ResponsiveTableViewProps> = ({ tableHeaders, tableData, style = null }) => {
 
-            // Combine closest values into the trajectory array
-            trajectory = trajectory.concat(closestValues);
-        }
+    const theme = useTheme()
+    const [selection, setSelection] = useState(null)
+    const [longPressed, setLongPressed] = useState(null)
+    const [detailsVisible, setDetailsVisible] = useState(false)
 
+    const select = (index) => {
+        console.log(index)
+        setSelection(index)
     }
 
-    const holdRow = trajectory.slice(1).reduce((closest, item) => Math.abs(item.dropAdjustment.rawValue) < Math.abs(closest.dropAdjustment.rawValue) ? item : closest, trajectory[1]);
-    const holdRowIndex = trajectory.indexOf(holdRow)
-
-    const tableData = trajectory.map(row => {
-        return [
-            row.time.toFixed(3),
-            (row.distance).In(preferredUnits.distance).toFixed(0),
-            row.velocity.In(preferredUnits.velocity).toFixed(0),
-            row.height.In(preferredUnits.drop).toFixed(1),
-            row.targetDrop.In(preferredUnits.drop).toFixed(1),
-            row.dropAdjustment.In(preferredUnits.adjustment).toFixed(2),
-            row.windage.In(preferredUnits.drop).toFixed(1),
-            row.windageAdjustment.In(preferredUnits.adjustment).toFixed(2),
-            row.mach.toFixed(2),
-            // row.densityFactor.toFixed(4),
-            row.drag.toFixed(3),
-            row.energy.In(preferredUnits.energy).toFixed(0),
-        ]
-    });
+    const handleLongPress = (event, index) => {
+        console.log(index)
+        setLongPressed(index)
+        setDetailsVisible(true)
+    }
 
     const styles = StyleSheet.create({
-        container: {
-            ...style,
-        },
         horizontalScroll: {
             flexGrow: 1,
-            // backgroundColor: '#0f0' 
         },
         tableContainer: { minWidth: "100%" },  // Ensures the table takes up available space
-
-        table: {
-            // backgroundColor: '#00f' 
-        },  // Ensures the table fills the parent width if the parent is wider
+        table: {},
         header: {
             height: 64,
-            // backgroundColor: '#ddd' 
         },
         headerText: { textAlign: 'center', fontWeight: 'bold', color: theme.colors.onSurfaceVariant },
 
-        text: { textAlign: 'center', color: theme.colors.onSurfaceVariant },
-        row: { height: 20, },
-
-        zeroText: { textAlign: 'center', color: theme.colors.onErrorContainer },
-        zeroRow: { height: 20, backgroundColor: theme.colors.errorContainer },
-
-        selectedRow: { height: 20, backgroundColor: "blue" },
+        selectedRow: { backgroundColor: theme.colors.primaryContainer },
+        selectedRowText: { textAlign: 'center', color: theme.colors.onPrimaryContainer },
 
         dataWrapper: { flex: 1, },  // Adjust as needed for vertical scrollable area
 
         borderStyle: { borderWidth: 2, borderColor: theme.colors.surfaceVariant }
     });
 
+    console.log(selection)
+
     return (
-        <View style={styles.container}>
-            <RowDetailsDialog row={tableData[longPressed]} visible={detailsVisible} setVisible={setDetailsVisible} />
+        <View style={style}>
+            <RowDetailsDialog row={tableData?.[longPressed]?.data} visible={detailsVisible} setVisible={setDetailsVisible} />
 
             <ScrollView horizontal contentContainerStyle={styles.horizontalScroll}>
                 <View style={styles.tableContainer}>
                     <Table borderStyle={styles.borderStyle} style={styles.table}>
-                        <Row data={tableHead} style={styles.header} textStyle={styles.headerText} />
+                        <Row data={tableHeaders} style={styles.header} textStyle={styles.headerText} />
                     </Table>
 
                     <ScrollView style={styles.dataWrapper}>
                         <Table borderStyle={styles.borderStyle} style={styles.table}>
                             {tableData.map((rowData, index) => (
-                                <TouchableOpacity
+                                <Pressable
                                     key={index}
                                     onPress={() => select(index)} // Regular press
                                     onLongPress={(event) => { handleLongPress(event, index) }} // Long press
                                     delayLongPress={300} // Optional: delay before the long press is recognized
                                 >
                                     <Row
-                                        data={rowData}
-                                        textStyle={index === holdRowIndex ? styles.zeroText : styles.text}
-                                        style={index === selection ? styles.selectedRow : index === holdRowIndex ? styles.zeroRow : styles.row}
+                                        data={rowData.data}
+                                        style={index === selection ? styles.selectedRow : rowData?.style}
+                                        textStyle={index === selection ? styles.selectedRowText : rowData?.textStyle}
                                         borderStyle={styles.borderStyle}
                                     />
-                                </TouchableOpacity>
+                                </Pressable>
                             ))}
                         </Table>
                     </ScrollView>
@@ -160,5 +140,82 @@ const ResponsiveTableView = ({ hitResult, style = null }) => {
 };
 
 
+export const ZerosDataTable = ({ hitResult, style = null }) => {
+    if (!(hitResult instanceof HitResult)) return <></>
 
-export default ResponsiveTableView;
+    const theme = useTheme()
+
+    const tableHeaders = ["", ...useTableHeaders()]
+
+    const zeros = hitResult.trajectory.filter(row => row.flag & TrajFlag.ZERO);
+
+    const styles = StyleSheet.create({
+        text: { textAlign: 'center', color: theme.colors.onSurfaceVariant },
+        zeroText: { textAlign: 'center', color: theme.colors.onErrorContainer },
+        zeroRow: { backgroundColor: theme.colors.errorContainer },
+        selectedRow: { backgroundColor: "blue" },
+    });
+
+    const tableData: TableDataType[] = zeros.map(row => {
+        return {
+            textStyle: styles.text,
+            data: [
+                row.flag & TrajFlag.ZERO_UP ? "Up" : "Down",
+                ...useMappedTableData(row)
+            ]
+        }
+    });
+
+    return <ResponsiveTableView tableHeaders={tableHeaders} tableData={tableData} style={style} />
+}
+
+
+export const TrajectoryTable = ({ hitResult, style = null }) => {
+    if (!(hitResult instanceof HitResult)) return <></>
+
+    const theme = useTheme()
+    const { currentConditions } = useCalculator()
+
+    const tableHeaders = useTableHeaders()
+
+    const trajectoryStepRaw = UNew.Meter(currentConditions.trajectoryStep).rawValue
+    const trajectoryRangeRaw = hitResult.trajectory[hitResult.trajectory.length - 1].distance.rawValue
+
+    let trajectory = [];
+
+    for (let i = 0; i <= trajectoryRangeRaw; i += trajectoryStepRaw) {
+        const closestValue = hitResult?.trajectory.reduce((closest, item) => {
+            const itemDifference = Math.abs(item.distance.rawValue - i);
+            const closestDifference = Math.abs(closest.distance.rawValue - i);
+            return itemDifference < closestDifference ? item : closest;
+        }, hitResult.trajectory[0]); // Start with the first element as the initial closest
+
+        if (closestValue) {
+            trajectory.push(closestValue);
+        }
+    }
+
+    const styles = StyleSheet.create({
+        text: { textAlign: 'center', color: theme.colors.onSurfaceVariant },
+        zeroText: { textAlign: 'center', color: theme.colors.onErrorContainer },
+        zeroRow: { backgroundColor: theme.colors.errorContainer },
+        selectedRow: { backgroundColor: "blue" },
+    });
+
+    const tableData: TableDataType[] = trajectory.map((row, index) => {
+        const isZeroRow = trajectory[index].flag & TrajFlag.ZERO
+        return {
+            textStyle: isZeroRow ? styles.zeroText : styles.text,
+            style: isZeroRow && styles.zeroRow,
+            data: useMappedTableData(row)
+        }
+    });
+
+    return (
+        <ResponsiveTableView
+            tableHeaders={tableHeaders}
+            tableData={tableData}
+            style={style}
+        />
+    )
+}

@@ -16,12 +16,28 @@ interface WindageTooltipProps {
 const WindageTooltip: React.FC<WindageTooltipProps> = ({ active = false, label = '', payload = [], preferredUnits }) => {
     const { theme } = useTheme();
 
+    const windageAccuracy = getFractionDigits(0.1, UNew.Inch(1).In(preferredUnits.drop));
+    const windageAdjAccuracy = getFractionDigits(0.01, UNew.MIL(1).In(preferredUnits.adjustment));
+    const distanceAccuracy = getFractionDigits(1, UNew.Meter(1).In(preferredUnits.distance));
+
     console.log({ active, label, payload }); // Debugging log
 
+    const roundWindage = (windage: number) => {
+        return windage.toFixed(windageAccuracy);
+    };
+
+    const roundWindageAdj = (windAdj: number) => {
+        return windAdj.toFixed(windageAdjAccuracy);
+    };
+
+    const roundDistance = (distance: string) => {
+        return parseFloat(distance).toFixed(distanceAccuracy);
+    };
+
     if (active && payload.length > 0) {
-        const distanceValue = `${label} ${UnitProps[preferredUnits.distance].symbol}`;
-        const windageValue = `${payload[0].value} ${UnitProps[preferredUnits.drop].symbol}`;
-        const windageAdjValue = `${payload[0].payload.windageAdj} ${UnitProps[preferredUnits.adjustment].symbol}`;
+        const distanceValue = `${roundDistance(label)} ${UnitProps[preferredUnits.distance].symbol}`;
+        const windageValue = `${roundWindage(payload[0].value)} ${UnitProps[preferredUnits.drop].symbol}`;
+        const windageAdjValue = `${roundWindageAdj(payload[0].payload.windageAdj)} ${UnitProps[preferredUnits.adjustment].symbol}`;
 
         return (
             <Card elevation={2} style={{ backgroundColor: `rgba(${theme.colors.primaryContainer}, 0.5)` }}>
@@ -40,10 +56,11 @@ const WindageTooltip: React.FC<WindageTooltipProps> = ({ active = false, label =
 export interface WindageChartProps {
     results: HitResult | Error;
     preferredUnits: any; 
+    maxDistance: Distance;
 }
 
 export const WindageChart: React.FC<WindageChartProps> = ({
-    results, preferredUnits
+    results, preferredUnits, maxDistance
 }) => {
     const { theme } = useTheme();
 
@@ -51,29 +68,12 @@ export const WindageChart: React.FC<WindageChartProps> = ({
         <Text>Can't display chart</Text>
     );
 
-    const windageAccuracy = getFractionDigits(0.1, UNew.Inch(1).In(preferredUnits.drop));
-    const windageAdjAccuracy = getFractionDigits(0.01, UNew.MIL(1).In(preferredUnits.adjustment));
-    const distanceAccuracy = getFractionDigits(1, UNew.Meter(1).In(preferredUnits.distance));
+    const result = results.trajectory.filter(row => row.distance.rawValue <= maxDistance.rawValue);
 
-    const result = results.trajectory;
-
-    const roundWindage = (windage: Distance, accuracy: number) => {
-        return parseFloat(windage.In(preferredUnits.drop).toFixed(accuracy));
-    };
-
-    const roundWindageAdj = (windAdj: Angular, accuracy: number) => {
-        return parseFloat(windAdj.In(preferredUnits.adjustment).toFixed(accuracy));
-    };
-
-    const roundDistance = (distance: Distance, accuracy: number) => {
-        return parseFloat(distance.In(preferredUnits.distance).toFixed(accuracy));
-    };
-
-    // Mapping the data to Recharts format
     const data = result.map(row => ({
-        distance: roundDistance(row.distance, distanceAccuracy),
-        windage: roundWindage(row.windage, windageAccuracy),
-        windageAdj: roundWindageAdj(row.windageAdjustment, windageAdjAccuracy), // Include adjustment value in data
+        distance: row.distance.In(preferredUnits.distance),
+        windage: row.windage.In(preferredUnits.drop),
+        windageAdj: row.windageAdjustment.In(preferredUnits.adjustment), // Include adjustment value in data
     }));
 
     return (
@@ -104,7 +104,7 @@ export const WindageChart: React.FC<WindageChartProps> = ({
 
                 {/* Line for Windage */}
                 <Line
-                    type="monotone"
+                    type="monotone" // Alternative to "monotone"
                     dataKey="windage"
                     stroke={theme.colors.primary}
                     strokeWidth={2}

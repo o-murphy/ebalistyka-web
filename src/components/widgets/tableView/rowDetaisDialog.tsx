@@ -12,7 +12,6 @@ export const RowDetailsDialog = ({ row, visible, setVisible }) => {
 
     const [time, distance, velocity, height, ...rest] = row
 
-    console.log(distance)
 
     const hideDialog = () => {
         setVisible(false)
