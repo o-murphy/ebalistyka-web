@@ -1,15 +1,11 @@
 import React, { useState } from 'react';
-import { View, ScrollView, StyleSheet, TouchableOpacity, Pressable, StyleProp, TextStyle, ViewStyle } from 'react-native';
+import { View, ScrollView, StyleSheet, Pressable, StyleProp, TextStyle, ViewStyle } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import { Table, Row } from 'react-native-table-component';
 import { useCalculator } from '../../../context/profileContext';
-import { HitResult, TrajFlag, UNew, Unit, UnitProps } from 'js-ballistics/dist/v2';
+import { HitResult, TrajectoryData, TrajFlag, UNew, UnitProps } from 'js-ballistics/dist/v2';
 import { usePreferredUnits } from '../../../context/preferredUnitsContext';
 import { RowDetailsDialog } from './rowDetaisDialog';
-import { forEach } from 'lodash';
-
-
-
 
 
 interface TableDataType {
@@ -46,7 +42,8 @@ const useTableHeaders = () => {
 }
 
 
-const useMappedTableData = (row) => {
+const useMappedTableData = (row: TrajectoryData) => {
+
     const { preferredUnits } = usePreferredUnits()
 
     return [
@@ -73,17 +70,18 @@ export const ResponsiveTableView: React.FC<ResponsiveTableViewProps> = ({ tableH
     const [detailsVisible, setDetailsVisible] = useState(false)
 
     const select = (index) => {
-        console.log(index)
         setSelection(index)
     }
 
     const handleLongPress = (event, index) => {
-        console.log(index)
         setLongPressed(index)
         setDetailsVisible(true)
     }
 
     const styles = StyleSheet.create({
+        noSelect: {
+            userSelect: 'none', // This will prevent text selection on web
+        },
         horizontalScroll: {
             flexGrow: 1,
         },
@@ -102,10 +100,8 @@ export const ResponsiveTableView: React.FC<ResponsiveTableViewProps> = ({ tableH
         borderStyle: { borderWidth: 2, borderColor: theme.colors.surfaceVariant }
     });
 
-    console.log(selection)
-
     return (
-        <View style={style}>
+        <View style={[style, styles.noSelect]}>
             <RowDetailsDialog row={tableData?.[longPressed]?.data} visible={detailsVisible} setVisible={setDetailsVisible} />
 
             <ScrollView horizontal contentContainerStyle={styles.horizontalScroll}>
@@ -145,7 +141,10 @@ export const ZerosDataTable = ({ hitResult, style = null }) => {
 
     const theme = useTheme()
 
-    const tableHeaders = ["", ...useTableHeaders()]
+    const tableHeaders = [
+        // "", 
+        ...useTableHeaders()
+    ]
 
     const zeros = hitResult.trajectory.filter(row => row.flag & TrajFlag.ZERO);
 
@@ -160,7 +159,7 @@ export const ZerosDataTable = ({ hitResult, style = null }) => {
         return {
             textStyle: styles.text,
             data: [
-                row.flag & TrajFlag.ZERO_UP ? "Up" : "Down",
+                // row.flag & TrajFlag.ZERO_UP ? "Up" : "Down",
                 ...useMappedTableData(row)
             ]
         }
@@ -195,6 +194,12 @@ export const TrajectoryTable = ({ hitResult, style = null }) => {
         }
     }
 
+    const zeroRow = trajectory.slice(1).reduce((closest, item) => {
+        const itemDifference = Math.abs(item.dropAdjustment.rawValue - 0);
+        const closestDifference = Math.abs(closest.dropAdjustment.rawValue - 0);
+        return itemDifference < closestDifference ? item : closest;
+    }, trajectory[1]); // Start with the first element as the initial closest
+
     const styles = StyleSheet.create({
         text: { textAlign: 'center', color: theme.colors.onSurfaceVariant },
         zeroText: { textAlign: 'center', color: theme.colors.onErrorContainer },
@@ -203,10 +208,9 @@ export const TrajectoryTable = ({ hitResult, style = null }) => {
     });
 
     const tableData: TableDataType[] = trajectory.map((row, index) => {
-        const isZeroRow = trajectory[index].flag & TrajFlag.ZERO
         return {
-            textStyle: isZeroRow ? styles.zeroText : styles.text,
-            style: isZeroRow && styles.zeroRow,
+            textStyle: zeroRow === row ? styles.zeroText : styles.text,
+            style: zeroRow === row && styles.zeroRow,
             data: useMappedTableData(row)
         }
     });

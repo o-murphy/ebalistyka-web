@@ -1,6 +1,6 @@
 import { View } from "react-native";
 import { useTheme } from "../../../context/themeContext";
-import { Appbar, Button, Text } from "react-native-paper";
+import { Appbar, Button, IconButton, Text } from "react-native-paper";
 import { NativeStackHeaderProps } from "@react-navigation/native-stack";
 import { useState } from "react";
 import SettingsUnitCard from "../../../components/cards/settingsCard";
@@ -43,20 +43,19 @@ export const TablesScreen = ({ navigation }) => {
             backgroundColor: theme.colors.background,
             marginBottom: 64,
         }}>
-            <View style={{height: 40, justifyContent: "center"}}>
-                <Text style={{textAlign: "center"}}>Zero crossing points</Text>
+            <View style={{ height: 40, justifyContent: "center" }}>
+                <Text style={{ textAlign: "center" }}>Zero crossing points</Text>
             </View>
             <ZerosDataTable hitResult={hitResult} />
 
-            <View style={{height: 40, justifyContent: "center"}}>
-                <Text style={{textAlign: "center"}}>Trajectory</Text>
+            <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                <IconButton icon={"export-variant"} onPress={() => console.log("Trajectory settings")} />
+                <View style={{ justifyContent: "center" }}>
+                    <Text style={{ textAlign: "center" }}>Trajectory</Text>
+                </View>
+                <IconButton icon={"cog-outline"} onPress={() => console.log("Trajectory settings")} />
             </View>
             <TrajectoryTable hitResult={hitResult} style={{ flex: 1 }} />
-
-            <View style={{ flexDirection: "row", alignItems: "center", padding: 16, justifyContent: "space-around" }}>
-                <Button mode="elevated" style={{ width: "40%" }}>Settings</Button>
-                <Button mode="elevated" style={{ width: "40%" }}>Export</Button>
-            </View>
         </View>
     )
 }
