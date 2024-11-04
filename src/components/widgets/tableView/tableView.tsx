@@ -6,6 +6,7 @@ import { useCalculator } from '../../../context/profileContext';
 import { HitResult, TrajectoryData, TrajFlag, UNew, UnitProps } from 'js-ballistics/dist/v2';
 import { usePreferredUnits } from '../../../context/preferredUnitsContext';
 import { RowDetailsDialog } from './rowDetaisDialog';
+import { useTableSettings } from '../../../context/tableSettingsContext';
 
 
 interface TableDataType {
@@ -173,12 +174,14 @@ export const TrajectoryTable = ({ hitResult, style = null }) => {
     if (!(hitResult instanceof HitResult)) return <></>
 
     const theme = useTheme()
-    const { currentConditions } = useCalculator()
+    const { tableSettings } = useTableSettings()
+
+    console.log("TS", tableSettings)
 
     const tableHeaders = useTableHeaders()
 
-    const trajectoryStepRaw = UNew.Meter(currentConditions.trajectoryStep).rawValue
-    const trajectoryRangeRaw = UNew.Meter(currentConditions.trajectoryRange + 1).rawValue
+    const trajectoryStepRaw = UNew.Meter(tableSettings.trajectoryStep).rawValue
+    const trajectoryRangeRaw = UNew.Meter(tableSettings.trajectoryRange + 1).rawValue
 
     let trajectory = [];
 

@@ -272,7 +272,7 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
 export const useCalculator = () => {
   const context = useContext(CalculationContext);
   if (!context) {
-    throw new Error('useProfile must be used within a ProfileProvider');
+    throw new Error('useCalculator must be used within a ProfileProvider');
   }
   return context;
 };
