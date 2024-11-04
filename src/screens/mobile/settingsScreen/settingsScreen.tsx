@@ -125,166 +125,168 @@ export const SettingsScreen = ({ navigation = null }) => {
     });
 
     return (
-        <ScrollView
-            style={_styles.scrollView}
-            keyboardShouldPersistTaps="always"
-            alwaysBounceVertical={false}
-            showsVerticalScrollIndicator={true}
-            contentContainerStyle={_styles.scrollViewContainer}
-        >
+        <View style={{
+            flex: 1,
+            paddingBottom: 32,
+            backgroundColor: theme.colors.secondaryContainer
+        }}>
             {saveBtnVisible && <Button
                 mode="contained"
                 icon={"content-save"}
                 buttonColor={theme.colors.tertiary}
                 textColor={theme.colors.onTertiary}
                 onPress={onSaveBtnPress}
-                style={{marginHorizontal: 16, marginTop: 16}}
+                style={{ margin: 16 }}
             >
                 Save settings
             </Button>}
+            <ScrollView
+                style={_styles.scrollView}
+                keyboardShouldPersistTaps="always"
+                alwaysBounceVertical={false}
+                showsVerticalScrollIndicator={true}
+                contentContainerStyle={_styles.scrollViewContainer}
+            >
 
-            <List.Section title={"Preferred units"}            >
-                {/* <List.Accordion
-                    title={"Preferred units"}
-                    expanded={prefUnitsExpanded}
-                    onPress={() => setPrefUnitsExpanded(!prefUnitsExpanded)}
-                > */}
-                <View>
-                    <UnitSelectorChip
-                        containerStyle={styles.row}
-                        icon="map-marker-distance"
-                        fKey="distance"
-                        label="Distance units"
-                        value={localUnits.distance}
-                        defaultValue={preferredUnits.distance}
-                        options={[
-                            { label: UnitProps[Unit.Meter].name, value: Unit.Meter },
-                            { label: UnitProps[Unit.Foot].name, value: Unit.Foot },
-                            { label: UnitProps[Unit.Yard].name, value: Unit.Yard },
-                        ]}
-                        onValueChange={value => { onUnitChange({ distance: value }) }}
-                    />
-                    <Divider />
 
-                    <UnitSelectorChip
-                        containerStyle={styles.row}
-                        icon={"speedometer"}
-                        fKey="velocity"
-                        label="Velocity units"
-                        value={localUnits.velocity}
-                        defaultValue={localUnits.velocity}
-                        options={[
-                            { label: UnitProps[Unit.MPS].name, value: Unit.MPS },
-                            { label: UnitProps[Unit.FPS].name, value: Unit.FPS },
-                        ]}
-                        onValueChange={value => { onUnitChange({ velocity: value }) }}
-                    />
-                    <Divider />
+                <List.Section title={"Preferred units"}            >
+                    <View>
+                        <UnitSelectorChip
+                            containerStyle={styles.row}
+                            icon="map-marker-distance"
+                            fKey="distance"
+                            label="Distance units"
+                            value={localUnits.distance}
+                            defaultValue={preferredUnits.distance}
+                            options={[
+                                { label: UnitProps[Unit.Meter].name, value: Unit.Meter },
+                                { label: UnitProps[Unit.Foot].name, value: Unit.Foot },
+                                { label: UnitProps[Unit.Yard].name, value: Unit.Yard },
+                            ]}
+                            onValueChange={value => { onUnitChange({ distance: value }) }}
+                        />
+                        <Divider />
 
-                    <UnitSelectorChip
-                        containerStyle={styles.row}
-                        icon={"ruler"}
-                        fKey="sizes"
-                        label="Sizes units"
-                        value={localUnits.sizes}
-                        defaultValue={localUnits.sizes}
-                        options={[
-                            { label: UnitProps[Unit.Inch].name, value: Unit.Inch },
-                            { label: UnitProps[Unit.Millimeter].name, value: Unit.Millimeter },
-                            { label: UnitProps[Unit.Centimeter].name, value: Unit.Centimeter },
-                            { label: UnitProps[Unit.Line].name, value: Unit.Line },
-                        ]}
-                        onValueChange={value => { onUnitChange({ sizes: value }) }}
-                    />
-                    <Divider />
+                        <UnitSelectorChip
+                            containerStyle={styles.row}
+                            icon={"speedometer"}
+                            fKey="velocity"
+                            label="Velocity units"
+                            value={localUnits.velocity}
+                            defaultValue={localUnits.velocity}
+                            options={[
+                                { label: UnitProps[Unit.MPS].name, value: Unit.MPS },
+                                { label: UnitProps[Unit.FPS].name, value: Unit.FPS },
+                            ]}
+                            onValueChange={value => { onUnitChange({ velocity: value }) }}
+                        />
+                        <Divider />
 
-                    <UnitSelectorChip
-                        containerStyle={styles.row}
-                        icon={"angle-acute"}
-                        fKey="angular"
-                        label="Angular units"
-                        value={localUnits.angular}
-                        defaultValue={localUnits.angular}
-                        options={getUnitList(Angular)}
-                        onValueChange={value => { onUnitChange({ angular: value }) }}
-                    />
-                    <Divider />
+                        <UnitSelectorChip
+                            containerStyle={styles.row}
+                            icon={"ruler"}
+                            fKey="sizes"
+                            label="Sizes units"
+                            value={localUnits.sizes}
+                            defaultValue={localUnits.sizes}
+                            options={[
+                                { label: UnitProps[Unit.Inch].name, value: Unit.Inch },
+                                { label: UnitProps[Unit.Millimeter].name, value: Unit.Millimeter },
+                                { label: UnitProps[Unit.Centimeter].name, value: Unit.Centimeter },
+                                { label: UnitProps[Unit.Line].name, value: Unit.Line },
+                            ]}
+                            onValueChange={value => { onUnitChange({ sizes: value }) }}
+                        />
+                        <Divider />
 
-                    <UnitSelectorChip
-                        containerStyle={styles.row}
-                        icon={"arrow-expand-vertical"}
-                        fKey="adjustment"
-                        label="Adjustment units"
-                        value={localUnits.adjustment}
-                        defaultValue={localUnits.adjustment}
-                        options={getUnitList(Angular)}
-                        onValueChange={value => { onUnitChange({ adjustment: value }) }}
-                    />
-                    <Divider />
+                        <UnitSelectorChip
+                            containerStyle={styles.row}
+                            icon={"angle-acute"}
+                            fKey="angular"
+                            label="Angular units"
+                            value={localUnits.angular}
+                            defaultValue={localUnits.angular}
+                            options={getUnitList(Angular)}
+                            onValueChange={value => { onUnitChange({ angular: value }) }}
+                        />
+                        <Divider />
 
-                    <UnitSelectorChip
-                        containerStyle={styles.row}
-                        icon={"arrow-expand-down"}
-                        fKey="drop"
-                        label="Drop units"
-                        value={localUnits.drop}
-                        defaultValue={localUnits.drop}
-                        options={getUnitList(Distance)}
-                        onValueChange={value => { onUnitChange({ drop: value }) }}
-                    />
-                    <Divider />
+                        <UnitSelectorChip
+                            containerStyle={styles.row}
+                            icon={"arrow-expand-vertical"}
+                            fKey="adjustment"
+                            label="Adjustment units"
+                            value={localUnits.adjustment}
+                            defaultValue={localUnits.adjustment}
+                            options={getUnitList(Angular)}
+                            onValueChange={value => { onUnitChange({ adjustment: value }) }}
+                        />
+                        <Divider />
 
-                    <UnitSelectorChip
-                        containerStyle={styles.row}
-                        icon={"weight"}
-                        fKey="weight"
-                        label="Weight units"
-                        value={localUnits.weight}
-                        defaultValue={localUnits.weight}
-                        options={getUnitList(Weight)}
-                        onValueChange={value => { onUnitChange({ weight: value }) }}
-                    />
-                    <Divider />
+                        <UnitSelectorChip
+                            containerStyle={styles.row}
+                            icon={"arrow-expand-down"}
+                            fKey="drop"
+                            label="Drop units"
+                            value={localUnits.drop}
+                            defaultValue={localUnits.drop}
+                            options={getUnitList(Distance)}
+                            onValueChange={value => { onUnitChange({ drop: value }) }}
+                        />
+                        <Divider />
 
-                    <UnitSelectorChip
-                        containerStyle={styles.row}
-                        icon={"thermometer"}
-                        fKey="temperature"
-                        label="Temperature units"
-                        value={localUnits.temperature}
-                        defaultValue={localUnits.temperature}
-                        options={getUnitList(Temperature)}
-                        onValueChange={value => { onUnitChange({ temperature: value }) }}
-                    />
-                    <Divider />
+                        <UnitSelectorChip
+                            containerStyle={styles.row}
+                            icon={"weight"}
+                            fKey="weight"
+                            label="Weight units"
+                            value={localUnits.weight}
+                            defaultValue={localUnits.weight}
+                            options={getUnitList(Weight)}
+                            onValueChange={value => { onUnitChange({ weight: value }) }}
+                        />
+                        <Divider />
 
-                    <UnitSelectorChip
-                        containerStyle={styles.row}
-                        icon={"gauge"}
-                        fKey="pressure"
-                        label="Pressure units"
-                        value={preferredUnits.pressure}
-                        defaultValue={preferredUnits.pressure}
-                        options={getUnitList(Pressure)}
-                        onValueChange={value => { onUnitChange({ pressure: value }) }}
-                    />
-                    <Divider />
+                        <UnitSelectorChip
+                            containerStyle={styles.row}
+                            icon={"thermometer"}
+                            fKey="temperature"
+                            label="Temperature units"
+                            value={localUnits.temperature}
+                            defaultValue={localUnits.temperature}
+                            options={getUnitList(Temperature)}
+                            onValueChange={value => { onUnitChange({ temperature: value }) }}
+                        />
+                        <Divider />
 
-                    <UnitSelectorChip
-                        containerStyle={styles.row}
-                        icon={"lightning-bolt"}
-                        fKey="energy"
-                        label="Pressure units"
-                        value={preferredUnits.energy}
-                        defaultValue={preferredUnits.energy}
-                        options={getUnitList(Energy)}
-                        onValueChange={value => { onUnitChange({ energy: value }) }}
-                    />
-                </View>
-                {/* </List.Accordion> */}
-            </List.Section>
+                        <UnitSelectorChip
+                            containerStyle={styles.row}
+                            icon={"gauge"}
+                            fKey="pressure"
+                            label="Pressure units"
+                            value={localUnits.pressure}
+                            defaultValue={localUnits.pressure}
+                            options={getUnitList(Pressure)}
+                            onValueChange={value => { onUnitChange({ pressure: value }) }}
+                        />
+                        <Divider />
 
-        </ScrollView>
+                        <UnitSelectorChip
+                            containerStyle={styles.row}
+                            icon={"lightning-bolt"}
+                            fKey="energy"
+                            label="Pressure units"
+                            value={localUnits.energy}
+                            defaultValue={localUnits.energy}
+                            options={getUnitList(Energy)}
+                            onValueChange={value => { onUnitChange({ energy: value }) }}
+                        />
+                    </View>
+                </List.Section>
+
+            </ScrollView>
+        </View>
+
     )
 }
 

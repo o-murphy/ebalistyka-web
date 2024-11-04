@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { View, ScrollView, StyleSheet, Pressable, StyleProp, TextStyle, ViewStyle } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import { Table, Row } from 'react-native-table-component';
-import { useCalculator } from '../../../context/profileContext';
 import { HitResult, TrajectoryData, TrajFlag, UNew, UnitProps } from 'js-ballistics/dist/v2';
 import { usePreferredUnits } from '../../../context/preferredUnitsContext';
 import { RowDetailsDialog } from './rowDetaisDialog';
@@ -20,63 +19,61 @@ interface ResponsiveTableViewProps {
     tableHeaders: string[];
     tableData: TableDataType[];
     style?: StyleProp<ViewStyle>;
+    rowLongPress?: (index: number) => void;
 }
 
 
-const useTableHeaders = () => {
+const useTableHeaders = ({ displayFlag = false }) => {
 
     const { preferredUnits } = usePreferredUnits()
+    const { tableSettings } = useTableSettings()
 
     return [
-        `Time, s`,
-        `Range, ${UnitProps[preferredUnits.distance].symbol}`,
-        `V, ${UnitProps[preferredUnits.velocity].symbol}`,
-        `Height, ${UnitProps[preferredUnits.drop].symbol}`,
-        `Drop, ${UnitProps[preferredUnits.drop].symbol}`,
-        `Drop adjustment, ${UnitProps[preferredUnits.adjustment].symbol}`,
-        `Windage, ${UnitProps[preferredUnits.drop].symbol}`,
-        `Wind. adjustment, ${UnitProps[preferredUnits.adjustment].symbol}`,
-        "Mach",
-        "Drag",
-        `Energy, ${UnitProps[preferredUnits.energy].symbol}`
-    ];
+        displayFlag && " ",
+        tableSettings?.displayTime && `Time, s`,
+        tableSettings?.displayRange && `Range, ${UnitProps[preferredUnits.distance].symbol}`,
+        tableSettings?.displayVelocity && `V, ${UnitProps[preferredUnits.velocity].symbol}`,
+        tableSettings?.displayHeight && `Height, ${UnitProps[preferredUnits.drop].symbol}`,
+        tableSettings?.displayDrop && `Drop, ${UnitProps[preferredUnits.drop].symbol}`,
+        tableSettings?.displayDropAdjustment && `Drop adjustment, ${UnitProps[preferredUnits.adjustment].symbol}`,
+        tableSettings?.displayWindage && `Windage, ${UnitProps[preferredUnits.drop].symbol}`,
+        tableSettings?.displayWindageAdjustment && `Wind. adjustment, ${UnitProps[preferredUnits.adjustment].symbol}`,
+        tableSettings?.displayMach && "Mach",
+        tableSettings?.displayDrag && "Drag",
+        tableSettings?.displayEnergy && `Energy, ${UnitProps[preferredUnits.energy].symbol}`
+    ].filter(Boolean);
 }
 
 
-const useMappedTableData = (row: TrajectoryData) => {
+const useMappedTableData = ({ row, displayFlag = false }) => {
 
     const { preferredUnits } = usePreferredUnits()
+    const { tableSettings } = useTableSettings()
 
     return [
-        row.time.toFixed(3),
-        (row.distance).In(preferredUnits.distance).toFixed(0),
-        row.velocity.In(preferredUnits.velocity).toFixed(0),
-        row.height.In(preferredUnits.drop).toFixed(1),
-        row.targetDrop.In(preferredUnits.drop).toFixed(1),
-        row.dropAdjustment.In(preferredUnits.adjustment).toFixed(2),
-        row.windage.In(preferredUnits.drop).toFixed(1),
-        row.windageAdjustment.In(preferredUnits.adjustment).toFixed(2),
-        row.mach.toFixed(2),
-        row.drag.toFixed(3),
-        row.energy.In(preferredUnits.energy).toFixed(0),
-    ]
+        displayFlag && row.flag & TrajFlag.ZERO_UP ? "Up" : row.flag & TrajFlag.ZERO_DOWN ? "Down" : "",
+        tableSettings?.displayTime && row.time.toFixed(3),
+        tableSettings?.displayRange && (row.distance).In(preferredUnits.distance).toFixed(0),
+        tableSettings?.displayVelocity && row.velocity.In(preferredUnits.velocity).toFixed(0),
+        tableSettings?.displayHeight && row.height.In(preferredUnits.drop).toFixed(1),
+        tableSettings?.displayDrop && row.targetDrop.In(preferredUnits.drop).toFixed(1),
+        tableSettings?.displayDropAdjustment && row.dropAdjustment.In(preferredUnits.adjustment).toFixed(2),
+        tableSettings?.displayWindage && row.windage.In(preferredUnits.drop).toFixed(1),
+        tableSettings?.displayWindageAdjustment && row.windageAdjustment.In(preferredUnits.adjustment).toFixed(2),
+        tableSettings?.displayMach && row.mach.toFixed(2),
+        tableSettings?.displayDrag && row.drag.toFixed(3),
+        tableSettings?.displayEnergy && row.energy.In(preferredUnits.energy).toFixed(0),
+    ].filter(Boolean)
 }
 
 
-export const ResponsiveTableView: React.FC<ResponsiveTableViewProps> = ({ tableHeaders, tableData, style = null }) => {
+export const ResponsiveTableView: React.FC<ResponsiveTableViewProps> = ({ tableHeaders, tableData, style = null, rowLongPress = null }) => {
 
     const theme = useTheme()
     const [selection, setSelection] = useState(null)
-    const [longPressed, setLongPressed] = useState(null)
-    const [detailsVisible, setDetailsVisible] = useState(false)
 
     const select = (index) => {
         setSelection(index)
-    }
-
-    const handleLongPress = (event, index) => {
-        setLongPressed(index)
-        setDetailsVisible(true)
     }
 
     const styles = StyleSheet.create({
@@ -103,7 +100,6 @@ export const ResponsiveTableView: React.FC<ResponsiveTableViewProps> = ({ tableH
 
     return (
         <View style={[style, styles.noSelect]}>
-            <RowDetailsDialog row={tableData?.[longPressed]?.data} visible={detailsVisible} setVisible={setDetailsVisible} />
 
             <ScrollView horizontal contentContainerStyle={styles.horizontalScroll}>
                 <View style={styles.tableContainer}>
@@ -117,7 +113,7 @@ export const ResponsiveTableView: React.FC<ResponsiveTableViewProps> = ({ tableH
                                 <Pressable
                                     key={index}
                                     onPress={() => select(index)} // Regular press
-                                    onLongPress={(event) => { handleLongPress(event, index) }} // Long press
+                                    onLongPress={(event) => { rowLongPress?.(index) }} // Long press
                                     delayLongPress={300} // Optional: delay before the long press is recognized
                                 >
                                     <Row
@@ -142,10 +138,15 @@ export const ZerosDataTable = ({ hitResult, style = null }) => {
 
     const theme = useTheme()
 
-    const tableHeaders = [
-        // "", 
-        ...useTableHeaders()
-    ]
+    const [longPressed, setLongPressed] = useState(null)
+    const [detailsVisible, setDetailsVisible] = useState(false)
+
+    const handleLongPress = (index) => {
+        setLongPressed(index)
+        setDetailsVisible(true)
+    }
+
+    const tableHeaders = useTableHeaders({ displayFlag: true })
 
     const zeros = hitResult.trajectory.filter(row => row.flag & TrajFlag.ZERO);
 
@@ -159,14 +160,17 @@ export const ZerosDataTable = ({ hitResult, style = null }) => {
     const tableData: TableDataType[] = zeros.map(row => {
         return {
             textStyle: styles.text,
-            data: [
-                // row.flag & TrajFlag.ZERO_UP ? "Up" : "Down",
-                ...useMappedTableData(row)
-            ]
+            data: useMappedTableData({ row: row, displayFlag: true })
         }
     });
 
-    return <ResponsiveTableView tableHeaders={tableHeaders} tableData={tableData} style={style} />
+    return (
+        <View>
+            <RowDetailsDialog row={zeros?.[longPressed]} visible={detailsVisible} setVisible={setDetailsVisible} />
+            <ResponsiveTableView tableHeaders={tableHeaders} tableData={tableData} style={style} rowLongPress={handleLongPress}/>
+        </View>
+    )
+
 }
 
 
@@ -176,10 +180,18 @@ export const TrajectoryTable = ({ hitResult, style = null }) => {
     const theme = useTheme()
     const { tableSettings } = useTableSettings()
 
-    const tableHeaders = useTableHeaders()
+    const [longPressed, setLongPressed] = useState(null)
+    const [detailsVisible, setDetailsVisible] = useState(false)
 
-    const trajectoryStepRaw = UNew.Meter(tableSettings.trajectoryStep).rawValue
-    const trajectoryRangeRaw = UNew.Meter(tableSettings.trajectoryRange + 1).rawValue
+    const handleLongPress = (index) => {
+        setLongPressed(index)
+        setDetailsVisible(true)
+    }
+
+    const tableHeaders = useTableHeaders({ displayFlag: false })
+
+    const trajectoryStepRaw = UNew.Meter(tableSettings?.trajectoryStep).rawValue
+    const trajectoryRangeRaw = UNew.Meter(tableSettings?.trajectoryRange + 1).rawValue
 
     let trajectory = [];
 
@@ -214,15 +226,19 @@ export const TrajectoryTable = ({ hitResult, style = null }) => {
         return {
             textStyle: zeroRow === row ? styles.zeroText : styles.text,
             style: zeroRow === row && styles.zeroRow,
-            data: useMappedTableData(row)
+            data: useMappedTableData({ row: row, displayFlag: false })
         }
     });
 
     return (
-        <ResponsiveTableView
-            tableHeaders={tableHeaders}
-            tableData={tableData}
-            style={style}
-        />
+        <ScrollView>
+            <RowDetailsDialog row={trajectory?.[longPressed]} visible={detailsVisible} setVisible={setDetailsVisible} />
+            <ResponsiveTableView
+                tableHeaders={tableHeaders}
+                tableData={tableData}
+                style={style}
+                rowLongPress={handleLongPress}
+            />
+        </ScrollView>
     )
 }

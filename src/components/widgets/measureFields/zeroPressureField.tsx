@@ -24,7 +24,7 @@ export const ZeroPressureField = () => {
     const fieldProps: Partial<MeasureFormFieldProps> = useMemo(() => ({
         fKey: "cZeroAirPressure",
         label: "Pressure",
-        icon: "speedometer",
+        icon: "gauge",
         fractionDigits: accuracy,
         step: 1 / (10 ** accuracy),
         suffix: UnitProps[prefUnit].symbol,

@@ -2,14 +2,14 @@ import { StyleSheet, View } from "react-native"
 import { Dialog, FAB, Portal, useTheme } from "react-native-paper"
 import { Table, Row } from 'react-native-table-component';
 import { usePreferredUnits } from "../../../context/preferredUnitsContext";
-import { UnitProps } from "js-ballistics/dist/v2";
+import { TrajectoryData, UnitProps } from "js-ballistics/dist/v2";
 import React from "react";
 
 
 interface RowDetailsProps {
-    row?: string[];
+    row?: TrajectoryData;
     visible?: boolean;
-    setVisible?: (v: boolean) => void; 
+    setVisible?: (v: boolean) => void;
 }
 
 
@@ -21,12 +21,26 @@ export const RowDetailsDialog: React.FC<RowDetailsProps> = ({ row, visible, setV
         return null
     }
 
+    const data = [
+        row.time.toFixed(3),
+        (row.distance).In(preferredUnits.distance).toFixed(0),
+        row.velocity.In(preferredUnits.velocity).toFixed(0),
+        row.height.In(preferredUnits.drop).toFixed(1),
+        row.targetDrop.In(preferredUnits.drop).toFixed(1),
+        row.dropAdjustment.In(preferredUnits.adjustment).toFixed(2),
+        row.windage.In(preferredUnits.drop).toFixed(1),
+        row.windageAdjustment.In(preferredUnits.adjustment).toFixed(2),
+        row.mach.toFixed(2),
+        row.drag.toFixed(3),
+        row.energy.In(preferredUnits.energy).toFixed(0),
+    ]
+
     const [
-        time, distance, velocity, 
-        height, drop, targetDrop,
+        time, distance, velocity,
+        height, targetDrop, dropAdjustment,
         windage, windageAdjustment,
-        mach, drag, energy, ...rest
-    ] = row
+        mach, drag, energy
+    ] = data
 
     const rows = [
         [
@@ -47,11 +61,11 @@ export const RowDetailsDialog: React.FC<RowDetailsProps> = ({ row, visible, setV
         ],
         [
             "Drop:",
-            `${drop} ${UnitProps[preferredUnits.drop].symbol}`
+            `${targetDrop} ${UnitProps[preferredUnits.drop].symbol}`
         ],
         [
             "Drop adj.:",
-            `${targetDrop} ${UnitProps[preferredUnits.adjustment].symbol}`
+            `${dropAdjustment} ${UnitProps[preferredUnits.adjustment].symbol}`
         ],
         [
             "Windage:",

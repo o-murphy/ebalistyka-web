@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
-import { View } from "react-native";
-import { Dialog, FAB, HelperText, IconButton, Portal, Text } from "react-native-paper";
+import { ScrollView, View } from "react-native";
+import { Dialog, FAB, HelperText, IconButton, Portal, Switch, Text } from "react-native-paper";
 import MeasureFormField, { MeasureFormFieldProps } from "../../../../components/widgets/measureFields/measureField";
 import { usePreferredUnits } from "../../../../context/preferredUnitsContext";
 import { Distance, UNew, Unit, UnitProps } from "js-ballistics/dist/v2";
@@ -78,7 +78,6 @@ export const TrajectoryRangeField = ({ trajectoryRange, setTrajectoryRange, onEr
 
     const value = useCurrentValue(trajectoryRange, Distance, Unit.Meter, prefUnit)
     const onValueChange = setTrajectoryRange
-    console.log("FFF", value)
 
     return (
         <MeasureFormField
@@ -92,6 +91,22 @@ export const TrajectoryRangeField = ({ trajectoryRange, setTrajectoryRange, onEr
 }
 
 
+const displayOptions = [
+    { label: "Display zeros", key: "displayZeros" },
+    { label: "Time", key: "displayTime" },
+    { label: "Range", key: "displayRange" },
+    { label: "Velocity", key: "displayVelocity" },
+    { label: "Height", key: "displayHeight" },
+    { label: "Drop", key: "displayDrop" },
+    { label: "Drop Adjustment", key: "displayDropAdjustment" },
+    { label: "Windage", key: "displayWindage" },
+    { label: "Windage Adjustment", key: "displayWindageAdjustment" },
+    { label: "Mach", key: "displayMach" },
+    { label: "Drag", key: "displayDrag" },
+    { label: "Energy", key: "displayEnergy" },
+];
+
+
 export const TableSettingsDialog = ({ visible, setVisible }) => {
 
     // const { currentConditions, updateCurrentConditions } = useCalculator();
@@ -103,12 +118,40 @@ export const TableSettingsDialog = ({ visible, setVisible }) => {
     const [stepError, setStepError] = useState(null)
     const [rangeError, setRangeError] = useState(null)
 
+    const initialDisplaySettings = {
+        displayZeros: tableSettings?.displayZeros ?? true,
+
+        displayTime: tableSettings?.displayTime ?? true,
+        displayRange: tableSettings?.displayRange ?? true,
+        displayVelocity: tableSettings?.displayVelocity ?? true,
+        displayHeight: tableSettings?.displayHeight ?? true,
+        displayDrop: tableSettings?.displayDrop ?? true,
+        displayDropAdjustment: tableSettings?.displayDropAdjustment ?? true,
+        displayWindage: tableSettings?.displayWindage ?? true,
+        displayWindageAdjustment: tableSettings?.displayWindageAdjustment ?? true,
+        displayMach: tableSettings?.displayMach ?? true,
+        displayDrag: tableSettings?.displayDrag ?? true,
+        displayEnergy: tableSettings?.displayEnergy ?? true,
+    };
+
+    const [displaySettings, setDisplaySettings] = useState(initialDisplaySettings);
+
+    // To update a specific setting:
+    const updateDisplaySetting = (key, value) => {
+        setDisplaySettings((prev) => ({
+            ...prev,
+            [key]: value,
+        }));
+    };
+
     const onSubmit = () => {
         if (!stepError && !rangeError) {
             // setSubmitError(null)
             updateTableSettings({
                 trajectoryStep: new Distance(trajectoryStep, preferredUnits.distance).In(Unit.Meter),
                 trajectoryRange: new Distance(trajectoryRange, preferredUnits.distance).In(Unit.Meter),
+
+                ...displaySettings
             })
             setVisible(false)
         } else {
@@ -124,28 +167,57 @@ export const TableSettingsDialog = ({ visible, setVisible }) => {
 
     return (
         <Portal>
-            <Dialog visible={visible} onDismiss={hideDialog}>
+            <Dialog visible={visible} onDismiss={hideDialog} style={{ height: "80%" }}>
+
                 <Dialog.Title>
                     <View style={{ width: "100%", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
                         <Text>Tables settings</Text>
                         <IconButton icon={"close"} onPress={hideDialog} />
                     </View>
                 </Dialog.Title>
-                <Dialog.Content>
+                <Dialog.ScrollArea>
+                    <ScrollView style={{ flex: 1 }}>
+                        <Dialog.Content>
 
-                    <View style={{ marginBottom: 16 }}>
-                        <TrajectoryRangeField trajectoryRange={trajectoryRange} setTrajectoryRange={setTrajectoryRange} onError={setRangeError} />
-                        {rangeError && <HelperText type="error" visible={!!rangeError}>
-                            {rangeError.message}
-                        </HelperText>}
-                    </View>
+                            <View style={{ marginVertical: 8 }}>
+                                <TrajectoryRangeField trajectoryRange={trajectoryRange} setTrajectoryRange={setTrajectoryRange} onError={setRangeError} />
+                                {rangeError && <HelperText type="error" visible={!!rangeError}>
+                                    {rangeError.message}
+                                </HelperText>}
+                            </View>
 
-                    <TrajectoryStepField trajectoryStep={trajectoryStep} setTrajectoryStep={setTrajectoryStep} onError={setStepError} />
-                    {stepError && <HelperText type="error" visible={!!stepError}>
-                        {stepError.message}
-                    </HelperText>}
+                            <View style={{ marginVertical: 8 }}>
+                                <TrajectoryStepField trajectoryStep={trajectoryStep} setTrajectoryStep={setTrajectoryStep} onError={setStepError} />
+                                {stepError && <HelperText type="error" visible={!!stepError}>
+                                    {stepError.message}
+                                </HelperText>}
+                            </View>
 
-                </Dialog.Content>
+                            {displayOptions.map((option) => (
+                                <View
+                                    key={option.key}
+                                    style={{
+                                        flexDirection: "row",
+                                        justifyContent: "space-between",
+                                        marginHorizontal: 8,
+                                        marginVertical: 8,
+                                    }}
+                                >
+                                    <Text>{option.label}</Text>
+                                    <Switch
+                                        value={displaySettings[option.key]}
+                                        onValueChange={() =>
+                                            updateDisplaySetting(option.key, !displaySettings[option.key])
+                                        }
+                                    />
+                                </View>
+                            ))}
+
+                        </Dialog.Content>
+
+                    </ScrollView>
+                </Dialog.ScrollArea>
+
                 <Dialog.Actions>
                     {(!stepError && !rangeError) && <FAB
                         size="small"
