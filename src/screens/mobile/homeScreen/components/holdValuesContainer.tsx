@@ -1,8 +1,7 @@
 import { Angular, Unit, UnitProps } from "js-ballistics/dist/v2"
 import { useState } from "react"
 import { StyleSheet, View } from "react-native"
-import { Divider, Icon, Text } from "react-native-paper"
-import { useTheme } from "../../../../context/themeContext"
+import { Divider, Icon, Text, useTheme } from "react-native-paper"
 
 const holdUnits = [
     Unit.MRad,
@@ -34,7 +33,7 @@ const HoldValues = ({ value, icon, color, layoutSize }) => {
 }
 
 export const HoldValuesContainer = ({ hold }: { hold: { hold: Angular, wind: Angular } }) => {
-    const { theme } = useTheme()
+    const theme = useTheme()
     const [holdLayoutSize, setHoldLayoutSize] = useState({ width: 0, height: 0 }); // Default value
 
     const onHoldLayout = (event) => {

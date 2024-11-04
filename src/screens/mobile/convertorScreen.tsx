@@ -1,6 +1,5 @@
 import { ScrollView, StyleSheet } from "react-native";
-import { useTheme } from "../../context/themeContext";
-import { Appbar, Divider, List } from "react-native-paper";
+import { Appbar, Divider, List, useTheme } from "react-native-paper";
 import { NativeStackHeaderProps } from "@react-navigation/native-stack";
 
 
@@ -8,7 +7,7 @@ export const ConvertorTopAppBar = ({...props}: NativeStackHeaderProps) => {
     
     const { back, navigation } = props;
 
-    const { theme } = useTheme()
+    const theme = useTheme()
     // const [settingsVisible, setSettingsVisible] = useState(false)
 
     
@@ -29,7 +28,7 @@ export const ConvertorTopAppBar = ({...props}: NativeStackHeaderProps) => {
 }
 
 export const ConvertorScreen = ({ navigation }) => {
-    const { theme } = useTheme();
+    const theme = useTheme()
 
     const styles = StyleSheet.create({
         scrollViewContainer: {

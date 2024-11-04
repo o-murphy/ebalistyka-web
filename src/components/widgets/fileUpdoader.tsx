@@ -1,9 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { View, StyleSheet, Alert } from 'react-native';
-import { Button } from 'react-native-paper';
+import { Button, useTheme } from 'react-native-paper';
 import parseA7P, { ProfileProps } from '../../utils/parseA7P';
 import { useCalculator } from '../../context/profileContext';
-import { useTheme } from '../../context/themeContext';
 
 const allowedExtensions = ['.a7p'];
 
@@ -11,7 +10,7 @@ const FileUploadButton = () => {
     const [fileName, setFileName] = useState('Upload file');
     const [fileData, setFileData] = useState(null);
     const [error, setError] = useState(null);
-    const {theme} = useTheme()
+    const theme = useTheme();
     const fileInputRef = useRef(null);
 
     const { profileProperties, setProfileProperties, updateProfileProperties, setIsLoaded } = useCalculator();

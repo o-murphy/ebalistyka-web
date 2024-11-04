@@ -1,11 +1,11 @@
 import React from 'react';
-import { useTheme } from '../../context/themeContext';
 import { PaperProvider } from 'react-native-paper';
 import RootScreenManager from '../../screens/mobile/RootScreenManager';
+import { useThemeSwitch } from '../../context/themeContext';
 
 
 const MobileView = () => {
-    const { theme } = useTheme();
+    const {theme} = useThemeSwitch();
     
     return (
         <PaperProvider theme={theme}>

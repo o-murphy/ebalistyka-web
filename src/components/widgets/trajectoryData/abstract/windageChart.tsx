@@ -1,8 +1,7 @@
-import { Card, Text } from 'react-native-paper';
+import { Card, Text, useTheme } from 'react-native-paper';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Angular, Distance, HitResult, UNew, UnitProps } from 'js-ballistics/dist/v2';
 import getFractionDigits from '../../../../utils/fractionConvertor';
-import { useTheme } from '../../../../context/themeContext';
 import React from 'react';
 import { ToolTipRow } from './tooltipRow';
 
@@ -14,7 +13,7 @@ interface WindageTooltipProps {
 }
 
 const WindageTooltip: React.FC<WindageTooltipProps> = ({ active = false, label = '', payload = [], preferredUnits }) => {
-    const { theme } = useTheme();
+    const theme = useTheme()
 
     const windageAccuracy = getFractionDigits(0.1, UNew.Inch(1).In(preferredUnits.drop));
     const windageAdjAccuracy = getFractionDigits(0.01, UNew.MIL(1).In(preferredUnits.adjustment));
@@ -62,7 +61,7 @@ export interface WindageChartProps {
 export const WindageChart: React.FC<WindageChartProps> = ({
     results, preferredUnits, maxDistance
 }) => {
-    const { theme } = useTheme();
+    const theme = useTheme()
 
     if (results instanceof Error) return (
         <Text>Can't display chart</Text>

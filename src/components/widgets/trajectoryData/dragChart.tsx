@@ -1,9 +1,8 @@
-import { Card } from 'react-native-paper';
+import { Card, useTheme } from 'react-native-paper';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { useCalculator } from '../../../context/profileContext';
 import { Table } from 'js-ballistics/dist/v2';
 import React from 'react';
-import { useTheme } from '../../../context/themeContext';
 import { ToolTipRow } from './abstract';
 
 interface DragTooltipProps {
@@ -13,7 +12,7 @@ interface DragTooltipProps {
 }
 
 const DragTooltip: React.FC<DragTooltipProps> = ({ active, label, payload }) => {
-    const { theme } = useTheme();
+    const theme = useTheme();
 
     if (active && payload && payload.length) {
         const machValue = `${label?.toFixed(2)}`; // Ensure label is defined
@@ -56,7 +55,7 @@ const combineDragTables = (dragTable, customDragTable) => {
 
 const DragChart = () => {
     const { calculator, profileProperties } = useCalculator();
-    const { theme } = useTheme();
+    const theme = useTheme();
 
     let dragTable = null;
 

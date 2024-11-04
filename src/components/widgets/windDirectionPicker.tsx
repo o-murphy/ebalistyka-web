@@ -35,7 +35,7 @@ export default function WindDirectionPicker({ value, onChange, style = null, dia
     onChange: (value: number) => void,
     style?: StyleProp<ViewStyle>,
     diameter?: number,
-    props: any
+    props?: any
 }) {
 
     const [devType, setDevType] = useState(DeviceType.PHONE)

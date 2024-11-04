@@ -50,12 +50,14 @@ export const DoubleSpinBox: React.FC<SpinBoxProps> = ({
   }
 
   // Debounced callback for onValueChange
-  const debouncedValueChange = useCallback(
-    debounce((numericValue: number) => {
-      if (onValueChange) onValueChange(numericValue);
-    }, debounceDelay),
-    [onValueChange]
-  );
+  // const debouncedValueChange = useCallback(
+  //   debounce((numericValue: number) => {
+  //     onValueChange?.(numericValue);
+  //   }, debounceDelay),
+  //   [onValueChange]
+  // );
+
+  const valueChanged = (value) => onValueChange?.(value)
 
   // Handle digit input from keyboard
   const handleInputChange = (text: string) => {
@@ -63,7 +65,8 @@ export const DoubleSpinBox: React.FC<SpinBoxProps> = ({
 
     if (sanitizedText === '') {
       setCurrentValue('0'.padEnd(fixedPoints + 1, '0'));
-      debouncedValueChange(0);
+      // debouncedValueChange(0);
+      valueChanged(0);
       return;
     }
 
@@ -88,7 +91,8 @@ export const DoubleSpinBox: React.FC<SpinBoxProps> = ({
     if (strict && _error) {
       return;
     }
-    debouncedValueChange(numericValue);
+    // debouncedValueChange(numericValue);
+    valueChanged(numericValue);
   };
 
   // Add input at the end of the text or handle backspace

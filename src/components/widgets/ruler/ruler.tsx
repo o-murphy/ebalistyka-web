@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
   Animated,
   StyleProp,
@@ -6,8 +6,7 @@ import {
   View,
   ViewStyle
 } from 'react-native';
-import { Text, TextInput } from 'react-native-paper';
-import { useTheme } from '../../../context/themeContext';
+import { Text, useTheme } from 'react-native-paper';
 
 
 function createArray(min, max, step) {
@@ -38,7 +37,7 @@ export const TickList = ({children}) => {
 
 export const Ruler = ({min, max, step, width, snapTickSize}) => {
   
-  const { theme }= useTheme()
+  const theme = useTheme();
 
   let cur = min;
   
@@ -61,7 +60,7 @@ export const Ruler = ({min, max, step, width, snapTickSize}) => {
 export const Labels = ({min, max, step, snapTickSize, fraction}) => {
   let cur = min;
 
-  const { theme }= useTheme()
+  const theme = useTheme();
 
 
   const ticks = []
@@ -91,7 +90,7 @@ export const Labels = ({min, max, step, snapTickSize, fraction}) => {
 }
 
 export const Indicator = ({top, snapTickSize}) => {
-  const { theme }= useTheme()
+  const theme = useTheme();
 
   return (
     <View style={{
@@ -126,7 +125,7 @@ export interface RulerSliderProps {
 }
 
 export const RulerSlider: React.FC<RulerSliderProps> = ({...props}) => {
-  const { theme }= useTheme()
+  const theme = useTheme();
 
   const {
     minValue = 0,

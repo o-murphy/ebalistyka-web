@@ -1,6 +1,6 @@
-import { Appbar } from "react-native-paper"
+import { Appbar, useTheme } from "react-native-paper"
 // import A7PFileUploader from "./fileDrop"
-import { useTheme } from "../../context/themeContext"
+import { useThemeSwitch } from "../../context/themeContext"
 import SettingsUnitCard from "../cards/settingsCard"
 import { useEffect, useState } from "react"
 import { DeviceType, getDeviceTypeAsync } from "expo-device";
@@ -18,7 +18,10 @@ const TopAppBar = ({...props}: NativeStackHeaderProps) => {
       });
     }, []);
 
-    const { theme, toggleNightMode } = useTheme()
+    const { toggleNightMode } = useThemeSwitch()
+
+    const theme = useTheme()
+
     const [settingsVisible, setSettingsVisible] = useState(false)
 
     return (

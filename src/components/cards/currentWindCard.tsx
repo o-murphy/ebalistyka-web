@@ -4,10 +4,9 @@ import WindDirectionPicker from "../widgets/windDirectionPicker";
 import { CalculationState, useCalculator } from "../../context/profileContext";
 import { WindSpeedField } from "../widgets/measureFields";
 import { View } from "react-native";
-import { FAB, Icon } from "react-native-paper";
+import { FAB, Icon, useTheme } from "react-native-paper";
 import { Unit, UnitProps } from "js-ballistics/dist/v2";
 import { RefreshFAB, RefreshFabState } from "../widgets/refreshFAB";
-import { useTheme } from "../../context/themeContext";
 
 interface WindCardProps {
     label?: string;
@@ -20,7 +19,7 @@ const CurrentWindCard: React.FC<WindCardProps> = ({ label = "Current wind", expa
     const [isHovered, setIsHovered] = useState(false);
     const [refreshable, setRefreshable] = useState(false);
     const initialWindDir = useRef(currentConditions.windDirection);
-    const { theme } = useTheme()
+    const theme = useTheme();
 
     useEffect(() => {
         if (currentConditions.windDirection !== initialWindDir.current) {

@@ -1,13 +1,12 @@
-import { ActivityIndicator } from "react-native-paper"
+import { ActivityIndicator, useTheme } from "react-native-paper"
 import { useCalculator } from "../../context/profileContext"
-import { Animated, StyleSheet, View } from "react-native"
-import { useTheme } from "../../context/themeContext";
+import { Animated, View } from "react-native"
 import { useEffect, useRef } from "react";
 
 
 export const BusyOverlay = ({ children }) => {
     const { inProgress } = useCalculator();
-    const {theme} = useTheme()
+    const theme = useTheme()
 
     return (
         <View style={{ flex: 1 }}>
@@ -34,7 +33,7 @@ export const BusyOverlay = ({ children }) => {
 
 export const BusyOverlayAnimated = ({ children }) => {
   const { inProgress } = useCalculator();
-  const { theme } = useTheme();
+  const theme = useTheme()
 
   // Create an animated value for opacity
   const opacity = useRef(new Animated.Value(0)).current;

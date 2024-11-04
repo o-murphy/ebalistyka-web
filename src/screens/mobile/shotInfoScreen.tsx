@@ -1,6 +1,5 @@
 import { ScrollView, StyleSheet, View } from "react-native";
-import { useTheme } from "../../context/themeContext";
-import { Appbar, Chip, Divider, List, Text } from "react-native-paper";
+import { Appbar, Chip, Divider, Text, useTheme } from "react-native-paper";
 import { NativeStackHeaderProps } from "@react-navigation/native-stack";
 import { useCalculator } from "../../context/profileContext";
 import { UNew, Atmo, HitResult, UnitProps } from "js-ballistics/dist/v2";
@@ -11,7 +10,7 @@ import { useEffect, useState } from "react";
 export const ShotInfoTopAppBar = ({ ...props }: NativeStackHeaderProps) => {
 
     const { back, navigation } = props;
-    const { theme } = useTheme()
+    const theme = useTheme()
 
     return (
         <Appbar.Header mode={"center-aligned"} style={{
@@ -42,7 +41,7 @@ const adjustmentSort = (closest, item) => {
 
 
 export const ShotInfoScreen = ({ navigation }) => {
-    const { theme } = useTheme();
+    const theme = useTheme()
 
     const { currentConditions, profileProperties, adjustedResult } = useCalculator()
     const { preferredUnits } = usePreferredUnits()

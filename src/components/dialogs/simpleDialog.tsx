@@ -11,6 +11,7 @@ const SimpleDialog = ({
   onDecline = null,
   style = null,
 }) => {
+  const theme = useTheme()
   const [visible, setVisible] = useState(false);
   const childRef = useRef(null); // Reference for the child
 
@@ -78,7 +79,7 @@ const SimpleDialog = ({
               size="small"
               onPress={onDeclineBtn}
               variant="tertiary"
-              color={useTheme().colors.tertiary}
+              color={theme.colors.tertiary}
             />
             <FAB icon="check" mode="flat" size="small" onPress={onAcceptBtn} />
           </Dialog.Actions>

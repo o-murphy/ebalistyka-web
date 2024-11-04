@@ -1,13 +1,12 @@
 import { ScrollView, StyleSheet } from "react-native";
-import { useTheme } from "../../../context/themeContext";
 import { TopContainer } from "./components/topContainer";
 import { BotContainer } from "./components/botContainer";
-import { styles } from "../../../components/widgets/measureFields/measureField/measureField";
 import { useCalculator } from "../../../context/profileContext";
 import { useEffect } from "react";
+import { useTheme } from "react-native-paper";
 
-export const HomeScreen = ({ navigation }) => {
-    const { theme } = useTheme();
+export const HomeScreen = ({ navigation = null }) => {
+    const theme = useTheme();
     const { profileProperties, currentConditions, fire } = useCalculator()
 
     useEffect(() => {

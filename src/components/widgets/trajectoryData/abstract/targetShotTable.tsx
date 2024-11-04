@@ -1,7 +1,6 @@
-import { DataTable, Text } from 'react-native-paper';
+import { DataTable, Text, useTheme } from 'react-native-paper';
 import { HitResult, TrajectoryData, Unit, UnitProps } from 'js-ballistics/dist/v2';
-import { StyleSheet, ScrollView, View } from 'react-native';
-import { useTheme } from '../../../../context/themeContext';
+import { StyleSheet } from 'react-native';
 import { useState } from 'react';
 
 
@@ -12,8 +11,7 @@ export const TargetShotTable = ({ hitResult, reverse = false }: { hitResult: Hit
 
   const isScrollable = containerWidth < tableWidth;
 
-
-  const { theme } = useTheme()
+  const theme = useTheme()
   const hitResultError = hitResult instanceof Error;
 
   if (hitResultError) {

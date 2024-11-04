@@ -1,6 +1,5 @@
 import { ScrollView, StyleSheet, View } from "react-native";
-import { useTheme } from "../../context/themeContext";
-import { Appbar, FAB, Switch, Text } from "react-native-paper";
+import { Appbar, FAB, Switch, Text, useTheme } from "react-native-paper";
 import { useState } from "react";
 import SettingsUnitCard from "../../components/cards/settingsCard";
 import { NativeStackHeaderProps } from "@react-navigation/native-stack";
@@ -10,7 +9,7 @@ export const WeatherTopAppBar = ({...props}: NativeStackHeaderProps) => {
     
     const { back, navigation } = props;
 
-    const { theme } = useTheme()
+    const theme = useTheme()
     const [settingsVisible, setSettingsVisible] = useState(false)
 
     
@@ -32,7 +31,7 @@ export const WeatherTopAppBar = ({...props}: NativeStackHeaderProps) => {
 
 
 export const WeatherScreen = ({ navigation }) => {
-    const { theme } = useTheme();
+    const theme = useTheme()
 
     const [usePowderSens, setUsePowderSens] = useState(false);
 

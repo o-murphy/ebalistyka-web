@@ -1,6 +1,5 @@
-import { Text } from "react-native-paper";
+import { Text, useTheme } from "react-native-paper";
 import CustomCard from "./customCard";
-import { useTheme } from "../../context/themeContext";
 import { CalculationState, useCalculator } from "../../context/profileContext";
 import { ColorValue, StyleSheet, View } from "react-native";
 import { useEffect, useRef, useState } from "react";
@@ -9,7 +8,7 @@ import { CurrentConditionsProps } from "../../utils/ballisticsCalculator";
 import RecalculateChip from "../widgets/recalculateChip";
 
 const CalculationStateCard = (cardStyle) => {
-    const { theme } = useTheme();
+    const theme = useTheme();
     const {
         calcState, currentConditions,
         profileProperties, hitResult,

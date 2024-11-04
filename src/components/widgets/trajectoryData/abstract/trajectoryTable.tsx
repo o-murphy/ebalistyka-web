@@ -1,11 +1,9 @@
-import { DataTable, Text } from 'react-native-paper';
+import { DataTable, Text, useTheme } from 'react-native-paper';
 import { HitResult, TrajectoryData, UNew, UnitProps } from 'js-ballistics/dist/v2';
 import { StyleSheet, ScrollView, View } from 'react-native';
-import { useTheme } from '../../../../context/themeContext';
 import { useState } from 'react';
 import { usePreferredUnits } from '../../../../context/preferredUnitsContext';
 import { useCalculator } from '../../../../context/profileContext';
-import { Unit } from 'js-ballistics';
 
 
 export const TrajectoryTable = ({ hitResult, reverse = false }: { hitResult: HitResult | Error, reverse?: boolean }) => {
@@ -20,8 +18,7 @@ export const TrajectoryTable = ({ hitResult, reverse = false }: { hitResult: Hit
 
   const isScrollable = containerWidth < tableWidth;
 
-
-  const { theme } = useTheme()
+  const theme = useTheme()
   const hitResultError = hitResult instanceof Error;
 
   // const trajectory = !hitResultError && hitResult?.trajectory.filter(row => 

@@ -1,13 +1,12 @@
 import { StyleSheet, View } from "react-native"
-import { Chip, FAB, Icon } from "react-native-paper"
-import { useTheme } from "../../../../context/themeContext"
+import { Chip, FAB, Icon, useTheme } from "react-native-paper"
 import { useCalculator } from "../../../../context/profileContext"
 import { useEffect, useState } from "react"
 
 
 
 export const ProfileTitle = () => {
-    const {theme} = useTheme()
+    const theme = useTheme()
     const {profileProperties} = useCalculator()
 
     const [profileName, setProfileName] = useState(null)

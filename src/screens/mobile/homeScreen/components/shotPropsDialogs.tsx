@@ -137,8 +137,7 @@ const ValueDialog: React.FC<ValueDialogProps> = ({
                     >
                         <DoubleSpinBox value={localValue} onValueChange={setLocalValue} onError={setError} {...fieldProps} />
                         {error && <HelperText type="error" visible={!!error}>{error.message}</HelperText>}
-                        {/* <RulerSlider {...scrollWheelProps} style={{marginVertical: 16}}/> */}
-                        {enableSlider && <ValueSlider fieldProps={fieldProps} value={localValue} onChange={setLocalValue} style={{paddingTop: 16}}/>}
+                        {enableSlider && <ValueSlider fieldProps={fieldProps} value={localValue} onChange={setLocalValue} style={{marginTop: 16}}/>}
                     </Dialog.Content>
                     <Dialog.Actions>
                         <FAB size="small" icon="check" variant="secondary" onPress={onSubmit} />

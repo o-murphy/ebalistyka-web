@@ -3,9 +3,9 @@ import { StyleSheet, View } from 'react-native';
 import { Svg, Circle, Text } from 'react-native-svg';
 import HT5 from '../../../../../assets/HT5'; // Your base SVG
 import { useCalculator } from '../../../../context/profileContext';
-import { useTheme } from '../../../../context/themeContext';
 import { usePreferredUnits } from '../../../../context/preferredUnitsContext';
 import { TrajectoryData, UNew, Unit } from 'js-ballistics/dist/v2';
+import { useTheme } from 'react-native-paper';
 
 
 interface ReticleProps {
@@ -20,7 +20,7 @@ export const Reticle: React.FC<ReticleProps> = ({ trajectory, step = 100 }) => {
 
     const { currentConditions } = useCalculator()
     const { preferredUnits } = usePreferredUnits()
-    const { theme } = useTheme()
+    const theme = useTheme()
 
     const trajStep = parseFloat((UNew.Meter(currentConditions.trajectoryStep).In(preferredUnits.distance) / 10).toFixed(0)) * 10
     const filterValues = (value) => {

@@ -1,13 +1,13 @@
 import { LineChart } from 'react-native-chart-kit';
-import { useTheme } from '../../context/themeContext';
 import { useState } from 'react';
 import { View } from 'react-native';
+import { useTheme } from 'react-native-paper';
 
 
 // Arrow function component
 const CustomChart = ({containerStyle, data, chartProps}) => {
 
-    const { theme } = useTheme()
+    const theme = useTheme();
     const [containerWidth, setContainerWidth] = useState(0);
 
     return (

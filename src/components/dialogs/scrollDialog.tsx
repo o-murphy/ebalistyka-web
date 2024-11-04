@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import { Chip, Dialog, FAB, Portal } from "react-native-paper";
-import { useTheme } from "../../context/themeContext";
+import { useThemeSwitch } from "../../context/themeContext";
 
 const SimpleScrollDialog = ({
   children,
@@ -14,7 +14,7 @@ const SimpleScrollDialog = ({
 
   const [visible, setVisible] = useState(false);
 
-  const {theme} = useTheme()
+  const {theme} = useThemeSwitch()
 
   const showDialog = () => setVisible(true);
   const hideDialog = () => {

@@ -1,9 +1,8 @@
-import { Chip } from "react-native-paper";
+import { Chip, useTheme } from "react-native-paper";
 import React, { useMemo, useState } from "react";
 import CustomCard from "./customCard";
 import { StyleSheet, View } from "react-native";
 import { useCalculator } from "../../context/profileContext";
-import { useTheme } from "../../context/themeContext";
 import { usePreferredUnits } from "../../context/preferredUnitsContext";
 import { Unit, UnitProps } from "js-ballistics/dist/v2";
 import { TargetShotTable } from "../widgets/trajectoryData/abstract/targetShotTable";
@@ -18,7 +17,7 @@ interface SingleShotCardProps {
 
 const SingleShotChips = ({ chipLabels }) => {
     const [chipTextStyle, setChipTextStyle] = useState({ fontSize: 12 });
-    const { theme } = useTheme();
+    const theme = useTheme();
 
     // Memoize styles to prevent recalculation on every render
     const _styles = useMemo(() => StyleSheet.create({

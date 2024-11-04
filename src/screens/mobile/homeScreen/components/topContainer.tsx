@@ -1,6 +1,5 @@
 import { StyleSheet, View } from "react-native"
-import { FAB, Text } from "react-native-paper"
-import { useTheme } from "../../../../context/themeContext"
+import { FAB, Text, useTheme } from "react-native-paper"
 import { ProfileTitle } from "./profileTitle"
 import { ShotPropertiesContainer } from "./shotProperties"
 import { LookAngleDialog, TargetDistanceDialog, WindSpeedDialog } from "./shotPropsDialogs"
@@ -13,7 +12,7 @@ const bigFABsLabels = [
 
 export const TopContainer = () => {
 
-    const { theme } = useTheme()
+    const theme = useTheme()
 
     const windSpeedProps = {
         size: "medium",

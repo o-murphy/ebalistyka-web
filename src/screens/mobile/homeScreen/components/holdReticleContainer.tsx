@@ -1,10 +1,10 @@
 import { Angular } from "js-ballistics/dist/v2"
 import { StyleSheet, View } from "react-native"
-import { useTheme } from "../../../../context/themeContext"
 import HT5 from '../../../../../assets/HT5'; // Your base SVG
+import { useTheme } from "react-native-paper";
 
 export const HoldReticleContainer = ({ hold }: { hold: { hold: Angular, wind: Angular } }) => {
-    const { theme } = useTheme()
+    const theme = useTheme()
 
     return (
         <View style={[styles.shotResultReticleContainer, { backgroundColor: theme.colors.onSecondary }]}>

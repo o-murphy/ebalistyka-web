@@ -1,7 +1,7 @@
 import { StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native";
 import Icon, { IconSource } from "react-native-paper/src/components/Icon";
-import { useTheme } from "../../../../context/themeContext";
 import { useState } from "react";
+import { useTheme } from "react-native-paper";
 
 
 interface TouchableTileProps {
@@ -15,7 +15,7 @@ const TouchableIcon: React.FC<TouchableTileProps> = ({
     icon = null,
     onPress = null,
 }) => {
-    const { theme } = useTheme()
+    const theme = useTheme();
     const [dynamicIconSize, setDynamicIconSize] = useState(null);
 
     const handleLayout = (event) => {
@@ -35,7 +35,7 @@ const TouchableIcon: React.FC<TouchableTileProps> = ({
 }
 
 const TouchableValueSelector = ({ children, onUp, onDown }) => {
-    const { theme } = useTheme();
+    const theme = useTheme();
 
     const _styles = {
         container: [styles.column, styles.selector, { backgroundColor: theme.colors.surfaceVariant }],

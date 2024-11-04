@@ -1,8 +1,7 @@
 import React from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { useTheme } from '../../../../context/themeContext';
 import { Angular, Distance, HitResult, TrajectoryData, UNew, Unit, UnitProps, Velocity } from 'js-ballistics/dist/v2';
-import { Card, Text } from 'react-native-paper';
+import { Card, Text, useTheme } from 'react-native-paper';
 import getFractionDigits from '../../../../utils/fractionConvertor';
 import { ToolTipRow } from './tooltipRow';
 
@@ -21,7 +20,7 @@ interface TrajectoryTooltipProps {
 }
 
 const TrajectoryTooltip: React.FC<TrajectoryTooltipProps> = ({ active, label, payload, preferredUnits }) => {
-  const { theme } = useTheme();
+  const theme = useTheme()
 
   // Check if the tooltip should be displayed
   if (active && payload && payload.length) {
@@ -56,7 +55,7 @@ export interface WindageChartProps {
 export const TrajectoryChart: React.FC<WindageChartProps> = ({
   results, preferredUnits, maxDistance
 }) => {
-  const { theme } = useTheme();
+  const theme = useTheme()
 
   if (results instanceof Error) return (
     <Text>Can't display chart</Text>

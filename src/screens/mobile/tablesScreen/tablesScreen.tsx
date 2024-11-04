@@ -1,12 +1,11 @@
 import { View } from "react-native";
-import { useTheme } from "../../../context/themeContext";
-import { Appbar, Dialog, FAB, IconButton, Portal, Text } from "react-native-paper";
+import { Appbar, Dialog, FAB, HelperText, IconButton, Portal, Text, useTheme } from "react-native-paper";
 import { NativeStackHeaderProps } from "@react-navigation/native-stack";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import SettingsUnitCard from "../../../components/cards/settingsCard";
 import { useCalculator } from "../../../context/profileContext";
 import { TrajectoryTable, ZerosDataTable } from "../../../components/widgets/tableView/tableView";
-import { MeasureFormFieldProps, MeasureFormFieldRefreshable } from "../../../components/widgets/measureFields/measureField";
+import MeasureFormField, { MeasureFormFieldProps } from "../../../components/widgets/measureFields/measureField";
 import { usePreferredUnits } from "../../../context/preferredUnitsContext";
 import { Distance, UNew, Unit, UnitProps } from "js-ballistics/dist/v2";
 import getFractionDigits from "../../../utils/fractionConvertor";
@@ -16,7 +15,7 @@ export const TablesTopAppBar = ({ ...props }: NativeStackHeaderProps) => {
 
     const { back, navigation } = props;
 
-    const { theme } = useTheme()
+    const theme = useTheme()
     const [settingsVisible, setSettingsVisible] = useState(false)
 
     return (
@@ -35,7 +34,22 @@ export const TablesTopAppBar = ({ ...props }: NativeStackHeaderProps) => {
 }
 
 
-export const TrajectoryStepField = ({trajectoryStep, setTrajectoryStep, onError}) => {
+// Define UnitType and UnitTypeClass to accept class types for handling units
+type UnitType = "velocity" | "angular" | "distance"; // Add other types if needed
+type UnitClass = typeof Distance; // Add other unit classes if needed
+
+
+const useCurrentValue = (
+    value: number,
+    unitTypeClass: UnitClass,
+    defUnit: Unit,
+    prefUnit: Unit
+): number => {
+    return new unitTypeClass(value, defUnit).In(prefUnit);
+};
+
+
+export const TrajectoryStepField = ({ trajectoryStep, setTrajectoryStep, onError }) => {
 
     const { preferredUnits } = usePreferredUnits()
 
@@ -54,29 +68,22 @@ export const TrajectoryStepField = ({trajectoryStep, setTrajectoryStep, onError}
         maxValue: UNew.Meter(500).In(prefUnit),
     }), [accuracy, prefUnit])
 
-    const value: number = useMemo(() => UNew.Meter(
-        trajectoryStep ? 
-        trajectoryStep : 100
-    ).In(prefUnit), [trajectoryStep, prefUnit])
-
-    const onValueChange = useCallback((value: number): void => {
-        setTrajectoryStep(value)
-    }, [prefUnit]);
+    const value = useCurrentValue(trajectoryStep, Distance, Unit.Meter, prefUnit)
+    const onValueChange = setTrajectoryStep
 
     return (
-        <MeasureFormFieldRefreshable 
-            fieldProps={fieldProps}
+        <MeasureFormField
+            {...fieldProps}
             value={value}
             onValueChange={onValueChange}
-            refreshable={false}
-            buttonPosition="left"
             onError={onError}
+            strict={false}
         />
     )
 }
 
 
-export const TrajectoryRangeField = ({trajectoryRange, setTrajectoryRange, onError}) => {
+export const TrajectoryRangeField = ({ trajectoryRange, setTrajectoryRange, onError }) => {
 
     const { preferredUnits } = usePreferredUnits()
 
@@ -94,29 +101,24 @@ export const TrajectoryRangeField = ({trajectoryRange, setTrajectoryRange, onErr
         maxValue: UNew.Meter(3000).In(prefUnit),
     }), [accuracy, prefUnit])
 
-    const value: number = useMemo(() => UNew.Meter(
-        trajectoryRange ? 
-        trajectoryRange : 100
-    ).In(prefUnit), [trajectoryRange, prefUnit])
-
-    const onValueChange = useCallback((value: number): void => {
-        setTrajectoryRange(value)
-    }, [prefUnit]);
+    const value = useCurrentValue(trajectoryRange, Distance, Unit.Meter, prefUnit)
+    const onValueChange = setTrajectoryRange
+    console.log("FFF", value)
 
     return (
-        <MeasureFormFieldRefreshable 
-            fieldProps={fieldProps}
+        <MeasureFormField
+            {...fieldProps}
             value={value}
             onValueChange={onValueChange}
-            refreshable={false}
-            buttonPosition="left"
             onError={onError}
+            strict={false}
         />
     )
 }
 
 
 export const TableSettingsDialog = ({ visible, setVisible }) => {
+    const theme = useTheme()
     const { currentConditions, updateCurrentConditions } = useCalculator();
     const { preferredUnits } = usePreferredUnits()
 
@@ -124,14 +126,18 @@ export const TableSettingsDialog = ({ visible, setVisible }) => {
     const [trajectoryRange, setTrajectoryRange] = useState(currentConditions?.trajectoryRange)
     const [stepError, setStepError] = useState(null)
     const [rangeError, setRangeError] = useState(null)
+    // const [submitError, setSubmitError] = useState(null)
 
     const onSubmit = () => {
         if (!stepError && !rangeError) {
+            // setSubmitError(null)
             updateCurrentConditions({
                 trajectoryStep: new Distance(trajectoryStep, preferredUnits.distance).In(Unit.Meter),
                 trajectoryRange: new Distance(trajectoryRange, preferredUnits.distance).In(Unit.Meter),
             })
-            setVisible(false)    
+            setVisible(false)
+        } else {
+            // setSubmitError(new Error("Invalid tables settings"))
         }
     }
 
@@ -144,14 +150,36 @@ export const TableSettingsDialog = ({ visible, setVisible }) => {
     return (
         <Portal>
             <Dialog visible={visible} onDismiss={hideDialog}>
-                <Dialog.Title>Tables settings</Dialog.Title>
+                <Dialog.Title>
+                    <View style={{ width: "100%", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+                        <Text>Tables settings</Text>
+                        <IconButton icon={"close"} onPress={hideDialog} />
+                    </View>
+                </Dialog.Title>
                 <Dialog.Content>
-                    <TrajectoryRangeField trajectoryRange={trajectoryRange} setTrajectoryRange={setTrajectoryRange} onError={setRangeError} />
+
+                    <View style={{ marginBottom: 16 }}>
+                        <TrajectoryRangeField trajectoryRange={trajectoryRange} setTrajectoryRange={setTrajectoryRange} onError={setRangeError} />
+                        {rangeError && <HelperText type="error" visible={!!rangeError}>
+                            {rangeError.message}
+                        </HelperText>}
+                    </View>
+
                     <TrajectoryStepField trajectoryStep={trajectoryStep} setTrajectoryStep={setTrajectoryStep} onError={setStepError} />
+                    {stepError && <HelperText type="error" visible={!!stepError}>
+                        {stepError.message}
+                    </HelperText>}
+                
                 </Dialog.Content>
                 <Dialog.Actions>
-                    <FAB size="small" icon="check" variant="secondary" onPress={onSubmit} />
-                    <FAB size="small" icon="close" variant="tertiary" onPress={hideDialog} />
+                    {(!stepError && !rangeError) && <FAB
+                        size="small"
+                        label="Ok"
+                        icon="check"
+                        variant="secondary"
+                        mode="flat"
+                        onPress={onSubmit}
+                    />}
                 </Dialog.Actions>
             </Dialog>
         </Portal>
@@ -159,8 +187,8 @@ export const TableSettingsDialog = ({ visible, setVisible }) => {
 }
 
 
-export const TablesScreen = ({ navigation }) => {
-    const { theme } = useTheme();
+export const TablesScreen = ({ navigation = null }) => {
+    const theme = useTheme();
     const { hitResult } = useCalculator()
 
     const [settingsVisible, setSettingsVisible] = useState(false)

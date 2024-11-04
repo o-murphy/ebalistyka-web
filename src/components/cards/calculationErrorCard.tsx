@@ -1,6 +1,5 @@
-import { Text } from "react-native-paper"
+import { Text, useTheme } from "react-native-paper"
 import CustomCard from "./customCard";
-import { useTheme } from "../../context/themeContext";
 
 
 interface CalculationErrorProps {
@@ -11,7 +10,7 @@ interface CalculationErrorProps {
 
 const CalculationErrorCard = ({ title = "Error", details = "Undefined" }: CalculationErrorProps) => {
 
-    const { theme } = useTheme();
+    const theme = useTheme();
 
     const fontStyle = {
         color: theme.colors.error
