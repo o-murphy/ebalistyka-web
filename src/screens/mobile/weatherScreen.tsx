@@ -10,7 +10,7 @@ export const WeatherTopAppBar = ({...props}: NativeStackHeaderProps) => {
     const { back, navigation } = props;
 
     const theme = useTheme()
-    const [settingsVisible, setSettingsVisible] = useState(false)
+    // const [settingsVisible, setSettingsVisible] = useState(false)
 
     
 
@@ -21,9 +21,10 @@ export const WeatherTopAppBar = ({...props}: NativeStackHeaderProps) => {
         }}>
             <Appbar.BackAction onPress={() => navigation.navigate(back.title)}/>
             <Appbar.Content title="Shooting conditions"/>
-            <Appbar.Action icon="cog-outline" onPress={() => setSettingsVisible(true)} />
+            <Appbar.Action icon="cog-outline" onPress={() => navigation.navigate("SettingsScreen")} />
+            {/* <Appbar.Action icon="cog-outline" onPress={() => setSettingsVisible(true)} /> */}
 
-            <SettingsUnitCard visibility={[settingsVisible, setSettingsVisible]} />
+            {/* <SettingsUnitCard visibility={[settingsVisible, setSettingsVisible]} /> */}
 
         </Appbar.Header>
     )
@@ -94,7 +95,7 @@ export const WeatherScreen = ({ navigation }) => {
                     />
                     <FAB
                         size="small"
-                        icon={"speedometer"}
+                        icon={"gauge"}
                         onPress={() => console.log('Pressure')}
                         label={"1000 hPa"}
                         style={styles.fabStyle}

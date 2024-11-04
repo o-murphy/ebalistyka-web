@@ -15,7 +15,7 @@ export const TablesTopAppBar = ({ ...props }: NativeStackHeaderProps) => {
     const { back, navigation } = props;
 
     const theme = useTheme()
-    const [settingsVisible, setSettingsVisible] = useState(false)
+    // const [settingsVisible, setSettingsVisible] = useState(false)
 
     return (
         <Appbar.Header mode={"center-aligned"} style={{
@@ -24,9 +24,10 @@ export const TablesTopAppBar = ({ ...props }: NativeStackHeaderProps) => {
         }}>
             <Appbar.BackAction onPress={() => navigation.navigate(back.title)} />
             <Appbar.Content title="Tables" />
-            <Appbar.Action icon="cog-outline" onPress={() => setSettingsVisible(true)} />
+            {/* <Appbar.Action icon="cog-outline" onPress={() => setSettingsVisible(true)} /> */}
+            <Appbar.Action icon="cog-outline" onPress={() => navigation.navigate("SettingsScreen")} />
 
-            <SettingsUnitCard visibility={[settingsVisible, setSettingsVisible]} />
+            {/* <SettingsUnitCard visibility={[settingsVisible, setSettingsVisible]} /> */}
 
         </Appbar.Header>
     )

@@ -7,7 +7,7 @@ import { Dropdown } from "react-native-paper-dropdown";
 import { Unit, UnitProps, Measure } from "js-ballistics/dist/v2"
 import { usePreferredUnits } from "../../context/preferredUnitsContext";
 
-const getUnitList = (measure: Object) =>
+export const getUnitList = (measure: Object) =>
     Object.keys(measure).map(
         (key: string): {
             label: string,
@@ -21,17 +21,18 @@ const getUnitList = (measure: Object) =>
     );
 
 
-interface UnitSelectorProps {
+export interface UnitSelectorProps {
     fKey?: string;
     label: string;
     value?: Unit;
     defaultValue: Unit;
     options: { label: string, value: Unit }[];
     onValueChange?: (value: Unit) => void;
-    containerStyle?: StyleProp<ViewStyle>
+    containerStyle?: StyleProp<ViewStyle>;
+    icon?: any
 }
 
-const UnitSelector = ({ fKey: key = null, label, value = null, defaultValue, options, onValueChange, containerStyle }: UnitSelectorProps) => {
+export const UnitSelector = ({ fKey: key = null, label, value = null, defaultValue, options, onValueChange, containerStyle, icon }: UnitSelectorProps) => {
 
     const [curValue, setCurValue] = useState(value ?? defaultValue);
 

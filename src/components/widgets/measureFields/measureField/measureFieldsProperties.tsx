@@ -16,7 +16,7 @@ export const measureFieldsProps: Record<string, Partial<MeasureFormFieldProps>> 
         fKey: "pressure",
         label: "Pressure",
         suffix: UnitProps[Unit.hPa].symbol,
-        icon: "speedometer",
+        icon: "gauge",
         maxValue: 1300,
         minValue: 700,
         fractionDigits: 0,

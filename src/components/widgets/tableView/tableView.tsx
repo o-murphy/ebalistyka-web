@@ -176,8 +176,6 @@ export const TrajectoryTable = ({ hitResult, style = null }) => {
     const theme = useTheme()
     const { tableSettings } = useTableSettings()
 
-    console.log("TS", tableSettings)
-
     const tableHeaders = useTableHeaders()
 
     const trajectoryStepRaw = UNew.Meter(tableSettings.trajectoryStep).rawValue
