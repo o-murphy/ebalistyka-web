@@ -178,7 +178,7 @@ export const TrajectoryTable = ({ hitResult, style = null }) => {
     const tableHeaders = useTableHeaders()
 
     const trajectoryStepRaw = UNew.Meter(currentConditions.trajectoryStep).rawValue
-    const trajectoryRangeRaw = hitResult.trajectory[hitResult.trajectory.length - 1].distance.rawValue
+    const trajectoryRangeRaw = UNew.Meter(currentConditions.trajectoryRange + 1).rawValue
 
     let trajectory = [];
 
@@ -193,6 +193,8 @@ export const TrajectoryTable = ({ hitResult, style = null }) => {
             trajectory.push(closestValue);
         }
     }
+
+    trajectory = trajectory.filter(row => row.distance.rawValue <= trajectoryRangeRaw)
 
     const zeroRow = trajectory.slice(1).reduce((closest, item) => {
         const itemDifference = Math.abs(item.dropAdjustment.rawValue - 0);
