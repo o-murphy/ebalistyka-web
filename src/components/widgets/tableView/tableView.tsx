@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, ScrollView, StyleSheet, Pressable, StyleProp, TextStyle, ViewStyle } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import { Table, Row } from 'react-native-table-component';
-import { HitResult, TrajectoryData, TrajFlag, UNew, UnitProps } from 'js-ballistics/dist/v2';
+import { HitResult, TrajFlag, UNew, UnitProps } from 'js-ballistics/dist/v2';
 import { usePreferredUnits } from '../../../context/preferredUnitsContext';
 import { RowDetailsDialog } from './rowDetaisDialog';
 import { useTableSettings } from '../../../context/tableSettingsContext';
@@ -231,7 +231,7 @@ export const TrajectoryTable = ({ hitResult, style = null }) => {
     });
 
     return (
-        <ScrollView>
+        <View style={{flex: 1}}>
             <RowDetailsDialog row={trajectory?.[longPressed]} visible={detailsVisible} setVisible={setDetailsVisible} />
             <ResponsiveTableView
                 tableHeaders={tableHeaders}
@@ -239,6 +239,6 @@ export const TrajectoryTable = ({ hitResult, style = null }) => {
                 style={style}
                 rowLongPress={handleLongPress}
             />
-        </ScrollView>
+        </View>
     )
 }
