@@ -43,9 +43,9 @@ export const HoldValuesContainer = ({ hold }: { hold: { hold: Angular, wind: Ang
 
     return (
         <View style={[styles.shotResultHoldContainer, { backgroundColor: theme.colors.onSecondary }]} onLayout={onHoldLayout}>
-            <HoldValues icon={"arrow-up"} value={hold?.hold} color={theme.colors.secondary} layoutSize={holdLayoutSize} />
+            <HoldValues icon={"arrow-expand-vertical"} value={hold?.hold} color={theme.colors.secondary} layoutSize={holdLayoutSize} />
             <Divider bold style={{ height: 1, width: "80%", backgroundColor: theme.colors.secondary }} />
-            <HoldValues icon={"arrow-left"} value={hold?.wind} color={theme.colors.secondary} layoutSize={holdLayoutSize} />
+            <HoldValues icon={"arrow-expand-horizontal"} value={hold?.wind} color={theme.colors.secondary} layoutSize={holdLayoutSize} />
         </View>
     )
 }

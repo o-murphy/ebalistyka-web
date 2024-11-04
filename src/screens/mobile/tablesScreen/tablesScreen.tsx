@@ -1,5 +1,5 @@
 import { View } from "react-native";
-import { Appbar, Dialog, FAB, HelperText, IconButton, Portal, Text, useTheme } from "react-native-paper";
+import { Appbar, Button, Dialog, FAB, HelperText, IconButton, Portal, Text, useTheme } from "react-native-paper";
 import { NativeStackHeaderProps } from "@react-navigation/native-stack";
 import { useMemo, useState } from "react";
 import SettingsUnitCard from "../../../components/cards/settingsCard";
@@ -118,7 +118,7 @@ export const TrajectoryRangeField = ({ trajectoryRange, setTrajectoryRange, onEr
 
 
 export const TableSettingsDialog = ({ visible, setVisible }) => {
-    const theme = useTheme()
+
     const { currentConditions, updateCurrentConditions } = useCalculator();
     const { preferredUnits } = usePreferredUnits()
 
@@ -126,7 +126,6 @@ export const TableSettingsDialog = ({ visible, setVisible }) => {
     const [trajectoryRange, setTrajectoryRange] = useState(currentConditions?.trajectoryRange)
     const [stepError, setStepError] = useState(null)
     const [rangeError, setRangeError] = useState(null)
-    // const [submitError, setSubmitError] = useState(null)
 
     const onSubmit = () => {
         if (!stepError && !rangeError) {
@@ -169,12 +168,11 @@ export const TableSettingsDialog = ({ visible, setVisible }) => {
                     {stepError && <HelperText type="error" visible={!!stepError}>
                         {stepError.message}
                     </HelperText>}
-                
+
                 </Dialog.Content>
                 <Dialog.Actions>
                     {(!stepError && !rangeError) && <FAB
                         size="small"
-                        label="Ok"
                         icon="check"
                         variant="secondary"
                         mode="flat"

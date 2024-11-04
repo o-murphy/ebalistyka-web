@@ -6,7 +6,7 @@ import BulletCard from '../cards/bulletCard';
 import ZeroAtmoCard from '../cards/zeroAtmoCard';
 import CurrentWindCard from '../cards/currentWindCard';
 import CurrentAtmoCard from '../cards/currentAtmoCard';
-import { PaperProvider, useTheme } from 'react-native-paper';
+import { PaperProvider } from 'react-native-paper';
 import TopAppBar from '../widgets/topAppBar';
 import { ZeroTable, AdjustedTable, DragChart, HorizontalTrajectoryChart, AdjustedTrajectoryChart, HorizontalWindageChart, AdjustedWindageChart, TrajectoryReticle, AdjustedReticle } from '../widgets/trajectoryData';
 import CustomCard from '../cards/customCard';
@@ -16,6 +16,7 @@ import TrajectoryParamsCard from '../cards/trajectoryParamsCard';
 import CalculationModeCard from '../cards/calculationModeCard';
 import SingleShotCard from '../cards/singleShotCard';
 import TargetCard from '../cards/targetCard';
+import { useThemeSwitch } from '../../context/themeContext';
 
 
 
@@ -136,7 +137,7 @@ const ResultInfo = () => {
 
 
 const MainScreen = () => {
-    const theme = useTheme();
+    const {theme} = useThemeSwitch();
 
     return (
         <PaperProvider theme={theme}>
