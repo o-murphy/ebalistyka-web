@@ -2,7 +2,7 @@ import { View } from "react-native"
 import { Chip, Divider, List, Text } from "react-native-paper"
 import { useCalculator } from "../../../../context/profileContext"
 import { usePreferredUnits } from "../../../../context/preferredUnitsContext"
-import { Distance, UNew, UnitProps } from "js-ballistics/dist/v2"
+import { Distance, UNew, Unit, UnitProps } from "js-ballistics/dist/v2"
 import getFractionDigits from "../../../../utils/fractionConvertor"
 
 
@@ -46,8 +46,9 @@ export const ProfileDetails = () => {
     const twistAccuracy = getFractionDigits(0.1, UNew.Inch(1).In(preferredUnits.sizes))
     const bLengthAccuracy = getFractionDigits(0.01, UNew.Inch(1).In(preferredUnits.sizes))
     const bWeightAccuracy = getFractionDigits(0.1, UNew.Grain(1).In(preferredUnits.weight))
+    const windSpeedAccuracy = getFractionDigits(0.1, UNew.MPS(1).In(preferredUnits.velocity))
 
-    const values = {
+    const props = {
         profName: profileProperties?.profileName,
         caliber: `${UNew.Inch(profileProperties?.bDiameter / 1000).In(preferredUnits.sizes).toFixed(caliberAccuracy)} ${UnitProps[preferredUnits.sizes].symbol}`,
         twist: `1:${UNew.Inch(profileProperties?.rTwist / 100).In(preferredUnits.sizes).toFixed(twistAccuracy)} ${UnitProps[preferredUnits.sizes].symbol}`,
@@ -60,36 +61,44 @@ export const ProfileDetails = () => {
         scHeight: `${UNew.Centimeter(profileProperties?.scHeight / 10).In(preferredUnits.sizes).toFixed(twistAccuracy)} ${UnitProps[preferredUnits.sizes].symbol}`,
     }
 
+    const conds = {
+        temp: `${UNew.Celsius(currentConditions?.temperature).In(preferredUnits.temperature).toFixed(0)} ${UnitProps[preferredUnits.temperature].symbol}`,
+        press: `${UNew.hPa(currentConditions?.pressure).In(preferredUnits.pressure).toFixed(0)} ${UnitProps[preferredUnits.pressure].symbol}`,
+        humidity: `${currentConditions?.humidity} %`,
+        windSpeed: `${UNew.MPS(currentConditions?.windSpeed).In(preferredUnits.velocity).toFixed(windSpeedAccuracy)}  ${UnitProps[preferredUnits.velocity].symbol}`,
+        windDir: `${(currentConditions?.windDirection * 30).toFixed(0)} ${UnitProps[Unit.Degree].symbol}`,
+    }
+
     return (
         <List.Section>
             <List.Accordion title={"Details"} >
                 <View style={{ flexDirection: "column", marginHorizontal: 16 }}>
-                    <Section text={"Profile name"} value={values.profName} />
+                    <Section text={"Profile name"} value={props.profName} />
 
                     <SectionTitle title={"Weapon"} />
-                    <Section text={"Caliber"} value={values.caliber} />
-                    <Section text={"Twist"} value={values.twist} />
-                    <Section text={"Twist direction"} value={values.twistDir} />
+                    <Section text={"Caliber"} value={props.caliber} />
+                    <Section text={"Twist"} value={props.twist} />
+                    <Section text={"Twist direction"} value={props.twistDir} />
 
                     <SectionTitle title={"Projectile"} />
-                    <Section text={"Drag model"} value={values.dragModel} />
+                    <Section text={"Drag model"} value={props.dragModel} />
                     <Section text={"BC"} value={"<bc>"} />
                     <Section text={"Muzzle velocity"} value={"<mv>"} />
-                    <Section text={"Zero muzzle velocity"} value={values.mv} />
-                    <Section text={"Zero distance"} value={values.zeroDist} />
-                    <Section text={"Bullet length"} value={values.bLength} />
-                    <Section text={"Bullet diameter"} value={values.caliber} />
-                    <Section text={"Bullet weight"} value={values.bWeight} />
+                    <Section text={"Zero muzzle velocity"} value={props.mv} />
+                    <Section text={"Zero distance"} value={props.zeroDist} />
+                    <Section text={"Bullet length"} value={props.bLength} />
+                    <Section text={"Bullet diameter"} value={props.caliber} />
+                    <Section text={"Bullet weight"} value={props.bWeight} />
 
                     <SectionTitle title={"Scope"} />
-                    <Section text={"Sight height"} value={values.scHeight} />
+                    <Section text={"Sight height"} value={props.scHeight} />
 
                     <SectionTitle title={"Atmosphere"} />
-                    <Section text={"Temperature"} value={"<temp>"} />
-                    <Section text={"Humidity"} value={"<humidity>"} />
-                    <Section text={"Pressure"} value={"<pressure>"} />
-                    <Section text={"Wind speed"} value={"<wind speed>"} />
-                    <Section text={"Wind direction"} value={"<wind direction>"} />
+                    <Section text={"Temperature"} value={conds.temp} />
+                    <Section text={"Humidity"} value={conds.humidity} />
+                    <Section text={"Pressure"} value={conds.press} />
+                    <Section text={"Wind speed"} value={conds.windSpeed} />
+                    <Section text={"Wind direction"} value={conds.windDir} />
 
                 </View>
 
