@@ -7,7 +7,7 @@ import { useEffect, useState } from "react"
 
 export const ProfileTitle = () => {
     const theme = useTheme()
-    const {profileProperties} = useCalculator()
+    const { profileProperties } = useCalculator()
 
     const [profileName, setProfileName] = useState(null)
     const [bulletName, setBulletName] = useState(null)
@@ -28,6 +28,8 @@ export const ProfileTitle = () => {
                 closeIcon={"square-edit-outline"}
                 onClose={() => { }}
                 style={styles.chipStyle}
+                disabled={true}
+
             >
                 {`${profileName} ${bulletName}`}
             </Chip>
@@ -35,6 +37,7 @@ export const ProfileTitle = () => {
                 size="small"
                 mode={"flat"}
                 animated={false}
+                disabled={true}
                 icon={() => (
                     <View style={styles.bulletIconStyle}>
                         <Icon size={28} source={"bullet"} color={theme.colors.secondary} />
@@ -47,11 +50,11 @@ export const ProfileTitle = () => {
 
 
 const styles = StyleSheet.create({
-    chipStyle: { 
-        flex: 1, 
-        marginRight: 8, 
-        justifyContent: "center", 
-        alignItems: "center" 
+    chipStyle: {
+        flex: 1,
+        marginRight: 8,
+        justifyContent: "center",
+        alignItems: "center"
     },
     bulletIconStyle: {
         transform: [

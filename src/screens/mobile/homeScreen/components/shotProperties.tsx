@@ -54,19 +54,22 @@ export const ShotPropertiesContainer = () => {
             icon: "help",
             size: "small",
             onPress: () => console.log('Help'),
-            style: { position: "absolute", top: 28, right: 28, }
+            style: { position: "absolute", top: 28, right: 28, },
+            disabled: true
         },
         {
             icon: "",
             size: "small",
             onPress: () => console.log('<Move>'),
-            style: { position: "absolute", bottom: 28, left: 28, }
+            style: { position: "absolute", bottom: 28, left: 28, },
+            disabled: true
         },
         {
             icon: "dots-horizontal",
             size: "small",
             onPress: () => console.log('Dots'),
-            style: { position: "absolute", bottom: 28, right: 28, }
+            style: { position: "absolute", bottom: 28, right: 28, },
+            disabled: true
         }
     ]
 

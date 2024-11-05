@@ -18,7 +18,7 @@ export const ConvertorTopAppBar = ({ ...props }: NativeStackHeaderProps) => {
             backgroundColor: theme.colors.elevation.level2
         }}>
             <Appbar.BackAction onPress={() => navigation.navigate(back.title)} />
-            <Appbar.Content title="Convertors" />
+            <Appbar.Content title="Convertor" />
             {/* <Appbar.Action icon="cog-outline" onPress={() => setSettingsVisible(true)} /> */}
 
             {/* <SettingsUnitCard visibility={[settingsVisible, setSettingsVisible]} /> */}
@@ -63,7 +63,7 @@ export const ConvertorScreen = ({ navigation }) => {
                     <Divider />
                     <List.Item title="Weight" left={props => <List.Icon {...props} icon="weight" />} onPress={() => console.log("w conv")} />
                     <Divider />
-                    <List.Item title="Pressure" left={props => <List.Icon {...props} icon="speedometer" />} onPress={() => console.log("p conv")} />
+                    <List.Item title="Pressure" left={props => <List.Icon {...props} icon="gauge" />} onPress={() => console.log("p conv")} />
                     <Divider />
                     <List.Item title="Temperature" left={props => <List.Icon {...props} icon="thermometer" />} onPress={() => console.log("t conv")} />
                     <Divider />
