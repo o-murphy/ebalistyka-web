@@ -26,11 +26,11 @@ export const ShotInfoTopAppBar = ({ ...props }: NativeStackHeaderProps) => {
 
 const InfoRow = ({ title, value, icon = null, last = false }) => (
     <View>
-    <View style={{ flexDirection: "row", justifyContent: "space-around", alignItems: "center", marginVertical: 8, marginHorizontal: 16 }}>
-        <Text style={{ flex: 2 }}>{title}</Text>
-        <Chip style={{ flex: 1 }} icon={icon} >{value}</Chip>
-    </View>
-    {!last && <Divider />}
+        <View style={{ flexDirection: "row", justifyContent: "space-around", alignItems: "center", marginVertical: 8, marginHorizontal: 16 }}>
+            <Text style={{ flex: 2 }}>{title}</Text>
+            <Chip style={{ flex: 1 }} icon={icon} >{value}</Chip>
+        </View>
+        {!last && <Divider />}
     </View>
 )
 
@@ -63,10 +63,23 @@ export const ShotInfoScreen = ({ navigation }) => {
         }
     }, [adjustedResult])
 
-    const styles = StyleSheet.create({
-        scrollViewContainer: {
+    // const styles = StyleSheet.create({
+    //     scrollViewContainer: {
+    //         backgroundColor: theme.colors.elevation.level1,
+    //         paddingBottom: 64, 
+    //     },
+    // });
+
+    const _styles = StyleSheet.create({
+        scrollView: {
+            flex: 1,
+            paddingBottom: 64,
             backgroundColor: theme.colors.background,
-            paddingBottom: 64, 
+        },
+        scrollViewContainer: {
+            paddingBottom: 16,
+            backgroundColor: theme.colors.elevation.level1,
+            borderBottomRightRadius: 32, borderBottomLeftRadius: 32
         },
     });
 
@@ -140,23 +153,24 @@ export const ShotInfoScreen = ({ navigation }) => {
     ]
 
     return (
-        <ScrollView
-            style={styles.scrollViewContainer}
-            keyboardShouldPersistTaps="always"
-            alwaysBounceVertical={false}
-            showsVerticalScrollIndicator={true}
+        <View style={{
+            flex: 1,
+            paddingBottom: 32,
+            backgroundColor: theme.colors.secondaryContainer
+        }}>
+            <ScrollView
+                style={_styles.scrollView}
+                keyboardShouldPersistTaps="always"
+                alwaysBounceVertical={false}
+                showsVerticalScrollIndicator={true}
 
-            contentContainerStyle={{
-                overflow: "hidden",
-                backgroundColor: theme.colors.elevation.level1,
-                borderBottomRightRadius: 32, borderBottomLeftRadius: 32,
-                paddingBottom: 16
-            }}
-        >
-            <View>
-                {rows.map((item, index) => <InfoRow key={`${index}`} {...item} />)}
-            </View>
+                contentContainerStyle={_styles.scrollViewContainer}
+            >
+                <View>
+                    {rows.map((item, index) => <InfoRow key={index} {...item} />)}
+                </View>
 
-        </ScrollView>
+            </ScrollView>
+        </View>
     )
 }

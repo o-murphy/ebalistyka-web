@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, ScrollView, StyleSheet, Pressable, StyleProp, TextStyle, ViewStyle } from 'react-native';
+import { View, ScrollView, StyleSheet, Pressable, StyleProp, TextStyle, ViewStyle, Platform } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import { Table, Row } from 'react-native-table-component';
 import { HitResult, TrajFlag, UNew, UnitProps } from 'js-ballistics/dist/v2';
@@ -10,15 +10,15 @@ import { useTableSettings } from '../../../context/tableSettingsContext';
 
 interface TableDataType {
     data: string[];
-    style?: StyleProp<ViewStyle>;
-    textStyle?: StyleProp<TextStyle>;
+    style: StyleProp<ViewStyle>;
+    textStyle: StyleProp<TextStyle>;
 }
 
 
 interface ResponsiveTableViewProps {
     tableHeaders: string[];
     tableData: TableDataType[];
-    style?: StyleProp<ViewStyle>;
+    style: StyleProp<ViewStyle>;
     rowLongPress?: (index: number) => void;
 }
 
@@ -78,7 +78,7 @@ export const ResponsiveTableView: React.FC<ResponsiveTableViewProps> = ({ tableH
 
     const styles = StyleSheet.create({
         noSelect: {
-            userSelect: 'none', // This will prevent text selection on web
+            userSelect: 'none'
         },
         horizontalScroll: {
             flexGrow: 1,
@@ -101,13 +101,13 @@ export const ResponsiveTableView: React.FC<ResponsiveTableViewProps> = ({ tableH
     return (
         <View style={[style, styles.noSelect]}>
 
-            <ScrollView horizontal contentContainerStyle={styles.horizontalScroll}>
+            <ScrollView horizontal contentContainerStyle={styles.horizontalScroll} >
                 <View style={styles.tableContainer}>
                     <Table borderStyle={styles.borderStyle} style={styles.table}>
                         <Row data={tableHeaders} style={styles.header} textStyle={styles.headerText} />
                     </Table>
 
-                    <ScrollView style={styles.dataWrapper}>
+                    <ScrollView style={styles.dataWrapper} >
                         <Table borderStyle={styles.borderStyle} style={styles.table}>
                             {tableData.map((rowData, index) => (
                                 <Pressable
@@ -118,8 +118,8 @@ export const ResponsiveTableView: React.FC<ResponsiveTableViewProps> = ({ tableH
                                 >
                                     <Row
                                         data={rowData.data}
-                                        style={index === selection ? styles.selectedRow : rowData?.style}
-                                        textStyle={index === selection ? styles.selectedRowText : rowData?.textStyle}
+                                        style={index === selection ? styles.selectedRow : (rowData.style || {})}
+                                        textStyle={index === selection ? styles.selectedRowText : (rowData.textStyle || {})}
                                         borderStyle={styles.borderStyle}
                                     />
                                 </Pressable>
@@ -159,6 +159,7 @@ export const ZerosDataTable = ({ hitResult, style = null }) => {
 
     const tableData: TableDataType[] = zeros.map(row => {
         return {
+            style: null,
             textStyle: styles.text,
             data: useMappedTableData({ row: row, displayFlag: true })
         }
@@ -167,7 +168,7 @@ export const ZerosDataTable = ({ hitResult, style = null }) => {
     return (
         <View>
             <RowDetailsDialog row={zeros?.[longPressed]} visible={detailsVisible} setVisible={setDetailsVisible} />
-            <ResponsiveTableView tableHeaders={tableHeaders} tableData={tableData} style={style} rowLongPress={handleLongPress}/>
+            <ResponsiveTableView tableHeaders={tableHeaders} tableData={tableData} style={style} rowLongPress={handleLongPress} />
         </View>
     )
 
@@ -231,7 +232,7 @@ export const TrajectoryTable = ({ hitResult, style = null }) => {
     });
 
     return (
-        <View style={{flex: 1}}>
+        <View style={{ flex: 1 }}>
             <RowDetailsDialog row={trajectory?.[longPressed]} visible={detailsVisible} setVisible={setDetailsVisible} />
             <ResponsiveTableView
                 tableHeaders={tableHeaders}

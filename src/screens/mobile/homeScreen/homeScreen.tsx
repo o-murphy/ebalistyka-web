@@ -69,7 +69,7 @@ export const HomeScreen = ({ navigation = null }) => {
         scrollView: {
             flex: 1, 
             paddingBottom: 64, 
-            backgroundColor: theme.colors.secondaryContainer
+            backgroundColor: theme.colors.background,
         },
         scrollViewContainer: {
             // backgroundColor: theme.colors.secondaryContainer

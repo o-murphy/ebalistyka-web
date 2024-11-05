@@ -83,7 +83,7 @@ export const ShotPropertiesContainer = () => {
 
             onTouchEnd={onWheelTouchRelease}
         />
-        {smallFABs.map((props, index) => <FAB key={`${index}`} {...props} />)}
+        {smallFABs.map((props, index) => <FAB key={index} {...props} />)}
     </View>
     )
 }

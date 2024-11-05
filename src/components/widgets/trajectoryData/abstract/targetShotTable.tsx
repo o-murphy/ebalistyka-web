@@ -69,30 +69,19 @@ export const TargetShotTable = ({ hitResult, reverse = false }: { hitResult: Hit
 
           <DataTable style={{alignSelf: "center", maxWidth: 400}}>
             <DataTable.Header style={tableStyles.row}>
-              {/* {headerTitles.map((item, index) => <HeaderText key={`${index}`}>{item}</HeaderText>)} */}
               <HeaderText>{""}</HeaderText>
-              {adjUnits.map((item, index) => <HeaderText key={`${index}`}>{UnitProps[item].symbol}</HeaderText>)}
+              {adjUnits.map((item, index) => <HeaderText key={index}>{UnitProps[item].symbol}</HeaderText>)}
             </DataTable.Header>
 
             <DataTable.Row style={tableStyles.row}>
               <DataTable.Cell {...headerStyle}>Hold</DataTable.Cell>
-              {adjUnits.map((item, index) => <DataTable.Cell key={`${index}`} {...headerStyle}>{hold?.In(item).toFixed(UnitProps[item].accuracy)}</DataTable.Cell>)}
+              {adjUnits.map((item, index) => <DataTable.Cell key={index} {...headerStyle}>{hold?.In(item).toFixed(UnitProps[item].accuracy)}</DataTable.Cell>)}
             </DataTable.Row>
               
             <DataTable.Row style={tableStyles.row}>
               <DataTable.Cell {...headerStyle}>Wind</DataTable.Cell>
-              {adjUnits.map((item, index) => <DataTable.Cell key={`${index}`} {...headerStyle}>{wind?.In(item).toFixed(UnitProps[item].accuracy)}</DataTable.Cell>)}
+              {adjUnits.map((item, index) => <DataTable.Cell key={index} {...headerStyle}>{wind?.In(item).toFixed(UnitProps[item].accuracy)}</DataTable.Cell>)}
             </DataTable.Row>
-
-
-            {/* {hold && adjUnits.map((u, index) => (
-              <DataTable.Row key={`${index}`} style={tableStyles.row}>
-                <DataTable.Cell {...headerStyle}>{UnitProps[u].name}</DataTable.Cell>
-                <DataTable.Cell {...headerStyle}>{hold.In(u).toFixed(UnitProps[u].accuracy)}</DataTable.Cell>
-                <DataTable.Cell {...headerStyle}>{wind.In(u).toFixed(UnitProps[u].accuracy)}</DataTable.Cell>
-              </DataTable.Row>
-            ))} */}
-
           </DataTable>
   );
 };

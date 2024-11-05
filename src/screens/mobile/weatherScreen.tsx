@@ -5,22 +5,22 @@ import SettingsUnitCard from "../../components/cards/settingsCard";
 import { NativeStackHeaderProps } from "@react-navigation/native-stack";
 
 
-export const WeatherTopAppBar = ({...props}: NativeStackHeaderProps) => {
-    
+export const WeatherTopAppBar = ({ ...props }: NativeStackHeaderProps) => {
+
     const { back, navigation } = props;
 
     const theme = useTheme()
     // const [settingsVisible, setSettingsVisible] = useState(false)
 
-    
+
 
     return (
         <Appbar.Header mode={"center-aligned"} style={{
             height: 48,
             backgroundColor: theme.colors.elevation.level2
         }}>
-            <Appbar.BackAction onPress={() => navigation.navigate(back.title)}/>
-            <Appbar.Content title="Shooting conditions"/>
+            <Appbar.BackAction onPress={() => navigation.navigate(back.title)} />
+            <Appbar.Content title="Shooting conditions" />
             <Appbar.Action icon="cog-outline" onPress={() => navigation.navigate("SettingsScreen")} />
             {/* <Appbar.Action icon="cog-outline" onPress={() => setSettingsVisible(true)} /> */}
 
@@ -44,25 +44,30 @@ export const WeatherScreen = ({ navigation }) => {
     const _styles = StyleSheet.create({
         scrollViewContainer: {
             flex: 1,
-            backgroundColor: theme.colors.secondaryContainer,
+            backgroundColor: theme.colors.background,
         },
     });
 
     return (
-        <ScrollView
-            style={_styles.scrollViewContainer}
-            keyboardShouldPersistTaps="always"
-            alwaysBounceVertical={false}
-            showsVerticalScrollIndicator={true}
+        <View style={{
+            flex: 1,
+            paddingBottom: 32,
+            backgroundColor: theme.colors.secondaryContainer
+        }}>
+            <ScrollView
+                style={_styles.scrollViewContainer}
+                keyboardShouldPersistTaps="always"
+                alwaysBounceVertical={false}
+                showsVerticalScrollIndicator={true}
 
-            contentContainerStyle={{
-                height: "60%", maxHeight: 420, 
-                padding: 8,
-                backgroundColor: theme.colors.elevation.level1,
-                borderBottomRightRadius: 32, borderBottomLeftRadius: 32
-            }}
-        >
-            {/* <View style={{
+                contentContainerStyle={{
+                    height: "60%", maxHeight: 420,
+                    padding: 8,
+                    backgroundColor: theme.colors.elevation.level1,
+                    borderBottomRightRadius: 32, borderBottomLeftRadius: 32
+                }}
+            >
+                {/* <View style={{
                 height: "60%", maxHeight: 420, padding: 8,
                 backgroundColor: theme.colors.elevation.level1,
                 borderBottomRightRadius: 32, borderBottomLeftRadius: 32
@@ -107,14 +112,15 @@ export const WeatherScreen = ({ navigation }) => {
 
                 <View style={{ padding: 16, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                     <Text variant="labelLarge">Use powder sensitivity</Text>
-                    <Switch 
+                    <Switch
                         value={usePowderSens}
                         onValueChange={onTogglePowderSens}
                     />
                 </View>
 
-            {/* </View> */}
-        </ScrollView>
+                {/* </View> */}
+            </ScrollView>
+        </View>
     )
 }
 

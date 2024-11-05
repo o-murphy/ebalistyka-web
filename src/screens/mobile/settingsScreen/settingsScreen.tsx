@@ -64,6 +64,7 @@ export const UnitSelectorChip: React.FC<UnitSelectorProps> = ({ label, value, op
                     <Dialog.Content>
                         <RadioButton.Group onValueChange={onSelect} value={value}>
                             {options.map((item, index) => <RadioButton.Item
+                                key={index}
                                 label={item.label}
                                 value={item.value}
                                 status={value === item.value ? 'checked' : 'unchecked'}
@@ -115,11 +116,11 @@ export const SettingsScreen = ({ navigation = null }) => {
         scrollView: {
             flex: 1,
             paddingBottom: 64,
-            backgroundColor: theme.colors.secondaryContainer
+            backgroundColor: theme.colors.background,
         },
         scrollViewContainer: {
             paddingBottom: 16,
-            backgroundColor: theme.colors.background,
+            backgroundColor: theme.colors.elevation.level1,
             borderBottomRightRadius: 32, borderBottomLeftRadius: 32
         },
     });

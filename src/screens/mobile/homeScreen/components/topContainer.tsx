@@ -14,26 +14,8 @@ export const TopContainer = () => {
 
     const theme = useTheme()
 
-    const windSpeedProps = {
-        size: "medium",
-        icon: "windsock",
-        style: styles.shotPropsFab,
-    }
-
-    const lookAngleProps = {
-        size: "medium",
-        icon: "angle-acute",
-        style: styles.shotPropsFab
-    }
-
-    const targetDistanceProps = {
-        size: "medium",
-        icon: "map-marker-distance",
-        style: styles.shotPropsFab
-    }
-
     const topContainerStyle = {
-        ...styles.topContainer, 
+        ...styles.topContainer,
         backgroundColor: theme.colors.elevation.level1
     }
 
@@ -43,13 +25,25 @@ export const TopContainer = () => {
             <ShotPropertiesContainer />
 
             <View style={styles.shotPropsFabContainer}>
-                <WindSpeedDialog button={<FAB {...windSpeedProps} />}/>
-                <LookAngleDialog button={<FAB {...lookAngleProps} />}/>
-                <TargetDistanceDialog button={<FAB {...targetDistanceProps} />}/>
+                <WindSpeedDialog button={<FAB
+                    size={"medium"}
+                    icon={"windsock"}
+                    style={styles.shotPropsFab}
+                />} />
+                <LookAngleDialog button={<FAB
+                    size={"medium"}
+                    icon={"angle-acute"}
+                    style={styles.shotPropsFab}
+                />} />
+                <TargetDistanceDialog button={<FAB
+                    size={"medium"}
+                    icon={"map-marker-distance"}
+                    style={styles.shotPropsFab}
+                />} />
             </View>
 
             <View style={styles.shotPropsFabContainer}>
-                {bigFABsLabels.map((text, index) => <Text key={`${index}`} style={styles.shotPropsFab} >{text}</Text>)}
+                {bigFABsLabels.map((text, index) => <Text key={index} style={styles.shotPropsFab} >{text}</Text>)}
             </View>
         </View>
     )

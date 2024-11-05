@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { View } from "react-native";
-import { Appbar, IconButton, Text, useTheme } from "react-native-paper";
+import { Appbar, Divider, IconButton, Text, useTheme } from "react-native-paper";
 import { NativeStackHeaderProps } from "@react-navigation/native-stack";
 import { useCalculator } from "../../../context/profileContext";
 import { TrajectoryTable, ZerosDataTable } from "../../../components/widgets/tableView/tableView";
@@ -80,16 +80,17 @@ export const TablesScreen = ({ navigation = null }) => {
     }
 
     return (
-        <TableSettingsProvider>
+        <ScrollView style={{
+            flex: 1,
+            backgroundColor: theme.colors.background,
+            marginBottom: 64,
+        }}
+            onLayout={handleLayout}
+            contentContainerStyle={{ height: topLayoutHeight + botLayoutHeight }}
+        >
+            <TableSettingsProvider>
 
-            <ScrollView style={{
-                flex: 1,
-                backgroundColor: theme.colors.background,
-                marginBottom: 64,
-            }}
-                onLayout={handleLayout}
-                contentContainerStyle={{ height: topLayoutHeight + botLayoutHeight }}
-            >
+
                 <TableSettingsDialog visible={settingsVisible} setVisible={setSettingsVisible} />
 
                 <View
@@ -97,26 +98,27 @@ export const TablesScreen = ({ navigation = null }) => {
                 >
 
                     <ProfileDetails />
-
                     <ZerosView hitResult={hitResult} />
+
                 </View>
 
-                <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                    <IconButton icon={"export-variant"} onPress={onExport} />
-                    <View style={{ justifyContent: "center" }}>
-                        <Text variant={"labelLarge"} style={{ textAlign: "center" }}>Trajectory</Text>
-                    </View>
-                    <IconButton icon={"tune"} onPress={onSettings} />
-                </View>
+
                 <View
                     style={{ height: layoutHeight }}
                     onLayout={handleBotLayout}
                 >
+                    <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                        <IconButton icon={"export-variant"} onPress={onExport} />
+                        <View style={{ justifyContent: "center" }}>
+                            <Text variant={"labelLarge"} style={{ textAlign: "center" }}>Trajectory</Text>
+                        </View>
+                        <IconButton icon={"tune"} onPress={onSettings} />
+                    </View>
                     <TrajectoryTable hitResult={hitResult} style={{ flex: 1 }} />
 
                 </View>
-            </ScrollView>
 
-        </TableSettingsProvider>
+            </TableSettingsProvider>
+        </ScrollView>
     )
 }

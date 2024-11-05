@@ -122,7 +122,8 @@ export const RowDetailsDialog: React.FC<RowDetailsProps> = ({ row, visible, setV
                     <View style={{ minWidth: "100%" }}>
 
                         <Table borderStyle={styles.borderStyle} style={styles.table}>
-                            {rows.map(row => <Row
+                            {rows.map((row, index) => <Row
+                                key={index}
                                 data={row}
                                 textStyle={styles.text}
                                 style={styles.row}

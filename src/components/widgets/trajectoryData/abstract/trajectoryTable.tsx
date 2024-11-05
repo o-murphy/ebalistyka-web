@@ -121,15 +121,15 @@ export const TrajectoryTable = ({ hitResult, reverse = false }: { hitResult: Hit
 
           <DataTable>
             <DataTable.Header style={tableStyles.row}>
-              {headerTitles.map((item, index) => <HeaderText key={`${index}`}>{item}</HeaderText>)}
+              {headerTitles.map((item, index) => <HeaderText key={index} >{item}</HeaderText>)}
             </DataTable.Header>
 
             <DataTable.Header style={tableStyles.row}>
-              {headerUnits.map((item, index) => <HeaderText key={`${index}`}>{UnitProps[item] ? UnitProps[item].symbol : item}</HeaderText>)}
+              {headerUnits.map((item, index) => <HeaderText key={index} >{UnitProps[item] ? UnitProps[item].symbol : item}</HeaderText>)}
             </DataTable.Header>
 
             {!hitResultError && trajectory.map((row, index) => (
-              <DataTable.Row key={`${index}`} style={tableStyles.row}>
+              <DataTable.Row key={index} style={tableStyles.row}>
                 <DataTable.Cell {...dataRowStyle(row)}>{row.time.toFixed(3)}</DataTable.Cell>
                 <DataTable.Cell {...dataRowStyle(row)}>{(row.distance).In(preferredUnits.distance).toFixed(0)}</DataTable.Cell>
                 <DataTable.Cell {...dataRowStyle(row)}>{row.velocity.In(preferredUnits.velocity).toFixed(0)}</DataTable.Cell>

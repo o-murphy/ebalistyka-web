@@ -26,7 +26,7 @@ const HoldValues = ({ value, icon, color, layoutSize }) => {
         <View style={{ flexDirection: "row", alignItems: "center" }}>
             <Icon size={2 * holdFontSize} color={color} source={icon} />
             <View style={{ width: layoutSize.width - 3 * holdFontSize }}>
-                {holdUnits.map((unit, index) => <HoldAsText key={`${index}`} style={holdTextStyle} value={value} unit={unit} />)}
+                {holdUnits.map((unit, index) => <HoldAsText key={index} style={holdTextStyle} value={value} unit={unit} />)}
             </View>
         </View>
     )
