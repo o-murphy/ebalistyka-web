@@ -134,7 +134,9 @@ export const ProfileDetails = () => {
         bWeight: `${UNew.Grain(profileProperties?.bWeight / 10).In(preferredUnits.weight).toFixed(bWeightAccuracy)} ${UnitProps[preferredUnits.weight].symbol}`,
         scHeight: `${UNew.Centimeter(profileProperties?.scHeight / 10).In(preferredUnits.sizes).toFixed(twistAccuracy)} ${UnitProps[preferredUnits.sizes].symbol}`,
 
-        coeffs: profileProperties.coefRows
+        coeffs: profileProperties?.coefRows,
+
+        bulletName: profileProperties?.bulletName
     }
 
     const conds = {
@@ -175,7 +177,7 @@ export const ProfileDetails = () => {
                     <Section text={"Twist direction"} value={props.twistDir} />
 
                     <SectionTitle title={"Projectile"} />
-
+                    <SectionSubtitle subtitle={props.bulletName} />
                     <BCDetails dragModel={props.dragModel} coeffs={props.coeffs} />
 
                     <Section text={"Muzzle velocity"} value={"<mv>"} />
