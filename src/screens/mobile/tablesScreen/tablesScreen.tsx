@@ -6,6 +6,8 @@ import { useCalculator } from "../../../context/profileContext";
 import { TrajectoryTable, ZerosDataTable } from "../../../components/widgets/tableView/tableView";
 import { TableSettingsDialog } from "./components/tablesSettingsDialog";
 import { TableSettingsProvider, useTableSettings } from "../../../context/tableSettingsContext";
+import { ProfileDetails } from "./components/profileDetails";
+import { ScrollView } from "react-native-gesture-handler";
 
 
 
@@ -33,13 +35,13 @@ export const TablesTopAppBar = ({ ...props }: NativeStackHeaderProps) => {
 }
 
 
-export const ZerosView = ({hitResult}) => {
+export const ZerosView = ({ hitResult }) => {
     const { tableSettings } = useTableSettings()
 
     return (
         tableSettings.displayZeros && <View>
             <View style={{ height: 40, justifyContent: "center" }}>
-                <Text style={{ textAlign: "center" }}>Zero crossing points</Text>
+                <Text variant={"labelLarge"} style={{ textAlign: "center" }}>Zero crossing points</Text>
             </View>
             <ZerosDataTable hitResult={hitResult} />
         </View>
@@ -53,6 +55,10 @@ export const TablesScreen = ({ navigation = null }) => {
 
     const [settingsVisible, setSettingsVisible] = useState(false)
 
+    const [layoutHeight, setLayoutHeight] = useState(0)
+    const [topLayoutHeight, setTopLayoutHeight] = useState(0)
+    const [botLayoutHeight, setBotLayoutHeight] = useState(0)
+
     const onExport = () => {
         console.log("On export")
     }
@@ -61,28 +67,55 @@ export const TablesScreen = ({ navigation = null }) => {
         setSettingsVisible(true)
     }
 
+    const handleLayout = (event) => {
+        setLayoutHeight(event.nativeEvent.layout.height)
+    }
+
+    const handleTopLayout = (event) => {
+        setTopLayoutHeight(event.nativeEvent.layout.height)
+    }
+
+    const handleBotLayout = (event) => {
+        setBotLayoutHeight(event.nativeEvent.layout.height)
+    }
+
     return (
         <TableSettingsProvider>
 
-            <View style={{
+            <ScrollView style={{
                 flex: 1,
                 backgroundColor: theme.colors.background,
                 marginBottom: 64,
-            }}>
+            }}
+                onLayout={handleLayout}
+                contentContainerStyle={{ height: topLayoutHeight + botLayoutHeight }}
+            >
                 <TableSettingsDialog visible={settingsVisible} setVisible={setSettingsVisible} />
 
-                <ZerosView hitResult={hitResult}/>
+                <View
+                    onLayout={handleTopLayout}
+                >
+
+                    <ProfileDetails />
+
+                    <ZerosView hitResult={hitResult} />
+                </View>
 
                 <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                     <IconButton icon={"export-variant"} onPress={onExport} />
                     <View style={{ justifyContent: "center" }}>
-                        <Text style={{ textAlign: "center" }}>Trajectory</Text>
+                        <Text variant={"labelLarge"} style={{ textAlign: "center" }}>Trajectory</Text>
                     </View>
                     <IconButton icon={"tune"} onPress={onSettings} />
                 </View>
+                <View
+                    style={{ height: layoutHeight }}
+                    onLayout={handleBotLayout}
+                >
+                    <TrajectoryTable hitResult={hitResult} style={{ flex: 1 }} />
 
-                <TrajectoryTable hitResult={hitResult} style={{ flex: 1 }} />
-            </View>
+                </View>
+            </ScrollView>
 
         </TableSettingsProvider>
     )
