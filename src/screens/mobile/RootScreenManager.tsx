@@ -9,7 +9,7 @@ import TopAppBar from "../../components/widgets/topAppBar";
 import BotAppBar from "../../components/widgets/botAppBar";
 
 import { navigationRef } from "./RootNavigation";
-import HomeScreenTopAppBar, { HomeScreen } from './homeScreen/homeScreen';
+import { HomeScreenTopAppBar, HomeScreen } from './homeScreen';
 import { WeatherScreen, WeatherTopAppBar } from './weatherScreen';
 import { TablesScreen, TablesTopAppBar } from './tablesScreen/tablesScreen';
 import { ConvertorScreen, ConvertorTopAppBar } from './convertorScreen';
@@ -25,13 +25,11 @@ export default function RootScreenManager({ ...props }) {
 
     return (
         <BusyOverlayAnimated>
-
             <NavigationContainer ref={navigationRef}>
                 <Stack.Navigator
                     initialRouteName="Home"
                     screenOptions={{
                         header: (props) => <TopAppBar {...props} />
-                        // headerShown: false, 
                     }}
                 >
 

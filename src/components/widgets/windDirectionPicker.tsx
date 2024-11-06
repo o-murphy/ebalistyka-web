@@ -55,10 +55,10 @@ export default function WindDirectionPicker({ value, onChange, style = null, dia
         strokeWidth: diameter / 11,
         meterTextSize: diameter / 11,
 
-        handleColor: theme.colors.outline,
+        handleColor: theme.colors.onSecondaryContainer,
         arcColor: theme.colors.secondaryContainer,
         strokeColor: theme.colors.secondaryContainer,
-        meterTextColor: theme.colors.outline,
+        meterTextColor: theme.colors.onSecondaryContainer,
     }
 
     const sliderValues = {
