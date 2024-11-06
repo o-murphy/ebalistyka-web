@@ -5,7 +5,6 @@ import MeasureFormField, { MeasureFormFieldProps } from "../../../../components/
 import { usePreferredUnits } from "../../../../context/preferredUnitsContext";
 import { Distance, UNew, Unit, UnitProps } from "js-ballistics/dist/v2";
 import getFractionDigits from "../../../../utils/fractionConvertor";
-import { useCalculator } from "../../../../context/profileContext";
 import { useTableSettings } from "../../../../context/tableSettingsContext";
 
 
@@ -24,7 +23,7 @@ const useCurrentValue = (
 };
 
 
-export const TrajectoryStepField = ({ trajectoryStep, setTrajectoryStep, onError }) => {
+const TrajectoryStepField = ({ trajectoryStep, setTrajectoryStep, onError }) => {
 
     const { preferredUnits } = usePreferredUnits()
 
@@ -58,7 +57,7 @@ export const TrajectoryStepField = ({ trajectoryStep, setTrajectoryStep, onError
 }
 
 
-export const TrajectoryRangeField = ({ trajectoryRange, setTrajectoryRange, onError }) => {
+const TrajectoryRangeField = ({ trajectoryRange, setTrajectoryRange, onError }) => {
 
     const { preferredUnits } = usePreferredUnits()
 
@@ -107,7 +106,7 @@ const displayOptions = [
 ];
 
 
-export const TableSettingsDialog = ({ visible, setVisible }) => {
+const TableSettingsDialog = ({ visible, setVisible }) => {
 
     // const { currentConditions, updateCurrentConditions } = useCalculator();
     const { tableSettings, updateTableSettings } = useTableSettings();
@@ -231,3 +230,6 @@ export const TableSettingsDialog = ({ visible, setVisible }) => {
         </Portal>
     )
 }
+
+
+export default TableSettingsDialog;

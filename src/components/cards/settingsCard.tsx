@@ -25,7 +25,7 @@ export interface UnitSelectorProps {
     fKey?: string;
     label: string;
     value?: Unit;
-    defaultValue: Unit;
+    defaultValue?: Unit;
     options: { label: string, value: Unit }[];
     onValueChange?: (value: Unit) => void;
     containerStyle?: StyleProp<ViewStyle>;

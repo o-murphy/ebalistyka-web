@@ -1,315 +1,141 @@
-import { Pressable, ScrollView, StyleSheet, View } from "react-native";
-import { getUnitList, UnitSelectorProps } from "../../../components/cards/settingsCard";
-import { Angular, Distance, Energy, Pressure, Temperature, Unit, UnitProps, Weight } from "js-ballistics/dist/v2";
 import React, { useEffect, useState } from "react";
+import { ScrollView, StyleSheet, View } from "react-native";
+import { useTheme, Banner, Divider, List, Text } from "react-native-paper";
 import { usePreferredUnits } from "../../../context/preferredUnitsContext";
-import { Appbar, Button, Chip, Dialog, Divider, Icon, List, Portal, RadioButton, Text, useTheme } from "react-native-paper";
-import { NativeStackHeaderProps } from "@react-navigation/native-stack";
+import { Angular, Energy, Pressure, Temperature, Unit, UnitProps, Weight } from "js-ballistics/dist/v2";
+import { UnitSelectorChip } from "./components";
 
-
-export const SettingsScreenTopAppBar = ({ ...props }: NativeStackHeaderProps) => {
-
-    const { back, navigation } = props;
-    const theme = useTheme()
-
-    return (
-        <Appbar.Header mode={"center-aligned"} style={{
-            height: 48,
-            backgroundColor: theme.colors.elevation.level2
-        }}>
-            <Appbar.BackAction onPress={() => navigation.navigate(back.title)} />
-            <Appbar.Content title="Shot info" />
-        </Appbar.Header>
-    )
+interface UnitConfig {
+    icon: string;
+    fKey: string;
+    label: string;
+    unitList: Unit[];
 }
 
 
-export const UnitSelectorChip: React.FC<UnitSelectorProps> = ({ label, value, options, onValueChange, icon }) => {
-
-    const [dialogVisible, setDialogVisible] = useState(false)
-
-    const onPress = () => {
-        setDialogVisible(true)
-    }
-
-    const onSelect = (value) => {
-        onValueChange?.(value)
-        setDialogVisible(false)
-    }
-
-    const onDismiss = () => {
-        setDialogVisible(false)
-    }
-
-    return (
-        <View>
-            <Pressable onPress={onPress}>
-                <View style={{ flexDirection: "row", justifyContent: "space-around", alignItems: "center", marginVertical: 8, marginHorizontal: 16 }}>
-                    <View style={{ flex: 1 }}>
-                        <Icon source={icon} size={24} />
-                    </View>
-                    <Text style={{ flex: 4 }}>{label}</Text>
-                    <Chip
-                        style={{ flex: 3 }}
-                        onPress={onPress}
-                        closeIcon={"square-edit-outline"}
-                        onClose={onPress}
-                    >
-                        {UnitProps[value].name}
-                    </Chip>
-                </View>
-            </Pressable>
-            <Portal>
-                <Dialog visible={dialogVisible} onDismiss={onDismiss}>
-                    <Dialog.Content>
-                        <RadioButton.Group onValueChange={onSelect} value={value}>
-                            {options.map((item, index) => <RadioButton.Item
-                                key={index}
-                                label={item.label}
-                                value={item.value}
-                                status={value === item.value ? 'checked' : 'unchecked'}
-                            />)}
-                        </RadioButton.Group>
-                    </Dialog.Content>
-                </Dialog>
-            </Portal>
-        </View>
-    )
-}
+export const getUnitList = (measure: Object): Unit[] =>
+    Object.keys(measure).map(
+        (key: string): Unit => measure[key]
+    );
 
 
-export const SettingsScreen = ({ navigation = null }) => {
-    const theme = useTheme()
-    const { preferredUnits, setPreferredUnits } = usePreferredUnits()
-    const [saveBtnVisible, setSaveBtnVisible] = useState(false)
+const SettingsScreen = () => {
+    const theme = useTheme();
+    const { preferredUnits, setPreferredUnits } = usePreferredUnits();
+    const [saveBtnVisible, setSaveBtnVisible] = useState(false);
 
-    // const [prefUnitsExpanded, setPrefUnitsExpanded] = useState(true)
-
-    const [localUnits, setLocalUnits] = useState({
-        distance: preferredUnits.distance,
-        velocity: preferredUnits.velocity,
-        sizes: preferredUnits.sizes,
-        temperature: preferredUnits.temperature,
-        pressure: preferredUnits.pressure,
-        energy: preferredUnits.energy,
-        adjustment: preferredUnits.adjustment,
-        drop: preferredUnits.drop,
-        angular: preferredUnits.angular,
-        weight: preferredUnits.weight,
-    })
+    const [localUnits, setLocalUnits] = useState(preferredUnits);
 
     useEffect(() => {
-        setLocalUnits(preferredUnits)
-    }, [preferredUnits])
+        setLocalUnits(preferredUnits);
+    }, [preferredUnits]);
 
-    const onUnitChange = (props: {}) => {
-        setLocalUnits({ ...localUnits, ...props })
-        setSaveBtnVisible(true)
-    }
+    const handleUnitChange = (updatedUnit: Partial<typeof preferredUnits>) => {
+        setLocalUnits((prev) => ({ ...prev, ...updatedUnit }));
+        setSaveBtnVisible(true);
+    };
 
-    const onSaveBtnPress = () => {
-        setPreferredUnits(localUnits)
-        setSaveBtnVisible(false)
-    }
+    const handleSave = () => {
+        setPreferredUnits(localUnits);
+        setSaveBtnVisible(false);
+    };
 
-    const _styles = StyleSheet.create({
-        scrollView: {
-            flex: 1,
-            paddingBottom: 64,
-            backgroundColor: theme.colors.background,
-        },
-        scrollViewContainer: {
-            paddingBottom: 16,
-            backgroundColor: theme.colors.elevation.level1,
-            borderBottomRightRadius: 32, borderBottomLeftRadius: 32
-        },
-    });
+    const handleDiscard = () => {
+        setLocalUnits(preferredUnits);
+        setSaveBtnVisible(false);
+    };
 
     return (
-        <View style={{
-            flex: 1,
-            paddingBottom: 32,
-            backgroundColor: theme.colors.secondaryContainer
-        }}>
-            {saveBtnVisible && <Button
-                mode="contained"
-                icon={"content-save"}
-                buttonColor={theme.colors.tertiary}
-                textColor={theme.colors.onTertiary}
-                onPress={onSaveBtnPress}
-                style={{ margin: 16 }}
+        <View style={[styles.container]}>
+            <Banner
+                visible={saveBtnVisible}
+                style={{ backgroundColor: theme.colors.secondaryContainer }}
+                actions={[
+                    { label: "Save".toUpperCase(), onPress: handleSave, textColor: theme.colors.onSecondaryContainer },
+                    { label: "Discard".toUpperCase(), onPress: handleDiscard, textColor: theme.colors.tertiary },
+                ]}
+                icon="content-save"
             >
-                Save settings
-            </Button>}
+                <Text>{"Changes detected in settings. Save changes?"}</Text>
+            </Banner>
+
             <ScrollView
-                style={_styles.scrollView}
+                style={[styles.scrollView, { backgroundColor: theme.colors.surface }]}
+                contentContainerStyle={[styles.scrollViewContent, { backgroundColor: theme.colors.elevation.level1 }]}
                 keyboardShouldPersistTaps="always"
+                showsVerticalScrollIndicator
                 alwaysBounceVertical={false}
-                showsVerticalScrollIndicator={true}
-                contentContainerStyle={_styles.scrollViewContainer}
             >
-
-
-                <List.Section title={"Preferred units"}            >
-                    <View>
-                        <UnitSelectorChip
-                            containerStyle={styles.row}
-                            icon="map-marker-distance"
-                            fKey="distance"
-                            label="Distance units"
-                            value={localUnits.distance}
-                            defaultValue={preferredUnits.distance}
-                            options={[
-                                { label: UnitProps[Unit.Meter].name, value: Unit.Meter },
-                                { label: UnitProps[Unit.Foot].name, value: Unit.Foot },
-                                { label: UnitProps[Unit.Yard].name, value: Unit.Yard },
-                            ]}
-                            onValueChange={value => { onUnitChange({ distance: value }) }}
-                        />
-                        <Divider />
-
-                        <UnitSelectorChip
-                            containerStyle={styles.row}
-                            icon={"speedometer"}
-                            fKey="velocity"
-                            label="Velocity units"
-                            value={localUnits.velocity}
-                            defaultValue={localUnits.velocity}
-                            options={[
-                                { label: UnitProps[Unit.MPS].name, value: Unit.MPS },
-                                { label: UnitProps[Unit.FPS].name, value: Unit.FPS },
-                            ]}
-                            onValueChange={value => { onUnitChange({ velocity: value }) }}
-                        />
-                        <Divider />
-
-                        <UnitSelectorChip
-                            containerStyle={styles.row}
-                            icon={"ruler"}
-                            fKey="sizes"
-                            label="Sizes units"
-                            value={localUnits.sizes}
-                            defaultValue={localUnits.sizes}
-                            options={[
-                                { label: UnitProps[Unit.Inch].name, value: Unit.Inch },
-                                { label: UnitProps[Unit.Millimeter].name, value: Unit.Millimeter },
-                                { label: UnitProps[Unit.Centimeter].name, value: Unit.Centimeter },
-                                { label: UnitProps[Unit.Line].name, value: Unit.Line },
-                            ]}
-                            onValueChange={value => { onUnitChange({ sizes: value }) }}
-                        />
-                        <Divider />
-
-                        <UnitSelectorChip
-                            containerStyle={styles.row}
-                            icon={"angle-acute"}
-                            fKey="angular"
-                            label="Angular units"
-                            value={localUnits.angular}
-                            defaultValue={localUnits.angular}
-                            options={getUnitList(Angular)}
-                            onValueChange={value => { onUnitChange({ angular: value }) }}
-                        />
-                        <Divider />
-
-                        <UnitSelectorChip
-                            containerStyle={styles.row}
-                            icon={"arrow-expand-vertical"}
-                            fKey="adjustment"
-                            label="Adjustment units"
-                            value={localUnits.adjustment}
-                            defaultValue={localUnits.adjustment}
-                            options={getUnitList(Angular)}
-                            onValueChange={value => { onUnitChange({ adjustment: value }) }}
-                        />
-                        <Divider />
-
-                        <UnitSelectorChip
-                            containerStyle={styles.row}
-                            icon={"arrow-expand-down"}
-                            fKey="drop"
-                            label="Drop units"
-                            value={localUnits.drop}
-                            defaultValue={localUnits.drop}
-                            options={getUnitList(Distance)}
-                            onValueChange={value => { onUnitChange({ drop: value }) }}
-                        />
-                        <Divider />
-
-                        <UnitSelectorChip
-                            containerStyle={styles.row}
-                            icon={"weight"}
-                            fKey="weight"
-                            label="Weight units"
-                            value={localUnits.weight}
-                            defaultValue={localUnits.weight}
-                            options={getUnitList(Weight)}
-                            onValueChange={value => { onUnitChange({ weight: value }) }}
-                        />
-                        <Divider />
-
-                        <UnitSelectorChip
-                            containerStyle={styles.row}
-                            icon={"thermometer"}
-                            fKey="temperature"
-                            label="Temperature units"
-                            value={localUnits.temperature}
-                            defaultValue={localUnits.temperature}
-                            options={getUnitList(Temperature)}
-                            onValueChange={value => { onUnitChange({ temperature: value }) }}
-                        />
-                        <Divider />
-
-                        <UnitSelectorChip
-                            containerStyle={styles.row}
-                            icon={"gauge"}
-                            fKey="pressure"
-                            label="Pressure units"
-                            value={localUnits.pressure}
-                            defaultValue={localUnits.pressure}
-                            options={getUnitList(Pressure)}
-                            onValueChange={value => { onUnitChange({ pressure: value }) }}
-                        />
-                        <Divider />
-
-                        <UnitSelectorChip
-                            containerStyle={styles.row}
-                            icon={"lightning-bolt"}
-                            fKey="energy"
-                            label="Pressure units"
-                            value={localUnits.energy}
-                            defaultValue={localUnits.energy}
-                            options={getUnitList(Energy)}
-                            onValueChange={value => { onUnitChange({ energy: value }) }}
-                        />
-                    </View>
+                <List.Section title="Preferred units">
+                    {renderUnitSelectors(localUnits, handleUnitChange)}
                 </List.Section>
-
             </ScrollView>
         </View>
+    );
+};
 
-    )
-}
+const renderUnitSelectors = (localUnits, handleUnitChange: (unit) => void) => {
+    const unitsConfig: UnitConfig[] = [
+        { icon: "map-marker-distance", fKey: "distance", label: "Distance units", unitList: [Unit.Meter, Unit.Foot, Unit.Yard] },
+        { icon: "speedometer", fKey: "velocity", label: "Velocity units", unitList: [Unit.MPS, Unit.FPS] },
+        { icon: "ruler", fKey: "sizes", label: "Sizes units", unitList: [Unit.Inch, Unit.Millimeter, Unit.Centimeter, Unit.Line] },
+        { icon: "angle-acute", fKey: "angular", label: "Angular units", unitList: getUnitList(Angular) },
+        { icon: "arrow-expand-vertical", fKey: "adjustment", label: "Adjustment units", unitList: getUnitList(Angular) },
+        { icon: "arrow-expand-down", fKey: "drop", label: "Drop units", unitList: [Unit.Inch, Unit.Millimeter, Unit.Centimeter, Unit.Line, Unit.Meter, Unit.Yard] },
+        { icon: "weight", fKey: "weight", label: "Weight units", unitList: getUnitList(Weight) },
+        { icon: "thermometer", fKey: "temperature", label: "Temperature units", unitList: getUnitList(Temperature) },
+        { icon: "gauge", fKey: "pressure", label: "Pressure units", unitList: getUnitList(Pressure) },
+        { icon: "lightning-bolt", fKey: "energy", label: "Energy units", unitList: getUnitList(Energy) },
+    ];
+
+    const isChanged = (unit: UnitConfig, newValue: Unit) => {
+        return localUnits[unit.fKey] !== newValue;
+    };
+
+    const handleChange = (unit: UnitConfig, value: Unit) => {
+        return isChanged(unit, value) && handleUnitChange({ [unit.fKey]: value });
+    };
+
+    return unitsConfig.map((unit, index) => (
+        <View key={unit.fKey}>
+            <UnitSelectorChip
+                containerStyle={styles.unitRow}
+                icon={unit.icon}
+                fKey={unit.fKey}
+                label={unit.label}
+                value={localUnits[unit.fKey]}
+                options={unit.unitList
+                    .map((value) => {
+                        const unitProps = UnitProps[value];
+                        return unitProps ? { label: unitProps.name, value } : null;
+                    })
+                    .filter((option) => option !== null)} // filter out any null values
+                onValueChange={(value) => handleChange(unit, value)}
+            />
+            {index < unitsConfig.length - 1 && <Divider />}
+        </View>
+    ));
+};
 
 const styles = StyleSheet.create({
-    dialog: { width: 350, height: "80%", alignSelf: 'center', justifyContent: 'center' },
-    column: {
+    container: {
         flex: 1,
-        flexDirection: "row",
-        marginHorizontal: 8,
+        paddingBottom: 32,
     },
-    row: {
+    scrollView: {
+        flex: 1,
+        paddingBottom: 64,
+    },
+    scrollViewContent: {
+        paddingBottom: 16,
+        borderBottomRightRadius: 32,
+        borderBottomLeftRadius: 32,
+    },
+    unitRow: {
         flex: 1,
         marginVertical: 4,
         justifyContent: "center",
     },
-    doubleSpinBox: {
-        flex: 1,
-    },
-    nameContainer: {
-        flex: 1,
-    },
-    label: {
-        // fontSize: 14,
-    },
 });
+
+export default SettingsScreen;

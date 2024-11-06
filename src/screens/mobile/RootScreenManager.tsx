@@ -5,17 +5,16 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import TopAppBar from "../../components/widgets/topAppBar";
-import BotAppBar from "../../components/widgets/botAppBar";
+import BotAppBar from "./botAppBar";
 
 import { navigationRef } from "./RootNavigation";
 import { HomeScreenTopAppBar, HomeScreen } from './homeScreen';
 import { WeatherScreen, WeatherTopAppBar } from './weatherScreen';
-import { TablesScreen, TablesTopAppBar } from './tablesScreen/tablesScreen';
+import { TablesScreen, TablesTopAppBar } from './tablesScreen';
 import { ConvertorScreen, ConvertorTopAppBar } from './convertorScreen';
 import { ShotInfoScreen, ShotInfoTopAppBar } from './shotInfoScreen';
 import { BusyOverlayAnimated } from './busyOverlay';
-import { SettingsScreen, SettingsScreenTopAppBar } from './settingsScreen/settingsScreen';
+import { SettingsScreen, SettingsScreenTopAppBar } from './settingsScreen';
 
 
 const Stack = createNativeStackNavigator();
@@ -29,7 +28,7 @@ export default function RootScreenManager({ ...props }) {
                 <Stack.Navigator
                     initialRouteName="Home"
                     screenOptions={{
-                        header: (props) => <TopAppBar {...props} />
+                        // header: (props) => <TopAppBar {...props} />
                     }}
                 >
 

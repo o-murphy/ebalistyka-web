@@ -1,7 +1,7 @@
 import { StyleSheet, View } from "react-native"
 import { Dialog, FAB, Portal, useTheme } from "react-native-paper"
 import { Table, Row } from 'react-native-table-component';
-import { usePreferredUnits } from "../../../context/preferredUnitsContext";
+import { usePreferredUnits } from "../../../../../context/preferredUnitsContext";
 import { TrajectoryData, UnitProps } from "js-ballistics/dist/v2";
 import React from "react";
 
@@ -13,7 +13,7 @@ interface RowDetailsProps {
 }
 
 
-export const RowDetailsDialog: React.FC<RowDetailsProps> = ({ row, visible, setVisible }) => {
+const RowDetailsDialog: React.FC<RowDetailsProps> = ({ row, visible, setVisible }) => {
     const theme = useTheme()
     const { preferredUnits } = usePreferredUnits()
 
@@ -151,3 +151,6 @@ const styles = StyleSheet.create({
         justifyContent: "space-between"
     }
 })
+
+
+export default RowDetailsDialog;

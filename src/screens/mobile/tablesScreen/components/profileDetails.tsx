@@ -6,7 +6,7 @@ import { UNew, Unit, UnitProps } from "js-ballistics/dist/v2"
 import getFractionDigits from "../../../../utils/fractionConvertor"
 
 
-export const Section = ({ text, value, divider = true }) => {
+const Section = ({ text, value, divider = true }) => {
     return (
         <View>
             <View style={{ flexDirection: "row", marginVertical: 4, justifyContent: "space-between" }}>
@@ -26,7 +26,7 @@ export const Section = ({ text, value, divider = true }) => {
     )
 }
 
-export const SectionTitle = ({ title }) => {
+const SectionTitle = ({ title }) => {
     return (
         <View style={{ marginTop: 16, marginBottom: 4, justifyContent: "center" }}>
 
@@ -38,7 +38,7 @@ export const SectionTitle = ({ title }) => {
 }
 
 
-export const SectionSubtitle = ({ subtitle }) => {
+const SectionSubtitle = ({ subtitle }) => {
     const theme = useTheme()
 
     return (
@@ -110,7 +110,7 @@ const BCDetails = ({ dragModel, coeffs }) => {
 
 }
 
-export const ProfileDetails = () => {
+const ProfileDetails = () => {
 
     const { preferredUnits } = usePreferredUnits()
     const { profileProperties, currentConditions } = useCalculator()
@@ -205,3 +205,6 @@ export const ProfileDetails = () => {
         </List.Section>
     )
 }
+
+
+export default ProfileDetails;

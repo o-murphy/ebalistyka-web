@@ -3,9 +3,9 @@ import { View, ScrollView, StyleSheet, Pressable, StyleProp, TextStyle, ViewStyl
 import { useTheme } from 'react-native-paper';
 import { Table, Row } from 'react-native-table-component';
 import { HitResult, TrajFlag, UNew, UnitProps } from 'js-ballistics/dist/v2';
-import { usePreferredUnits } from '../../../context/preferredUnitsContext';
-import { RowDetailsDialog } from './rowDetaisDialog';
-import { useTableSettings } from '../../../context/tableSettingsContext';
+import { usePreferredUnits } from '../../../../../context/preferredUnitsContext';
+import RowDetailsDialog from './rowDetaisDialog';
+import { useTableSettings } from '../../../../../context/tableSettingsContext';
 
 
 interface TableDataType {
@@ -76,6 +76,11 @@ export const ResponsiveTableView: React.FC<ResponsiveTableViewProps> = ({ tableH
         setSelection(index)
     }
 
+    const onLongPress = (index) => {
+        setSelection(index)
+        rowLongPress?.(index)
+    }
+
     const styles = StyleSheet.create({
         noSelect: {
             userSelect: 'none'
@@ -90,8 +95,8 @@ export const ResponsiveTableView: React.FC<ResponsiveTableViewProps> = ({ tableH
         },
         headerText: { textAlign: 'center', fontWeight: 'bold', color: theme.colors.onSurfaceVariant },
 
-        selectedRow: { backgroundColor: theme.colors.primaryContainer },
-        selectedRowText: { textAlign: 'center', color: theme.colors.onPrimaryContainer },
+        selectedRow: { backgroundColor: theme.colors.secondaryContainer },
+        selectedRowText: { textAlign: 'center', color: theme.colors.onSecondaryContainer },
 
         dataWrapper: { flex: 1, },  // Adjust as needed for vertical scrollable area
 
@@ -113,7 +118,7 @@ export const ResponsiveTableView: React.FC<ResponsiveTableViewProps> = ({ tableH
                                 <Pressable
                                     key={index}
                                     onPress={() => select(index)} // Regular press
-                                    onLongPress={(event) => { rowLongPress?.(index) }} // Long press
+                                    onLongPress={(event) => onLongPress(index)} // Long press
                                     delayLongPress={300} // Optional: delay before the long press is recognized
                                 >
                                     <Row
@@ -152,9 +157,6 @@ export const ZerosDataTable = ({ hitResult, style = null }) => {
 
     const styles = StyleSheet.create({
         text: { textAlign: 'center', color: theme.colors.onSurfaceVariant },
-        zeroText: { textAlign: 'center', color: theme.colors.onErrorContainer },
-        zeroRow: { backgroundColor: theme.colors.errorContainer },
-        selectedRow: { backgroundColor: "blue" },
     });
 
     const tableData: TableDataType[] = zeros.map(row => {
@@ -218,9 +220,9 @@ export const TrajectoryTable = ({ hitResult, style = null }) => {
 
     const styles = StyleSheet.create({
         text: { textAlign: 'center', color: theme.colors.onSurfaceVariant },
-        zeroText: { textAlign: 'center', color: theme.colors.onErrorContainer },
-        zeroRow: { backgroundColor: theme.colors.errorContainer },
-        selectedRow: { backgroundColor: "blue" },
+        zeroText: { textAlign: 'center', color: theme.colors.tertiary },
+        zeroRow: { backgroundColor: theme.colors.onTertiary },
+        // selectedRow: { backgroundColor: theme.colors.tertiaryContainer },
     });
 
     const tableData: TableDataType[] = trajectory.map((row, index) => {

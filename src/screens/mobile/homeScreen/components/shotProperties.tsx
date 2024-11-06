@@ -37,11 +37,11 @@ const ShotPropertiesContainer = () => {
     const windDirLabelStyle = useMemo(
         () => ({
             ...styles.windDirLabel,
-            color: theme.colors.onSurface,
+            color: theme.colors.onSecondaryContainer,
             fontSize: dialDiameter / 20,
             top: layoutSize.height / 2 - dialDiameter * 0.2,
         }),
-        [dialDiameter, layoutSize.height]
+        [theme, dialDiameter, layoutSize.height]
     );
 
 

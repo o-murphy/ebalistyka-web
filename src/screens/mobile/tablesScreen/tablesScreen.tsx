@@ -1,41 +1,14 @@
 import { useState } from "react";
 import { View } from "react-native";
-import { Appbar, Divider, IconButton, Text, useTheme } from "react-native-paper";
-import { NativeStackHeaderProps } from "@react-navigation/native-stack";
+import { IconButton, Text, useTheme } from "react-native-paper";
 import { useCalculator } from "../../../context/profileContext";
-import { TrajectoryTable, ZerosDataTable } from "../../../components/widgets/tableView/tableView";
-import { TableSettingsDialog } from "./components/tablesSettingsDialog";
+import { TrajectoryTable, ZerosDataTable } from "./components/tableView";
 import { TableSettingsProvider, useTableSettings } from "../../../context/tableSettingsContext";
-import { ProfileDetails } from "./components/profileDetails";
+import { ProfileDetails, TableSettingsDialog } from "./components";
 import { ScrollView } from "react-native-gesture-handler";
 
 
-
-export const TablesTopAppBar = ({ ...props }: NativeStackHeaderProps) => {
-
-    const { back, navigation } = props;
-
-    const theme = useTheme()
-    // const [settingsVisible, setSettingsVisible] = useState(false)
-
-    return (
-        <Appbar.Header mode={"center-aligned"} style={{
-            height: 48,
-            backgroundColor: theme.colors.elevation.level2
-        }}>
-            <Appbar.BackAction onPress={() => navigation.navigate(back.title)} />
-            <Appbar.Content title="Tables" />
-            {/* <Appbar.Action icon="cog-outline" onPress={() => setSettingsVisible(true)} /> */}
-            <Appbar.Action icon="cog-outline" onPress={() => navigation.navigate("SettingsScreen")} />
-
-            {/* <SettingsUnitCard visibility={[settingsVisible, setSettingsVisible]} /> */}
-
-        </Appbar.Header>
-    )
-}
-
-
-export const ZerosView = ({ hitResult }) => {
+const ZerosView = ({ hitResult }) => {
     const { tableSettings } = useTableSettings()
 
     return (
@@ -49,7 +22,7 @@ export const ZerosView = ({ hitResult }) => {
 }
 
 
-export const TablesScreen = ({ navigation = null }) => {
+const TablesScreen = ({ navigation = null }) => {
     const theme = useTheme();
     const { hitResult } = useCalculator()
 
@@ -82,7 +55,7 @@ export const TablesScreen = ({ navigation = null }) => {
     return (
         <ScrollView style={{
             flex: 1,
-            backgroundColor: theme.colors.background,
+            backgroundColor: theme.colors.surface,
             marginBottom: 64,
         }}
             onLayout={handleLayout}
@@ -122,3 +95,6 @@ export const TablesScreen = ({ navigation = null }) => {
         </ScrollView>
     )
 }
+
+
+export default TablesScreen;
