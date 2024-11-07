@@ -3,7 +3,8 @@ import Calculator, {
     DragDataPoint,
     DragModel,
     HitResult,
-    Wind
+    Wind,
+    getGlobalUsePowderSensitivity
 } from 'js-ballistics/dist/v2';
 import { ProfileProps } from './parseA7P';
 import { Unit } from 'js-ballistics';
@@ -73,7 +74,7 @@ const dragModel = (profile: ProfileProps) => {
     }
 };
 
-export const prepareCalculator = (profile: ProfileProps): PreparedZeroData => {
+export const prepareCalculator = (profile: ProfileProps, currentConditions): PreparedZeroData => {
     // try {
 
 
@@ -125,10 +126,18 @@ export const prepareCalculator = (profile: ProfileProps): PreparedZeroData => {
             });
         }
 
-        const ammo = new Ammo({
+        let ammo = new Ammo({
             dm: dm,
             ...zeroData.ammo
         });
+
+        if (getGlobalUsePowderSensitivity()) {
+            console.log("Adjusting mv to powder temp")
+            ammo = new Ammo({
+                dm: dm,
+                ...{...zeroData.ammo, mv: ammo.getVelocityForTemp(UNew.Celsius(currentConditions.powderTemperature))}
+            });
+        }
 
         const zeroShot = new Shot({
             weapon: weapon,

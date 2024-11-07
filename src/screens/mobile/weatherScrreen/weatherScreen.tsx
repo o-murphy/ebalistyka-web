@@ -28,14 +28,15 @@ const WeatherContent = () => {
 
     const CurrentVelocity = () => {
         if (adjustedResult instanceof HitResult) {
-            const currentTemp = UNew.Celsius(currentConditions.temperature).In(preferredUnits.temperature).toFixed(0)
+            const currentTemp = UNew.Celsius(currentConditions.powderTemperature).In(preferredUnits.temperature).toFixed(0)
             const currentTempSymbol = UnitProps[preferredUnits.temperature].symbol
             const currentMuzzleVelocity = adjustedResult.trajectory[0].velocity.In(preferredUnits.velocity).toFixed(0)
             const velocitySymbol = UnitProps[preferredUnits.velocity].symbol
             return (
                 <Surface style={styles.powderSenseSwitchRow} elevation={0}>
                     <Text style={{ flex: 3 }}>
-                        Muzzle velocity for {currentTemp} {currentTempSymbol}
+                        {`Muzzle velocity for ${currentTemp} ${currentTempSymbol}
+                        \nof powder temperature`}
                     </Text>
                     <Chip style={{ flex: 2 }}>
                         {currentMuzzleVelocity} {velocitySymbol}
@@ -130,7 +131,7 @@ const WeatherContent = () => {
                     />
                 </Surface>
 
-                {/* {usePowderSens && <PowderSenseValue />} */}
+                {usePowderSens && <PowderSenseValue />}
                 {usePowderSens && <CurrentVelocity />}
                 {usePowderSens && <PowderSense />}
 

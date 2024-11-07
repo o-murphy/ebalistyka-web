@@ -146,7 +146,7 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
   }, [currentConditions, calculator, isLoaded]);
 
   const zero = () => {
-    const preparedCalculator = prepareCalculator(profileProperties);
+    const preparedCalculator = prepareCalculator(profileProperties, currentConditions);
     setCalculator(preparedCalculator);
     return preparedCalculator;
   }
