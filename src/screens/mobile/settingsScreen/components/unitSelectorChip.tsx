@@ -1,8 +1,16 @@
-import { Pressable, StyleSheet, View } from "react-native";
-import { UnitSelectorProps } from "../../../../components/cards/settingsCard";
-import { UnitProps } from "js-ballistics/dist/v2";
+import { Pressable, StyleProp, StyleSheet, ViewStyle } from "react-native";
+import { Unit, UnitProps } from "js-ballistics/dist/v2";
 import React, { useState } from "react";
-import { Chip, Dialog, Icon, Portal, RadioButton, Text } from "react-native-paper";
+import { Chip, Dialog, Icon, Portal, RadioButton, Text, Surface } from "react-native-paper";
+
+
+export interface UnitSelectorProps {
+    label: string;
+    value?: Unit;
+    options: { label: string, value: Unit }[];
+    onValueChange?: (value: Unit) => void;
+    icon?: any
+}
 
 
 const UnitSelectorChip: React.FC<UnitSelectorProps> = ({ label, value, options, onValueChange, icon }) => {
@@ -23,12 +31,12 @@ const UnitSelectorChip: React.FC<UnitSelectorProps> = ({ label, value, options, 
     }
 
     return (
-        <View>
+        <Surface elevation={0}>
             <Pressable onPress={onPress}>
-                <View style={styles.pressableView}>
-                    <View style={{ flex: 1 }}>
-                        <Icon source={icon} size={24} />
-                    </View>
+                <Surface style={styles.pressableView} elevation={0}>
+                    <Surface style={{ flex: 1 }} elevation={0}>
+                        <Icon source={icon} size={24}/>
+                    </Surface>
                     <Text style={{ flex: 4 }}>{label}</Text>
                     <Chip
                         style={{ flex: 3 }}
@@ -38,7 +46,7 @@ const UnitSelectorChip: React.FC<UnitSelectorProps> = ({ label, value, options, 
                     >
                         {UnitProps[value].name}
                     </Chip>
-                </View>
+                </Surface>
             </Pressable>
             <Portal>
                 <Dialog visible={dialogVisible} onDismiss={onDismiss}>
@@ -54,7 +62,7 @@ const UnitSelectorChip: React.FC<UnitSelectorProps> = ({ label, value, options, 
                     </Dialog.Content>
                 </Dialog>
             </Portal>
-        </View>
+        </Surface>
     )
 }
 

@@ -1,29 +1,28 @@
 import { useState } from "react";
-import { View } from "react-native";
-import { IconButton, Text, useTheme } from "react-native-paper";
+import { StyleSheet } from "react-native";
+import { IconButton, Surface, Text } from "react-native-paper";
 import { useCalculator } from "../../../context/profileContext";
 import { TrajectoryTable, ZerosDataTable } from "./components/tableView";
 import { TableSettingsProvider, useTableSettings } from "../../../context/tableSettingsContext";
 import { ProfileDetails, TableSettingsDialog } from "./components";
-import { ScrollView } from "react-native-gesture-handler";
+import { ScreenBackground, ScrollViewSurface } from "../components";
 
 
 const ZerosView = ({ hitResult }) => {
     const { tableSettings } = useTableSettings()
 
     return (
-        tableSettings.displayZeros && <View>
-            <View style={{ height: 40, justifyContent: "center" }}>
+        tableSettings.displayZeros && <Surface elevation={0}>
+            <Surface style={{ height: 40, justifyContent: "center" }} elevation={0}>
                 <Text variant={"labelLarge"} style={{ textAlign: "center" }}>Zero crossing points</Text>
-            </View>
+            </Surface>
             <ZerosDataTable hitResult={hitResult} />
-        </View>
+        </Surface>
     )
 }
 
 
-const TablesScreen = ({ navigation = null }) => {
-    const theme = useTheme();
+const TablesContent = () => {
     const { hitResult } = useCalculator()
 
     const [settingsVisible, setSettingsVisible] = useState(false)
@@ -53,48 +52,63 @@ const TablesScreen = ({ navigation = null }) => {
     }
 
     return (
-        <ScrollView style={{
-            flex: 1,
-            backgroundColor: theme.colors.surface,
-            marginBottom: 64,
-        }}
+        <ScrollViewSurface style={styles.scrollView}
+            elevation={1}
             onLayout={handleLayout}
             contentContainerStyle={{ height: topLayoutHeight + botLayoutHeight }}
+            surfaceStyle={styles.scrollViewContainer}
         >
             <TableSettingsProvider>
 
 
                 <TableSettingsDialog visible={settingsVisible} setVisible={setSettingsVisible} />
 
-                <View
+                <Surface
                     onLayout={handleTopLayout}
+                    elevation={0}
                 >
-
                     <ProfileDetails />
                     <ZerosView hitResult={hitResult} />
+                </Surface>
 
-                </View>
-
-
-                <View
+                <Surface
                     style={{ height: layoutHeight }}
                     onLayout={handleBotLayout}
+                    elevation={1}
                 >
-                    <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                    <Surface style={{ flexDirection: "row", justifyContent: "space-between" }} elevation={0}>
                         <IconButton icon={"export-variant"} onPress={onExport} />
-                        <View style={{ justifyContent: "center" }}>
+                        <Surface style={{ justifyContent: "center" }} elevation={0}>
                             <Text variant={"labelLarge"} style={{ textAlign: "center" }}>Trajectory</Text>
-                        </View>
+                        </Surface>
                         <IconButton icon={"tune"} onPress={onSettings} />
-                    </View>
+                    </Surface>
                     <TrajectoryTable hitResult={hitResult} style={{ flex: 1 }} />
 
-                </View>
+                </Surface>
 
             </TableSettingsProvider>
-        </ScrollView>
+        </ScrollViewSurface>
     )
 }
+
+
+const TablesScreen = ({ navigation }) => {
+    return (
+        <ScreenBackground>
+            <TablesContent />
+        </ScreenBackground>
+    )
+}
+
+
+const styles = StyleSheet.create({
+    scrollView: {
+        flex: 1,
+    },
+    scrollViewContainer: {
+    },
+})
 
 
 export default TablesScreen;

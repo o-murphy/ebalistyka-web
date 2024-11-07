@@ -1,18 +1,26 @@
-import { StyleSheet, View } from "react-native";
-import { useTheme } from "react-native-paper/src/core/theming";
+import { StyleProp, StyleSheet, ViewStyle } from "react-native";
 import { BOTTOM_APP_BAR_HEIGHT } from "./botAppBar";
+import { Surface, useTheme } from "react-native-paper";
+import React from "react";
 
-const ScreenBackground = ({ children, style = null }) => {
-    const theme = useTheme();
+
+interface ScreenBackgroundProps {
+    children?: React.ReactNode;
+    style?: StyleProp<ViewStyle>;
+}
+
+
+const ScreenBackground: React.FC<ScreenBackgroundProps> = ({ children = null, style = null }) => {
+
+    const theme = useTheme()
 
     return (
-        <View style={[
-            styles.container,
-            { backgroundColor: theme.colors.surface },
-            style
-        ]}>
+        <Surface
+            elevation={0}
+            style={[styles.container, {backgroundColor: theme.colors.surface}, style]}
+        >
             {children}
-        </View>
+        </Surface>
     );
 };
 

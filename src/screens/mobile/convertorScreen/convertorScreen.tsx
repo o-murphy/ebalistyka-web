@@ -1,7 +1,7 @@
-import { StyleSheet, View } from "react-native";
+import { StyleSheet } from "react-native";
 import { Divider, List, Surface, useTheme } from "react-native-paper";
 import { ScreenBackground } from "../components";
-import ScrollViewSurface from "../components/scrollViewSurface";
+import { ScrollViewSurface } from "../components";
 
 const ConvertorContent = () => {
     const theme = useTheme();
@@ -18,20 +18,27 @@ const ConvertorContent = () => {
     ];
 
     return (
-            <ScrollViewSurface style={styles.scrollView} surfaceStyle={styles.scrollViewContainer}>
-                <List.Section>
-                    {conversionItems.map((item, index) => (
-                        <Surface key={index} elevation={0}>
-                            <List.Item
-                                title={item.title}
-                                left={props => <List.Icon {...props} icon={item.icon} />}
-                                onPress={item.action}
-                            />
-                            {index < conversionItems.length - 1 && <Divider />}
-                        </Surface>
-                    ))}
-                </List.Section>
-            </ScrollViewSurface>
+        <ScrollViewSurface
+            style={styles.scrollView}
+            keyboardShouldPersistTaps="always"
+            alwaysBounceVertical={false}
+            showsVerticalScrollIndicator={true}
+            surfaceStyle={styles.scrollViewContainer}
+            elevation={1}
+        >
+            <List.Section>
+                {conversionItems.map((item, index) => (
+                    <Surface key={index} elevation={0}>
+                        <List.Item
+                            title={item.title}
+                            left={props => <List.Icon {...props} icon={item.icon} />}
+                            onPress={item.action}
+                        />
+                        {index < conversionItems.length - 1 && <Divider />}
+                    </Surface>
+                ))}
+            </List.Section>
+        </ScrollViewSurface>
     );
 };
 

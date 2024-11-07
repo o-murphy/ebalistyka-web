@@ -151,16 +151,15 @@ const ProfileDetails = () => {
         <List.Section style={{
             paddingVertical: 0,
             marginVertical: 0,
-            backgroundColor: theme.colors.elevation.level1,
+            backgroundColor: theme.colors.elevation.level3,
             borderBottomLeftRadius: 32,
             borderBottomRightRadius: 32,
         }}>
-            {/* <List.Accordion title={<Text variant="labelMedium">{"Profile details"}</Text>} */}
             <List.Accordion title={"Profile details"}
                 style={{
                     paddingVertical: 0,
                     marginVertical: 0,
-                    backgroundColor: theme.colors.elevation.level1,
+                    backgroundColor: theme.colors.elevation.level3,
                 }}
             >
 
@@ -200,8 +199,6 @@ const ProfileDetails = () => {
                 </View>
 
             </List.Accordion>
-            {/* <Divider /> */}
-
         </List.Section>
     )
 }

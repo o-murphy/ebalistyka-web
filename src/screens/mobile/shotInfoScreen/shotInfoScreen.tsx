@@ -1,18 +1,19 @@
-import { ScrollView, StyleSheet, View } from "react-native";
-import { Chip, Divider, Text, useTheme } from "react-native-paper";
+import { StyleSheet } from "react-native";
+import { Chip, Divider, Surface, Text } from "react-native-paper";
 import { useCalculator } from "../../../context/profileContext";
 import { UNew, Atmo, HitResult, UnitProps } from "js-ballistics/dist/v2";
 import { usePreferredUnits } from "../../../context/preferredUnitsContext";
 import { useEffect, useState, useMemo } from "react";
+import { ScreenBackground, ScrollViewSurface } from "../components";
 
 const InfoRow = ({ title, value, icon = null, last = false }) => (
-    <View>
-        <View style={styles.infoRow}>
+    <Surface elevation={0}>
+        <Surface style={styles.infoRow} elevation={0}>
             <Text style={styles.title}>{title}</Text>
             <Chip style={styles.valueChip} icon={icon}>{value}</Chip>
-        </View>
+        </Surface>
         {!last && <Divider />}
-    </View>
+    </Surface>
 );
 
 // Helper function to format units
@@ -35,8 +36,7 @@ const adjustmentSort = (closest, item) =>
     Math.abs(item.dropAdjustment.rawValue) < Math.abs(closest.dropAdjustment.rawValue) ? item : closest;
 
 
-const ShotInfoScreen = () => {
-    const theme = useTheme();
+const ShotInfoContent = () => {
     const { currentConditions, profileProperties, adjustedResult } = useCalculator();
     const { preferredUnits } = usePreferredUnits();
     const [hold, setHold] = useState(null);
@@ -56,48 +56,53 @@ const ShotInfoScreen = () => {
 
     const rows = useMemo(() => {
         const targetDistance = formatUnit(
-            UNew.Meter(currentConditions?.targetDistance), 
-            preferredUnits.distance, 
+            UNew.Meter(currentConditions?.targetDistance),
+            preferredUnits.distance,
             0
         );
 
         const muzzleVelocity = formatUnit(
-            UNew.MPS(profileProperties?.cMuzzleVelocity / 10), 
+            UNew.MPS(profileProperties?.cMuzzleVelocity / 10),
+            preferredUnits.velocity
+        );
+
+        const adjustedMuzzleVelocity = formatUnit(
+            trajectory[0].velocity,
             preferredUnits.velocity
         );
 
         const speedOfSound = calculateSpeedOfSound(currentConditions, preferredUnits.velocity);
 
-        const velocityOnTarget = hold?.velocity 
-            ? formatUnit(hold.velocity, preferredUnits.velocity, 0) 
+        const velocityOnTarget = hold?.velocity
+            ? formatUnit(hold.velocity, preferredUnits.velocity, 0)
             : '<NaN>';
 
-        const startEnergy = trajectory?.[0].energy 
-            ? formatUnit(trajectory[0].energy, preferredUnits.energy, 0) 
+        const startEnergy = trajectory?.[0].energy
+            ? formatUnit(trajectory[0].energy, preferredUnits.energy, 0)
             : '<NaN>';
 
-        const energyOnTarget = hold?.energy 
-            ? formatUnit(hold.energy, preferredUnits.energy, 0) 
+        const energyOnTarget = hold?.energy
+            ? formatUnit(hold.energy, preferredUnits.energy, 0)
             : '<NaN>';
 
-        const maxHeightPoint = trajectory 
-            ? trajectory.reduce((prev, curr) => (curr.height.rawValue > prev.height.rawValue ? curr : prev)) 
+        const maxHeightPoint = trajectory
+            ? trajectory.reduce((prev, curr) => (curr.height.rawValue > prev.height.rawValue ? curr : prev))
             : null;
-        
-        const maxHeight = maxHeightPoint 
-            ? formatUnit(maxHeightPoint.height, preferredUnits.distance, 2) 
+
+        const maxHeight = maxHeightPoint
+            ? formatUnit(maxHeightPoint.height, preferredUnits.distance, 2)
             : '<NaN>';
 
-        const maxHeightDistance = maxHeightPoint 
-            ? formatUnit(maxHeightPoint.distance, preferredUnits.distance, 2) 
+        const maxHeightDistance = maxHeightPoint
+            ? formatUnit(maxHeightPoint.distance, preferredUnits.distance, 2)
             : '<NaN>';
 
         const timeToTarget = hold?.time?.toFixed(3) || '<NaN>';
 
         return [
             { title: "Shot distance", value: targetDistance },
-            { title: "Muzzle velocity", value: muzzleVelocity },
-            { title: "Adjusted muzzle velocity", value: '<NaN>' },
+            { title: "Zero muzzle velocity", value: muzzleVelocity },
+            { title: "Shot muzzle velocity", value: adjustedMuzzleVelocity },
             { title: "Speed of sound", value: speedOfSound },
             { title: "Velocity on target", value: velocityOnTarget },
             { title: "Start energy", value: startEnergy },
@@ -113,28 +118,31 @@ const ShotInfoScreen = () => {
     }, [hold, trajectory, currentConditions, profileProperties, preferredUnits]);
 
     return (
-        <View style={[styles.container, { backgroundColor: theme.colors.surface }]}>
-            <ScrollView
-                style={[styles.scrollView, { backgroundColor: theme.colors.surface }]}
-                keyboardShouldPersistTaps="always"
-                alwaysBounceVertical={false}
-                showsVerticalScrollIndicator
-                contentContainerStyle={[styles.scrollViewContainer, { backgroundColor: theme.colors.elevation.level1 }]}
-            >
-                {rows.map((item, index) => <InfoRow key={index} {...item} />)}
-            </ScrollView>
-        </View>
+        <ScrollViewSurface
+            style={styles.scrollView}
+            keyboardShouldPersistTaps="always"
+            alwaysBounceVertical={false}
+            showsVerticalScrollIndicator
+            surfaceStyle={styles.scrollViewContainer}
+        >
+            {rows.map((item, index) => <InfoRow key={index} {...item} />)}
+        </ScrollViewSurface>
     );
 };
 
+
+const ShotInfoScreen = ({ navigation }) => {
+    return (
+        <ScreenBackground>
+            <ShotInfoContent />
+        </ScreenBackground>
+    )
+}
+
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        paddingBottom: 32,
-    },
     scrollView: {
         flex: 1,
-        paddingBottom: 64,
+        paddingBottom: 16,
     },
     scrollViewContainer: {
         paddingBottom: 16,

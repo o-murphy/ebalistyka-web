@@ -25,7 +25,9 @@ export interface CurrentConditionsProps {
 
     targetDistance: number,
     trajectoryStep: number,
-    trajectoryRange: number
+    trajectoryRange: number,
+
+    usePowderSens: boolean,
 }
 
 // Handle messages from the main thread
@@ -88,12 +90,12 @@ export const prepareCalculator = (profile: ProfileProps): PreparedZeroData => {
             ammo: {
                 mv: UNew.MPS(profile.cMuzzleVelocity / 10),
                 powderTemp: UNew.Celsius(profile.cZeroPTemperature),
-                tempModifier: profile.cTCoeff / 1000,
+                tempModifier: profile.cTCoeff / 1000 / 100,  // NOTE:  / 100 REQUIRED
             },
             lookAngle: UNew.Degree(profile.cZeroWPitch / 10),
             zeroDistance: UNew.Meter(profile.distances[profile.cZeroDistanceIdx] / 100)
         }
-
+        console.log("TM", profile.cTCoeff / 1000)
         const atmo = new Atmo(zeroData.atmo);
         const weapon = new Weapon(zeroData.weapon);
 

@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
-import { ScrollView, View } from "react-native";
-import { Dialog, FAB, HelperText, IconButton, Portal, Switch, Text } from "react-native-paper";
+import { ScrollView } from "react-native";
+import { Dialog, FAB, HelperText, IconButton, Portal, Surface, Switch, Text } from "react-native-paper";
 import MeasureFormField, { MeasureFormFieldProps } from "../../../../components/widgets/measureFields/measureField";
 import { usePreferredUnits } from "../../../../context/preferredUnitsContext";
 import { Distance, UNew, Unit, UnitProps } from "js-ballistics/dist/v2";
@@ -108,7 +108,6 @@ const displayOptions = [
 
 const TableSettingsDialog = ({ visible, setVisible }) => {
 
-    // const { currentConditions, updateCurrentConditions } = useCalculator();
     const { tableSettings, updateTableSettings } = useTableSettings();
     const { preferredUnits } = usePreferredUnits()
 
@@ -169,31 +168,31 @@ const TableSettingsDialog = ({ visible, setVisible }) => {
             <Dialog visible={visible} onDismiss={hideDialog} style={{ height: "80%" }}>
 
                 <Dialog.Title>
-                    <View style={{ width: "100%", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+                    <Surface style={{ width: "100%", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }} elevation={0}>
                         <Text>Tables settings</Text>
                         <IconButton icon={"close"} onPress={hideDialog} />
-                    </View>
+                    </Surface>
                 </Dialog.Title>
                 <Dialog.ScrollArea>
                     <ScrollView style={{ flex: 1 }}>
                         <Dialog.Content>
 
-                            <View style={{ marginVertical: 8 }}>
+                            <Surface style={{ marginVertical: 8 }} elevation={0}>
                                 <TrajectoryRangeField trajectoryRange={trajectoryRange} setTrajectoryRange={setTrajectoryRange} onError={setRangeError} />
                                 {rangeError && <HelperText type="error" visible={!!rangeError}>
                                     {rangeError.message}
                                 </HelperText>}
-                            </View>
+                            </Surface>
 
-                            <View style={{ marginVertical: 8 }}>
+                            <Surface style={{ marginVertical: 8 }} elevation={0}>
                                 <TrajectoryStepField trajectoryStep={trajectoryStep} setTrajectoryStep={setTrajectoryStep} onError={setStepError} />
                                 {stepError && <HelperText type="error" visible={!!stepError}>
                                     {stepError.message}
                                 </HelperText>}
-                            </View>
+                            </Surface>
 
                             {displayOptions.map((option) => (
-                                <View
+                                <Surface
                                     key={option.key}
                                     style={{
                                         flexDirection: "row",
@@ -201,6 +200,7 @@ const TableSettingsDialog = ({ visible, setVisible }) => {
                                         marginHorizontal: 8,
                                         marginVertical: 8,
                                     }}
+                                    elevation={0}
                                 >
                                     <Text>{option.label}</Text>
                                     <Switch
@@ -209,7 +209,7 @@ const TableSettingsDialog = ({ visible, setVisible }) => {
                                             updateDisplaySetting(option.key, !displaySettings[option.key])
                                         }
                                     />
-                                </View>
+                                </Surface>
                             ))}
 
                         </Dialog.Content>

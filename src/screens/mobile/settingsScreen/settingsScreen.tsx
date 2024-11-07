@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
-import { useTheme, Divider, List } from "react-native-paper";
+import { StyleSheet } from "react-native";
+import { Divider, List, Surface } from "react-native-paper";
 import { usePreferredUnits } from "../../../context/preferredUnitsContext";
 import { Angular, Energy, Pressure, Temperature, Unit, UnitProps, Weight } from "js-ballistics/dist/v2";
 import { SettingsSaveBanner, UnitSelectorChip } from "./components";
-import { ScreenBackground } from "../components";
+import { ScreenBackground, ScrollViewSurface } from "../components";
 
 interface UnitConfig {
     icon: string;
@@ -21,7 +21,6 @@ export const getUnitList = (measure: Object): Unit[] =>
 
 
 const SettingsContent = () => {
-    const theme = useTheme();
     const { preferredUnits, setPreferredUnits } = usePreferredUnits();
     const [bannerVisible, setBannerVisible] = useState(false);
 
@@ -47,21 +46,21 @@ const SettingsContent = () => {
     };
 
     return (
-        <View style={[styles.container]}>
+        <Surface style={styles.container} elevation={0}>
             <SettingsSaveBanner visible={bannerVisible} onSubmit={handleSave} onDismiss={handleDiscard} />
-
-            <ScrollView
-                style={[styles.scrollView, { backgroundColor: theme.colors.surface }]}
-                contentContainerStyle={[styles.scrollViewContent, { backgroundColor: theme.colors.elevation.level1 }]}
+            <ScrollViewSurface
+                style={styles.scrollView}
                 keyboardShouldPersistTaps="always"
-                showsVerticalScrollIndicator
                 alwaysBounceVertical={false}
+                showsVerticalScrollIndicator={true}
+                surfaceStyle={styles.scrollViewContainer}
+                elevation={1}
             >
                 <List.Section title="Preferred units">
                     {renderUnitSelectors(localUnits, handleUnitChange)}
                 </List.Section>
-            </ScrollView>
-        </View>
+            </ScrollViewSurface>
+        </Surface>
     );
 };
 
@@ -88,11 +87,9 @@ const renderUnitSelectors = (localUnits, handleUnitChange: (unit) => void) => {
     };
 
     return unitsConfig.map((unit, index) => (
-        <View key={unit.fKey}>
+        <Surface key={unit.fKey} elevation={0}>
             <UnitSelectorChip
-                containerStyle={styles.unitRow}
                 icon={unit.icon}
-                fKey={unit.fKey}
                 label={unit.label}
                 value={localUnits[unit.fKey]}
                 options={unit.unitList
@@ -104,7 +101,7 @@ const renderUnitSelectors = (localUnits, handleUnitChange: (unit) => void) => {
                 onValueChange={(value) => handleChange(unit, value)}
             />
             {index < unitsConfig.length - 1 && <Divider />}
-        </View>
+        </Surface>
     ));
 };
 
@@ -126,7 +123,7 @@ const styles = StyleSheet.create({
         flex: 1,
         paddingBottom: 32,
     },
-    scrollViewContent: {
+    scrollViewContainer: {
         borderBottomRightRadius: 16,
         borderBottomLeftRadius: 16,
     },

@@ -1,13 +1,11 @@
 import { useEffect } from "react";
-import { ScrollView, StyleSheet } from "react-native";
-import { useTheme } from "react-native-paper";
+import { StyleSheet } from "react-native";
 import { TopContainer, BotContainer } from "./components";
 import { useCalculator } from "../../../context/profileContext";
-import { ScreenBackground } from "../components";
+import { ScreenBackground, ScrollViewSurface } from "../components";
 
 
 const HomeContent = () => {
-    const theme = useTheme();
     const { profileProperties, currentConditions, fire } = useCalculator();
 
     useEffect(() => {
@@ -17,16 +15,17 @@ const HomeContent = () => {
     }, [profileProperties, currentConditions]);
 
     return (
-        <ScrollView
-            style={[styles.scrollView, {backgroundColor: theme.colors.surface}]}
+        <ScrollViewSurface 
+            style={styles.scrollView}
             keyboardShouldPersistTaps="always"
             alwaysBounceVertical={false}
             showsVerticalScrollIndicator={true}
-            contentContainerStyle={styles.scrollViewContainer}
+            surfaceStyle={styles.scrollViewContainer}
+            elevation={0}
         >
             <TopContainer />
             <BotContainer />
-        </ScrollView>
+        </ScrollViewSurface>
     );
 };
 
