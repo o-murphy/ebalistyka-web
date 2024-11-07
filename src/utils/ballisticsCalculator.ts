@@ -28,6 +28,7 @@ export interface CurrentConditionsProps {
     trajectoryRange: number,
 
     usePowderSens: boolean,
+    powderTemperature: number,
 }
 
 // Handle messages from the main thread

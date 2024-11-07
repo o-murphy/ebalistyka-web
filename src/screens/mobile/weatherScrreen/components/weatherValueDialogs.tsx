@@ -235,6 +235,21 @@ const WeatherTemperatureDialog: React.FC<{ button: React.ReactElement }> = ({ bu
 );
 
 
+const WeatherPowderTemperatureDialog: React.FC<{ button: React.ReactElement }> = ({ button }) => (
+    <ValueDialog
+        button={button}
+        fieldKey="powderTemperature"
+        label="Temperature"
+        icon="thermometer"
+        unitType="temperature"
+        unitTypeClass={Temperature}
+        defUnit={Unit.Celsius}
+        range={{ min: UNew.Celsius(-50), max: UNew.Celsius(50), fraction: 2 }}
+        enableSlider
+    />
+);
+
+
 const WeatherPressureDialog: React.FC<{ button: React.ReactElement }> = ({ button }) => (
     <ValueDialog
         button={button}
@@ -268,4 +283,5 @@ export {
     WeatherTemperatureDialog,
     WeatherPressureDialog,
     WeatherHumidityDialog,
+    WeatherPowderTemperatureDialog,
 };

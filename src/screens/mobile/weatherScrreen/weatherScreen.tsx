@@ -1,9 +1,9 @@
 import { StyleSheet } from "react-native";
-import { Chip, FAB, Surface, Switch, Text } from "react-native-paper";
+import { Button, Chip, FAB, Surface, Switch, Text } from "react-native-paper";
 import { useEffect, useState } from "react";
 import { ScreenBackground, ScrollViewSurface } from "../components";
 import { useCalculator } from "../../../context/profileContext";
-import { WeatherHumidityDialog, WeatherPressureDialog, WeatherTemperatureDialog } from "./components";
+import { WeatherHumidityDialog, WeatherPowderTemperatureDialog, WeatherPressureDialog, WeatherTemperatureDialog } from "./components";
 import { HitResult, UNew } from "js-ballistics/dist/v2";
 import { usePreferredUnits } from "../../../context/preferredUnitsContext";
 import { UnitProps } from "js-ballistics";
@@ -61,6 +61,24 @@ const WeatherContent = () => {
     }
 
 
+    const PowderSenseValue = () => {
+        const currentTemp = UNew.Celsius(currentConditions.powderTemperature).In(preferredUnits.temperature).toFixed(0)
+        const currentTempSymbol = UnitProps[preferredUnits.temperature].symbol
+        return (
+            <WeatherPowderTemperatureDialog button={
+                <Button
+                    mode="outlined"
+                    icon={"thermometer"}
+                    onPress={() => console.log('cTemp')}
+                    style={styles.fabStyle}
+                >
+                    Powder temperature {currentTemp} {currentTempSymbol}
+                </Button>
+            } />
+        )
+    }
+
+
     return (
         <ScrollViewSurface
             style={styles.scrollView}
@@ -112,6 +130,7 @@ const WeatherContent = () => {
                     />
                 </Surface>
 
+                {/* {usePowderSens && <PowderSenseValue />} */}
                 {usePowderSens && <CurrentVelocity />}
                 {usePowderSens && <PowderSense />}
 
