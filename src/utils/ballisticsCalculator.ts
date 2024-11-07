@@ -4,7 +4,8 @@ import Calculator, {
     DragModel,
     HitResult,
     Wind,
-    getGlobalUsePowderSensitivity
+    getGlobalUsePowderSensitivity,
+    setGlobalUsePowderSensitivity
 } from 'js-ballistics/dist/v2';
 import { ProfileProps } from './parseA7P';
 import { Unit } from 'js-ballistics';
@@ -133,6 +134,7 @@ export const prepareCalculator = (profile: ProfileProps, currentConditions): Pre
 
         if (getGlobalUsePowderSensitivity()) {
             console.log("Adjusting mv to powder temp")
+            setGlobalUsePowderSensitivity(false)
             ammo = new Ammo({
                 dm: dm,
                 ...{...zeroData.ammo, mv: ammo.getVelocityForTemp(UNew.Celsius(currentConditions.powderTemperature))}
