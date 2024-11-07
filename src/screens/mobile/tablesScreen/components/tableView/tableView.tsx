@@ -220,9 +220,8 @@ export const TrajectoryTable = ({ hitResult, style = null }) => {
 
     const styles = StyleSheet.create({
         text: { textAlign: 'center', color: theme.colors.onSurfaceVariant },
-        zeroText: { textAlign: 'center', color: theme.colors.tertiary },
-        zeroRow: { backgroundColor: theme.colors.onTertiary },
-        // selectedRow: { backgroundColor: theme.colors.tertiaryContainer },
+        zeroRow: { backgroundColor: theme.colors.tertiaryContainer },
+        zeroText: { textAlign: 'center', color: theme.colors.onTertiaryContainer },
     });
 
     const tableData: TableDataType[] = trajectory.map((row, index) => {

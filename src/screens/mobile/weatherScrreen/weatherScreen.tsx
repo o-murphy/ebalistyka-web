@@ -9,76 +9,85 @@ import { usePreferredUnits } from "../../../context/preferredUnitsContext";
 import { UnitProps } from "js-ballistics";
 
 
-const WeatherContent = () => {
 
-    const { currentConditions, updateCurrentConditions, adjustedResult, profileProperties } = useCalculator()
+const CurrentVelocity = () => {
+    const { currentConditions, adjustedResult } = useCalculator()
     const { preferredUnits } = usePreferredUnits()
-    const [usePowderSens, setUsePowderSens] = useState<boolean>(currentConditions.usePowderSens);
 
-    useEffect(() => {
-        updateCurrentConditions({
-            usePowderSens: usePowderSens
-        })
-    }, [usePowderSens])
-
-    const onTogglePowderSens = () => {
-        console.log(!usePowderSens)
-        setUsePowderSens(!usePowderSens);
-    }
-
-    const CurrentVelocity = () => {
-        if (adjustedResult instanceof HitResult) {
-            const currentTemp = UNew.Celsius(currentConditions.powderTemperature).In(preferredUnits.temperature).toFixed(0)
-            const currentTempSymbol = UnitProps[preferredUnits.temperature].symbol
-            const currentMuzzleVelocity = adjustedResult.trajectory[0].velocity.In(preferredUnits.velocity).toFixed(0)
-            const velocitySymbol = UnitProps[preferredUnits.velocity].symbol
-            return (
-                <Surface style={styles.powderSenseSwitchRow} elevation={0}>
-                    <Text style={{ flex: 3 }}>
-                        {`Muzzle velocity for ${currentTemp} ${currentTempSymbol}
-                        \nof powder temperature`}
-                    </Text>
-                    <Chip style={{ flex: 2 }}>
-                        {currentMuzzleVelocity} {velocitySymbol}
-                    </Chip>
-                </Surface>
-            )
-        }
-    }
-
-    const PowderSense = () => {
-        if (adjustedResult instanceof HitResult) {
-            return (
-                <Surface style={styles.powderSenseSwitchRow} elevation={0}>
-                    <Text style={{ flex: 3 }}>
-                        Powder sensitivity
-                    </Text>
-                    <Chip style={{ flex: 2 }}>
-                        {(profileProperties.cTCoeff / 1000).toFixed(2)} %/15°C
-                    </Chip>
-                </Surface>
-            )
-        }
-    }
-
-
-    const PowderSenseValue = () => {
+    if (adjustedResult instanceof HitResult) {
         const currentTemp = UNew.Celsius(currentConditions.powderTemperature).In(preferredUnits.temperature).toFixed(0)
         const currentTempSymbol = UnitProps[preferredUnits.temperature].symbol
+        const currentMuzzleVelocity = adjustedResult.trajectory[0].velocity.In(preferredUnits.velocity).toFixed(0)
+        const velocitySymbol = UnitProps[preferredUnits.velocity].symbol
         return (
-            <WeatherPowderTemperatureDialog button={
-                <Button
-                    mode="outlined"
-                    icon={"thermometer"}
-                    onPress={() => console.log('cTemp')}
-                    style={styles.fabStyle}
-                >
-                    Powder temperature {currentTemp} {currentTempSymbol}
-                </Button>
-            } />
+            <Surface style={styles.powderSenseSwitchRow} elevation={0}>
+                <Text style={{ flex: 3 }}>
+                    {`Muzzle velocity for ${currentTemp} ${currentTempSymbol} of powder temperature`}
+                </Text>
+                <Chip style={{ flex: 2 }}>
+                    {currentMuzzleVelocity} {velocitySymbol}
+                </Chip>
+            </Surface>
         )
     }
+}
 
+const PowderSense = () => {
+    const { profileProperties, adjustedResult } = useCalculator()
+
+    if (adjustedResult instanceof HitResult) {
+        return (
+            <Surface style={styles.powderSenseSwitchRow} elevation={0}>
+                <Text style={{ flex: 3 }}>
+                    Powder sensitivity
+                </Text>
+                <Chip style={{ flex: 2 }}>
+                    {(profileProperties.cTCoeff / 1000).toFixed(2)} %/15°C
+                </Chip>
+            </Surface>
+        )
+    }
+}
+
+
+const PowderSenseValue = () => {
+    const { currentConditions, adjustedResult } = useCalculator()
+    const { preferredUnits } = usePreferredUnits()
+
+    const currentTemp = UNew.Celsius(currentConditions.powderTemperature).In(preferredUnits.temperature).toFixed(0)
+    const currentTempSymbol = UnitProps[preferredUnits.temperature].symbol
+    return (
+        <WeatherPowderTemperatureDialog button={
+            <Button
+                mode="outlined"
+                icon={"thermometer"}
+                onPress={() => console.log('cTemp')}
+                style={styles.fabStyle}
+            >
+                Powder temperature {currentTemp} {currentTempSymbol}
+            </Button>
+        } />
+    )
+}
+
+
+const WeatherContent = () => {
+
+    const { currentConditions, updateCurrentConditions } = useCalculator()
+
+    const { usePowderSens, useDifferentPowderTemperature } = currentConditions
+
+    const onTogglePowderSens = () => {
+        updateCurrentConditions({
+            usePowderSens: !usePowderSens
+        })
+    }
+
+    const onToggleDiffPowderTemp = () => {
+        updateCurrentConditions({
+            useDifferentPowderTemperature: !useDifferentPowderTemperature
+        })
+    }
 
     return (
         <ScrollViewSurface
@@ -111,6 +120,7 @@ const WeatherContent = () => {
                             style={styles.fabStyle}
                         />
                     } />
+
                     <WeatherPressureDialog button={
                         <FAB
                             size="small"
@@ -120,7 +130,6 @@ const WeatherContent = () => {
                             style={styles.fabStyle}
                         />
                     } />
-
                 </Surface>
 
                 <Surface style={styles.powderSenseSwitchRow} elevation={0}>
@@ -131,7 +140,15 @@ const WeatherContent = () => {
                     />
                 </Surface>
 
-                {usePowderSens && <PowderSenseValue />}
+                {usePowderSens && <Surface style={styles.powderSenseSwitchRow} elevation={0}>
+                    <Text>Use different powder temperature</Text>
+                    <Switch
+                        value={useDifferentPowderTemperature}
+                        onValueChange={onToggleDiffPowderTemp}
+                    />
+                </Surface>}
+
+                {usePowderSens && useDifferentPowderTemperature && <PowderSenseValue />}
                 {usePowderSens && <CurrentVelocity />}
                 {usePowderSens && <PowderSense />}
 

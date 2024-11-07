@@ -1,5 +1,5 @@
 import { View } from "react-native"
-import { Chip, Divider, List, Text, useTheme } from "react-native-paper"
+import { Chip, Divider, List, Text, Surface, useTheme } from "react-native-paper"
 import { useCalculator } from "../../../../context/profileContext"
 import { usePreferredUnits } from "../../../../context/preferredUnitsContext"
 import { UNew, Unit, UnitProps } from "js-ballistics/dist/v2"
@@ -46,7 +46,7 @@ const SectionSubtitle = ({ subtitle }) => {
 
             <Text
                 variant={"labelSmall"}
-                style={{ flex: 1, textAlign: "center", color: theme.colors.secondary }}
+                style={{ flex: 1, textAlign: "center", }}
             >
                 {subtitle}
             </Text>
@@ -60,7 +60,6 @@ const BCDetails = ({ dragModel, coeffs }) => {
     const theme = useTheme()
 
     if (dragModel === "G1" || dragModel === "G7") {
-        const bcOrCustom = "Ballistic coefficients"
         const coeffRows = coeffs.map((item, index) => {
             const v = `${UNew.MPS(item.mv / 10).In(preferredUnits.velocity).toFixed(0)} ${UnitProps[preferredUnits.velocity].symbol}`
             const bc = (item.bcCd / 10000).toFixed(3)
@@ -69,41 +68,41 @@ const BCDetails = ({ dragModel, coeffs }) => {
         return (
 
 
-            <View style={{ flexDirection: "column" }}>
+            <Surface style={{ flexDirection: "column" }} elevation={0}>
                 <Section text={"Drag model"} value={dragModel} divider={false} />
-                <View style={{
+                <Surface style={{
                     borderRadius: 16,
-                    backgroundColor: theme.colors.elevation.level4,
                     overflow: "hidden",
                     marginVertical: 4
-                }}>
-                    <List.Accordion 
+                }}
+                    elevation={3}>
+                    <List.Accordion
                         title={"Ballistic coefficients"}
-                        titleStyle={{fontSize: 12}}
+                        titleStyle={{ fontSize: 12 }}
                         style={{
                             paddingVertical: 0,
                             marginVertical: 0,
-                            backgroundColor: theme.colors.elevation.level4,
+                            backgroundColor: theme.colors.elevation.level3,
                         }}
                     >
-                        <View style={{
+                        <Surface style={{
                             flexDirection: "column",
                             marginHorizontal: 32,
                             paddingBottom: 16,
-                        }}>
+                        }} elevation={0}>
                             {coeffRows}
-                        </View>
+                        </Surface>
                     </List.Accordion>
-                </View>
-            </View>
+                </Surface>
+            </Surface>
         )
     } else {
         const bcOrCustom = "Custom drag function uses"
         return (
-            <View style={{ flexDirection: "column" }}>
+            <Surface style={{ flexDirection: "column" }} elevation={0}>
                 <Section text={"Drag model"} value={dragModel} divider={false} />
                 <SectionSubtitle subtitle={bcOrCustom} />
-            </View>
+            </Surface>
         )
     }
 
@@ -148,58 +147,68 @@ const ProfileDetails = () => {
     }
 
     return (
-        <List.Section style={{
-            paddingVertical: 0,
-            marginVertical: 0,
-            backgroundColor: theme.colors.elevation.level3,
+        <Surface style={{
             borderBottomLeftRadius: 32,
             borderBottomRightRadius: 32,
-        }}>
-            <List.Accordion title={"Profile details"}
+            overflow: "hidden",
+        }}
+            elevation={2}>
+            <List.Section
                 style={{
                     paddingVertical: 0,
                     marginVertical: 0,
-                    backgroundColor: theme.colors.elevation.level3,
-                }}
-            >
-
-                <View style={{
-                    flexDirection: "column", 
-                    marginHorizontal: 16, 
-                    paddingBottom: 16,
                 }}>
-                    <Section text={"Profile name"} value={props.profName} />
+                <List.Accordion title={"Profile details"}
+                    titleStyle={{
+                        backgroundColor: "transparent",
+                    }}
+                    style={{
+                        paddingVertical: 0,
+                        marginVertical: 0,
+                        backgroundColor: theme.colors.elevation.level2,
+                    }}
+                >
+                    <Surface
+                        style={{
+                            flexDirection: "column",
+                            paddingHorizontal: 16,
+                            paddingBottom: 16,
+                        }}
+                        elevation={2}
+                    >
+                        <Section text={"Profile name"} value={props.profName} />
 
-                    <SectionTitle title={"Weapon"} />
-                    <Section text={"Caliber"} value={props.caliber} />
-                    <Section text={"Twist"} value={props.twist} />
-                    <Section text={"Twist direction"} value={props.twistDir} />
+                        <SectionTitle title={"Weapon"} />
+                        <Section text={"Caliber"} value={props.caliber} />
+                        <Section text={"Twist"} value={props.twist} />
+                        <Section text={"Twist direction"} value={props.twistDir} />
 
-                    <SectionTitle title={"Projectile"} />
-                    <SectionSubtitle subtitle={props.bulletName} />
-                    <BCDetails dragModel={props.dragModel} coeffs={props.coeffs} />
+                        <SectionTitle title={"Projectile"} />
+                        <SectionSubtitle subtitle={props.bulletName} />
+                        <BCDetails dragModel={props.dragModel} coeffs={props.coeffs} />
 
-                    <Section text={"Muzzle velocity"} value={"<mv>"} />
-                    <Section text={"Zero muzzle velocity"} value={props.mv} />
-                    <Section text={"Zero distance"} value={props.zeroDist} />
-                    <Section text={"Bullet length"} value={props.bLength} />
-                    <Section text={"Bullet diameter"} value={props.caliber} />
-                    <Section text={"Bullet weight"} value={props.bWeight} />
+                        <Section text={"Muzzle velocity"} value={"<mv>"} />
+                        <Section text={"Zero muzzle velocity"} value={props.mv} />
+                        <Section text={"Zero distance"} value={props.zeroDist} />
+                        <Section text={"Bullet length"} value={props.bLength} />
+                        <Section text={"Bullet diameter"} value={props.caliber} />
+                        <Section text={"Bullet weight"} value={props.bWeight} />
 
-                    <SectionTitle title={"Scope"} />
-                    <Section text={"Sight height"} value={props.scHeight} />
+                        <SectionTitle title={"Scope"} />
+                        <Section text={"Sight height"} value={props.scHeight} />
 
-                    <SectionTitle title={"Atmosphere"} />
-                    <Section text={"Temperature"} value={conds.temp} />
-                    <Section text={"Humidity"} value={conds.humidity} />
-                    <Section text={"Pressure"} value={conds.press} />
-                    <Section text={"Wind speed"} value={conds.windSpeed} />
-                    <Section text={"Wind direction"} value={conds.windDir} divider={false} />
+                        <SectionTitle title={"Atmosphere"} />
+                        <Section text={"Temperature"} value={conds.temp} />
+                        <Section text={"Humidity"} value={conds.humidity} />
+                        <Section text={"Pressure"} value={conds.press} />
+                        <Section text={"Wind speed"} value={conds.windSpeed} />
+                        <Section text={"Wind direction"} value={conds.windDir} divider={false} />
 
-                </View>
+                    </Surface>
 
-            </List.Accordion>
-        </List.Section>
+                </List.Accordion>
+            </List.Section>
+        </Surface>
     )
 }
 

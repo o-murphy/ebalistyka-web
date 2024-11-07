@@ -30,6 +30,7 @@ export interface CurrentConditionsProps {
     trajectoryRange: number,
 
     usePowderSens: boolean,
+    useDifferentPowderTemperature: boolean,
     powderTemperature: number,
 }
 
@@ -76,8 +77,6 @@ const dragModel = (profile: ProfileProps) => {
 };
 
 export const prepareCalculator = (profile: ProfileProps, currentConditions): PreparedZeroData => {
-    // try {
-
 
         const zeroData = {
             atmo: {
@@ -132,7 +131,7 @@ export const prepareCalculator = (profile: ProfileProps, currentConditions): Pre
             ...zeroData.ammo
         });
 
-        if (getGlobalUsePowderSensitivity()) {
+        if (getGlobalUsePowderSensitivity() && currentConditions.useDifferentPowderTemperature) {
             console.log("Adjusting mv to powder temp")
             setGlobalUsePowderSensitivity(false)
             ammo = new Ammo({
@@ -154,9 +153,6 @@ export const prepareCalculator = (profile: ProfileProps, currentConditions): Pre
         console.log(`Muzzle velocity at zero temperature ${atmo.temperature} is ${ammo.getVelocityForTemp(atmo.temperature).to(Unit.MPS)}`)
         return { weapon: weapon, ammo: ammo, calc: calc, error: null };
 
-    // } catch (error) {
-    //     return { weapon: null, ammo: null, calc: null, error: error }
-    // }
 };
 
 export const makeShot = (calculator: PreparedZeroData, currentConditions: CurrentConditionsProps): HitResult | Error => {
