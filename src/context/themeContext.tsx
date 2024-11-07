@@ -40,7 +40,7 @@ const loadUserData = async (setNightMode) => {
 
 // Create a provider component
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-  const [nightMode, setNightMode] = useState<boolean>(null);
+  const [nightMode, setNightMode] = useState<boolean>(true);
   const theme: MD3Theme = nightMode ? MD3DarkTheme : MD3LightTheme;
 
   const toggleNightMode = () => {
@@ -54,8 +54,6 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   useEffect(() => {
     saveNightMode(nightMode)
   }, [nightMode])
-
-  if (nightMode === null) return null;
 
   return (
     <ThemeContext.Provider value={{ theme, toggleNightMode }}>
