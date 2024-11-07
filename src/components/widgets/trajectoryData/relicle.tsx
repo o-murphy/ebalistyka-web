@@ -1,5 +1,4 @@
-import { Distance, TrajectoryData, UNew, Unit } from "js-ballistics/dist/v2"
-import { usePreferredUnits } from "../../../context/preferredUnitsContext"
+import { TrajectoryData, UNew } from "js-ballistics/dist/v2"
 import { useCalculator } from "../../../context/profileContext"
 import { Reticle } from "./abstract"
 
