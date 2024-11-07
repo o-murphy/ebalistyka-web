@@ -1,5 +1,5 @@
-import { StyleSheet, View } from "react-native";
-import { FAB, Text, useTheme } from "react-native-paper";
+import { StyleSheet } from "react-native";
+import { FAB, Surface, Text } from "react-native-paper";
 import ProfileTitle from "./profileTitle";
 import ShotPropertiesContainer from "./shotProperties";
 import { LookAngleDialog, TargetDistanceDialog, WindSpeedDialog } from "./shotPropsDialogs";
@@ -7,27 +7,26 @@ import { LookAngleDialog, TargetDistanceDialog, WindSpeedDialog } from "./shotPr
 const bigFABsLabels = ['Wind speed', 'Look angle', 'Distance'];
 
 const TopContainer = () => {
-    const theme = useTheme();
 
     return (
-        <View style={[styles.topContainer, { backgroundColor: theme.colors.elevation.level1 }]}>
+        <Surface style={styles.topContainer} elevation={1}>
             <ProfileTitle />
             <ShotPropertiesContainer />
 
-            <View style={styles.shotPropsFabContainer}>
+            <Surface style={styles.shotPropsFabContainer} elevation={0}>
                 <WindSpeedDialog button={<FAB size="medium" icon="windsock" style={styles.shotPropsFab} />} />
                 <LookAngleDialog button={<FAB size="medium" icon="angle-acute" style={styles.shotPropsFab} />} />
                 <TargetDistanceDialog button={<FAB size="medium" icon="map-marker-distance" style={styles.shotPropsFab} />} />
-            </View>
+            </Surface>
 
-            <View style={styles.shotPropsLabelContainer}>
+            <Surface style={styles.shotPropsLabelContainer} elevation={0}>
                 {bigFABsLabels.map((text, index) => (
                     <Text key={index} style={styles.shotPropsLabel}>
                         {text}
                     </Text>
                 ))}
-            </View>
-        </View>
+            </Surface>
+        </Surface>
     );
 };
 

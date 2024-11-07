@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
-import { useTheme, Banner, Divider, List, Text } from "react-native-paper";
+import { useTheme, Divider, List } from "react-native-paper";
 import { usePreferredUnits } from "../../../context/preferredUnitsContext";
 import { Angular, Energy, Pressure, Temperature, Unit, UnitProps, Weight } from "js-ballistics/dist/v2";
-import { UnitSelectorChip } from "./components";
+import { SettingsSaveBanner, UnitSelectorChip } from "./components";
+import { ScreenBackground } from "../components";
 
 interface UnitConfig {
     icon: string;
@@ -19,10 +20,10 @@ export const getUnitList = (measure: Object): Unit[] =>
     );
 
 
-const SettingsScreen = () => {
+const SettingsContent = () => {
     const theme = useTheme();
     const { preferredUnits, setPreferredUnits } = usePreferredUnits();
-    const [saveBtnVisible, setSaveBtnVisible] = useState(false);
+    const [bannerVisible, setBannerVisible] = useState(false);
 
     const [localUnits, setLocalUnits] = useState(preferredUnits);
 
@@ -32,32 +33,22 @@ const SettingsScreen = () => {
 
     const handleUnitChange = (updatedUnit: Partial<typeof preferredUnits>) => {
         setLocalUnits((prev) => ({ ...prev, ...updatedUnit }));
-        setSaveBtnVisible(true);
+        setBannerVisible(true);
     };
 
     const handleSave = () => {
         setPreferredUnits(localUnits);
-        setSaveBtnVisible(false);
+        setBannerVisible(false);
     };
 
     const handleDiscard = () => {
         setLocalUnits(preferredUnits);
-        setSaveBtnVisible(false);
+        setBannerVisible(false);
     };
 
     return (
         <View style={[styles.container]}>
-            <Banner
-                visible={saveBtnVisible}
-                style={{ backgroundColor: theme.colors.secondaryContainer }}
-                actions={[
-                    { label: "Save".toUpperCase(), onPress: handleSave, textColor: theme.colors.onSecondaryContainer },
-                    { label: "Discard".toUpperCase(), onPress: handleDiscard, textColor: theme.colors.tertiary },
-                ]}
-                icon="content-save"
-            >
-                <Text>{"Changes detected in settings. Save changes?"}</Text>
-            </Banner>
+            <SettingsSaveBanner visible={bannerVisible} onSubmit={handleSave} onDismiss={handleDiscard} />
 
             <ScrollView
                 style={[styles.scrollView, { backgroundColor: theme.colors.surface }]}
@@ -117,19 +108,27 @@ const renderUnitSelectors = (localUnits, handleUnitChange: (unit) => void) => {
     ));
 };
 
+
+const SettingsScreen = ({ navigation }) => {
+    return (
+        <ScreenBackground>
+            <SettingsContent />
+        </ScreenBackground>
+    )
+}
+
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingBottom: 32,
     },
     scrollView: {
         flex: 1,
-        paddingBottom: 64,
+        paddingBottom: 32,
     },
     scrollViewContent: {
-        paddingBottom: 16,
-        borderBottomRightRadius: 32,
-        borderBottomLeftRadius: 32,
+        borderBottomRightRadius: 16,
+        borderBottomLeftRadius: 16,
     },
     unitRow: {
         flex: 1,

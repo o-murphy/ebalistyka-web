@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { StyleSheet, View } from "react-native";
-import { Text } from "react-native-paper";
+import { StyleSheet } from "react-native";
+import { Surface, Text } from "react-native-paper";
 import { useCalculator } from "../../../../context/profileContext";
 import { HitResult } from "js-ballistics/dist/v2";
 import { HoldValuesContainer } from "./holdValuesContainer";
@@ -35,17 +35,17 @@ const BotContainer = () => {
     ], [profileProperties]);
 
     return (
-        <View style={styles.botContainer}>
+        <Surface style={styles.botContainer} elevation={0}>
             {profileProperties && (
                 <Text style={styles.shortInfo} variant="labelMedium">
                     {shortInfo.join("; ")}
                 </Text>
             )}
-            <View style={styles.shotResultContainer}>
+            <Surface style={styles.shotResultContainer} elevation={0}>
                 <HoldReticleContainer hold={hold} />
                 <HoldValuesContainer hold={hold} />
-            </View>
-        </View>
+            </Surface>
+        </Surface>
     );
 };
 

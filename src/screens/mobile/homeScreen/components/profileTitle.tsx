@@ -1,20 +1,19 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { StyleSheet, View } from "react-native";
-import { Chip, FAB, Icon, useTheme } from "react-native-paper";
+import { StyleSheet } from "react-native";
+import { Chip, FAB, Icon, Surface } from "react-native-paper";
 import { useCalculator } from "../../../../context/profileContext";
 
 
 const BulletIcon = ({ size, color }) => {
     return (
-        <View style={styles.bulletIcon}>
+        <Surface style={styles.bulletIcon} elevation={0}>
             <Icon size={size} color={color} source="bullet" />
-        </View>
+        </Surface>
     )
 }
 
 
 const ProfileTitle = () => {
-    const theme = useTheme();
     const { profileProperties } = useCalculator();
 
     const [profileData, setProfileData] = useState({
@@ -35,7 +34,7 @@ const ProfileTitle = () => {
     );
 
     return (
-        <View style={styles.container}>
+        <Surface style={styles.container} elevation={0}>
             <Chip
                 closeIcon="square-edit-outline"
                 mode={"flat"}
@@ -49,11 +48,11 @@ const ProfileTitle = () => {
                 size="small"
                 mode="flat"
                 variant="secondary"
-                animated={false}
+                // animated={true}
                 disabled={true}
                 icon={({ size, color }) => <BulletIcon color={color} size={size} />}
             />
-        </View>
+        </Surface>
     );
 };
 

@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { MD3LightTheme, MD3DarkTheme, MD3Theme } from 'react-native-paper';
 
 // Define the shape of the context value
@@ -16,14 +17,45 @@ interface ThemeProviderProps {
   children: ReactNode;
 }
 
+const saveNightMode = async (isNightMode) => {
+  try {
+    const jsonValue = JSON.stringify(isNightMode);
+    await AsyncStorage.setItem('nightMode', jsonValue);
+  } catch (error) {
+    console.error('Failed to save theme settings:', error);
+  }
+};
+
+const loadUserData = async (setNightMode) => {
+  try {
+    const settingsValue = await AsyncStorage.getItem('nightMode');
+    if (settingsValue) {
+      setNightMode(JSON.parse(settingsValue));
+    }
+  } catch (error) {
+    setNightMode(true)
+    console.error('Failed to load table settings:', error);
+  }
+};
+
 // Create a provider component
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-  const [nightMode, setNightMode] = useState<boolean>(true);
+  const [nightMode, setNightMode] = useState<boolean>(null);
   const theme: MD3Theme = nightMode ? MD3DarkTheme : MD3LightTheme;
 
   const toggleNightMode = () => {
     setNightMode((prevNightMode) => !prevNightMode);
   };
+
+  useEffect(() => {
+    loadUserData(setNightMode)
+  }, [])
+
+  useEffect(() => {
+    saveNightMode(nightMode)
+  }, [nightMode])
+
+  if (nightMode === null) return null;
 
   return (
     <ThemeContext.Provider value={{ theme, toggleNightMode }}>

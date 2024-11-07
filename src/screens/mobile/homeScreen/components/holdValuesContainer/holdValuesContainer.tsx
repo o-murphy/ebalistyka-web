@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { Angular, Unit, UnitProps } from "js-ballistics/dist/v2";
 import { StyleSheet, View } from "react-native";
-import { Divider, Icon, Text, useTheme } from "react-native-paper";
+import { Divider, Icon, Surface, Text } from "react-native-paper";
 
 const holdUnits = [
     Unit.MRad,
@@ -14,7 +14,6 @@ const holdUnits = [
 interface HoldValuesProps {
     value: Angular;
     icon: string;
-    color: string;
     layoutSize: { width: number; height: number };
 }
 
@@ -23,19 +22,19 @@ const HoldAsText: React.FC<{ value: Angular; unit: Unit; style: object }> = Reac
     return <Text style={style}>{text}</Text>;
 });
 
-const HoldValues: React.FC<HoldValuesProps> = React.memo(({ value, icon, color, layoutSize }) => {
+const HoldValues: React.FC<HoldValuesProps> = React.memo(({ value, icon, layoutSize }) => {
     const holdFontSize = Math.min(layoutSize.width, layoutSize.height) / 11;
-    const holdTextStyle = { color, textAlign: "left", fontSize: holdFontSize };
+    const holdTextStyle = { textAlign: "left", fontSize: holdFontSize };
 
     return (
-        <View style={styles.rowContainer}>
-            <Icon size={2 * holdFontSize} color={color} source={icon} />
-            <View style={{ width: layoutSize.width - 3 * holdFontSize }}>
+        <Surface style={styles.rowContainer} elevation={0}>
+            <Icon size={2 * holdFontSize} source={icon} />
+            <Surface style={{ width: layoutSize.width - 3 * holdFontSize, paddingLeft: 4 }} elevation={0}>
                 {holdUnits.map((unit, index) => (
                     <HoldAsText key={index} style={holdTextStyle} value={value} unit={unit} />
                 ))}
-            </View>
-        </View>
+            </Surface>
+        </Surface>
     );
 });
 
@@ -44,7 +43,6 @@ interface HoldValuesContainerProps {
 }
 
 const HoldValuesContainer: React.FC<HoldValuesContainerProps> = ({ hold }) => {
-    const theme = useTheme();
     const [holdLayoutSize, setHoldLayoutSize] = useState({ width: 0, height: 0 });
 
     const onHoldLayout = useCallback((event) => {
@@ -53,11 +51,11 @@ const HoldValuesContainer: React.FC<HoldValuesContainerProps> = ({ hold }) => {
     }, []);
 
     return (
-        <View style={[styles.shotResultHoldContainer, { backgroundColor: theme.colors.elevation.level1 }]} onLayout={onHoldLayout}>
-            <HoldValues icon="arrow-expand-vertical" value={hold?.hold} color={theme.colors.onSurface} layoutSize={holdLayoutSize} />
-            <Divider bold style={[styles.divider, { backgroundColor: theme.colors.outlineVariant }]} />
-            <HoldValues icon="arrow-expand-horizontal" value={hold?.wind} color={theme.colors.onSurface} layoutSize={holdLayoutSize} />
-        </View>
+        <Surface mode={"flat"} style={[styles.shotResultHoldContainer]} elevation={2} onLayout={onHoldLayout}>
+            <HoldValues icon="arrow-expand-vertical" value={hold?.hold} layoutSize={holdLayoutSize} />
+            <Divider bold style={[styles.divider]} />
+            <HoldValues icon="arrow-expand-horizontal" value={hold?.wind} layoutSize={holdLayoutSize} />
+        </Surface>
     );
 };
 
@@ -71,6 +69,7 @@ const styles = StyleSheet.create({
     rowContainer: {
         flexDirection: "row",
         alignItems: "center",
+        justifyContent: "space-between",
     },
     divider: {
         height: 1,

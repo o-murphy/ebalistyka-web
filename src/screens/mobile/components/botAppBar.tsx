@@ -5,34 +5,18 @@ import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 // import DocumentPicker from 'react-native-document-picker';
 
-const BOTTOM_APPBAR_HEIGHT = 64;
+export const BOTTOM_APP_BAR_HEIGHT = 64;
 const MEDIUM_FAB_HEIGHT = 40;
 
 
 const pickDocument = async () => {
-    // try {
-    //     const res = await DocumentPicker.pick({
-    //         // You can specify the types of files you want to pick
-    //         type: [DocumentPicker.types.allFiles], // Change to specific types if needed
-    //     });
 
-    //     // Handle the selected file
-    //     console.log('Selected file:', res);
-    //     // res.uri contains the file path, res.name contains the file name, etc.
-    // } catch (err) {
-    //     if (DocumentPicker.isCancel(err)) {
-    //         console.log('User cancelled the picker');
-    //     } else {
-    //         console.error('Error picking document:', err);
-    //     }
-    // }
 };
 
 const BotAppBar = () => {
 
     const { bottom } = useSafeAreaInsets();
     const navigation: any = useNavigation()
-    const theme = useTheme();
   
     const [currentRoute, setCurrentRoute] = useState('');
 
@@ -67,8 +51,8 @@ const BotAppBar = () => {
             style={[
                 styles.bottomBar,
                 {
-                    height: BOTTOM_APPBAR_HEIGHT + bottom,
-                    backgroundColor: theme.colors.elevation.level2,
+                    elevation: 2,
+                    height: BOTTOM_APP_BAR_HEIGHT + bottom,
                 },
             ]}
             safeAreaInsets={{bottom}}
@@ -85,7 +69,7 @@ const BotAppBar = () => {
           onPress={pickDocument}
           style={[
             styles.fab,
-            {top: (BOTTOM_APPBAR_HEIGHT - MEDIUM_FAB_HEIGHT) / 2},
+            {top: (BOTTOM_APP_BAR_HEIGHT - MEDIUM_FAB_HEIGHT) / 2},
         ]}
         />
       </Appbar>
@@ -100,7 +84,6 @@ const BotAppBar = () => {
     },
 
     bottomBar: {
-        backgroundColor: 'aquamarine',
         position: 'absolute',
         left: 0,
         right: 0,

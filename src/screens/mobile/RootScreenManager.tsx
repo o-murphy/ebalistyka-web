@@ -5,7 +5,7 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import BotAppBar from "./botAppBar";
+import { BotAppBar } from "./components";
 
 import { navigationRef } from "./RootNavigation";
 import { HomeScreenTopAppBar, HomeScreen } from './homeScreen';

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react"
-import { LayoutChangeEvent, StyleSheet, View } from "react-native"
-import { FAB, Text, useTheme } from "react-native-paper"
+import { LayoutChangeEvent, StyleSheet } from "react-native"
+import { FAB, Surface, Text } from "react-native-paper"
 import { useNavigation } from "@react-navigation/native"
 import WindDirectionPicker from "../../../../components/widgets/windDirectionPicker"
 import { useCalculator } from "../../../../context/profileContext"
@@ -8,7 +8,6 @@ import { useCalculator } from "../../../../context/profileContext"
 
 const ShotPropertiesContainer = () => {
 
-    const theme = useTheme()
     const { currentConditions, updateCurrentConditions } = useCalculator()
     const { windDirection } = currentConditions;
     const [windDir, setWindDir] = useState(windDirection || 0);
@@ -37,11 +36,10 @@ const ShotPropertiesContainer = () => {
     const windDirLabelStyle = useMemo(
         () => ({
             ...styles.windDirLabel,
-            color: theme.colors.onSecondaryContainer,
             fontSize: dialDiameter / 20,
             top: layoutSize.height / 2 - dialDiameter * 0.2,
         }),
-        [theme, dialDiameter, layoutSize.height]
+        [dialDiameter, layoutSize.height]
     );
 
 
@@ -80,7 +78,7 @@ const ShotPropertiesContainer = () => {
     ]
 
     return (
-        <View style={styles.windDirPickerContainer} onLayout={onLayout}>
+        <Surface style={styles.windDirPickerContainer} onLayout={onLayout} elevation={0}>
             <Text style={windDirLabelStyle}>{"Wind\ndirection"}</Text>
             <WindDirectionPicker
                 style={styles.windDirPicker}
@@ -92,7 +90,7 @@ const ShotPropertiesContainer = () => {
             {smallFABs.map((fabProps, index) => (
                 <FAB key={index} {...fabProps} />
             ))}
-        </View>
+        </Surface>
     );
 }
 
