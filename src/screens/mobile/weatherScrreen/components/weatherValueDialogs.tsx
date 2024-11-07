@@ -239,7 +239,7 @@ const WeatherPowderTemperatureDialog: React.FC<{ button: React.ReactElement }> =
     <ValueDialog
         button={button}
         fieldKey="powderTemperature"
-        label="Temperature"
+        label="Powder temperature"
         icon="thermometer"
         unitType="temperature"
         unitTypeClass={Temperature}
