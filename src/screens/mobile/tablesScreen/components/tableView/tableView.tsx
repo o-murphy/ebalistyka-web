@@ -25,44 +25,43 @@ interface ResponsiveTableViewProps {
 
 const useTableHeaders = ({ displayFlag = false }) => {
 
-    const { preferredUnits } = usePreferredUnits()
+    const { preferredUnits: pu } = usePreferredUnits()
     const { tableSettings } = useTableSettings()
 
     return [
         displayFlag && " ",
         tableSettings?.displayTime && `Time, s`,
-        tableSettings?.displayRange && `Range, ${UnitProps[preferredUnits.distance].symbol}`,
-        tableSettings?.displayVelocity && `V, ${UnitProps[preferredUnits.velocity].symbol}`,
-        tableSettings?.displayHeight && `Height, ${UnitProps[preferredUnits.drop].symbol}`,
-        tableSettings?.displayDrop && `Drop, ${UnitProps[preferredUnits.drop].symbol}`,
-        tableSettings?.displayDropAdjustment && `Drop adjustment, ${UnitProps[preferredUnits.adjustment].symbol}`,
-        tableSettings?.displayWindage && `Windage, ${UnitProps[preferredUnits.drop].symbol}`,
-        tableSettings?.displayWindageAdjustment && `Wind. adjustment, ${UnitProps[preferredUnits.adjustment].symbol}`,
+        tableSettings?.displayRange && `Range, ${UnitProps[pu.distance].symbol}`,
+        tableSettings?.displayVelocity && `V, ${UnitProps[pu.velocity].symbol}`,
+        tableSettings?.displayHeight && `Height, ${UnitProps[pu.drop].symbol}`,
+        tableSettings?.displayDrop && `Drop, ${UnitProps[pu.drop].symbol}`,
+        tableSettings?.displayDropAdjustment && `Drop adjustment, ${UnitProps[pu.adjustment].symbol}`,
+        tableSettings?.displayWindage && `Windage, ${UnitProps[pu.drop].symbol}`,
+        tableSettings?.displayWindageAdjustment && `Wind. adjustment, ${UnitProps[pu.adjustment].symbol}`,
         tableSettings?.displayMach && "Mach",
         tableSettings?.displayDrag && "Drag",
-        tableSettings?.displayEnergy && `Energy, ${UnitProps[preferredUnits.energy].symbol}`
+        tableSettings?.displayEnergy && `Energy, ${UnitProps[pu.energy].symbol}`
     ].filter(Boolean);
 }
 
 
 const useMappedTableData = ({ row, displayFlag = false }) => {
 
-    const { preferredUnits } = usePreferredUnits()
+    const { preferredUnits: pu } = usePreferredUnits()
     const { tableSettings } = useTableSettings()
-
     return [
-        displayFlag && row.flag & TrajFlag.ZERO_UP ? "Up" : row.flag & TrajFlag.ZERO_DOWN ? "Down" : "",
+        displayFlag && (row.flag & TrajFlag.ZERO_UP ? "Up" : row.flag & TrajFlag.ZERO_DOWN ? "Down" : ""),
         tableSettings?.displayTime && row.time.toFixed(3),
-        tableSettings?.displayRange && (row.distance).In(preferredUnits.distance).toFixed(0),
-        tableSettings?.displayVelocity && row.velocity.In(preferredUnits.velocity).toFixed(0),
-        tableSettings?.displayHeight && row.height.In(preferredUnits.drop).toFixed(1),
-        tableSettings?.displayDrop && row.targetDrop.In(preferredUnits.drop).toFixed(1),
-        tableSettings?.displayDropAdjustment && row.dropAdjustment.In(preferredUnits.adjustment).toFixed(2),
-        tableSettings?.displayWindage && row.windage.In(preferredUnits.drop).toFixed(1),
-        tableSettings?.displayWindageAdjustment && row.windageAdjustment.In(preferredUnits.adjustment).toFixed(2),
+        tableSettings?.displayRange && (row.distance).In(pu.distance).toFixed(0),
+        tableSettings?.displayVelocity && row.velocity.In(pu.velocity).toFixed(0),
+        tableSettings?.displayHeight && row.height.In(pu.drop).toFixed(1),
+        tableSettings?.displayDrop && row.targetDrop.In(pu.drop).toFixed(1),
+        tableSettings?.displayDropAdjustment && row.dropAdjustment.In(pu.adjustment).toFixed(2),
+        tableSettings?.displayWindage && row.windage.In(pu.drop).toFixed(1),
+        tableSettings?.displayWindageAdjustment && row.windageAdjustment.In(pu.adjustment).toFixed(2),
         tableSettings?.displayMach && row.mach.toFixed(2),
         tableSettings?.displayDrag && row.drag.toFixed(3),
-        tableSettings?.displayEnergy && row.energy.In(preferredUnits.energy).toFixed(0),
+        tableSettings?.displayEnergy && row.energy.In(pu.energy).toFixed(0),
     ].filter(Boolean)
 }
 

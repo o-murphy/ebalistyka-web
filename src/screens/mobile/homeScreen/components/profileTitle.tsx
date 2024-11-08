@@ -48,7 +48,7 @@ const ProfileTitle = () => {
                 size="small"
                 mode="flat"
                 variant="secondary"
-                // animated={true}
+                animated={false}
                 disabled={true}
                 icon={({ size, color }) => <BulletIcon color={color} size={size} />}
             />

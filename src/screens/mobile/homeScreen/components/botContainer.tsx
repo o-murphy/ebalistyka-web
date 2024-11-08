@@ -5,6 +5,7 @@ import { useCalculator } from "../../../../context/profileContext";
 import { HitResult } from "js-ballistics/dist/v2";
 import { HoldPage } from "./holdPage";
 import CarouselView from "./carouselView";
+import { ShotTable } from "./shotTablePage";
 // import { Indicator, Pages } from 'react-native-pages';
 
 const adjustmentSort = (closest, item) => {
@@ -43,13 +44,10 @@ const BotContainer = () => {
                 </Text>
             )}
             <CarouselView>
-                <HoldPage hold={hold} style={styles.shotResultContainer} />
+                <HoldPage hold={hold} />
+                <ShotTable />
 
-                <Surface style={[styles.shotResultContainer, {justifyContent: "center"}]} elevation={0}>
-                    <Text style={{alignSelf: "center"}}>Nothing here yet</Text>
-                </Surface>
-
-                <Surface style={[styles.shotResultContainer, {justifyContent: "center"}]} elevation={0}>
+                <Surface elevation={0}>
                     <Text style={{alignSelf: "center"}}>{"Nothing here yet\npage2"}</Text>
                 </Surface>
             </CarouselView>
@@ -60,17 +58,12 @@ const BotContainer = () => {
 const styles = StyleSheet.create({
     botContainer: {
         flexDirection: "column",
-        paddingBottom: 16
+        paddingBottom: 16,
     },
     shortInfo: {
         textAlign: "center",
         paddingHorizontal: 16,
         paddingVertical: 8,
-    },
-    shotResultContainer: {
-        flexDirection: "row",
-        paddingHorizontal: 16,
-        justifyContent: "space-between",
     },
 });
 

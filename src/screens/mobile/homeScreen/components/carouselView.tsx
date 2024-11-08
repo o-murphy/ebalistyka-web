@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { View, FlatList, Dimensions, StyleSheet, Animated } from 'react-native';
 import { Icon, IconButton, Surface, useTheme } from 'react-native-paper';
 
-const screenWidth = Dimensions.get('window').width;
+// const screenWidth = Dimensions.get('window').width;
 
 const StaticDot = ({ active }) => {
     const theme = useTheme();
@@ -69,6 +69,7 @@ const Indicator = ({ data, activeIndex, animated = false }) => {
 
 const CarouselView = ({ children }) => {
     const [activeIndex, setActiveIndex] = useState(0);
+    const [layoutWidth, setLayoutWidth] = useState(0);
     const flatListRef = useRef<FlatList>(null);
 
     const data = children.map((child, index) => {
@@ -76,7 +77,7 @@ const CarouselView = ({ children }) => {
     })
 
     const handleScroll = (event) => {
-        const index = Math.round(event.nativeEvent.contentOffset.x / screenWidth);
+        const index = Math.round(event.nativeEvent.contentOffset.x / layoutWidth);
         setActiveIndex(index);
     };
 
@@ -85,8 +86,12 @@ const CarouselView = ({ children }) => {
     //     flatListRef.current.scrollToIndex({ index: activeIndex, animated: true });
     // }, [activeIndex])
 
+    const handleLayout = (event) => {
+        setLayoutWidth(event.nativeEvent.layout.width)
+    }
+
     const renderItem = ({ item }) => (
-        <Surface style={styles.card} elevation={0}>
+        <Surface style={[styles.card, {width: layoutWidth}]} elevation={0}>
             {item.content}
         </Surface>
     );
@@ -108,7 +113,7 @@ const CarouselView = ({ children }) => {
     }
 
     return (
-        <View>
+        <View onLayout={handleLayout}>
             <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                 <IconButton icon={"chevron-left"} size={24} style={{ height: 24 }} onPress={onLeftBtn} disabled={!(activeIndex > 0)} />
                 <Indicator data={data} activeIndex={activeIndex} animated />
@@ -125,7 +130,7 @@ const CarouselView = ({ children }) => {
                 keyExtractor={(item) => item.key}
                 showsHorizontalScrollIndicator={false}
 
-                getItemLayout={(data, index) => ({ length: screenWidth, offset: screenWidth * index, index })}
+                getItemLayout={(data, index) => ({ length: layoutWidth, offset: layoutWidth * index, index })}
 
             />
 
@@ -135,7 +140,6 @@ const CarouselView = ({ children }) => {
 
 const styles = StyleSheet.create({
     card: {
-        width: screenWidth,
         marginHorizontal: 0,
     },
     content: {
