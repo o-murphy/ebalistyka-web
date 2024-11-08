@@ -52,15 +52,20 @@ const TablesContent = () => {
     }
 
     return (
-        <ScrollViewSurface style={styles.scrollView}
+        <ScrollViewSurface
+            style={styles.scrollView}
             elevation={1}
             onLayout={handleLayout}
-            contentContainerStyle={{ height: topLayoutHeight + botLayoutHeight }}
+            contentContainerStyle={{
+                height: topLayoutHeight + botLayoutHeight,
+            }}
             surfaceStyle={styles.scrollViewContainer}
+            overScrollMode="never" 
+            bounces={false} 
+            alwaysBounceVertical={false} 
+            scrollToOverflowEnabled={false}
         >
             <TableSettingsProvider>
-
-
                 <TableSettingsDialog visible={settingsVisible} setVisible={setSettingsVisible} />
 
                 <Surface
@@ -84,7 +89,6 @@ const TablesContent = () => {
                         <IconButton icon={"tune"} onPress={onSettings} />
                     </Surface>
                     <TrajectoryTable hitResult={hitResult} style={{ flex: 1 }} />
-
                 </Surface>
 
             </TableSettingsProvider>

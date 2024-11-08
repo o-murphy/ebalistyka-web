@@ -3,8 +3,9 @@ import { StyleSheet } from "react-native";
 import { Surface, Text } from "react-native-paper";
 import { useCalculator } from "../../../../context/profileContext";
 import { HitResult } from "js-ballistics/dist/v2";
-import { HoldValuesContainer } from "./holdValuesContainer";
-import { HoldReticleContainer } from "./holdReticleContainer";
+import { HoldPage } from "./holdPage";
+import CarouselView from "./carouselView";
+// import { Indicator, Pages } from 'react-native-pages';
 
 const adjustmentSort = (closest, item) => {
     return Math.abs(item.dropAdjustment.rawValue) < Math.abs(closest.dropAdjustment.rawValue) ? item : closest;
@@ -41,10 +42,17 @@ const BotContainer = () => {
                     {shortInfo.join("; ")}
                 </Text>
             )}
-            <Surface style={styles.shotResultContainer} elevation={0}>
-                <HoldReticleContainer hold={hold} />
-                <HoldValuesContainer hold={hold} />
-            </Surface>
+            <CarouselView>
+                <HoldPage hold={hold} style={styles.shotResultContainer} />
+
+                <Surface style={[styles.shotResultContainer, {justifyContent: "center"}]} elevation={0}>
+                    <Text style={{alignSelf: "center"}}>Nothing here yet</Text>
+                </Surface>
+
+                <Surface style={[styles.shotResultContainer, {justifyContent: "center"}]} elevation={0}>
+                    <Text style={{alignSelf: "center"}}>{"Nothing here yet\npage2"}</Text>
+                </Surface>
+            </CarouselView>
         </Surface>
     );
 };
@@ -52,7 +60,7 @@ const BotContainer = () => {
 const styles = StyleSheet.create({
     botContainer: {
         flexDirection: "column",
-        padding: 8,
+        paddingBottom: 16
     },
     shortInfo: {
         textAlign: "center",
@@ -61,7 +69,7 @@ const styles = StyleSheet.create({
     },
     shotResultContainer: {
         flexDirection: "row",
-        padding: 8,
+        paddingHorizontal: 16,
         justifyContent: "space-between",
     },
 });

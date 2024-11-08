@@ -106,13 +106,13 @@ export const ResponsiveTableView: React.FC<ResponsiveTableViewProps> = ({ tableH
     return (
         <View style={[style, styles.noSelect]}>
 
-            <ScrollView horizontal contentContainerStyle={styles.horizontalScroll} >
+            <ScrollView horizontal contentContainerStyle={styles.horizontalScroll} overScrollMode="never" bounces={false} alwaysBounceHorizontal={false} alwaysBounceVertical={false}>
                 <View style={styles.tableContainer}>
                     <Table borderStyle={styles.borderStyle} style={styles.table}>
                         <Row data={tableHeaders} style={styles.header} textStyle={styles.headerText} />
                     </Table>
 
-                    <ScrollView style={styles.dataWrapper} >
+                    <ScrollView style={styles.dataWrapper} overScrollMode="never" bounces={false} alwaysBounceVertical={false}>
                         <Table borderStyle={styles.borderStyle} style={styles.table}>
                             {tableData.map((rowData, index) => (
                                 <Pressable
