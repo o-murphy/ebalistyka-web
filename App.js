@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { ProfileProvider } from './src/context/profileContext';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ThemeProvider } from './src/context/themeContext';
@@ -8,6 +8,7 @@ import MainScreen from './src/components/views/main';
 
 import { Platform } from 'react-native';
 import { DeviceType, getDeviceTypeAsync } from "expo-device";
+import { AppSettingsProvider } from './src/context/settingsContext';
 
 
 export default function App() {
@@ -23,11 +24,13 @@ export default function App() {
   return (
     <ThemeProvider>
       <PreferredUnitsProvider>
-        <ProfileProvider>
-          <SafeAreaProvider>
-            {devType === DeviceType.PHONE ? <MobileView /> : <MainScreen />}
-          </SafeAreaProvider>
-        </ProfileProvider>
+        <AppSettingsProvider>
+          <ProfileProvider>
+            <SafeAreaProvider>
+              {devType === DeviceType.PHONE ? <MobileView /> : <MainScreen />}
+            </SafeAreaProvider>
+          </ProfileProvider>
+        </AppSettingsProvider>
       </PreferredUnitsProvider>
     </ThemeProvider>
   );

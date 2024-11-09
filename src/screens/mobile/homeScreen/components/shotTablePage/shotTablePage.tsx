@@ -6,6 +6,7 @@ import { Divider, useTheme } from "react-native-paper";
 import { HitResult, Unit, UnitProps } from "js-ballistics/dist/v2";
 import { UNew } from "js-ballistics";
 import { usePreferredUnits } from "../../../../../context/preferredUnitsContext";
+import { useAppSettings } from "../../../../../context/settingsContext";
 
 const adjustmentSort = (closest, item) => {
     return Math.abs(item.dropAdjustment.rawValue) < Math.abs(closest.dropAdjustment.rawValue) ? item : closest;
@@ -15,7 +16,6 @@ const adjustmentSort = (closest, item) => {
 const MiniTable = ({ header, rows, active = 0 }) => {
     const theme = useTheme()
     const headers = [header]
-    console.log(rows)
 
     rows = rows[0].map((item, index) => [item, rows[1][index]])
 
@@ -40,13 +40,15 @@ const MiniTable = ({ header, rows, active = 0 }) => {
 const ShotTablePage = () => {
     const { adjustedResult } = useCalculator()
     const { preferredUnits: pu } = usePreferredUnits()
+    const { appSettings } = useAppSettings()
 
     if (!(adjustedResult instanceof HitResult)) {
         return null
     }
 
     const hold = adjustedResult.shot.relativeAngle
-    const trajectoryStepRaw = UNew.Meter(10).rawValue
+    // const trajectoryStepRaw = UNew.Meter(10).rawValue
+    const trajectoryStepRaw = UNew.Meter(appSettings.homeScreenDistanceStep).rawValue
     // const trajectoryRangeRaw = UNew.Meter(currentConditions?.targetDistance + 1).rawValue
     const trajectoryRangeRaw = adjustedResult?.trajectory[adjustedResult.trajectory.length - 1].distance.rawValue
 

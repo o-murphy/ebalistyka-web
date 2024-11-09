@@ -38,7 +38,7 @@ const TrajectoryStepField = ({ trajectoryStep, setTrajectoryStep, onError }) => 
         // step: 1 / (10 ** accuracy),
         step: 10,
         suffix: UnitProps[prefUnit].symbol,
-        minValue: UNew.Meter(10).In(prefUnit),
+        minValue: UNew.Meter(0).In(prefUnit),
         maxValue: UNew.Meter(500).In(prefUnit),
     }), [accuracy, prefUnit])
 
@@ -71,7 +71,7 @@ const TrajectoryRangeField = ({ trajectoryRange, setTrajectoryRange, onError }) 
         fractionDigits: accuracy,
         step: 1 / (10 ** accuracy),
         suffix: UnitProps[prefUnit].symbol,
-        minValue: UNew.Meter(10).In(prefUnit),
+        minValue: UNew.Meter(1).In(prefUnit),
         maxValue: UNew.Meter(3000).In(prefUnit),
     }), [accuracy, prefUnit])
 

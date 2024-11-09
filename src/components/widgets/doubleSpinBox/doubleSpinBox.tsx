@@ -33,29 +33,20 @@ export const DoubleSpinBox: React.FC<SpinBoxProps> = ({
   inputProps,
   strict = false,
   onError = null,
-  debounceDelay = 500
 }) => {
   const [currentValue, setCurrentValue] = useState<string>(value.toFixed(fixedPoints));
   const [error, setError] = useState<string | Error | null>(null);
 
-  // const inputAccessoryViewID = generateRandomId();
-
   useEffect(() => {
     setCurrentValue(value.toFixed(fixedPoints))
+    setError(null) // FIXME: unexpected beahaviour
+    // handleInputChange(value.toFixed(fixedPoints))
   }, [value])
 
   const onErrorSet = (error) => {
     setError(error)
     onError?.(error)
   }
-
-  // Debounced callback for onValueChange
-  // const debouncedValueChange = useCallback(
-  //   debounce((numericValue: number) => {
-  //     onValueChange?.(numericValue);
-  //   }, debounceDelay),
-  //   [onValueChange]
-  // );
 
   const valueChanged = (value) => onValueChange?.(value)
 
