@@ -81,7 +81,7 @@ export default function WindDirectionPicker({ value, onChange, style = null, dia
                         {...sliderValueHandler}
                         {...sliderValues}
                         {...{ ...sliderProps, capMode: "triangle" }}
-                        dialDiameter={diameter - 30}
+                        dialDiameter={diameter }
                         angleType={{
                             direction: "cw",
                             axis: "+y"

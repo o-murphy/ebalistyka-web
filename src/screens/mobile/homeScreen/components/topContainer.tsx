@@ -32,7 +32,7 @@ const TopContainer = () => {
 
 const styles = StyleSheet.create({
     topContainer: {
-        minHeight: 420,
+        // minHeight: 400,
         padding: 8,
         borderBottomRightRadius: 32,
         borderBottomLeftRadius: 32,
