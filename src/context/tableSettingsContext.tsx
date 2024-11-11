@@ -68,7 +68,7 @@ export const TableSettingsProvider: React.FC<{ children: ReactNode }> = ({ child
 
   useEffect(() => {
     saveTableSettings();
-  }, [tableSettings]);
+  }, [tableSettings, trajectoryStep, trajectoryRange]);
 
   const updateTableSettings = (props: Partial<TableSettings>) => {
     setTableSettings((prev) => ({ ...prev, ...props }));

@@ -59,7 +59,7 @@ export const AppSettingsProvider: React.FC<AppSettingsProviderProps> = ({ childr
     const [isLoaded, setIsLoaded] = useState(false); // Track loading state
 
     useEffect(() => {
-        const loadUnits = async () => {
+        const load = async () => {
             const storedUnits: AppSettings = await loadAppSettingsFromStorage();
             if (storedUnits) {
                 homeScreenDistanceStep.setAsDef(storedUnits.homeScreenDistanceStep || 10)
@@ -67,7 +67,7 @@ export const AppSettingsProvider: React.FC<AppSettingsProviderProps> = ({ childr
             console.log("Loading app settings")
             setIsLoaded(true); // Mark as loaded after attempting to load data
         };
-        loadUnits();
+        load();
     }, []);
 
     useEffect(() => {

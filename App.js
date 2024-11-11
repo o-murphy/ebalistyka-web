@@ -9,6 +9,7 @@ import MainScreen from './src/components/views/main';
 import { Platform } from 'react-native';
 import { DeviceType, getDeviceTypeAsync } from "expo-device";
 import { AppSettingsProvider } from './src/context/settingsContext';
+import { ConditionsProvider } from './src/context/currentConditions';
 
 
 export default function App() {
@@ -25,11 +26,17 @@ export default function App() {
     <ThemeProvider>
       <PreferredUnitsProvider>
         <AppSettingsProvider>
-          <ProfileProvider>
-            <SafeAreaProvider>
-              {devType === DeviceType.PHONE ? <MobileView /> : <MainScreen />}
-            </SafeAreaProvider>
-          </ProfileProvider>
+
+          <ConditionsProvider>
+            <ProfileProvider>
+
+              <SafeAreaProvider>
+                {devType === DeviceType.PHONE ? <MobileView /> : <MainScreen />}
+              </SafeAreaProvider>
+
+            </ProfileProvider>
+          </ConditionsProvider>
+
         </AppSettingsProvider>
       </PreferredUnitsProvider>
     </ThemeProvider>
