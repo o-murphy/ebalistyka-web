@@ -1,13 +1,12 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
-import { Divider, HelperText, List, Surface } from "react-native-paper";
+import { Divider, List, Surface } from "react-native-paper";
 import { usePreferredUnits } from "../../../context/preferredUnitsContext";
 import { Angular, Energy, Pressure, Temperature, Unit, UnitProps, Weight } from "js-ballistics/dist/v2";
 import { SettingsSaveBanner, UnitSelectorChip } from "./components";
 import { ScreenBackground, ScrollViewSurface } from "../components";
-import MeasureFormField, { MeasureFormFieldProps } from "../../../components/widgets/measureFields/measureField";
 import { useAppSettings } from "../../../context/settingsContext";
-import { DimensionProps } from "../../../hooks/dimension";
+import { NumericField } from "../components";
 
 interface UnitConfig {
     icon: string;
@@ -23,50 +22,6 @@ export const getUnitList = (measure: Object): Unit[] =>
     );
 
 
-const TrajectoryStep = (
-    { dimension, value, onValueChange, onError }: {
-        dimension: DimensionProps, 
-        value: number,
-        onValueChange: (value: number) => void,
-        onError: (err: any) => void
-    }
-) => {
-    
-    const fieldProps: Partial<MeasureFormFieldProps> = useMemo(() => ({
-        fKey: "homeScreenDistanceStep",
-        label: "Home screen trajectory step",
-        icon: "delta",
-        fractionDigits: dimension.rangePref.accuracy,
-        step: 1 / (10 ** dimension.rangePref.accuracy),
-        suffix: dimension.symbol,
-        minValue: dimension.rangePref.min,
-        maxValue: dimension.rangePref.max,
-    }), [dimension])
-
-    const [localError, setLocalError] = useState(null)
-
-    const setErr = (err) => {
-        setLocalError(err)
-        onError(err)
-    }
-
-    return (
-        <Surface style={{ marginVertical: 8 }} elevation={0}>
-            <MeasureFormField
-                {...fieldProps}
-                value={value}
-                onValueChange={onValueChange}
-                onError={setErr}
-                strict={false}
-            />
-            {localError && <HelperText type="error" visible={!!localError}>
-                {localError.message}
-            </HelperText>}
-        </Surface>
-    )
-}
-
-
 const SettingsContent = () => {
     const { preferredUnits, setPreferredUnits } = usePreferredUnits();
     const [bannerVisible, setBannerVisible] = useState(false);
@@ -74,8 +29,8 @@ const SettingsContent = () => {
 
     const [localUnits, setLocalUnits] = useState(preferredUnits);
 
-    const [ localHsd, setLocalHsd ] = useState(homeScreenDistanceStep.asPref)
-    const [ hsdError, setHsdError ] = useState(null)
+    const [localHsd, setLocalHsd] = useState(homeScreenDistanceStep.asPref)
+    const [hsdError, setHsdError] = useState(null)
 
     useEffect(() => {
         setLocalUnits(preferredUnits);
@@ -130,7 +85,9 @@ const SettingsContent = () => {
 
                 <List.Section title="Home screen settings">
                     <Surface elevation={0} style={{ marginHorizontal: 16 }}>
-                        <TrajectoryStep
+                        <NumericField
+                            label="Home screen trajectory step"
+                            icon="delta"
                             dimension={homeScreenDistanceStep}
                             value={localHsd}
                             onValueChange={handleHsdChange}

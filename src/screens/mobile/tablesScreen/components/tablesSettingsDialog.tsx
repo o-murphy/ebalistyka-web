@@ -1,137 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { ScrollView } from "react-native";
-import { Dialog, FAB, HelperText, IconButton, Portal, Surface, Switch, Text } from "react-native-paper";
-import MeasureFormField, { MeasureFormFieldProps } from "../../../../components/widgets/measureFields/measureField";
+import { Dialog, FAB, IconButton, Portal, Surface, Switch, Text } from "react-native-paper";
 import { useTableSettings } from "../../../../context/tableSettingsContext";
-import { DimensionProps } from "../../../../hooks/dimension";
-
-
-// const TrajectoryRangeField = (
-//     { dimension, value, onValueChange, onError }: {
-//         dimension: DimensionProps,
-//         value: number,
-//         onValueChange: (value: number) => void,
-//         onError: (err: any) => void
-//     }
-// ) => {
-
-//     const fieldProps: Partial<MeasureFormFieldProps> = useMemo(() => ({
-//         label: "Trajectory range",
-//         icon: "map-marker-distance",
-//         fractionDigits: dimension.rangePref.accuracy,
-//         step: 1 / (10 ** dimension.rangePref.accuracy),
-//         suffix: dimension.symbol,
-//         minValue: dimension.rangePref.min,
-//         maxValue: dimension.rangePref.max,
-//     }), [dimension])
-
-//     const [localError, setLocalError] = useState(null)
-
-//     const setErr = (err) => {
-//         setLocalError(err)
-//         onError(err)
-//     }
-
-//     return (
-//         <Surface style={{ marginVertical: 8 }} elevation={0}>
-//             <MeasureFormField
-//                 {...fieldProps}
-//                 value={value}
-//                 onValueChange={onValueChange}
-//                 onError={setErr}
-//                 strict={false}
-//             />
-//             {localError && <HelperText type="error" visible={!!localError}>
-//                 {localError.message}
-//             </HelperText>}
-//         </Surface>
-//     )
-// }
-
-// const TrajectoryStepField = (
-//     { dimension, value, onValueChange, onError }: {
-//         dimension: DimensionProps,
-//         value: number,
-//         onValueChange: (value: number) => void,
-//         onError: (err: any) => void
-//     }
-// ) => {
-
-//     const fieldProps: Partial<MeasureFormFieldProps> = useMemo(() => ({
-//         label: "Trajectory step",
-//         icon: "delta",
-//         fractionDigits: dimension.rangePref.accuracy,
-//         step: 1 / (10 ** dimension.rangePref.accuracy),
-//         suffix: dimension.symbol,
-//         minValue: dimension.rangePref.min,
-//         maxValue: dimension.rangePref.max,
-//     }), [dimension])
-
-//     const [localError, setLocalError] = useState(null)
-
-//     const setErr = (err) => {
-//         setLocalError(err)
-//         onError(err)
-//     }
-
-//     return (
-//         <Surface style={{ marginVertical: 8 }} elevation={0}>
-//             <MeasureFormField
-//                 {...fieldProps}
-//                 value={value}
-//                 onValueChange={onValueChange}
-//                 onError={setErr}
-//                 strict={false}
-//             />
-//             {localError && <HelperText type="error" visible={!!localError}>
-//                 {localError.message}
-//             </HelperText>}
-//         </Surface>
-//     )
-// }
-
-
-const NumericField = (
-    { dimension, value, onValueChange, onError, label, icon }: {
-        dimension: DimensionProps,
-        value: number,
-        onValueChange: (value: number) => void,
-        onError: (err: any) => void
-    }
-) => {
-
-    const fieldProps: Partial<MeasureFormFieldProps> = useMemo(() => ({
-        label: "Trajectory step",
-        icon: "delta",
-        fractionDigits: dimension.rangePref.accuracy,
-        step: 1 / (10 ** dimension.rangePref.accuracy),
-        suffix: dimension.symbol,
-        minValue: dimension.rangePref.min,
-        maxValue: dimension.rangePref.max,
-    }), [dimension])
-
-    const [localError, setLocalError] = useState(null)
-
-    const setErr = (err) => {
-        setLocalError(err)
-        onError(err)
-    }
-
-    return (
-        <Surface style={{ marginVertical: 8 }} elevation={0}>
-            <MeasureFormField
-                {...fieldProps}
-                value={value}
-                onValueChange={onValueChange}
-                onError={setErr}
-                strict={false}
-            />
-            {localError && <HelperText type="error" visible={!!localError}>
-                {localError.message}
-            </HelperText>}
-        </Surface>
-    )
-}
+import { NumericField } from "../../components";
 
 
 const displayOptions = [
@@ -225,7 +96,9 @@ const TableSettingsDialog = ({ visible, setVisible }) => {
                         <Dialog.Content>
 
                             <Surface style={{ marginVertical: 8 }} elevation={0}>
-                                <TrajectoryRangeField
+                                <NumericField
+                                    label="Trajectory range"
+                                    icon="map-marker-distance"
                                     dimension={trajectoryRange}
                                     value={localRange}
                                     onValueChange={setLocalRange}
@@ -234,7 +107,9 @@ const TableSettingsDialog = ({ visible, setVisible }) => {
                             </Surface>
 
                             <Surface style={{ marginVertical: 8 }} elevation={0}>
-                                <TrajectoryStepField
+                                <NumericField
+                                    label="Trajectory step"
+                                    icon="delta"
                                     dimension={trajectoryStep}
                                     value={localStep}
                                     onValueChange={setLocalStep}
