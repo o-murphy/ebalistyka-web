@@ -1,18 +1,17 @@
-import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect, useCallback, useMemo } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Distance, Unit } from 'js-ballistics/dist/v2';
+import { DimensionProps, useDimension } from '../hooks/dimension';
 
 interface AppSettings {
     homeScreenDistanceStep: number;
 }
 
-const defaultSettings: AppSettings = {
-    homeScreenDistanceStep: 10
-}
 
 // Define the context value type, including the setter function
 interface AppSettingsContextType {
-    appSettings: AppSettings;
-    setAppSettings: React.Dispatch<React.SetStateAction<AppSettings>>;
+    homeScreenDistanceStep: DimensionProps;
+    saveAppSettings: () => void;
 }
 
 // Initialize the context with a null default value
@@ -46,15 +45,24 @@ const loadAppSettingsFromStorage = async (): Promise<AppSettings | null> => {
 };
 
 export const AppSettingsProvider: React.FC<AppSettingsProviderProps> = ({ children }) => {
-    const [appSettings, setAppSettings] = useState<AppSettings>(defaultSettings);
+    // const [appSettings, setAppSettings] = useState<AppSettings>(null);
+
+    const homeScreenDistanceStep = useDimension({
+        measure: Distance,
+        defUnit: Unit.Meter,
+        prefUnitFlag: "distance",
+        min: 0,
+        max: 3000,
+        precision: 1,
+    })
 
     const [isLoaded, setIsLoaded] = useState(false); // Track loading state
 
     useEffect(() => {
         const loadUnits = async () => {
-            const storedUnits = await loadAppSettingsFromStorage();
+            const storedUnits: AppSettings = await loadAppSettingsFromStorage();
             if (storedUnits) {
-                setAppSettings(storedUnits);
+                homeScreenDistanceStep.setAsDef(storedUnits.homeScreenDistanceStep || 10)
             }
             console.log("Loading app settings")
             setIsLoaded(true); // Mark as loaded after attempting to load data
@@ -65,12 +73,21 @@ export const AppSettingsProvider: React.FC<AppSettingsProviderProps> = ({ childr
     useEffect(() => {
         if (isLoaded) { // Only save if data has been loaded
             console.log("Saving app settings")
-            saveAppSettingsToStorage(appSettings);
+            saveAppSettings()
         }
-    }, [appSettings, isLoaded]);
+    }, [homeScreenDistanceStep, isLoaded]);
+
+    const saveAppSettings = () => {
+        saveAppSettingsToStorage({
+            homeScreenDistanceStep: homeScreenDistanceStep.asDef
+        });
+    }
 
     return (
-        <AppSettingsContext.Provider value={{ appSettings, setAppSettings }}>
+        <AppSettingsContext.Provider value={{
+            homeScreenDistanceStep,
+            saveAppSettings
+        }}>
             {children}
         </AppSettingsContext.Provider>
     );

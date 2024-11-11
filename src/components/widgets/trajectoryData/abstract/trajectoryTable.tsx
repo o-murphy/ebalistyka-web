@@ -52,8 +52,6 @@ export const TrajectoryTable = ({ hitResult, reverse = false }: { hitResult: Hit
   
   }
 
-  console.log("Filtered", trajectory.length)
-
   const headerStyle = {
     textStyle: tableStyles.cellText,
     style: theme?.dark ? tableStyles.cellDark : tableStyles.cellLight,

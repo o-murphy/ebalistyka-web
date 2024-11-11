@@ -34,7 +34,7 @@ const HoldReticleContainer: React.FC<{ hold: Hold }> = ({ hold }) => {
       }
 
       const isOutOfScope = -point.cy >= viewBox[1] + viewBox[3]
-      console.log(-point.cy, viewBox[1] + viewBox[3], isOutOfScope)
+      // console.log(-point.cy, viewBox[1] + viewBox[3], isOutOfScope)
 
       if (isOutOfScope) {
         return (

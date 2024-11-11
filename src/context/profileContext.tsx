@@ -173,7 +173,7 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
           if (!currentCalc.error) {
             const result = makeShot(currentCalc, currentConditions);
             const adjustedResult = shootTheTarget(currentCalc, currentConditions);
-            console.log("ZERO result", result)
+
             setHitResult(result);
             setAdjustedResult(adjustedResult);
             setCalcState(result instanceof Error ? CalculationState.Error : CalculationState.Complete);

@@ -1,13 +1,15 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { StyleSheet } from "react-native";
 import { Divider, HelperText, List, Surface } from "react-native-paper";
 import { usePreferredUnits } from "../../../context/preferredUnitsContext";
-import { Angular, Distance, Energy, Pressure, Temperature, UNew, Unit, UnitProps, Weight } from "js-ballistics/dist/v2";
+import { Angular, Distance, Energy, preferredUnits, Pressure, Temperature, UNew, Unit, UnitProps, Weight } from "js-ballistics/dist/v2";
 import { SettingsSaveBanner, UnitSelectorChip } from "./components";
 import { ScreenBackground, ScrollViewSurface } from "../components";
 import getFractionDigits from "../../../utils/fractionConvertor";
 import MeasureFormField, { MeasureFormFieldProps } from "../../../components/widgets/measureFields/measureField";
 import { useAppSettings } from "../../../context/settingsContext";
+import holdReticleContainer from "../homeScreen/components/holdReticleContainer/holdReticleContainer";
+import { DimensionProps } from "../../../hooks/dimension";
 
 interface UnitConfig {
     icon: string;
@@ -23,63 +25,44 @@ export const getUnitList = (measure: Object): Unit[] =>
     );
 
 
-type UnitClass = typeof Distance; // Add other unit classes if needed
-
-
-const useCurrentValue = (
-    value: number,
-    unitTypeClass: UnitClass,
-    defUnit: Unit,
-    prefUnit: Unit
-): number => {
-    return new unitTypeClass(value, defUnit).In(prefUnit);
-};
-
-
-const TrajectoryStepField = ({ trajectoryStep, setTrajectoryStep, onError, units }) => {
-
-    const accuracy = useMemo(() => getFractionDigits(1, UNew.Meter(1).In(units)), [units])
-
+const TrajectoryStep = (
+    { dimension, value, onValueChange, onError }: {
+        dimension: DimensionProps, 
+        value: number,
+        onValueChange: (value: number) => void,
+        onError: (err: any) => void
+    }
+) => {
+    
     const fieldProps: Partial<MeasureFormFieldProps> = useMemo(() => ({
         fKey: "homeScreenDistanceStep",
         label: "Home screen trajectory step",
         icon: "delta",
-        fractionDigits: accuracy,
-        step: 1 / (10 ** accuracy),
-        suffix: UnitProps[units].symbol,
-        minValue: UNew.Meter(0).In(units),
-        maxValue: UNew.Meter(500).In(units),
-    }), [accuracy, units])
+        fractionDigits: dimension.rangePref.accuracy,
+        step: 1 / (10 ** dimension.rangePref.accuracy),
+        suffix: dimension.symbol,
+        minValue: dimension.rangePref.min,
+        maxValue: dimension.rangePref.max,
+    }), [dimension])
 
-    const value = useCurrentValue(trajectoryStep, Distance, Unit.Meter, units)
-    const onValueChange = setTrajectoryStep
+    const [localError, setLocalError] = useState(null)
 
-    return (
-        <MeasureFormField
-            {...fieldProps}
-            value={value}
-            onValueChange={onValueChange}
-            onError={onError}
-            strict={false}
-        />
-    )
-}
-
-
-const TrajectoryStep = ({ trajectoryStep, setTrajectoryStep, stepError, setStepError, units }) => {
-
-    // const value = UNew.Meter(trajectoryStep).In(units)
-    const onChange = (value) => {
-        setTrajectoryStep({
-            homeScreenDistanceStep: new Distance(value, units).In(Unit.Meter)
-        })
+    const setErr = (err) => {
+        setLocalError(err)
+        onError(err)
     }
 
     return (
         <Surface style={{ marginVertical: 8 }} elevation={0}>
-            <TrajectoryStepField trajectoryStep={trajectoryStep} units={units} setTrajectoryStep={onChange} onError={setStepError} />
-            {stepError && <HelperText type="error" visible={!!stepError}>
-                {stepError.message}
+            <MeasureFormField
+                {...fieldProps}
+                value={value}
+                onValueChange={onValueChange}
+                onError={setErr}
+                strict={false}
+            />
+            {localError && <HelperText type="error" visible={!!localError}>
+                {localError.message}
             </HelperText>}
         </Surface>
     )
@@ -89,45 +72,39 @@ const TrajectoryStep = ({ trajectoryStep, setTrajectoryStep, stepError, setStepE
 const SettingsContent = () => {
     const { preferredUnits, setPreferredUnits } = usePreferredUnits();
     const [bannerVisible, setBannerVisible] = useState(false);
-    const { appSettings, setAppSettings } = useAppSettings()
+    const { homeScreenDistanceStep } = useAppSettings()
 
     const [localUnits, setLocalUnits] = useState(preferredUnits);
-    const [localAppSettings, setLocalAppSettings] = useState(appSettings);
 
-    const [stepError, setStepError] = useState(null);
+    const hsd = useMemo(() => homeScreenDistanceStep.asPref, [homeScreenDistanceStep, preferredUnits])
+    console.log("hsd", hsd)
+
+    const [ localHsd, setLocalHsd ] = useState(hsd)
+    const [ hsdError, setHsdError ] = useState(null)
 
     useEffect(() => {
         setLocalUnits(preferredUnits);
     }, [preferredUnits]);
-
-    useEffect(() => {
-        setLocalAppSettings(appSettings);
-    }, [appSettings]);
 
     const handleUnitChange = (updatedUnit: Partial<typeof preferredUnits>) => {
         setLocalUnits((prev) => ({ ...prev, ...updatedUnit }));
         setBannerVisible(true)
     };
 
-    const handleStepError = (err) => {
-        setStepError(err)
-    }
-
-    const handleAppSettingsChange = (newProps) => {
-        setLocalAppSettings((prev) => ({ ...prev, ...newProps }));
-        console.log("THERE 2")
+    const handleHsdChange = (value) => {
+        setLocalHsd(value)
         setBannerVisible(true)
-    };
+    }
 
     const handleSave = () => {
         setPreferredUnits(localUnits);
-        setAppSettings(localAppSettings)
+        homeScreenDistanceStep.setAsPref(localHsd);
         setBannerVisible(false);
     };
 
     const handleDiscard = () => {
         setLocalUnits(preferredUnits);
-        setLocalAppSettings(appSettings)
+        setLocalHsd(homeScreenDistanceStep.asPref);
         setBannerVisible(false);
     };
 
@@ -137,7 +114,7 @@ const SettingsContent = () => {
                 visible={bannerVisible}
                 onSubmit={handleSave}
                 onDismiss={handleDiscard}
-                error={stepError}
+                error={hsdError}
             />
 
 
@@ -157,11 +134,15 @@ const SettingsContent = () => {
 
                     <Surface elevation={0} style={{ marginHorizontal: 16 }}>
                         <TrajectoryStep
-                            units={localUnits.distance}
-                            trajectoryStep={localAppSettings.homeScreenDistanceStep}
-                            setTrajectoryStep={handleAppSettingsChange}
-                            stepError={stepError}
-                            setStepError={handleStepError}
+                            // units={localUnits.distance}
+                            // trajectoryStep={homeScreenDistanceStep.asPref}
+                            // setTrajectoryStep={homeScreenDistanceStep.setAsPref}
+                            // stepError={stepError}
+                            // setStepError={handleStepError}
+                            dimension={homeScreenDistanceStep}
+                            value={localHsd}
+                            onValueChange={handleHsdChange}
+                            onError={setHsdError}
                         />
                     </Surface>
 

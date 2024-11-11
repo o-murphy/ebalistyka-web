@@ -97,7 +97,7 @@ export const prepareCalculator = (profile: ProfileProps, currentConditions): Pre
             lookAngle: UNew.Degree(profile.cZeroWPitch / 10),
             zeroDistance: UNew.Meter(profile.distances[profile.cZeroDistanceIdx] / 100)
         }
-        console.log("TM", profile.cTCoeff / 1000)
+
         const atmo = new Atmo(zeroData.atmo);
         const weapon = new Weapon(zeroData.weapon);
 

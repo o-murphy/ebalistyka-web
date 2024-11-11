@@ -19,8 +19,6 @@ const WindageTooltip: React.FC<WindageTooltipProps> = ({ active = false, label =
     const windageAdjAccuracy = getFractionDigits(0.01, UNew.MIL(1).In(preferredUnits.adjustment));
     const distanceAccuracy = getFractionDigits(1, UNew.Meter(1).In(preferredUnits.distance));
 
-    console.log({ active, label, payload }); // Debugging log
-
     const roundWindage = (windage: number) => {
         return windage.toFixed(windageAccuracy);
     };

@@ -30,7 +30,6 @@ const A7PFileUploader = () => {
 
     reader.onload = (event: ProgressEvent<FileReader>) => {
       if (event.target?.result) {
-        console.log("GOT PROFILE")
         parseA7P(event.target.result as ArrayBuffer)
           .then((parsedData) => {
             setError(null);

@@ -40,7 +40,7 @@ const MiniTable = ({ header, rows, active = 0 }) => {
 const ShotTablePage = () => {
     const { adjustedResult } = useCalculator()
     const { preferredUnits: pu } = usePreferredUnits()
-    const { appSettings } = useAppSettings()
+    const { homeScreenDistanceStep } = useAppSettings()
 
     if (!(adjustedResult instanceof HitResult)) {
         return null
@@ -48,7 +48,7 @@ const ShotTablePage = () => {
 
     const hold = adjustedResult.shot.relativeAngle
     // const trajectoryStepRaw = UNew.Meter(10).rawValue
-    const trajectoryStepRaw = UNew.Meter(appSettings.homeScreenDistanceStep).rawValue
+    const trajectoryStepRaw = homeScreenDistanceStep.value.rawValue
     // const trajectoryRangeRaw = UNew.Meter(currentConditions?.targetDistance + 1).rawValue
     const trajectoryRangeRaw = adjustedResult?.trajectory[adjustedResult.trajectory.length - 1].distance.rawValue
 
