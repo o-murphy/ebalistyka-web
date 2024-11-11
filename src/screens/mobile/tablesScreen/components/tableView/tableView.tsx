@@ -180,7 +180,7 @@ export const TrajectoryTable = ({ hitResult, style = null }) => {
     if (!(hitResult instanceof HitResult)) return <></>
 
     const theme = useTheme()
-    const { tableSettings } = useTableSettings()
+    const { trajectoryStep, trajectoryRange } = useTableSettings()
 
     const [longPressed, setLongPressed] = useState(null)
     const [detailsVisible, setDetailsVisible] = useState(false)
@@ -192,8 +192,10 @@ export const TrajectoryTable = ({ hitResult, style = null }) => {
 
     const tableHeaders = useTableHeaders({ displayFlag: false })
 
-    const trajectoryStepRaw = UNew.Meter(tableSettings?.trajectoryStep).rawValue
-    const trajectoryRangeRaw = UNew.Meter(tableSettings?.trajectoryRange + 1).rawValue
+    // const trajectoryStepRaw = UNew.Meter(tableSettings?.trajectoryStep).rawValue
+    const trajectoryStepRaw = trajectoryStep.value.rawValue
+    // const trajectoryRangeRaw = UNew.Meter(tableSettings?.trajectoryRange + 1).rawValue
+    const trajectoryRangeRaw = trajectoryRange.value.rawValue
 
     let trajectory = [];
 

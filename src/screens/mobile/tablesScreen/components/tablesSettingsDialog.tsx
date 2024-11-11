@@ -1,91 +1,135 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ScrollView } from "react-native";
 import { Dialog, FAB, HelperText, IconButton, Portal, Surface, Switch, Text } from "react-native-paper";
 import MeasureFormField, { MeasureFormFieldProps } from "../../../../components/widgets/measureFields/measureField";
-import { usePreferredUnits } from "../../../../context/preferredUnitsContext";
-import { Distance, UNew, Unit, UnitProps } from "js-ballistics/dist/v2";
-import getFractionDigits from "../../../../utils/fractionConvertor";
 import { useTableSettings } from "../../../../context/tableSettingsContext";
+import { DimensionProps } from "../../../../hooks/dimension";
 
 
+// const TrajectoryRangeField = (
+//     { dimension, value, onValueChange, onError }: {
+//         dimension: DimensionProps,
+//         value: number,
+//         onValueChange: (value: number) => void,
+//         onError: (err: any) => void
+//     }
+// ) => {
 
-// Define UnitType and UnitTypeClass to accept class types for handling units
-type UnitClass = typeof Distance; // Add other unit classes if needed
+//     const fieldProps: Partial<MeasureFormFieldProps> = useMemo(() => ({
+//         label: "Trajectory range",
+//         icon: "map-marker-distance",
+//         fractionDigits: dimension.rangePref.accuracy,
+//         step: 1 / (10 ** dimension.rangePref.accuracy),
+//         suffix: dimension.symbol,
+//         minValue: dimension.rangePref.min,
+//         maxValue: dimension.rangePref.max,
+//     }), [dimension])
+
+//     const [localError, setLocalError] = useState(null)
+
+//     const setErr = (err) => {
+//         setLocalError(err)
+//         onError(err)
+//     }
+
+//     return (
+//         <Surface style={{ marginVertical: 8 }} elevation={0}>
+//             <MeasureFormField
+//                 {...fieldProps}
+//                 value={value}
+//                 onValueChange={onValueChange}
+//                 onError={setErr}
+//                 strict={false}
+//             />
+//             {localError && <HelperText type="error" visible={!!localError}>
+//                 {localError.message}
+//             </HelperText>}
+//         </Surface>
+//     )
+// }
+
+// const TrajectoryStepField = (
+//     { dimension, value, onValueChange, onError }: {
+//         dimension: DimensionProps,
+//         value: number,
+//         onValueChange: (value: number) => void,
+//         onError: (err: any) => void
+//     }
+// ) => {
+
+//     const fieldProps: Partial<MeasureFormFieldProps> = useMemo(() => ({
+//         label: "Trajectory step",
+//         icon: "delta",
+//         fractionDigits: dimension.rangePref.accuracy,
+//         step: 1 / (10 ** dimension.rangePref.accuracy),
+//         suffix: dimension.symbol,
+//         minValue: dimension.rangePref.min,
+//         maxValue: dimension.rangePref.max,
+//     }), [dimension])
+
+//     const [localError, setLocalError] = useState(null)
+
+//     const setErr = (err) => {
+//         setLocalError(err)
+//         onError(err)
+//     }
+
+//     return (
+//         <Surface style={{ marginVertical: 8 }} elevation={0}>
+//             <MeasureFormField
+//                 {...fieldProps}
+//                 value={value}
+//                 onValueChange={onValueChange}
+//                 onError={setErr}
+//                 strict={false}
+//             />
+//             {localError && <HelperText type="error" visible={!!localError}>
+//                 {localError.message}
+//             </HelperText>}
+//         </Surface>
+//     )
+// }
 
 
-const useCurrentValue = (
-    value: number,
-    unitTypeClass: UnitClass,
-    defUnit: Unit,
-    prefUnit: Unit
-): number => {
-    return new unitTypeClass(value, defUnit).In(prefUnit);
-};
-
-
-const TrajectoryStepField = ({ trajectoryStep, setTrajectoryStep, onError }) => {
-
-    const { preferredUnits } = usePreferredUnits()
-
-    const prefUnit = useMemo(() => preferredUnits.distance, [preferredUnits.distance])
-    const accuracy = useMemo(() => getFractionDigits(1, UNew.Meter(1).In(prefUnit)), [prefUnit])
+const NumericField = (
+    { dimension, value, onValueChange, onError, label, icon }: {
+        dimension: DimensionProps,
+        value: number,
+        onValueChange: (value: number) => void,
+        onError: (err: any) => void
+    }
+) => {
 
     const fieldProps: Partial<MeasureFormFieldProps> = useMemo(() => ({
-        fKey: "trajectoryStep",
         label: "Trajectory step",
         icon: "delta",
-        fractionDigits: accuracy,
-        // step: 1 / (10 ** accuracy),
-        step: 10,
-        suffix: UnitProps[prefUnit].symbol,
-        minValue: UNew.Meter(0).In(prefUnit),
-        maxValue: UNew.Meter(500).In(prefUnit),
-    }), [accuracy, prefUnit])
+        fractionDigits: dimension.rangePref.accuracy,
+        step: 1 / (10 ** dimension.rangePref.accuracy),
+        suffix: dimension.symbol,
+        minValue: dimension.rangePref.min,
+        maxValue: dimension.rangePref.max,
+    }), [dimension])
 
-    const value = useCurrentValue(trajectoryStep, Distance, Unit.Meter, prefUnit)
-    const onValueChange = setTrajectoryStep
+    const [localError, setLocalError] = useState(null)
 
-    return (
-        <MeasureFormField
-            {...fieldProps}
-            value={value}
-            onValueChange={onValueChange}
-            onError={onError}
-            strict={false}
-        />
-    )
-}
-
-
-const TrajectoryRangeField = ({ trajectoryRange, setTrajectoryRange, onError }) => {
-
-    const { preferredUnits } = usePreferredUnits()
-
-    const prefUnit = useMemo(() => preferredUnits.distance, [preferredUnits.distance])
-    const accuracy = useMemo(() => getFractionDigits(1, UNew.Meter(1).In(prefUnit)), [prefUnit])
-
-    const fieldProps: Partial<MeasureFormFieldProps> = useMemo(() => ({
-        fKey: "trajectoryRange",
-        label: "Trajectory range",
-        icon: "map-marker-distance",
-        fractionDigits: accuracy,
-        step: 1 / (10 ** accuracy),
-        suffix: UnitProps[prefUnit].symbol,
-        minValue: UNew.Meter(1).In(prefUnit),
-        maxValue: UNew.Meter(3000).In(prefUnit),
-    }), [accuracy, prefUnit])
-
-    const value = useCurrentValue(trajectoryRange, Distance, Unit.Meter, prefUnit)
-    const onValueChange = setTrajectoryRange
+    const setErr = (err) => {
+        setLocalError(err)
+        onError(err)
+    }
 
     return (
-        <MeasureFormField
-            {...fieldProps}
-            value={value}
-            onValueChange={onValueChange}
-            onError={onError}
-            strict={false}
-        />
+        <Surface style={{ marginVertical: 8 }} elevation={0}>
+            <MeasureFormField
+                {...fieldProps}
+                value={value}
+                onValueChange={onValueChange}
+                onError={setErr}
+                strict={false}
+            />
+            {localError && <HelperText type="error" visible={!!localError}>
+                {localError.message}
+            </HelperText>}
+        </Surface>
     )
 }
 
@@ -108,11 +152,11 @@ const displayOptions = [
 
 const TableSettingsDialog = ({ visible, setVisible }) => {
 
-    const { tableSettings, updateTableSettings } = useTableSettings();
-    const { preferredUnits } = usePreferredUnits()
+    const { tableSettings, updateTableSettings, trajectoryStep, trajectoryRange } = useTableSettings();
 
-    const [trajectoryStep, setTrajectoryStep] = useState(tableSettings?.trajectoryStep)
-    const [trajectoryRange, setTrajectoryRange] = useState(tableSettings?.trajectoryRange)
+    const [localStep, setLocalStep] = useState(trajectoryStep.asPref)
+    const [localRange, setLocalRange] = useState(trajectoryRange.asPref)
+
     const [stepError, setStepError] = useState(null)
     const [rangeError, setRangeError] = useState(null)
 
@@ -134,7 +178,14 @@ const TableSettingsDialog = ({ visible, setVisible }) => {
 
     const [displaySettings, setDisplaySettings] = useState(initialDisplaySettings);
 
-    // To update a specific setting:
+    useEffect(() => {
+        setLocalStep(trajectoryStep.asPref)
+    }, [trajectoryStep])
+
+    useEffect(() => {
+        setLocalRange(trajectoryRange.asPref)
+    }, [trajectoryRange])
+
     const updateDisplaySetting = (key, value) => {
         setDisplaySettings((prev) => ({
             ...prev,
@@ -144,22 +195,18 @@ const TableSettingsDialog = ({ visible, setVisible }) => {
 
     const onSubmit = () => {
         if (!stepError && !rangeError) {
-            // setSubmitError(null)
             updateTableSettings({
-                trajectoryStep: new Distance(trajectoryStep, preferredUnits.distance).In(Unit.Meter),
-                trajectoryRange: new Distance(trajectoryRange, preferredUnits.distance).In(Unit.Meter),
-
                 ...displaySettings
             })
+            trajectoryStep.setAsPref(localStep)
+            trajectoryRange.setAsPref(localRange)
             setVisible(false)
-        } else {
-            // setSubmitError(new Error("Invalid tables settings"))
         }
     }
 
     const hideDialog = () => {
-        setTrajectoryStep(tableSettings?.trajectoryStep)
-        setTrajectoryRange(tableSettings?.trajectoryRange)
+        setLocalStep(trajectoryStep.asPref)
+        setLocalRange(trajectoryRange.asPref)
         setVisible(false)
     }
 
@@ -178,17 +225,21 @@ const TableSettingsDialog = ({ visible, setVisible }) => {
                         <Dialog.Content>
 
                             <Surface style={{ marginVertical: 8 }} elevation={0}>
-                                <TrajectoryRangeField trajectoryRange={trajectoryRange} setTrajectoryRange={setTrajectoryRange} onError={setRangeError} />
-                                {rangeError && <HelperText type="error" visible={!!rangeError}>
-                                    {rangeError.message}
-                                </HelperText>}
+                                <TrajectoryRangeField
+                                    dimension={trajectoryRange}
+                                    value={localRange}
+                                    onValueChange={setLocalRange}
+                                    onError={setRangeError}
+                                />
                             </Surface>
 
                             <Surface style={{ marginVertical: 8 }} elevation={0}>
-                                <TrajectoryStepField trajectoryStep={trajectoryStep} setTrajectoryStep={setTrajectoryStep} onError={setStepError} />
-                                {stepError && <HelperText type="error" visible={!!stepError}>
-                                    {stepError.message}
-                                </HelperText>}
+                                <TrajectoryStepField
+                                    dimension={trajectoryStep}
+                                    value={localStep}
+                                    onValueChange={setLocalStep}
+                                    onError={setStepError}
+                                />
                             </Surface>
 
                             {displayOptions.map((option) => (

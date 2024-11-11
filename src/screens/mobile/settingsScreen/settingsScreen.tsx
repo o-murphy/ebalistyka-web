@@ -1,14 +1,12 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { StyleSheet } from "react-native";
 import { Divider, HelperText, List, Surface } from "react-native-paper";
 import { usePreferredUnits } from "../../../context/preferredUnitsContext";
-import { Angular, Distance, Energy, preferredUnits, Pressure, Temperature, UNew, Unit, UnitProps, Weight } from "js-ballistics/dist/v2";
+import { Angular, Energy, Pressure, Temperature, Unit, UnitProps, Weight } from "js-ballistics/dist/v2";
 import { SettingsSaveBanner, UnitSelectorChip } from "./components";
 import { ScreenBackground, ScrollViewSurface } from "../components";
-import getFractionDigits from "../../../utils/fractionConvertor";
 import MeasureFormField, { MeasureFormFieldProps } from "../../../components/widgets/measureFields/measureField";
 import { useAppSettings } from "../../../context/settingsContext";
-import holdReticleContainer from "../homeScreen/components/holdReticleContainer/holdReticleContainer";
 import { DimensionProps } from "../../../hooks/dimension";
 
 interface UnitConfig {
@@ -76,15 +74,16 @@ const SettingsContent = () => {
 
     const [localUnits, setLocalUnits] = useState(preferredUnits);
 
-    const hsd = useMemo(() => homeScreenDistanceStep.asPref, [homeScreenDistanceStep, preferredUnits])
-    console.log("hsd", hsd)
-
-    const [ localHsd, setLocalHsd ] = useState(hsd)
+    const [ localHsd, setLocalHsd ] = useState(homeScreenDistanceStep.asPref)
     const [ hsdError, setHsdError ] = useState(null)
 
     useEffect(() => {
         setLocalUnits(preferredUnits);
     }, [preferredUnits]);
+
+    useEffect(() => {
+        setLocalHsd(homeScreenDistanceStep.asPref)
+    }, [homeScreenDistanceStep])
 
     const handleUnitChange = (updatedUnit: Partial<typeof preferredUnits>) => {
         setLocalUnits((prev) => ({ ...prev, ...updatedUnit }));
@@ -117,7 +116,6 @@ const SettingsContent = () => {
                 error={hsdError}
             />
 
-
             <ScrollViewSurface
                 style={styles.scrollView}
                 keyboardShouldPersistTaps="always"
@@ -131,23 +129,15 @@ const SettingsContent = () => {
                 </List.Section>
 
                 <List.Section title="Home screen settings">
-
                     <Surface elevation={0} style={{ marginHorizontal: 16 }}>
                         <TrajectoryStep
-                            // units={localUnits.distance}
-                            // trajectoryStep={homeScreenDistanceStep.asPref}
-                            // setTrajectoryStep={homeScreenDistanceStep.setAsPref}
-                            // stepError={stepError}
-                            // setStepError={handleStepError}
                             dimension={homeScreenDistanceStep}
                             value={localHsd}
                             onValueChange={handleHsdChange}
                             onError={setHsdError}
                         />
                     </Surface>
-
                 </List.Section>
-
             </ScrollViewSurface>
         </Surface>
     );
