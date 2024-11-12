@@ -5,13 +5,13 @@ import { UNew } from 'js-ballistics/dist/v2';
 
 
 export const HorizontalWindageChart = () => {
-    const { hitResult, currentConditions } = useCalculator();
+    const { hitResult } = useCalculator();
     const { preferredUnits } = usePreferredUnits();
-    return <WindageChart results={hitResult} preferredUnits={preferredUnits} maxDistance={UNew.Meter(currentConditions.trajectoryRange)}/>
+    return <WindageChart results={hitResult} preferredUnits={preferredUnits} maxDistance={hitResult.trajectory[hitResult.trajectory.length - 1].distance}/>
 }
 
 export const AdjustedWindageChart = () => {
-    const { adjustedResult, currentConditions } = useCalculator();
+    const { adjustedResult } = useCalculator();
     const { preferredUnits } = usePreferredUnits();
-    return <WindageChart results={adjustedResult} preferredUnits={preferredUnits} maxDistance={UNew.Meter(currentConditions.trajectoryRange)}/>
+    return <WindageChart results={adjustedResult} preferredUnits={preferredUnits} maxDistance={adjustedResult.trajectory[adjustedResult.trajectory.length - 1].distance}/>
 }

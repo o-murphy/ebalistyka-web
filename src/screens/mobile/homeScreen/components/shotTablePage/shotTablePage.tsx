@@ -198,7 +198,9 @@ const styles = StyleSheet.create({
     scrollView: {
         paddingBottom: 16,
         paddingHorizontal: 32,
-        aspectRatio: 1,
+        // aspectRatio: 1,
+        // flex: 1
+        height: 200
     },
     scrollViewContainer: {
         paddingBottom: 16,

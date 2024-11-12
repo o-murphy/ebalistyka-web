@@ -26,7 +26,6 @@ const ShotPropertiesContainer = () => {
     const [windDir, setWindDir] = useState(windDirection.asDef / 30 || 0);
     const [layoutSize, setLayoutSize] = useState({ width: 0, height: 0 }); // Default value
 
-
     let onInfoPress = null;
 
     try {
@@ -40,7 +39,7 @@ const ShotPropertiesContainer = () => {
 
 
     useEffect(() => {
-        setWindDir(windDirection.asDef / 30 || 0);
+        setWindDir((windDirection.asDef - 180) / 30 || 0);
     }, [windDirection]);
 
     const onWinDirChange = (value: number) => {
@@ -53,7 +52,7 @@ const ShotPropertiesContainer = () => {
     };
 
     const onWheelTouchRelease = () => {
-        windDirection.setAsDef(windDir * 30)
+        windDirection.setAsDef(windDir * 30 + 180)
     };
 
     const dialDiameter = useMemo(() => Math.min(layoutSize.height), [layoutSize]);

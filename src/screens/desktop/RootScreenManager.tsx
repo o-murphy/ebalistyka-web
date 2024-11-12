@@ -15,30 +15,16 @@ import { StyleSheet } from 'react-native';
 import TopAppBar from '../../components/widgets/topAppBar';
 import { TablesScreen } from './tablesScreen';
 import { SettingsScreen } from './settingsScreen';
+import { ChartsScreen } from './chartsScreen.tsx';
 
 const Stack = createNativeStackNavigator();
 
 
-const navigationView = ({ setCollapsed }) => {
+const navigationViewCollapsed = () => {
     const navigation = useNavigation()
 
     return (
         <Surface style={[styles.navigationContainer]} elevation={2}>
-        <PaperDrawer.Item icon={"menu"} label={""} onPress={() => setCollapsed(true)} />
-        <PaperDrawer.Item icon={"home"} label={"Home"} onPress={() => navigation.navigate("Home")} />
-        <PaperDrawer.Item icon={"table"} label={"Tables"} onPress={() => navigation.navigate("Tables")} />
-        <PaperDrawer.Item icon={"chart-bell-curve-cumulative"} label={"Charts"} onPress={() => navigation.navigate("Charts")} />
-        <PaperDrawer.Item icon={"cog-outline"} label={"Settings"} onPress={() => navigation.navigate("Settings")} />
-    </Surface>
-    )
-}
-
-const navigationViewCollapsed = ({ setCollapsed }) => {
-    const navigation = useNavigation()
-
-    return (
-        <Surface style={[styles.navigationContainer]} elevation={2}>
-            <PaperDrawer.CollapsedItem focusedIcon={"menu"} label={""} onPress={() => setCollapsed(false)} />
             <PaperDrawer.CollapsedItem focusedIcon={"home"} label={"Home"} onPress={() => navigation.navigate("Home")} />
             <PaperDrawer.CollapsedItem focusedIcon={"table"} label={"Tables"} onPress={() => navigation.navigate("Tables")} />
             <PaperDrawer.CollapsedItem focusedIcon={"chart-bell-curve-cumulative"} label={"Charts"} onPress={() => navigation.navigate("Charts")} />
@@ -55,18 +41,16 @@ const RootDrawer = ({ ...props }) => {
     const [collapsed, setCollapsed] = useState(true)
 
     const drawerWidth = collapsed ? 80 : 300
-    const drawerType = collapsed ? "permanent" : "front"
 
     return (
         <Drawer
-            open={open}
-            drawerType={drawerType}
+            drawerType={"permanent"}
             onOpen={() => setOpen(true)}
             onClose={() => setCollapsed(true)}
             style={{}}
             drawerPosition={"left"}
-            renderDrawerContent={() => (collapsed ? navigationViewCollapsed : navigationView)({ setCollapsed: setCollapsed })}
-            drawerStyle={{ backgroundColor: theme.colors.surface, width: drawerWidth }}
+            renderDrawerContent={navigationViewCollapsed}
+            drawerStyle={{ backgroundColor: theme.colors.surface, width: 80 }}
         >
             <Stack.Navigator
                 initialRouteName="Home"
@@ -77,6 +61,7 @@ const RootDrawer = ({ ...props }) => {
                 <Stack.Screen name="Home" component={HomeScreen} options={{}} />
                 <Stack.Screen name="Tables" component={TablesScreen} options={{}} />
                 <Stack.Screen name="Settings" component={SettingsScreen} options={{}} />
+                <Stack.Screen name="Charts" component={ChartsScreen} options={{}} />
             </Stack.Navigator>
         </Drawer>
     )
