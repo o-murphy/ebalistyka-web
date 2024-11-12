@@ -1,7 +1,8 @@
 import HomeScreenTopAppBar from "./topAppBar";
-import HomeScreen from "./homeScreen";
+import HomeScreen, { HomeContent } from "./homeScreen";
 
 export {
     HomeScreenTopAppBar,
-    HomeScreen
+    HomeScreen,
+    HomeContent,
 };

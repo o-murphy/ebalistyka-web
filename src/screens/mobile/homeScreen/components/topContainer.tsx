@@ -32,11 +32,16 @@ const TopContainer = () => {
 
 const styles = StyleSheet.create({
     topContainer: {
+        minHeight: 320,
+        minWidth: 320,
+        aspectRatio: 1,
         padding: 8,
         borderBottomRightRadius: 32,
         borderBottomLeftRadius: 32,
     },
     shotPropsFabContainer: {
+        flex: 2,
+
         paddingHorizontal: 12,
         paddingVertical: 8,
         flexDirection: "row",

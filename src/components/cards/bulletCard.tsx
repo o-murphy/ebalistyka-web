@@ -2,7 +2,7 @@ import { Text, Chip } from "react-native-paper";
 import React, { useMemo } from "react";
 import CustomCard from "./customCard";
 import { StyleSheet, View } from "react-native";
-import { CalculationState, useCalculator } from "../../context/profileContext";
+import { useCalculator } from "../../context/profileContext";
 import { BulletLengthField, BulletWeightField, CaliberField } from "../widgets/measureFields";
 import { TextInputChip } from "../widgets/inputChip";
 

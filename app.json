@@ -30,6 +30,9 @@
     },
     "experiments": {
       "baseUrl": "/ebalistyka-web"
-    }
+    },
+    "plugins": [
+      "expo-router"
+    ]
   }
 }

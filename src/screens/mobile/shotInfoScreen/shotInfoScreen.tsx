@@ -5,6 +5,7 @@ import { UNew, Atmo, HitResult, UnitProps } from "js-ballistics/dist/v2";
 import { usePreferredUnits } from "../../../context/preferredUnitsContext";
 import { useEffect, useState, useMemo } from "react";
 import { ScreenBackground, ScrollViewSurface } from "../components";
+import { useCurrentConditions } from "../../../context/currentConditions";
 
 const InfoRow = ({ title, value, icon = null, last = false }) => (
     <Surface elevation={0}>
@@ -21,23 +22,26 @@ const formatUnit = (value, unit, precision = 1) =>
     value ? `${value.In(unit).toFixed(precision)} ${UnitProps[unit].symbol}` : '<NaN>';
 
 // Helper function for calculating speed of sound
-const calculateSpeedOfSound = (conditions, unit) => {
-    if (!conditions) return '<NaN>';
-    const { pressure, temperature, humidity } = conditions;
+const calculateSpeedOfSound = () => {
+
+    const {preferredUnits } = usePreferredUnits()
+    const { temperature, pressure, currentConditions } = useCurrentConditions()
+
     const speedOfSound = new Atmo({
-        pressure: UNew.hPa(pressure),
-        temperature: UNew.Celsius(temperature),
-        humidity: humidity,
+        pressure: UNew.hPa(pressure.asPref),
+        temperature: UNew.Celsius(temperature.asPref),
+        humidity: currentConditions.humidity,
     }).mach;
-    return formatUnit(speedOfSound, unit);
+    return formatUnit(speedOfSound, preferredUnits.velocity);
 };
 
 const adjustmentSort = (closest, item) =>
     Math.abs(item.dropAdjustment.rawValue) < Math.abs(closest.dropAdjustment.rawValue) ? item : closest;
 
 
-const ShotInfoContent = () => {
-    const { currentConditions, profileProperties, adjustedResult } = useCalculator();
+export const ShotInfoContent = () => {
+    const { profileProperties, adjustedResult } = useCalculator();
+    const { targetDistance } = useCurrentConditions()
     const { preferredUnits } = usePreferredUnits();
     const [hold, setHold] = useState(null);
 
@@ -55,23 +59,19 @@ const ShotInfoContent = () => {
     const trajectory = adjustedResult instanceof HitResult ? adjustedResult.trajectory : null;
 
     const rows = useMemo(() => {
-        const targetDistance = formatUnit(
-            UNew.Meter(currentConditions?.targetDistance),
-            preferredUnits.distance,
-            0
-        );
+        const targetDistanceRow = `${targetDistance.asString} ${targetDistance.symbol}`
 
         const muzzleVelocity = formatUnit(
             UNew.MPS(profileProperties?.cMuzzleVelocity / 10),
             preferredUnits.velocity
         );
 
-        const adjustedMuzzleVelocity = formatUnit(
+        const adjustedMuzzleVelocity = adjustedResult instanceof HitResult && formatUnit(
             trajectory[0].velocity,
             preferredUnits.velocity
         );
 
-        const speedOfSound = calculateSpeedOfSound(currentConditions, preferredUnits.velocity);
+        const speedOfSound = calculateSpeedOfSound();
 
         const velocityOnTarget = hold?.velocity
             ? formatUnit(hold.velocity, preferredUnits.velocity, 0)
@@ -100,7 +100,7 @@ const ShotInfoContent = () => {
         const timeToTarget = hold?.time?.toFixed(3) || '<NaN>';
 
         return [
-            { title: "Shot distance", value: targetDistance },
+            { title: "Shot distance", value: targetDistanceRow },
             { title: "Zero muzzle velocity", value: muzzleVelocity },
             { title: "Shot muzzle velocity", value: adjustedMuzzleVelocity },
             { title: "Speed of sound", value: speedOfSound },
@@ -115,7 +115,7 @@ const ShotInfoContent = () => {
             { title: "Hold in clicks", value: '<NaN>', icon: "arrow-expand-horizontal" },
             { title: "Windage in clicks", value: '<NaN>', icon: "arrow-expand-vertical", last: true },
         ];
-    }, [hold, trajectory, currentConditions, profileProperties, preferredUnits]);
+    }, [hold, trajectory, targetDistance, profileProperties, preferredUnits]);
 
     return (
         <ScrollViewSurface

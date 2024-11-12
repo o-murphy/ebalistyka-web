@@ -1,8 +1,9 @@
 import ShotInfoTopAppBar from "./topAppBar";
-import ShotInfoScreen from "./shotInfoScreen";
+import ShotInfoScreen, { ShotInfoContent } from "./shotInfoScreen";
 
 
 export {
     ShotInfoTopAppBar,
     ShotInfoScreen,
+    ShotInfoContent,
 };

@@ -22,7 +22,7 @@ const ZerosView = ({ hitResult }) => {
 }
 
 
-const TablesContent = () => {
+export const TablesContent = () => {
     const { hitResult } = useCalculator()
 
     const [settingsVisible, setSettingsVisible] = useState(false)

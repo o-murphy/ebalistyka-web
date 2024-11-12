@@ -83,7 +83,7 @@ const TableSettingsDialog = ({ visible, setVisible }) => {
 
     return (
         <Portal>
-            <Dialog visible={visible} onDismiss={hideDialog} style={{ height: "80%" }}>
+            <Dialog visible={visible} onDismiss={hideDialog} style={{ height: "80%", maxWidth: 400, alignSelf: "center"}}>
 
                 <Dialog.Title>
                     <Surface style={{ width: "100%", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }} elevation={0}>

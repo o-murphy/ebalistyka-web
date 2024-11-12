@@ -26,29 +26,11 @@ export interface CurrentConditionsProps {
     lookAngle: number;
 
     targetDistance: number,
-    trajectoryStep: number,
-    trajectoryRange: number,
 
     usePowderSens: boolean,
     useDifferentPowderTemperature: boolean,
     powderTemperature: number,
 }
-
-// Handle messages from the main thread
-// self.onmessage = async (event) => {
-//     const { currentCalc, currentConditions } = event.data;
-  
-//     try {
-//       // Perform your calculations here (this should be asynchronous)
-//       const result = await makeShot(currentCalc, currentConditions);
-//       const adjustedResult = await shootTheTarget(currentCalc, currentConditions);
-  
-//       // Post the results back to the main thread
-//       self.postMessage({ result, adjustedResult });
-//     } catch (error) {
-//       self.postMessage({ error: error.message });
-//     }
-// };
 
 const dragModel = (profile: ProfileProps) => {
     switch (profile.bcType) {
@@ -77,7 +59,6 @@ const dragModel = (profile: ProfileProps) => {
 };
 
 export const prepareCalculator = (profile: ProfileProps, currentConditions): PreparedZeroData => {
-
         const zeroData = {
             atmo: {
                 pressure: UNew.hPa(profile.cZeroAirPressure / 10),
@@ -87,7 +68,6 @@ export const prepareCalculator = (profile: ProfileProps, currentConditions): Pre
             weapon: {
                 sightHeight: UNew.Millimeter(profile.scHeight),
                 twist: UNew.Inch(profile.rTwist / 100 * (profile.twistDir === "RIGHT" ? 1 : -1)),
-                // zeroElevation: UNew.Degree(profile.cZeroWPitch),
             },
             ammo: {
                 mv: UNew.MPS(profile.cMuzzleVelocity / 10),
@@ -173,7 +153,7 @@ export const makeShot = (calculator: PreparedZeroData, currentConditions: Curren
             },
             trajectoryProps: {
                 trajectoryRange: UNew.Meter(3000 + 1e-9),
-                trajectoryStep: UNew.Meter(currentConditions.trajectoryStep),
+                trajectoryStep: UNew.Meter(1),
             },
             lookAngle: UNew.Degree(currentConditions.lookAngle / 10),
         }
@@ -219,9 +199,8 @@ export const shootTheTarget = (calculator: PreparedZeroData, currentConditions: 
                 directionFrom: UNew.Degree(currentConditions.windDirection)
             },
             trajectoryProps: {
-                trajectoryRange: UNew.Meter(currentConditions.targetDistance + 2 * currentConditions.trajectoryStep),
-                trajectoryStep: UNew.Meter(currentConditions.trajectoryStep),
-                
+                trajectoryRange: UNew.Meter(currentConditions.targetDistance + 200),
+                trajectoryStep: UNew.Meter(1),    
             },
             lookAngle: UNew.Degree(currentConditions.lookAngle / 10),
             targetDistance: UNew.Meter(currentConditions.targetDistance)

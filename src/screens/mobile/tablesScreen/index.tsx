@@ -1,8 +1,9 @@
 import TablesTopAppBar from "./topAppBar";
-import TablesScreen from "./tablesScreen";
+import TablesScreen, {TablesContent} from "./tablesScreen";
 
 
 export {
     TablesTopAppBar,
     TablesScreen,
+    TablesContent,
 }
