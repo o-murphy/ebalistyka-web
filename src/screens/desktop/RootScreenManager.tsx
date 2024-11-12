@@ -16,6 +16,7 @@ import TopAppBar from '../../components/widgets/topAppBar';
 import { TablesScreen } from './tablesScreen';
 import { SettingsScreen } from './settingsScreen';
 import { ChartsScreen } from './chartsScreen.tsx';
+import { PropertiesScreen } from './propertiesScreen.tsx';
 
 const Stack = createNativeStackNavigator();
 
@@ -28,6 +29,7 @@ const navigationViewCollapsed = () => {
             <PaperDrawer.CollapsedItem focusedIcon={"home"} label={"Home"} onPress={() => navigation.navigate("Home")} />
             <PaperDrawer.CollapsedItem focusedIcon={"table"} label={"Tables"} onPress={() => navigation.navigate("Tables")} />
             <PaperDrawer.CollapsedItem focusedIcon={"chart-bell-curve-cumulative"} label={"Charts"} onPress={() => navigation.navigate("Charts")} />
+            <PaperDrawer.CollapsedItem focusedIcon={"tools"} label={"Profile"} onPress={() => navigation.navigate("Profile")} />
             <PaperDrawer.CollapsedItem focusedIcon={"cog-outline"} label={"Settings"} onPress={() => navigation.navigate("Settings")} />
         </Surface>
     );
@@ -62,6 +64,7 @@ const RootDrawer = ({ ...props }) => {
                 <Stack.Screen name="Tables" component={TablesScreen} options={{}} />
                 <Stack.Screen name="Settings" component={SettingsScreen} options={{}} />
                 <Stack.Screen name="Charts" component={ChartsScreen} options={{}} />
+                <Stack.Screen name="Profile" component={PropertiesScreen} options={{}} />
             </Stack.Navigator>
         </Drawer>
     )
