@@ -66,7 +66,7 @@ export const ShotInfoContent = () => {
             preferredUnits.velocity
         );
 
-        const adjustedMuzzleVelocity = formatUnit(
+        const adjustedMuzzleVelocity = adjustedResult instanceof HitResult && formatUnit(
             trajectory[0].velocity,
             preferredUnits.velocity
         );

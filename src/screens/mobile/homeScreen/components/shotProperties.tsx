@@ -112,6 +112,7 @@ const ShotPropertiesContainer = () => {
                     onChange={onWinDirChange}
                     diameter={dialDiameter}
                     onTouchEnd={onWheelTouchRelease}
+                    onMouseUp={onWheelTouchRelease}
                 />
             </Surface>
 

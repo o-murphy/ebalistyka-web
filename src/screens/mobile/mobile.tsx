@@ -1,6 +1,6 @@
 import React from 'react';
 import { PaperProvider } from 'react-native-paper';
-import RootScreenManager from '../../screens/mobile/RootScreenManager';
+import RootScreenManager from './RootScreenManager';
 import { useThemeSwitch } from '../../context/themeContext';
 
 

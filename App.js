@@ -3,8 +3,8 @@ import { ProfileProvider } from './src/context/profileContext';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ThemeProvider } from './src/context/themeContext';
 import { PreferredUnitsProvider } from './src/context/preferredUnitsContext';
-import MobileView from './src/components/views/mobile';
-import MainScreen from './src/components/views/main';
+import MobileView from './src/screens/mobile/mobile';
+import MainScreen from './src/screens/desktop/desktop';
 
 import { Platform } from 'react-native';
 import { DeviceType, getDeviceTypeAsync } from "expo-device";

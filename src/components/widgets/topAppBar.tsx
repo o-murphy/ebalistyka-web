@@ -6,7 +6,7 @@ import { DeviceType, getDeviceTypeAsync } from "expo-device";
 import { NativeStackHeaderProps } from "@react-navigation/native-stack"
 import { Platform } from 'react-native';
 import FileUploadButton from "./fileUpdoader";
-import { HomeScreenTopAppBar } from "../../screens/mobile/homeScreen";
+// import { HomeScreenTopAppBar } from "../../screens/mobile/homeScreen";
 
 const TopAppBar = ({...props}: NativeStackHeaderProps) => {
 
@@ -37,7 +37,7 @@ const TopAppBar = ({...props}: NativeStackHeaderProps) => {
 
             {Platform.OS === 'web' && <FileUploadButton />}
 
-            <Appbar.Action icon="cog-outline" onPress={() => setSettingsVisible(true)} />
+            {/* <Appbar.Action icon="cog-outline" onPress={() => setSettingsVisible(true)} /> */}
 
             <SettingsUnitCard visibility={[settingsVisible, setSettingsVisible]} />
 

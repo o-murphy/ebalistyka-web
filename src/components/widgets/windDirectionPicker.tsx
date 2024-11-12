@@ -27,7 +27,7 @@ function degreesToTime(angle) {
 }
 
 function meterText(value) {
-    return  `${(value * 30).toFixed(0)}° (${degreesToTime(value * 30)})`
+    return `${(value * 30).toFixed(0)}° (${degreesToTime(value * 30)})`
 }
 
 export default function WindDirectionPicker({ value, onChange, style = null, diameter = 198, ...props }: {
@@ -75,7 +75,7 @@ export default function WindDirectionPicker({ value, onChange, style = null, dia
     }
 
     return (
-        <View style={[style, styles.noSelect]} {...props}>
+        <View style={[style, styles.noSelect]} {...props} >
             {
                 devType === DeviceType.PHONE
                     ?
@@ -83,7 +83,7 @@ export default function WindDirectionPicker({ value, onChange, style = null, dia
                         {...sliderValueHandler}
                         {...sliderValues}
                         {...{ ...sliderProps, capMode: "triangle" }}
-                        dialDiameter={diameter }
+                        dialDiameter={diameter}
                         angleType={{
                             direction: "cw",
                             axis: "+y"

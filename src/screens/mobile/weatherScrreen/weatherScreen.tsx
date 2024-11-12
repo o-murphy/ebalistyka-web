@@ -21,12 +21,12 @@ const CurrentVelocity = () => {
         prefUnitFlag: "velocity",
         min: 0,
         max: 3000,
-        precision: 1 
+        precision: 1
     })
 
     useEffect(() => {
         if (adjustedResult instanceof HitResult) {
-            muzzleVelocity.setValue(adjustedResult.trajectory[0].velocity)        
+            muzzleVelocity.setValue(adjustedResult.trajectory[0].velocity)
         }
     }, [adjustedResult])
 
@@ -88,8 +88,7 @@ const PowderSenseValue = () => {
 }
 
 
-const WeatherContent = () => {
-
+export const WeatherTopContainer = () => {
     const { currentConditions, updateCurrentConditions } = useCurrentConditions()
     const { usePowderSens, useDifferentPowderTemperature } = currentConditions
 
@@ -106,6 +105,67 @@ const WeatherContent = () => {
     }
 
     return (
+        <Surface elevation={0} style={styles.innerContainer}>
+            <Surface style={styles.fabButtonsRow} elevation={0}>
+
+                <WeatherTemperatureDialog button={
+                    <FAB
+                        size="small"
+                        icon={"thermometer"}
+                        onPress={() => console.log('cTemp')}
+                        label={"15 deg"}
+                        style={styles.fabStyle}
+                    />
+                } />
+                <WeatherHumidityDialog button={
+                    <FAB
+                        size="small"
+                        icon={"water"}
+                        onPress={() => console.log('Wind')}
+                        label={"50 %"}
+                        style={styles.fabStyle}
+                    />
+                } />
+
+                <WeatherPressureDialog button={
+                    <FAB
+                        size="small"
+                        icon={"gauge"}
+                        onPress={() => console.log('Pressure')}
+                        label={"1000 hPa"}
+                        style={styles.fabStyle}
+                    />
+                } />
+            </Surface>
+
+            <Surface style={styles.powderSenseSwitchRow} elevation={0}>
+                <Text>Use powder sensitivity</Text>
+                <Switch
+                    value={usePowderSens}
+                    onValueChange={onTogglePowderSens}
+                />
+            </Surface>
+
+            {usePowderSens && <Surface style={styles.powderSenseSwitchRow} elevation={0}>
+                <Text>Use different powder temperature</Text>
+                <Switch
+                    value={useDifferentPowderTemperature}
+                    onValueChange={onToggleDiffPowderTemp}
+                />
+            </Surface>}
+
+            {usePowderSens && useDifferentPowderTemperature && <PowderSenseValue />}
+            {usePowderSens && <CurrentVelocity />}
+            {usePowderSens && <PowderSense />}
+
+        </Surface>
+    )
+}
+
+
+export const WeatherContent = () => {
+
+    return (
         <ScrollViewSurface
             style={styles.scrollView}
             keyboardShouldPersistTaps="always"
@@ -114,63 +174,7 @@ const WeatherContent = () => {
             elevation={1}
             surfaceStyle={styles.scrollViewContainer}
         >
-
-            <Surface elevation={0} style={styles.innerContainer}>
-                <Surface style={styles.fabButtonsRow} elevation={0}>
-
-                    <WeatherTemperatureDialog button={
-                        <FAB
-                            size="small"
-                            icon={"thermometer"}
-                            onPress={() => console.log('cTemp')}
-                            label={"15 deg"}
-                            style={styles.fabStyle}
-                        />
-                    } />
-                    <WeatherHumidityDialog button={
-                        <FAB
-                            size="small"
-                            icon={"water"}
-                            onPress={() => console.log('Wind')}
-                            label={"50 %"}
-                            style={styles.fabStyle}
-                        />
-                    } />
-
-                    <WeatherPressureDialog button={
-                        <FAB
-                            size="small"
-                            icon={"gauge"}
-                            onPress={() => console.log('Pressure')}
-                            label={"1000 hPa"}
-                            style={styles.fabStyle}
-                        />
-                    } />
-                </Surface>
-
-                <Surface style={styles.powderSenseSwitchRow} elevation={0}>
-                    <Text>Use powder sensitivity</Text>
-                    <Switch
-                        value={usePowderSens}
-                        onValueChange={onTogglePowderSens}
-                    />
-                </Surface>
-
-                {usePowderSens && <Surface style={styles.powderSenseSwitchRow} elevation={0}>
-                    <Text>Use different powder temperature</Text>
-                    <Switch
-                        value={useDifferentPowderTemperature}
-                        onValueChange={onToggleDiffPowderTemp}
-                    />
-                </Surface>}
-
-                {usePowderSens && useDifferentPowderTemperature && <PowderSenseValue />}
-                {usePowderSens && <CurrentVelocity />}
-                {usePowderSens && <PowderSense />}
-
-            </Surface>
-
-
+            <WeatherTopContainer />
         </ScrollViewSurface>
     )
 }
