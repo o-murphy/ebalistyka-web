@@ -12,7 +12,7 @@ const dimensions: Record<string, UseDimensionArgs> = {
         prefUnitFlag: "temperature",
         min: -50,
         max: 50,
-        precision: 1
+        precision: 2
     },
     powderTemperature: {
         measure: Temperature,
@@ -20,7 +20,7 @@ const dimensions: Record<string, UseDimensionArgs> = {
         prefUnitFlag: "temperature",
         min: -50,
         max: 50,
-        precision: 1
+        precision: 2
     },
     pressure: {
         measure: Pressure,
@@ -179,8 +179,6 @@ const defaultConditions: CurrentConditionsProps = {
     windDirection: 0,
     lookAngle: 0,
     targetDistance: 100,
-    trajectoryStep: 100,
-    trajectoryRange: 2000,
     usePowderSens: true,
     useDifferentPowderTemperature: false,
     powderTemperature: 15,

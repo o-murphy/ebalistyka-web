@@ -192,10 +192,8 @@ export const TrajectoryTable = ({ hitResult, style = null }) => {
 
     const tableHeaders = useTableHeaders({ displayFlag: false })
 
-    // const trajectoryStepRaw = UNew.Meter(tableSettings?.trajectoryStep).rawValue
     const trajectoryStepRaw = trajectoryStep.value.rawValue
-    // const trajectoryRangeRaw = UNew.Meter(tableSettings?.trajectoryRange + 1).rawValue
-    const trajectoryRangeRaw = trajectoryRange.value.rawValue
+    const trajectoryRangeRaw = trajectoryRange.value.rawValue + 1
 
     let trajectory = [];
 

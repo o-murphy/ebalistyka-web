@@ -30,6 +30,7 @@ export interface DimensionProps {
     setAsPref: (value: number) => void;
     rangePref: DimensionRange;
     reset: () => void;
+    accuracy: number;
 }
 
 // Interface for the arguments passed to useDimension
@@ -123,6 +124,7 @@ export const useDimension = ({
         asPref,
         setAsPref,
         rangePref,
-        reset
+        reset,
+        accuracy
     };
 };

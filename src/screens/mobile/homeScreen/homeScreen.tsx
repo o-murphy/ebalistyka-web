@@ -3,11 +3,13 @@ import { StyleSheet } from "react-native";
 import { TopContainer, BotContainer } from "./components";
 import { useCalculator } from "../../../context/profileContext";
 import { ScreenBackground, ScrollViewSurface } from "../components";
+import { useCurrentConditions } from "../../../context/currentConditions";
 
 
 const HomeContent = () => {
-    const { profileProperties, currentConditions, fire } = useCalculator();
+    const { profileProperties, fire } = useCalculator();
 
+    const currentConditions = useCurrentConditions(); 
     useEffect(() => {
         if (profileProperties && currentConditions) {
             fire();

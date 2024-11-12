@@ -1,24 +1,42 @@
 import { StyleSheet } from "react-native";
 import { Button, Chip, FAB, Surface, Switch, Text } from "react-native-paper";
-import { useEffect, useState } from "react";
 import { ScreenBackground, ScrollViewSurface } from "../components";
 import { useCalculator } from "../../../context/profileContext";
 import { WeatherHumidityDialog, WeatherPowderTemperatureDialog, WeatherPressureDialog, WeatherTemperatureDialog } from "./components";
-import { HitResult, UNew } from "js-ballistics/dist/v2";
-import { usePreferredUnits } from "../../../context/preferredUnitsContext";
-import { UnitProps } from "js-ballistics";
+import { HitResult, Unit, Velocity } from "js-ballistics/dist/v2";
+import { useCurrentConditions } from "../../../context/currentConditions";
+import { useDimension } from "../../../hooks/dimension";
+import { useEffect } from "react";
 
 
 
 const CurrentVelocity = () => {
-    const { currentConditions, adjustedResult } = useCalculator()
-    const { preferredUnits } = usePreferredUnits()
+    const { adjustedResult } = useCalculator()
+    const { temperature, powderTemperature, currentConditions } = useCurrentConditions()
+    const { useDifferentPowderTemperature } = currentConditions
+    // NOTE: temporary 
+    const muzzleVelocity = useDimension({
+        measure: Velocity,
+        defUnit: Unit.MPS,
+        prefUnitFlag: "velocity",
+        min: 0,
+        max: 3000,
+        precision: 1 
+    })
+
+    useEffect(() => {
+        if (adjustedResult instanceof HitResult) {
+            muzzleVelocity.setValue(adjustedResult.trajectory[0].velocity)        
+        }
+    }, [adjustedResult])
+
 
     if (adjustedResult instanceof HitResult) {
-        const currentTemp = UNew.Celsius(currentConditions.powderTemperature).In(preferredUnits.temperature).toFixed(0)
-        const currentTempSymbol = UnitProps[preferredUnits.temperature].symbol
-        const currentMuzzleVelocity = adjustedResult.trajectory[0].velocity.In(preferredUnits.velocity).toFixed(0)
-        const velocitySymbol = UnitProps[preferredUnits.velocity].symbol
+        const currentTemp = (useDifferentPowderTemperature ? powderTemperature : temperature).asString
+        const currentTempSymbol = powderTemperature.symbol
+
+        const currentMuzzleVelocity = muzzleVelocity.asString
+        const velocitySymbol = muzzleVelocity.symbol
         return (
             <Surface style={styles.powderSenseSwitchRow} elevation={0}>
                 <Text style={{ flex: 3 }}>
@@ -51,11 +69,10 @@ const PowderSense = () => {
 
 
 const PowderSenseValue = () => {
-    const { currentConditions, adjustedResult } = useCalculator()
-    const { preferredUnits } = usePreferredUnits()
+    const { powderTemperature } = useCurrentConditions()
 
-    const currentTemp = UNew.Celsius(currentConditions.powderTemperature).In(preferredUnits.temperature).toFixed(0)
-    const currentTempSymbol = UnitProps[preferredUnits.temperature].symbol
+    const currentTemp = powderTemperature.asString
+    const currentTempSymbol = powderTemperature.symbol
     return (
         <WeatherPowderTemperatureDialog button={
             <Button
@@ -73,8 +90,7 @@ const PowderSenseValue = () => {
 
 const WeatherContent = () => {
 
-    const { currentConditions, updateCurrentConditions } = useCalculator()
-
+    const { currentConditions, updateCurrentConditions } = useCurrentConditions()
     const { usePowderSens, useDifferentPowderTemperature } = currentConditions
 
     const onTogglePowderSens = () => {

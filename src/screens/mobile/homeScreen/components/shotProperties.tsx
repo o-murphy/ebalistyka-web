@@ -3,20 +3,19 @@ import { LayoutChangeEvent, StyleSheet } from "react-native"
 import { FAB, Surface, Text } from "react-native-paper"
 import { useNavigation } from "@react-navigation/native"
 import WindDirectionPicker from "../../../../components/widgets/windDirectionPicker"
-import { useCalculator } from "../../../../context/profileContext"
+import { useCurrentConditions } from "../../../../context/currentConditions"
 
 
 const ShotPropertiesContainer = () => {
 
-    const { currentConditions, updateCurrentConditions } = useCalculator()
-    const { windDirection } = currentConditions;
-    const [windDir, setWindDir] = useState(windDirection || 0);
+    const { windDirection } = useCurrentConditions()
+    const [windDir, setWindDir] = useState(windDirection.asDef / 30 || 0);
     const [layoutSize, setLayoutSize] = useState({ width: 0, height: 0 }); // Default value
 
     const navigation: any = useNavigation()
 
     useEffect(() => {
-        setWindDir(windDirection);
+        setWindDir(windDirection.asDef / 30 || 0);
     }, [windDirection]);
 
     const onWinDirChange = (value: number) => {
@@ -29,7 +28,7 @@ const ShotPropertiesContainer = () => {
     };
 
     const onWheelTouchRelease = () => {
-        updateCurrentConditions({ windDirection: windDir });
+        windDirection.setAsDef(windDir * 30)
     };
 
     const dialDiameter = useMemo(() => Math.min(layoutSize.width, layoutSize.height), [layoutSize]);

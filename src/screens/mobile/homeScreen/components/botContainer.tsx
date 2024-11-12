@@ -6,19 +6,21 @@ import { HitResult } from "js-ballistics/dist/v2";
 import { HoldPage } from "./holdPage";
 import CarouselView from "./carouselView";
 import { ShotTable } from "./shotTablePage";
-// import { Indicator, Pages } from 'react-native-pages';
+import { useCurrentConditions } from "../../../../context/currentConditions";
+
 
 const adjustmentSort = (closest, item) => {
     return Math.abs(item.dropAdjustment.rawValue) < Math.abs(closest.dropAdjustment.rawValue) ? item : closest;
 };
 
 const BotContainer = () => {
-    const { profileProperties, currentConditions, adjustedResult } = useCalculator();
+    const { profileProperties, adjustedResult } = useCalculator();
+    const { windDirection } = useCurrentConditions();
     const [hold, setHold] = useState(null);
 
     useEffect(() => {
         if (adjustedResult instanceof HitResult) {
-            console.log(currentConditions.windDirection);
+
             const trajectory = adjustedResult?.trajectory;
             const holdRow = trajectory.slice(1).reduce(adjustmentSort, trajectory[1]);
 
@@ -27,7 +29,7 @@ const BotContainer = () => {
                 wind: holdRow.windageAdjustment,
             });
         }
-    }, [adjustedResult, currentConditions.windDirection]);
+    }, [adjustedResult, windDirection]);
 
     const shortInfo = useMemo(() => [
         `${(profileProperties?.bWeight / 10).toFixed(1)} gr.`,
