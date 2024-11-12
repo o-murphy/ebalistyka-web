@@ -39,7 +39,7 @@ const adjustmentSort = (closest, item) =>
     Math.abs(item.dropAdjustment.rawValue) < Math.abs(closest.dropAdjustment.rawValue) ? item : closest;
 
 
-const ShotInfoContent = () => {
+export const ShotInfoContent = () => {
     const { profileProperties, adjustedResult } = useCalculator();
     const { targetDistance } = useCurrentConditions()
     const { preferredUnits } = usePreferredUnits();

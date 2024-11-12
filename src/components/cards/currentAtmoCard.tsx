@@ -1,6 +1,5 @@
 import React from "react";
 import CustomCard from "./customCard";
-import { useCalculator } from "../../context/profileContext";
 import { CurrentHumidityField, CurrentPressureField, CurrentTemperatureField } from "../widgets/measureFields";
 
 

@@ -6,7 +6,7 @@ import { ScreenBackground, ScrollViewSurface } from "../components";
 import { useCurrentConditions } from "../../../context/currentConditions";
 
 
-const HomeContent = () => {
+export const HomeContent = () => {
     const { profileProperties, fire } = useCalculator();
 
     const currentConditions = useCurrentConditions(); 

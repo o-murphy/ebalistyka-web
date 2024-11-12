@@ -4,6 +4,20 @@ import { FAB, Surface, Text } from "react-native-paper"
 import { useNavigation } from "@react-navigation/native"
 import WindDirectionPicker from "../../../../components/widgets/windDirectionPicker"
 import { useCurrentConditions } from "../../../../context/currentConditions"
+import { DeviceType, getDeviceTypeAsync } from "expo-device"
+
+
+const getDeviceType = () => {
+    const [devType, setDevType] = useState(DeviceType.PHONE)
+
+    useEffect(() => {
+      getDeviceTypeAsync().then((deviceType) => {
+        setDevType(deviceType);
+      });
+    }, []);
+
+    return devType
+}
 
 
 const ShotPropertiesContainer = () => {
@@ -12,7 +26,18 @@ const ShotPropertiesContainer = () => {
     const [windDir, setWindDir] = useState(windDirection.asDef / 30 || 0);
     const [layoutSize, setLayoutSize] = useState({ width: 0, height: 0 }); // Default value
 
-    const navigation: any = useNavigation()
+
+    let onInfoPress = null;
+
+    try {
+        const devType = getDeviceType()
+        console.log("Device type", DeviceType[devType])
+        const navigation = useNavigation()
+        onInfoPress = () => navigation.navigate("ShotInfo")
+    } catch {
+        onInfoPress = () => alert("No navigation context")
+    }
+
 
     useEffect(() => {
         setWindDir(windDirection.asDef / 30 || 0);
@@ -47,7 +72,7 @@ const ShotPropertiesContainer = () => {
             icon: "information-outline",
             size: "small",
             variant: "secondary",
-            onPress: () => navigation.navigate("ShotInfo"),
+            onPress: onInfoPress,
         },
         help: {
             icon: "help",

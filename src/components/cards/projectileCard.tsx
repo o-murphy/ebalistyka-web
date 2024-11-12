@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import CustomCard from "./customCard";
-import { CalculationState, useCalculator } from "../../context/profileContext";
+import { useCalculator } from "../../context/profileContext";
 import { MuzzleVelocityField, PowderSensField } from "../widgets/measureFields";
 import { TextInputChip } from "../widgets/inputChip";
 

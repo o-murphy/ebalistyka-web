@@ -1,8 +1,9 @@
 import SettingsScreenTopAppBar from "./topAppBar";
-import SettingsScreen from "./settingsScreen";
+import SettingsScreen, {SettingsContent} from "./settingsScreen";
 
 
 export {
     SettingsScreenTopAppBar,
-    SettingsScreen
+    SettingsScreen,
+    SettingsContent,
 }

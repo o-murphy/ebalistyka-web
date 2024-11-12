@@ -22,7 +22,7 @@ export const getUnitList = (measure: Object): Unit[] =>
     );
 
 
-const SettingsContent = () => {
+export const SettingsContent = () => {
     const { preferredUnits, setPreferredUnits } = usePreferredUnits();
     const [bannerVisible, setBannerVisible] = useState(false);
     const { homeScreenDistanceStep } = useAppSettings()

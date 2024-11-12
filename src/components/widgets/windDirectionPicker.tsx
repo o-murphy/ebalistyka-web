@@ -69,7 +69,9 @@ export default function WindDirectionPicker({ value, onChange, style = null, dia
 
     const sliderValueHandler = {
         value: value,
-        onChange: (value) => onChange(Math.round(value * 10) / 10)
+        onChange: (value) => {
+            onChange(Math.round(value * 10) / 10)
+        }
     }
 
     return (

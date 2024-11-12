@@ -1,6 +1,6 @@
 import React from "react";
 import CustomCard from "./customCard";
-import { CalculationState, useCalculator } from "../../context/profileContext";
+import { useCalculator } from "../../context/profileContext";
 import { ZeroTemperatureField } from "../widgets/measureFields";
 import { ZeroPressureField } from "../widgets/measureFields/zeroPressureField";
 import { ZeroHumidityField } from "../widgets/measureFields/zeroHumidityField";

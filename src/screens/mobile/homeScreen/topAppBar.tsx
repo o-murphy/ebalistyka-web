@@ -4,7 +4,7 @@ import { useThemeSwitch } from "../../../context/themeContext";
 import { NativeStackHeaderProps } from "@react-navigation/native-stack";
 import { TopAppBar } from "../components";
 
-const HomeScreenTopAppBar = ({ navigation }: NativeStackHeaderProps) => {
+const HomeScreenTopAppBar = ({ navigation = null }: NativeStackHeaderProps) => {
     const theme = useTheme();
     const { toggleNightMode } = useThemeSwitch();
 
