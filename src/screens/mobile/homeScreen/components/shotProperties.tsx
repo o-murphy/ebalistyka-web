@@ -56,7 +56,7 @@ const ShotPropertiesContainer = () => {
         windDirection.setAsDef(windDir * 30)
     };
 
-    const dialDiameter = useMemo(() => Math.min(layoutSize.width, layoutSize.height), [layoutSize]);
+    const dialDiameter = useMemo(() => Math.min(layoutSize.height), [layoutSize]);
 
     const windDirLabelStyle = useMemo(
         () => ({
@@ -128,8 +128,9 @@ const ShotPropertiesContainer = () => {
 
 const styles = StyleSheet.create({
     surface: {
+        flex: 7,
         flexDirection: "row",
-        minHeight: 200,
+        // minHeight: 200,
         justifyContent: "space-between",
         margin: 16,
     },

@@ -59,6 +59,7 @@ const BotContainer = () => {
 
 const styles = StyleSheet.create({
     botContainer: {
+        aspectRatio: 1,
         flexDirection: "column",
         paddingBottom: 16,
     },

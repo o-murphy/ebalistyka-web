@@ -196,10 +196,9 @@ const ShotTablePage = () => {
 
 const styles = StyleSheet.create({
     scrollView: {
-        // flex: 1,
         paddingBottom: 16,
         paddingHorizontal: 32,
-        height: 200
+        aspectRatio: 1,
     },
     scrollViewContainer: {
         paddingBottom: 16,

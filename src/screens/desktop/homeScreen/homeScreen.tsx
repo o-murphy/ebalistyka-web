@@ -15,7 +15,6 @@ const TILE_BASE_SIZE = 400;
 export const TileSurface = ({ children, widthRatio = 1, heightRatio = 1, style = null, ...props }) => {
     return (
         <Surface style={[
-            style,
             {
                 width: widthRatio * TILE_BASE_SIZE,
                 height: heightRatio * TILE_BASE_SIZE,
@@ -23,7 +22,8 @@ export const TileSurface = ({ children, widthRatio = 1, heightRatio = 1, style =
                 minHeight: heightRatio * TILE_BASE_SIZE,
                 maxWidth: widthRatio * TILE_BASE_SIZE,
                 maxHeight: heightRatio * TILE_BASE_SIZE,
-            }
+            },
+            style,
         ]} {...props}>
             {children}
         </Surface>
@@ -64,11 +64,11 @@ const HomeScreen = ({ navigation }) => {
                 </TileSurface>
 
 
-                <TileSurface style={styles.column} widthRatio={2} heightRatio={1}>
+                <TileSurface style={styles.column} widthRatio={1} heightRatio={1}>
                     <BotContainer />
                 </TileSurface>
 
-                <TileSurface style={styles.column} widthRatio={1} heightRatio={2}>
+                <TileSurface style={styles.column} widthRatio={1} heightRatio={1}>
                     <ShotInfoContent />
                 </TileSurface>
             </Surface>
@@ -88,6 +88,7 @@ const styles = StyleSheet.create({
     },
     column: {
         margin: 8,
+        padding: 16,
         borderRadius: 32,
         overflow: "hidden",
         alignSelf: "flex-start"

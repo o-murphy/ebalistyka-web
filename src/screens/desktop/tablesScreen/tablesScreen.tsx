@@ -7,6 +7,7 @@ import { TrajectoryTable, ZerosDataTable } from "../../mobile/tablesScreen/compo
 import { ScrollViewSurface } from "../../mobile/components";
 import { ProfileDetails, TableSettingsDialog } from "../../mobile/tablesScreen/components";
 import { ScreenBackground } from "../components";
+import { TileSurface } from "../homeScreen/homeScreen";
 
 
 const ZerosView = ({ hitResult }) => {
@@ -101,7 +102,9 @@ export const TablesContent = () => {
 const TablesScreen = ({ navigation }) => {
     return (
         <ScreenBackground>
-            <TablesContent />
+            <Surface style={{padding: 8, margin: 16, borderRadius: 32, aspectRatio: 1, flex: 1, maxWidth: 900}}>
+                <TablesContent />
+            </Surface>
         </ScreenBackground>
     )
 }
