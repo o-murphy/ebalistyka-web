@@ -16,11 +16,11 @@ const FileUploadButton = () => {
     const { profileProperties, setProfileProperties, updateProfileProperties, setIsLoaded } = useCalculator();
 
     const onSuccess = (data: ProfileProps) => {
-      if (profileProperties) {
+    //   if (profileProperties) {
         updateProfileProperties(data)
-      } else {
-        setProfileProperties(data)
-      }
+    //   } else {
+    //     setProfileProperties(data)
+    //   }
       setIsLoaded(true); // Mark as loaded after attempting to load data
     }
 

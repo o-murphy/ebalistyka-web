@@ -64,14 +64,26 @@ const TopContainer = () => {
 
 
 const CurrentShot = () => {
-    const { profileProperties, scHeight, rTwist, fire } = useCalculator();
+    const { profileProperties, scHeight, rTwist, zeroDistance, cZeroWPitch, fire } = useCalculator();
 
     const currentConditions = useCurrentConditions();
+
     useEffect(() => {
         if (profileProperties && currentConditions) {
             fire();
+            console.log("TRIGGER")
         }
-    }, [currentConditions]);
+    }, [
+        currentConditions,
+
+        scHeight.value,
+        rTwist.value,
+        zeroDistance.value,
+        cZeroWPitch.value,
+        profileProperties.twistDir,
+    
+    
+    ]);
 
     return (
         <TileSurface style={styles.column} widthRatio={1} heightRatio={2}>

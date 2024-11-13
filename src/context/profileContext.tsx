@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createContext, useState, useContext, useEffect, ReactNode } from 'react';
 import parseA7P, { ProfileProps } from '../utils/parseA7P';
 import { makeShot, prepareCalculator, PreparedZeroData, shootTheTarget } from '../utils/ballisticsCalculator';
-import { Distance, getGlobalUsePowderSensitivity, HitResult, setGlobalUsePowderSensitivity } from 'js-ballistics/dist/v2';
+import { Angular, Distance, getGlobalUsePowderSensitivity, HitResult, setGlobalUsePowderSensitivity, Temperature, Velocity } from 'js-ballistics/dist/v2';
 import { useCurrentConditions } from './currentConditions';
 import { DimensionProps, useDimension, UseDimensionArgs } from '../hooks/dimension';
 import { Unit } from 'js-ballistics';
@@ -11,7 +11,7 @@ import { Unit } from 'js-ballistics';
 interface CalculationContextType {
   profileProperties: ProfileProps | null;
   fetchBinaryFile: (file: string) => Promise<void>;
-  setProfileProperties: React.Dispatch<React.SetStateAction<ProfileProps | null>>;
+  // setProfileProperties: React.Dispatch<React.SetStateAction<ProfileProps | null>>;
   updateProfileProperties: (props: Partial<ProfileProps>) => void;
   calculator: PreparedZeroData | null;
   hitResult: HitResult | null | Error;
@@ -23,6 +23,10 @@ interface CalculationContextType {
 
   scHeight: DimensionProps;
   rTwist: DimensionProps;
+  cZeroWPitch: DimensionProps;
+  zeroDistance: DimensionProps;
+  cMuzzleVelocity: DimensionProps;
+  cZeroPTemperature: DimensionProps;
 }
 
 
@@ -63,6 +67,38 @@ const dimensions: Record<string, UseDimensionArgs> = {
     min: 0,
     max: 100,
     precision: 0.01
+  },
+  cZeroWPitch: {
+    measure: Angular,
+    defUnit: Unit.Degree,
+    prefUnitFlag: "angular",
+    min: -90,
+    max: 90,
+    precision: 1
+  },
+  zeroDistance: {
+    measure: Distance,
+    defUnit: Unit.Meter,
+    prefUnitFlag: "distance",
+    min: 0,
+    max: 3000,
+    precision: 1
+  },
+  cMuzzleVelocity: {
+    measure: Velocity,
+    defUnit: Unit.MPS,
+    prefUnitFlag: "velocity",
+    min: 0,
+    max: 2000,
+    precision: 1
+  },
+  cZeroPTemperature: {
+    measure: Temperature,
+    defUnit: Unit.Celsius,
+    prefUnitFlag: "temperature",
+    min: -50,
+    max: 50,
+    precision: 1
   }
 }
 
@@ -78,20 +114,32 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
   const currentConditions = prepareCurrentConditions()
 
   const scHeight = useDimension(dimensions.scHeight)
-
   const rTwist = useDimension(dimensions.rTwist)
+  const cZeroWPitch = useDimension(dimensions.cZeroWPitch)
+  const zeroDistance = useDimension(dimensions.zeroDistance)
 
+  const cMuzzleVelocity = useDimension(dimensions.cMuzzleVelocity)
+  const cZeroPTemperature = useDimension(dimensions.cZeroPTemperature)
+
+  const setParsedProps = (props: ProfileProps) => {
+    setProfileProperties(props)
+
+    scHeight.setAsDef(props.scHeight ?? 2)
+    rTwist.setAsDef((props.rTwist ?? 10) / 100)
+    cZeroWPitch.setAsDef(props?.cZeroWPitch ?? 10)
+    zeroDistance.setAsDef(props.zeroDistance ?? (props.distances[props.cZeroDistanceIdx] ?? 10000) / 100 )
+
+    cMuzzleVelocity.setAsDef((props.cMuzzleVelocity ?? 8000) / 10)
+    cZeroPTemperature.setAsDef(props.cZeroPTemperature ?? 15)
+  }
 
   useEffect(() => {
     const load = async () => {
       const profileValue = await AsyncStorage.getItem('profileProperties')
-      const profileValueParsed: ProfileProps = JSON.parse(profileValue || defaultProfile)
+      const profileValueParsed: ProfileProps = JSON.parse(profileValue ?? defaultProfile)
       if (profileValue !== null && profileValue !== 'null') {
 
-        setProfileProperties(profileValueParsed)
-
-        scHeight.setAsDef(profileValueParsed.scHeight || 2)
-        rTwist.setAsDef(profileValueParsed.rTwist / 100 || 10)
+        updateProfileProperties(profileValueParsed)
 
         setIsLoaded(true)
         console.log("loaded profile cache")
@@ -107,6 +155,10 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
           ...profileProperties,
           rTwist: rTwist.asDef * 100,
           scHeight: scHeight.asDef,
+          cZeroWPitch: cZeroWPitch.asDef,
+          zeroDistance: zeroDistance.asDef,
+          cMuzzleVelocity: cMuzzleVelocity.asDef * 10,
+          cZeroPTemperature: cZeroPTemperature.asDef,
         });
         await AsyncStorage.setItem('profileProperties', jsonValue);
       } catch (error) {
@@ -170,7 +222,7 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
 
       parseA7P(arrayBuffer)
         .then(parsedData => {
-          setProfileProperties(parsedData);
+          updateProfileProperties(parsedData);
         })
         .catch(error => {
           console.error('Error parsing A7P file:', error);
@@ -181,7 +233,8 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
   };
 
   const updateProfileProperties = (props: Partial<ProfileProps>) => {
-    setProfileProperties((prev) => ({ ...prev, ...props }));
+    setParsedProps({ ...profileProperties, ...props });
+    // setParsedProps((prev) => ({ ...prev, ...props }))
   };
 
   return (
@@ -189,7 +242,7 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
       profileProperties,
 
       fetchBinaryFile,
-      setProfileProperties,
+      // setProfileProperties,
       updateProfileProperties,
 
       calculator,
@@ -204,6 +257,11 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
 
       scHeight,
       rTwist,
+      cZeroWPitch,
+      zeroDistance,
+
+      cMuzzleVelocity,
+      cZeroPTemperature
     }}>
       {children}
     </CalculationContext.Provider>

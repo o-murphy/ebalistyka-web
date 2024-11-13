@@ -1,8 +1,8 @@
 import React, { useMemo } from "react";
 import CustomCard from "./customCard";
 import { useCalculator } from "../../context/profileContext";
-import { MuzzleVelocityField, PowderSensField } from "../widgets/measureFields";
 import { TextInputChip } from "../widgets/inputChip";
+import { ValueDialogChip } from "../../screens/desktop/components";
 
 interface ProjectileCardProps {
     expanded?: boolean;
@@ -24,15 +24,17 @@ const ProjectileName = () => {
 
 const ProjectileCard: React.FC<ProjectileCardProps> = ({ expanded = true }) => {
     const { isLoaded } = useCalculator()
+    const { cMuzzleVelocity, cZeroPTemperature } = useCalculator();
 
     if (!isLoaded) {
-        return <CustomCard title={"Weapon"} expanded={expanded} />
+        return <CustomCard title={"Projectile"} expanded={expanded} />
     }
     return (
         <CustomCard title={"Projectile"} expanded={expanded}>
             <ProjectileName />
-            <MuzzleVelocityField />
-            <PowderSensField />
+            <ValueDialogChip icon="speedometer" title="Muzzle velocity" dimension={cMuzzleVelocity}/>
+            <ValueDialogChip icon="thermometer" title="Powder temperature" dimension={cZeroPTemperature}/>
+            {/* <PowderSensField /> */}
         </CustomCard>
     );
 };

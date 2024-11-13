@@ -18,7 +18,6 @@ const ShotPropertiesContainer = () => {
 
     try {
         const devType = useDeviceType()
-        console.log("Device type", DeviceType[devType])
         const navigation = useNavigation()
         onInfoPress = () => navigation.navigate("ShotInfo")
     } catch {

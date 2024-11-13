@@ -17,8 +17,7 @@ import { useWindowDimensions } from 'react-native';
 const MOBILE_WIDTH = 500;
 
 
-export default function App() {
-
+const AdaptiveView = () => {
   const deviceType = useDeviceType()
   const windowDimensions = useWindowDimensions()
 
@@ -28,11 +27,19 @@ export default function App() {
     setIsMobile(windowDimensions?.width <= MOBILE_WIDTH)
   }, [windowDimensions])
 
-  console.log(DeviceType[deviceType], Platform.OS)
+  // console.log(DeviceType[deviceType], Platform.OS)
 
   if (deviceType === DeviceType.UNKNOWN) {
     return null
   }
+
+  return isMobile ? <MobileView /> : <MainScreen />
+}
+
+
+export default function App() {
+
+
 
   return (
     <ThemeProvider>
@@ -43,7 +50,7 @@ export default function App() {
             <ProfileProvider>
               <TableSettingsProvider>
 
-                  {isMobile ? <MobileView /> : <MainScreen />}
+                <AdaptiveView />
 
               </TableSettingsProvider>
             </ProfileProvider>

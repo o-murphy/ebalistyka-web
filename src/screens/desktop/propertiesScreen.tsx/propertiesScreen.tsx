@@ -17,9 +17,9 @@ const PropertiesScreen = ({ navigation }) => {
                 showsVerticalScrollIndicator={false}
             >
                 <WeaponCard />
-                {/* <ProjectileCard />
-                <BulletCard />
-                <ZeroAtmoCard /> */}
+                <ProjectileCard />
+                {/* <BulletCard /> */}
+                {/* <ZeroAtmoCard /> */}
             </ScrollView>
         </ScreenBackground>
     )
