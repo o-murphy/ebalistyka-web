@@ -1,9 +1,10 @@
 import { useTheme } from "react-native-paper";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { StyleProp, StyleSheet, View, ViewStyle } from "react-native";
 import CircularSlider from "./circularSlider/web";
 import CircularSliderNative from "./circularSlider/circularSliderNative";
-import { DeviceType, getDeviceTypeAsync } from "expo-device";
+import { DeviceType } from "expo-device";
+import useDeviceType from "../../hooks/deviceType";
 
 
 function degreesToTime(angle) {
@@ -38,14 +39,9 @@ export default function WindDirectionPicker({ value, onChange, style = null, dia
     props?: any
 }) {
 
-    const [devType, setDevType] = useState(DeviceType.PHONE)
     const theme = useTheme()
 
-    useEffect(() => {
-        getDeviceTypeAsync().then((deviceType) => {
-            setDevType(deviceType);
-        });
-    }, []);
+    const deviceType = useDeviceType()
 
     const sliderProps = {
         coerceToInt: false,
@@ -77,7 +73,7 @@ export default function WindDirectionPicker({ value, onChange, style = null, dia
     return (
         <View style={[style, styles.noSelect]} {...props} >
             {
-                devType === DeviceType.PHONE
+                deviceType === DeviceType.PHONE
                     ?
                     <CircularSliderNative
                         {...sliderValueHandler}

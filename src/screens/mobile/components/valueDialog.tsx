@@ -4,6 +4,9 @@ import { RulerSlider } from "../../../components/widgets/ruler/ruler"
 import NumericField from "./numericField"
 import { DimensionProps } from "../../../hooks/dimension"
 import { StyleSheet } from "react-native"
+import { DeviceType } from "expo-device";
+import useDeviceType from "../../../hooks/deviceType"
+
 
 interface ValueDialogProps {
     button: React.ReactElement;
@@ -34,6 +37,14 @@ const ValueDialog: React.FC<ValueDialogProps> = ({
     const [visible, setVisible] = useState(false);
     const [localValue, setLocalValue] = useState(dimension.asPref);
     const [localError, setLocalError] = useState<Error | null>(null);
+
+    const [showSlider, setShowSlider] = useState(false)
+
+    const deviceType = useDeviceType()
+
+    useEffect(() => {
+        setShowSlider((deviceType === DeviceType.PHONE || deviceType === DeviceType.TABLET) && enableSlider);
+    }, []);
 
     useEffect(() => {
         setLocalValue(dimension.asPref)
@@ -68,7 +79,7 @@ const ValueDialog: React.FC<ValueDialogProps> = ({
                             onValueChange={setLocalValue}
                             onError={setLocalError}
                         />
-                        {enableSlider && <ValueSlider dimension={dimension} value={localValue} onChange={setLocalValue} style={styles.slider} />}
+                        {showSlider && <ValueSlider dimension={dimension} value={localValue} onChange={setLocalValue} style={styles.slider} />}
 
                     </Dialog.Content>
                     <Dialog.Actions>

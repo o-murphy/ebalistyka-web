@@ -2,15 +2,18 @@ import React from 'react';
 import { PaperProvider } from 'react-native-paper';
 import RootScreenManager from './RootScreenManager';
 import { useThemeSwitch } from '../../context/themeContext';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 
 const MobileView = () => {
-    const {theme} = useThemeSwitch();
-    
+    const { theme } = useThemeSwitch();
+
     return (
-        <PaperProvider theme={theme}>
-            <RootScreenManager />
-        </PaperProvider>
+        <SafeAreaProvider>
+            <PaperProvider theme={theme}>
+                <RootScreenManager />
+            </PaperProvider>
+        </SafeAreaProvider>
     );
 };
 

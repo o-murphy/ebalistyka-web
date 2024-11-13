@@ -6,18 +6,24 @@ import { LookAngleDialog, TargetDistanceDialog, WindSpeedDialog } from "./shotPr
 
 const bigFABsLabels = ['Wind speed', 'Look angle', 'Distance'];
 
-const TopContainer = () => {
+export const TopContainerFabs = () => {
+    return (
+        <Surface style={styles.shotPropsFabContainer} elevation={0}>
+            <WindSpeedDialog button={<FAB size="medium" icon="windsock" style={styles.shotPropsFab} />} />
+            <LookAngleDialog button={<FAB size="medium" icon="angle-acute" style={styles.shotPropsFab} />} />
+            <TargetDistanceDialog button={<FAB size="medium" icon="map-marker-distance" style={styles.shotPropsFab} />} />
+        </Surface>
+    )
+}
+
+export const TopContainer = () => {
 
     return (
         <Surface style={styles.topContainer} elevation={1}>
             <ProfileTitle />
             <ShotPropertiesContainer />
 
-            <Surface style={styles.shotPropsFabContainer} elevation={0}>
-                <WindSpeedDialog button={<FAB size="medium" icon="windsock" style={styles.shotPropsFab} />} />
-                <LookAngleDialog button={<FAB size="medium" icon="angle-acute" style={styles.shotPropsFab} />} />
-                <TargetDistanceDialog button={<FAB size="medium" icon="map-marker-distance" style={styles.shotPropsFab} />} />
-            </Surface>
+            <TopContainerFabs />
 
             <Surface style={styles.shotPropsLabelContainer} elevation={0}>
                 {bigFABsLabels.map((text, index) => (
@@ -36,8 +42,8 @@ const styles = StyleSheet.create({
         minWidth: 320,
         aspectRatio: 1,
         padding: 8,
-        borderBottomRightRadius: 32,
-        borderBottomLeftRadius: 32,
+        borderBottomRightRadius: 16,
+        borderBottomLeftRadius: 16,
     },
     shotPropsFabContainer: {
         flex: 2,

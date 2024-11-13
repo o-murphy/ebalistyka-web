@@ -151,8 +151,8 @@ const ProfileDetails = () => {
 
     return (
         <Surface style={{
-            borderBottomLeftRadius: 32,
-            borderBottomRightRadius: 32,
+            borderBottomLeftRadius: 16,
+            borderBottomRightRadius: 16,
             overflow: "hidden",
         }}
             elevation={2}>

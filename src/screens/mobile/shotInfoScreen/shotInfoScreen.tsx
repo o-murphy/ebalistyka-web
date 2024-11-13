@@ -146,8 +146,8 @@ const styles = StyleSheet.create({
     },
     scrollViewContainer: {
         paddingBottom: 16,
-        borderBottomRightRadius: 32,
-        borderBottomLeftRadius: 32,
+        borderBottomRightRadius: 16,
+        borderBottomLeftRadius: 16,
     },
     infoRow: {
         flexDirection: "row",

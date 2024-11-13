@@ -1,5 +1,4 @@
-import { HorizontalTrajectoryChart, AdjustedTrajectoryChart } from "./trajectoryChart";
-import { HorizontalWindageChart, AdjustedWindageChart } from "./windageChart";
+import { HorizontalTrajectoryChart, AdjustedTrajectoryChart, HorizontalWindageChart, AdjustedWindageChart } from "./trajectoryChart";
 import DragChart from "./dragChart";
 import {ZeroTable, AdjustedTable} from "./trajectoryTable";
 import { TrajectoryReticle, AdjustedReticle } from "./relicle";

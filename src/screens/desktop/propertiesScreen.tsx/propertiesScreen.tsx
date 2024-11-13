@@ -11,15 +11,15 @@ const PropertiesScreen = ({ navigation }) => {
     return (
         <ScreenBackground>
             <ScrollView
-                style={{ flexDirection: "column", flex: 1, minWidth: 280, maxWidth: 320 }}
+                style={{ flexDirection: "column", flex: 1, minWidth: 280, maxWidth: 360 }}
                 keyboardShouldPersistTaps="always"
                 alwaysBounceVertical={false}
                 showsVerticalScrollIndicator={false}
             >
                 <WeaponCard />
-                <ProjectileCard />
+                {/* <ProjectileCard />
                 <BulletCard />
-                <ZeroAtmoCard />
+                <ZeroAtmoCard /> */}
             </ScrollView>
         </ScreenBackground>
     )

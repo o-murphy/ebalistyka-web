@@ -1,20 +1,13 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { createContext, useState, useContext, useEffect, ReactNode, useCallback, useMemo } from 'react';
+import { createContext, useState, useContext, useEffect, ReactNode, useCallback } from 'react';
 import parseA7P, { ProfileProps } from '../utils/parseA7P';
-import { CurrentConditionsProps, makeShot, prepareCalculator, PreparedZeroData, shootTheTarget } from '../utils/ballisticsCalculator';
-import { getGlobalUsePowderSensitivity, HitResult, setGlobalUsePowderSensitivity } from 'js-ballistics/dist/v2';
+import { makeShot, prepareCalculator, PreparedZeroData, shootTheTarget } from '../utils/ballisticsCalculator';
+import { Distance, getGlobalUsePowderSensitivity, HitResult, setGlobalUsePowderSensitivity } from 'js-ballistics/dist/v2';
 import debounce from '../utils/debounce';
 import { useCurrentConditions } from './currentConditions';
+import { DimensionProps, useDimension } from '../hooks/dimension';
+import { Unit } from 'js-ballistics';
 
-
-export enum CalculationState {
-  Error = -1,
-  NoData = 0,
-  ZeroUpdated = 1,
-  ConditionsUpdated = 2,
-  Complete = 3,
-  InvalidData = 4,
-}
 
 interface CalculationContextType {
   profileProperties: ProfileProps | null;
@@ -24,19 +17,13 @@ interface CalculationContextType {
   calculator: PreparedZeroData | null;
   hitResult: HitResult | null | Error;
   adjustedResult: HitResult | null | Error;
-  calcState: CalculationState;
-  setCalcState: React.Dispatch<React.SetStateAction<CalculationState>>;
-  // autoRefresh: boolean;
-  // setAutoRefresh: React.Dispatch<React.SetStateAction<boolean>>;
   fire: () => Promise<void>;
   inProgress: boolean;
-  trajectoryMode: TrajectoryMode,
-  setTrajectoryMode: React.Dispatch<React.SetStateAction<TrajectoryMode>>,
-  dataToDisplay: DataToDisplay,
-  setDataToDisplay: React.Dispatch<React.SetStateAction<DataToDisplay>>,
-  updMeasureErr: (props: { fkey: string, isError: boolean }) => void,
-  isLoaded: boolean,
-  setIsLoaded: (lodaded: boolean) => void,
+  isLoaded: boolean;
+  setIsLoaded: (lodaded: boolean) => void;
+
+  sightHeight: DimensionProps;
+  rTwist: DimensionProps;
 }
 
 
@@ -60,17 +47,17 @@ const loadUserData = async () => {
 }
 
 
-const useUserData = async (setProfileProperties, setIsLoaded) => {
-  const profileValue = await loadUserData()
+// const useUserData = async (setProfileProperties, setIsLoaded) => {
+//   const profileValue = await loadUserData()
 
-  if (profileValue !== null && profileValue !== 'null') {
-    setProfileProperties(JSON.parse(profileValue));
-    setIsLoaded(true); // Mark as loaded after attempting to load data
-  } else {
-    console.log("Loading defaults")
-    setProfileProperties(JSON.parse(defaultProfile))
-  }
-};
+//   if (profileValue !== null && profileValue !== 'null') {
+//     setProfileProperties(JSON.parse(profileValue));
+//     setIsLoaded(true); // Mark as loaded after attempting to load data
+//   } else {
+//     console.log("Loading defaults")
+//     setProfileProperties(JSON.parse(defaultProfile))
+//   }
+// };
 
 export enum TrajectoryMode {
   Zero = 1,
@@ -107,35 +94,48 @@ const prepareCurrentConditions = () => {
 
 export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [profileProperties, setProfileProperties] = useState<ProfileProps | null>(null);
-
-
-
-
-  const [calcState, setCalcState] = useState<CalculationState>(CalculationState.NoData);
   const [calculator, setCalculator] = useState<PreparedZeroData | null>(null);
   const [hitResult, setHitResult] = useState<HitResult | Error | null>(null);
   const [adjustedResult, setAdjustedResult] = useState<HitResult | Error | null>(null);
-
   const [isLoaded, setIsLoaded] = useState(false); // Track loading state
-
-  const [inProgress, setInProgress] = useState<boolean>(false)
-
-  const [trajectoryMode, setTrajectoryMode] = useState<TrajectoryMode>(TrajectoryMode.Adjusted)
-  const [dataToDisplay, setDataToDisplay] = useState<DataToDisplay>(DataToDisplay.Table);
-
-  const [measureErr, setMeasureErr] = useState({})
-
+  const [inProgress, setInProgress] = useState<boolean>(false);
   const currentConditions = prepareCurrentConditions()
 
-  const updMeasureErr = ({ fkey, isError }) => {
-    setMeasureErr((prev) => ({
-      ...prev,
-      ...{ [fkey]: isError },
-    }));
-  };
+  const sightHeight = useDimension({
+    measure: Distance, 
+    defUnit: Unit.Millimeter,
+    prefUnitFlag: "sizes",
+    min: 0,
+    max: 200,
+    precision: 1
+  })
+
+  const rTwist = useDimension({
+    measure: Distance, 
+    defUnit: Unit.Inch,
+    prefUnitFlag: "sizes",
+    min: 0,
+    max: 10,
+    precision: 0.01
+  })
 
   useEffect(() => {
-    useUserData(setProfileProperties, setIsLoaded); // Load data on mount
+    const useUserData = async () => {
+      const profileValue = await loadUserData()
+    
+      if (profileValue !== null && profileValue !== 'null') {
+        const _profile: ProfileProps = JSON.parse(profileValue)
+        console.log(profileValue)
+        setProfileProperties(_profile);
+        sightHeight.setAsDef(_profile.scHeight)
+        rTwist.setAsDef(_profile.rTwist / 100)
+        setIsLoaded(true); // Mark as loaded after attempting to load data
+      } else {
+        console.log("Loading defaults")
+        setProfileProperties(JSON.parse(defaultProfile))
+      }
+    };
+    useUserData();
   }, []);
 
   useEffect(() => {
@@ -145,18 +145,12 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
   }, [profileProperties, isLoaded]);
 
   const zero = () => {
-
     const preparedCalculator = prepareCalculator(profileProperties, currentConditions);
     setCalculator(preparedCalculator);
     return preparedCalculator;
   }
 
   const fire = async () => {
-    const allFieldsValid = Object.values(measureErr).every(value => value === false);
-    if (!allFieldsValid) {
-      setCalcState(CalculationState.InvalidData);
-      return;
-    }
 
     setInProgress(true); // Set loading state before beginning async operations
 
@@ -176,15 +170,12 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
 
             setHitResult(result);
             setAdjustedResult(adjustedResult);
-            setCalcState(result instanceof Error ? CalculationState.Error : CalculationState.Complete);
           } else {
             setHitResult(currentCalc.error);
-            setCalcState(CalculationState.Error);
           }
         }
       } catch (error) {
         console.error('Error during fire:', error);
-        setCalcState(CalculationState.Error);
       } finally {
         setInProgress(false); // Ensure loading state is reset after calculations
       }
@@ -210,7 +201,6 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
 
   const updateProfileProperties = (props: Partial<ProfileProps>) => {
     setProfileProperties((prev) => ({ ...prev, ...props }));
-    setCalcState(CalculationState.ZeroUpdated);
   };
 
   const debouncedProfileUpdate = useCallback(debounce(updateProfileProperties, 0), [updateProfileProperties]);
@@ -227,22 +217,14 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
       hitResult,
       adjustedResult,
 
-      calcState,
-      setCalcState,
-
       fire,
       inProgress,
 
-      trajectoryMode,
-      setTrajectoryMode,
-
-      dataToDisplay,
-      setDataToDisplay,
-
-      updMeasureErr,
-
       isLoaded,
       setIsLoaded,
+
+      sightHeight,
+      rTwist,
     }}>
       {children}
     </CalculationContext.Provider>

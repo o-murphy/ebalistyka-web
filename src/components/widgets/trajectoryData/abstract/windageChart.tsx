@@ -1,6 +1,6 @@
 import { Card, Text, useTheme } from 'react-native-paper';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { Angular, Distance, HitResult, UNew, UnitProps } from 'js-ballistics/dist/v2';
+import { Angular, Distance, HitResult, TrajectoryData, UNew, UnitProps } from 'js-ballistics/dist/v2';
 import getFractionDigits from '../../../../utils/fractionConvertor';
 import React from 'react';
 import { ToolTipRow } from './tooltipRow';
@@ -52,12 +52,13 @@ const WindageTooltip: React.FC<WindageTooltipProps> = ({ active = false, label =
 
 export interface WindageChartProps {
     results: HitResult | Error;
+    trajectory: TrajectoryData[];
     preferredUnits: any; 
     maxDistance: Distance;
 }
 
 export const WindageChart: React.FC<WindageChartProps> = ({
-    results, preferredUnits, maxDistance
+    results, trajectory, preferredUnits, maxDistance
 }) => {
     const theme = useTheme()
 
@@ -65,7 +66,7 @@ export const WindageChart: React.FC<WindageChartProps> = ({
         <Text>Can't display chart</Text>
     );
 
-    const result = results.trajectory.filter(row => row.distance.rawValue <= maxDistance.rawValue);
+    const result = trajectory;
 
     const data = result.map(row => ({
         distance: row.distance.In(preferredUnits.distance),

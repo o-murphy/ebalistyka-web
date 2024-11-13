@@ -67,7 +67,6 @@ export const TablesContent = () => {
             alwaysBounceVertical={false} 
             scrollToOverflowEnabled={false}
         >
-            <TableSettingsProvider>
                 <TableSettingsDialog visible={settingsVisible} setVisible={setSettingsVisible} />
 
                 <Surface
@@ -93,7 +92,6 @@ export const TablesContent = () => {
                     <TrajectoryTable hitResult={hitResult} style={{ flex: 1 }} />
                 </Surface>
 
-            </TableSettingsProvider>
         </ScrollViewSurface>
     )
 }
@@ -102,7 +100,7 @@ export const TablesContent = () => {
 const TablesScreen = ({ navigation }) => {
     return (
         <ScreenBackground>
-            <Surface style={{padding: 8, margin: 16, borderRadius: 32, aspectRatio: 1, flex: 1, maxWidth: 900}}>
+            <Surface style={{padding: 8, margin: 16, borderRadius: 16, aspectRatio: 1, flex: 1, maxWidth: 900}}>
                 <TablesContent />
             </Surface>
         </ScreenBackground>

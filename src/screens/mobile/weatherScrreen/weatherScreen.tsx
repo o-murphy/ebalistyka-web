@@ -42,7 +42,7 @@ const CurrentVelocity = () => {
                 <Text style={{ flex: 3 }}>
                     {`Muzzle velocity for ${currentTemp} ${currentTempSymbol} of powder temperature`}
                 </Text>
-                <Chip style={{ flex: 2 }}>
+                <Chip style={{ flex: 2 }} disabled>
                     {currentMuzzleVelocity} {velocitySymbol}
                 </Chip>
             </Surface>
@@ -59,7 +59,7 @@ const PowderSense = () => {
                 <Text style={{ flex: 3 }}>
                     Powder sensitivity
                 </Text>
-                <Chip style={{ flex: 2 }}>
+                <Chip style={{ flex: 2 }} disabled>
                     {(profileProperties.cTCoeff / 1000).toFixed(2)} %/15°C
                 </Chip>
             </Surface>
