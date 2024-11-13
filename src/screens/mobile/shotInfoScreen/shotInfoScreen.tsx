@@ -57,6 +57,7 @@ export const ShotInfoContent = () => {
     }, [adjustedResult]);
 
     const trajectory = adjustedResult instanceof HitResult ? adjustedResult.trajectory : null;
+    const speedOfSound = calculateSpeedOfSound();
 
     const rows = useMemo(() => {
         const targetDistanceRow = `${targetDistance.asString} ${targetDistance.symbol}`
@@ -70,8 +71,6 @@ export const ShotInfoContent = () => {
             trajectory[0].velocity,
             preferredUnits.velocity
         );
-
-        const speedOfSound = calculateSpeedOfSound();
 
         const velocityOnTarget = hold?.velocity
             ? formatUnit(hold.velocity, preferredUnits.velocity, 0)
