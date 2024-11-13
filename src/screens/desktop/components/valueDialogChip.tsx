@@ -5,6 +5,21 @@ import { DimensionDialog, DimensionFieldProps, NumericDialog, NumericFieldProps 
 import { DimensionProps, NumeralProps } from "../../../hooks/dimension";
 
 
+export interface DimensionDialogChipProps {
+    title: string; 
+    icon: string; 
+    enableSlider?: boolean;
+    dimension: DimensionProps
+}
+
+export interface NumericDialogChipProps {
+    title: string; 
+    icon: string; 
+    enableSlider?: boolean;
+    numeral: NumeralProps;
+}
+
+
 const PressableValue = ({ icon, value, title, onPress = null }) => {
     return (
         <Pressable onPress={onPress} >
@@ -20,12 +35,12 @@ const PressableValue = ({ icon, value, title, onPress = null }) => {
 }
 
 
-const DimensionDialogChip = ({ title, icon, dimension }: {title: string, icon: string, dimension: DimensionProps}) => {
+const DimensionDialogChip: React.FC<DimensionDialogChipProps> = ({ title, icon, dimension, enableSlider = false }) => {
     return (
         <DimensionDialog
             label={title}
             icon={icon}
-            enableSlider={false}
+            enableSlider={enableSlider}
             dimension={dimension}
             button={
                 <PressableValue
@@ -38,12 +53,12 @@ const DimensionDialogChip = ({ title, icon, dimension }: {title: string, icon: s
     )
 }
 
-const NumericDialogChip = ({ title, icon, numeral }: {title: string, icon: string, numeral: NumeralProps}) => {
+const NumericDialogChip: React.FC<NumericDialogChipProps> = ({ title, icon, numeral, enableSlider = false}) => {
     return (
         <NumericDialog
             label={title}
             icon={icon}
-            enableSlider={false}
+            enableSlider={enableSlider}
             numeral={numeral}
             button={
                 <PressableValue

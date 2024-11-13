@@ -64,23 +64,22 @@ const TopContainer = () => {
 
 
 const CurrentShot = () => {
-    const { profileProperties, scHeight, rTwist, zeroDistance, cZeroWPitch, fire } = useCalculator();
+    const { profileProperties, fire } = useCalculator();
 
     const currentConditions = useCurrentConditions();
 
     useEffect(() => {
         if (profileProperties && currentConditions) {
             fire();
-            console.log("TRIGGER")
         }
     }, [
         currentConditions,
 
-        scHeight.value,
-        rTwist.value,
-        zeroDistance.value,
-        cZeroWPitch.value,
-        profileProperties.twistDir,
+        // scHeight.value,
+        // rTwist.value,
+        // zeroDistance.value,
+        // cZeroWPitch.value,
+        // profileProperties.twistDir,
     
     
     ]);

@@ -44,7 +44,7 @@ export const Ruler = ({min, max, step, width, snapTickSize}) => {
   const ticks = []
 
   while (cur <= max) {
-    ticks.push(<View style={{height: snapTickSize * step}}>
+    ticks.push(<View key={cur} style={{height: snapTickSize * step}}>
       <View style={{height: 1, width: width, backgroundColor: theme.colors.outline }} />
     </View>)
     cur += step;
@@ -69,7 +69,7 @@ export const Labels = ({min, max, step, snapTickSize, fraction}) => {
   while (cur <= max) {
 
 
-    ticks.push(<View style={{height: snapTickSize * step }}>
+    ticks.push(<View key={cur} style={{height: snapTickSize * step }}>
       <Text style={{
         fontSize: fontSize, 
         textAlign: "center",

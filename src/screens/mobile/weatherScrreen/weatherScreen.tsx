@@ -1,12 +1,13 @@
 import { StyleSheet } from "react-native";
 import { Button, Chip, FAB, Surface, Switch, Text } from "react-native-paper";
-import { ScreenBackground, ScrollViewSurface } from "../components";
+import { NumericDialog, ScreenBackground, ScrollViewSurface } from "../components";
 import { useCalculator } from "../../../context/profileContext";
-import { WeatherHumidityDialog, WeatherPowderTemperatureDialog, WeatherPressureDialog, WeatherTemperatureDialog } from "./components";
+import { WeatherPressureDialog, WeatherTemperatureDialog } from "./components";
 import { HitResult, Unit, Velocity } from "js-ballistics/dist/v2";
 import { useCurrentConditions } from "../../../context/currentConditions";
-import { useDimension } from "../../../hooks/dimension";
+import { numerals, useDimension } from "../../../hooks/dimension";
 import { useEffect } from "react";
+import { DimensionDialogChip } from "../../desktop/components";
 
 
 
@@ -71,25 +72,16 @@ const PowderSense = () => {
 const PowderSenseValue = () => {
     const { powderTemperature } = useCurrentConditions()
 
-    const currentTemp = powderTemperature.asString
-    const currentTempSymbol = powderTemperature.symbol
     return (
-        <WeatherPowderTemperatureDialog button={
-            <Button
-                mode="outlined"
-                icon={"thermometer"}
-                onPress={() => console.log('cTemp')}
-                style={styles.fabStyle}
-            >
-                Powder temperature {currentTemp} {currentTempSymbol}
-            </Button>
-        } />
+        <Surface style={{marginHorizontal: 16}} elevation={0}>
+            <DimensionDialogChip icon={"thermometer"} title={"Powder temperature"} dimension={powderTemperature} enableSlider={true}/>
+        </Surface>
     )
 }
 
 
 export const WeatherTopContainer = () => {
-    const { currentConditions, updateCurrentConditions } = useCurrentConditions()
+    const { currentConditions, updateCurrentConditions, humidity } = useCurrentConditions()
     const { usePowderSens, useDifferentPowderTemperature } = currentConditions
 
     const onTogglePowderSens = () => {
@@ -117,15 +109,22 @@ export const WeatherTopContainer = () => {
                         style={styles.fabStyle}
                     />
                 } />
-                <WeatherHumidityDialog button={
-                    <FAB
-                        size="small"
-                        icon={"water"}
-                        onPress={() => console.log('Wind')}
-                        label={"50 %"}
-                        style={styles.fabStyle}
-                    />
-                } />
+
+                <NumericDialog 
+                    button={
+                        <FAB
+                            size="small"
+                            icon={"water"}
+                            onPress={() => console.log('Wind')}
+                            label={"50 %"}
+                            style={styles.fabStyle}
+                        />
+                    }
+                    label="Humidity"
+                    icon="water"
+                    numeral={humidity}
+                    enableSlider
+                />
 
                 <WeatherPressureDialog button={
                     <FAB

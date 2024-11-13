@@ -84,8 +84,9 @@ export const DimensionDialog: React.FC<DimensionDialogProps> = ({
     const deviceType = useDeviceType()
 
     useEffect(() => {
+        console.log("ENSL", enableSlider, deviceType, DeviceType.PHONE, deviceType, DeviceType.TABLET)
         setShowSlider((deviceType === DeviceType.PHONE || deviceType === DeviceType.TABLET) && enableSlider);
-    }, []);
+    }, [deviceType]);
 
     useEffect(() => {
         setLocalValue(dimension.asPref)
@@ -148,7 +149,7 @@ export const NumericDialog: React.FC<NumericDialogProps> = ({
 
     useEffect(() => {
         setShowSlider((deviceType === DeviceType.PHONE || deviceType === DeviceType.TABLET) && enableSlider);
-    }, []);
+    }, [deviceType]);
 
     useEffect(() => {
         setLocalValue(numeral.value)

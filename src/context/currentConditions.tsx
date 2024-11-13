@@ -1,68 +1,10 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createContext, useState, useContext, useEffect, ReactNode } from 'react';
 import { CurrentConditionsProps } from '../utils/ballisticsCalculator';
-import { DimensionProps, useDimension, UseDimensionArgs } from '../hooks/dimension';
-import { Unit, Pressure, Temperature, Velocity, Angular, Distance } from 'js-ballistics/dist/v2';
+import { DimensionProps, useDimension, dimensions, useNumeral, numerals, NumeralProps } from '../hooks/dimension';
 
 
-const dimensions: Record<string, UseDimensionArgs> = {
-    temperature: {
-        measure: Temperature,
-        defUnit: Unit.Celsius,
-        prefUnitFlag: "temperature",
-        min: -50,
-        max: 50,
-        precision: 2
-    },
-    powderTemperature: {
-        measure: Temperature,
-        defUnit: Unit.Celsius,
-        prefUnitFlag: "temperature",
-        min: -50,
-        max: 50,
-        precision: 2
-    },
-    pressure: {
-        measure: Pressure,
-        defUnit: Unit.hPa,
-        prefUnitFlag: "pressure",
-        min: 870,
-        max: 1084,
-        precision: 1
-    },
-    windSpeed: {
-        measure: Velocity,
-        defUnit: Unit.MPS,
-        prefUnitFlag: "velocity",
-        min: 0,
-        max: 100,
-        precision: 1
-    },
-    windDirection: {
-        measure: Angular,
-        defUnit: Unit.Degree,
-        prefUnitFlag: "angular",
-        min: 0,
-        max: 360,
-        precision: 1
-    },
-    lookAngle: {
-        measure: Angular,
-        defUnit: Unit.Degree,
-        prefUnitFlag: "angular",
-        min: -90,
-        max: 90,
-        precision: 0.1
-    },
-    targetDistance: {
-        measure: Distance,
-        defUnit: Unit.Meter,
-        prefUnitFlag: "distance",
-        min: 0,
-        max: 3000,
-        precision: 1
-    }
-}
+
 
 
 interface ConditionsContextType {
@@ -71,11 +13,12 @@ interface ConditionsContextType {
     updateCurrentConditions: (value: Partial<CurrentConditionsProps>) => void;
     temperature: DimensionProps;
     pressure: DimensionProps;
-    windSpeed: DimensionProps,
-    windDirection: DimensionProps,
-    lookAngle: DimensionProps,
-    targetDistance: DimensionProps,
-    powderTemperature: DimensionProps
+    windSpeed: DimensionProps;
+    windDirection: DimensionProps;
+    lookAngle: DimensionProps;
+    targetDistance: DimensionProps;
+    powderTemperature: DimensionProps;
+    humidity: NumeralProps;
 }
 
 
@@ -92,6 +35,8 @@ export const ConditionsProvider: React.FC<{ children: ReactNode }> = ({ children
     const lookAngle = useDimension(dimensions.lookAngle)
     const targetDistance = useDimension(dimensions.targetDistance)
 
+    const humidity = useNumeral(numerals.humidity)
+
     useEffect(() => {
         const load = async () => {
             const conditionsValue = await AsyncStorage.getItem('currentConditions');
@@ -105,6 +50,7 @@ export const ConditionsProvider: React.FC<{ children: ReactNode }> = ({ children
             windDirection.setAsDef(conditionsValueParsed.windDirection || 0)
             lookAngle.setAsDef(conditionsValueParsed.lookAngle || 0)
             targetDistance.setAsDef(conditionsValueParsed.targetDistance || 100)
+            humidity.setValue(conditionsValueParsed.humidity)
             console.log("Loaded conditions")
         };
         load();    
@@ -122,6 +68,7 @@ export const ConditionsProvider: React.FC<{ children: ReactNode }> = ({ children
                     windDirection: windDirection.asDef,
                     lookAngle: lookAngle.asDef,
                     targetDistance: targetDistance.asDef,
+                    humidity: humidity.value,
                 });
                 await AsyncStorage.setItem('currentConditions', jsonValue);
             } catch (error) {
@@ -156,6 +103,7 @@ export const ConditionsProvider: React.FC<{ children: ReactNode }> = ({ children
             windDirection,
             lookAngle,
             targetDistance,
+            humidity,
         }}>
             {children}
         </ConditionsContext.Provider>

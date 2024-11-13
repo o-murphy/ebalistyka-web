@@ -2,10 +2,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createContext, useState, useContext, useEffect, ReactNode } from 'react';
 import parseA7P, { ProfileProps } from '../utils/parseA7P';
 import { makeShot, prepareCalculator, PreparedZeroData, shootTheTarget } from '../utils/ballisticsCalculator';
-import { Angular, Distance, getGlobalUsePowderSensitivity, HitResult, setGlobalUsePowderSensitivity, Temperature, Velocity } from 'js-ballistics/dist/v2';
+import { getGlobalUsePowderSensitivity, HitResult, setGlobalUsePowderSensitivity } from 'js-ballistics/dist/v2';
 import { useCurrentConditions } from './currentConditions';
-import { DimensionProps, NumeralProps, useDimension, UseDimensionArgs, useNumeral, UseNumeralArgs } from '../hooks/dimension';
-import { Unit } from 'js-ballistics';
+import { DimensionProps, NumeralProps, useDimension, useNumeral, numerals, dimensions } from '../hooks/dimension';
 
 
 interface CalculationContextType {
@@ -28,6 +27,14 @@ interface CalculationContextType {
   cMuzzleVelocity: DimensionProps;
   cZeroPTemperature: DimensionProps;
   cTCoeff: NumeralProps;
+
+  bDiameter: DimensionProps;
+  bLength: DimensionProps;
+  bWeight: DimensionProps;
+
+  cZeroAirTemperature: DimensionProps;
+  cZeroAirPressure: DimensionProps;
+  cZeroAirHumidity: NumeralProps;
 }
 
 
@@ -52,67 +59,7 @@ const prepareCurrentConditions = () => {
 }
 
 
-const dimensions: Record<string, UseDimensionArgs> = {
-  scHeight: {
-    measure: Distance,
-    defUnit: Unit.Millimeter,
-    prefUnitFlag: "sizes",
-    min: 0,
-    max: 200,
-    precision: 1
-  },
-  rTwist: {
-    measure: Distance,
-    defUnit: Unit.Inch,
-    prefUnitFlag: "sizes",
-    min: 0,
-    max: 100,
-    precision: 0.01
-  },
-  cZeroWPitch: {
-    measure: Angular,
-    defUnit: Unit.Degree,
-    prefUnitFlag: "angular",
-    min: -90,
-    max: 90,
-    precision: 1
-  },
-  zeroDistance: {
-    measure: Distance,
-    defUnit: Unit.Meter,
-    prefUnitFlag: "distance",
-    min: 0,
-    max: 3000,
-    precision: 1
-  },
-  cMuzzleVelocity: {
-    measure: Velocity,
-    defUnit: Unit.MPS,
-    prefUnitFlag: "velocity",
-    min: 0,
-    max: 2000,
-    precision: 1
-  },
-  cZeroPTemperature: {
-    measure: Temperature,
-    defUnit: Unit.Celsius,
-    prefUnitFlag: "temperature",
-    min: -50,
-    max: 50,
-    precision: 1
-  }
-}
 
-const numerals: Record<string, UseNumeralArgs> = {
-  cTCoeff: {
-    symbol: "%/15°C",
-    range: {
-        min: 0,
-        max: 100,
-        accuracy: 2
-    }
-  }
-}
 
 export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [profileProperties, setProfileProperties] = useState<ProfileProps | null>(null);
@@ -134,6 +81,14 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
 
   const cTCoeff = useNumeral(numerals.cTCoeff)
 
+  const bDiameter = useDimension(dimensions.bDiameter)
+  const bLength = useDimension(dimensions.bLength)
+  const bWeight = useDimension(dimensions.bWeight)
+
+  const cZeroAirTemperature = useDimension(dimensions.temperature)
+  const cZeroAirPressure = useDimension(dimensions.pressure)
+  const cZeroAirHumidity = useNumeral(numerals.humidity)
+
   const setParsedProps = (props: ProfileProps) => {
     setProfileProperties(props)
 
@@ -145,6 +100,14 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
     cMuzzleVelocity.setAsDef((props.cMuzzleVelocity ?? 8000) / 10)
     cZeroPTemperature.setAsDef(props.cZeroPTemperature ?? 15)
     cTCoeff.setValue((props.cTCoeff ?? 1000) / 1000)
+
+    bDiameter.setAsDef((props.bDiameter ?? 338) / 1000)
+    bLength.setAsDef((props.bLength ?? 1.8) / 1000)
+    bWeight.setAsDef((props.bWeight ?? 300) / 10)
+
+    cZeroAirTemperature.setAsDef(props.cZeroAirTemperature ?? 15)
+    cZeroAirPressure.setAsDef((props.cZeroAirPressure ?? 10000) / 10)
+    cZeroAirHumidity.setValue(props.cZeroAirHumidity ?? 50)
   }
 
   useEffect(() => {
@@ -173,7 +136,13 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
           zeroDistance: zeroDistance.asDef,
           cMuzzleVelocity: cMuzzleVelocity.asDef * 10,
           cZeroPTemperature: cZeroPTemperature.asDef,
-          cTCoeff: cTCoeff.value * 1000
+          cTCoeff: cTCoeff.value * 1000,
+          bDiameter: bDiameter.asDef * 1000,
+          bLength: bLength.asDef * 1000,
+          bWeight: bWeight.asDef * 10,
+          cZeroAirHumidity: cZeroAirHumidity.value,
+          cZeroAirTemperature: cZeroAirTemperature.asDef,
+          cZeroAirPressure: cZeroAirPressure.asDef * 10
         });
         await AsyncStorage.setItem('profileProperties', jsonValue);
       } catch (error) {
@@ -278,6 +247,14 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
       cMuzzleVelocity,
       cZeroPTemperature,
       cTCoeff,
+
+      bDiameter,
+      bLength,
+      bWeight,
+
+      cZeroAirTemperature,
+      cZeroAirPressure,
+      cZeroAirHumidity,
     }}>
       {children}
     </CalculationContext.Provider>

@@ -1,10 +1,10 @@
-import { Text, Chip } from "react-native-paper";
+import { Text, Chip, Divider } from "react-native-paper";
 import React, { useMemo } from "react";
 import CustomCard from "./customCard";
 import { StyleSheet, View } from "react-native";
 import { useCalculator } from "../../context/profileContext";
-import { BulletLengthField, BulletWeightField, CaliberField } from "../widgets/measureFields";
 import { TextInputChip } from "../widgets/inputChip";
+import { DimensionDialogChip } from "../../screens/desktop/components";
 
 interface BulletCardProps {
     expanded?: boolean;
@@ -50,17 +50,20 @@ const DragModelEdit = () => {
 }
 
 const BulletCard: React.FC<BulletCardProps> = ({ expanded = true }) => {
-    const { isLoaded } = useCalculator()
+    const { isLoaded, bDiameter, bLength, bWeight } = useCalculator()
 
     if (!isLoaded) {
-        return <CustomCard title={"Weapon"} expanded={expanded} />
+        return <CustomCard title={"Bullet"} expanded={expanded} />
     }
     return (
         <CustomCard title={"Bullet"} expanded={expanded}>
             <BulletName />
-            <CaliberField />
-            <BulletWeightField />
-            <BulletLengthField />
+            <DimensionDialogChip icon={"diameter-variant"} title={"Bullet diameter"} dimension={bDiameter} />
+            <Divider />
+            <DimensionDialogChip icon={"ruler"} title={"Bullet length"} dimension={bLength} />
+            <Divider />
+            <DimensionDialogChip icon={"weight"} title={"Bullet weight"} dimension={bWeight} />
+            <Divider />
             <DragModelEdit />
         </CustomCard>
     );

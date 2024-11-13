@@ -1,9 +1,10 @@
-import { WeatherTemperatureDialog, WeatherPressureDialog, WeatherHumidityDialog, WeatherPowderTemperatureDialog } from "./weatherValueDialogs";
+import { WeatherTemperatureDialog, WeatherPressureDialog, 
+    // WeatherPowderTemperatureDialog 
+} from "./weatherValueDialogs";
 
 
 export {
     WeatherTemperatureDialog,
     WeatherPressureDialog,
-    WeatherHumidityDialog,
-    WeatherPowderTemperatureDialog,
+    // WeatherPowderTemperatureDialog,
 };
