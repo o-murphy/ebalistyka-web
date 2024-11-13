@@ -1,11 +1,10 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { createContext, useState, useContext, useEffect, ReactNode, useCallback } from 'react';
+import { createContext, useState, useContext, useEffect, ReactNode } from 'react';
 import parseA7P, { ProfileProps } from '../utils/parseA7P';
 import { makeShot, prepareCalculator, PreparedZeroData, shootTheTarget } from '../utils/ballisticsCalculator';
 import { Distance, getGlobalUsePowderSensitivity, HitResult, setGlobalUsePowderSensitivity } from 'js-ballistics/dist/v2';
-import debounce from '../utils/debounce';
 import { useCurrentConditions } from './currentConditions';
-import { DimensionProps, useDimension } from '../hooks/dimension';
+import { DimensionProps, useDimension, UseDimensionArgs } from '../hooks/dimension';
 import { Unit } from 'js-ballistics';
 
 
@@ -20,56 +19,12 @@ interface CalculationContextType {
   fire: () => Promise<void>;
   inProgress: boolean;
   isLoaded: boolean;
-  setIsLoaded: (lodaded: boolean) => void;
+  setIsLoaded: (loaded: boolean) => void;
 
-  sightHeight: DimensionProps;
+  scHeight: DimensionProps;
   rTwist: DimensionProps;
 }
 
-
-const saveProfileProperties = async (profileProperties) => {
-  try {
-    const jsonValue = JSON.stringify(profileProperties);
-    await AsyncStorage.setItem('profileProperties', jsonValue);
-  } catch (error) {
-    console.error('Failed to save profile properties:', error);
-  }
-};
-
-
-const loadUserData = async () => {
-  try {
-    const profileValue = await AsyncStorage.getItem('profileProperties');
-    return profileValue
-  } catch (error) {
-    console.error('Failed to load user data:', error);
-  }
-}
-
-
-// const useUserData = async (setProfileProperties, setIsLoaded) => {
-//   const profileValue = await loadUserData()
-
-//   if (profileValue !== null && profileValue !== 'null') {
-//     setProfileProperties(JSON.parse(profileValue));
-//     setIsLoaded(true); // Mark as loaded after attempting to load data
-//   } else {
-//     console.log("Loading defaults")
-//     setProfileProperties(JSON.parse(defaultProfile))
-//   }
-// };
-
-export enum TrajectoryMode {
-  Zero = 1,
-  Adjusted = 2
-}
-
-export enum DataToDisplay {
-  Table = 1,
-  Chart = 2,
-  Reticle = 3,
-  DragModel = 4,
-}
 
 export const CalculationContext = createContext<CalculationContextType | null>(null);
 
@@ -78,7 +33,6 @@ const prepareCurrentConditions = () => {
   const cc = useCurrentConditions()
 
   return {
-    // ...defaultConditions,
     temperature: cc.temperature.asDef,
     pressure: cc.pressure.asDef,
     humidity: cc.currentConditions.humidity,
@@ -92,6 +46,27 @@ const prepareCurrentConditions = () => {
   }
 }
 
+
+const dimensions: Record<string, UseDimensionArgs> = {
+  scHeight: {
+    measure: Distance,
+    defUnit: Unit.Millimeter,
+    prefUnitFlag: "sizes",
+    min: 0,
+    max: 200,
+    precision: 1
+  },
+  rTwist: {
+    measure: Distance,
+    defUnit: Unit.Inch,
+    prefUnitFlag: "sizes",
+    min: 0,
+    max: 100,
+    precision: 0.01
+  }
+}
+
+
 export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [profileProperties, setProfileProperties] = useState<ProfileProps | null>(null);
   const [calculator, setCalculator] = useState<PreparedZeroData | null>(null);
@@ -99,53 +74,59 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
   const [adjustedResult, setAdjustedResult] = useState<HitResult | Error | null>(null);
   const [isLoaded, setIsLoaded] = useState(false); // Track loading state
   const [inProgress, setInProgress] = useState<boolean>(false);
+
   const currentConditions = prepareCurrentConditions()
 
-  const sightHeight = useDimension({
-    measure: Distance, 
-    defUnit: Unit.Millimeter,
-    prefUnitFlag: "sizes",
-    min: 0,
-    max: 200,
-    precision: 1
-  })
+  const scHeight = useDimension(dimensions.scHeight)
 
-  const rTwist = useDimension({
-    measure: Distance, 
-    defUnit: Unit.Inch,
-    prefUnitFlag: "sizes",
-    min: 0,
-    max: 10,
-    precision: 0.01
-  })
+  const rTwist = useDimension(dimensions.rTwist)
+
 
   useEffect(() => {
-    const useUserData = async () => {
-      const profileValue = await loadUserData()
-    
+    const load = async () => {
+      const profileValue = await AsyncStorage.getItem('profileProperties')
+      const profileValueParsed: ProfileProps = JSON.parse(profileValue || defaultProfile)
       if (profileValue !== null && profileValue !== 'null') {
-        const _profile: ProfileProps = JSON.parse(profileValue)
-        console.log(profileValue)
-        setProfileProperties(_profile);
-        sightHeight.setAsDef(_profile.scHeight)
-        rTwist.setAsDef(_profile.rTwist / 100)
-        setIsLoaded(true); // Mark as loaded after attempting to load data
-      } else {
-        console.log("Loading defaults")
-        setProfileProperties(JSON.parse(defaultProfile))
+
+        setProfileProperties(profileValueParsed)
+
+        scHeight.setAsDef(profileValueParsed.scHeight || 2)
+        rTwist.setAsDef(profileValueParsed.rTwist / 100 || 10)
+
+        setIsLoaded(true)
+        console.log("loaded profile cache")
       }
     };
-    useUserData();
+    load();
   }, []);
 
   useEffect(() => {
-    if (isLoaded) { // Only save if data has been loaded
-      saveProfileProperties(profileProperties); // Save profile properties whenever it changes
-    }
-  }, [profileProperties, isLoaded]);
+    const save = async (profileProperties) => {
+      try {
+        const jsonValue = JSON.stringify({
+          ...profileProperties,
+          rTwist: rTwist.asDef * 100,
+          scHeight: scHeight.asDef,
+        });
+        await AsyncStorage.setItem('profileProperties', jsonValue);
+      } catch (error) {
+        console.error('Failed to cache profile:', error);
+      }
+    };
+    save(profileProperties);
+  }, [
+    profileProperties,
+    scHeight,
+    rTwist
+  ]);
 
   const zero = () => {
-    const preparedCalculator = prepareCalculator(profileProperties, currentConditions);
+    const _profileProperties = {
+      ...profileProperties,
+      rTwist: rTwist.asDef * 100,
+      scHeight: scHeight.asDef,
+    }
+    const preparedCalculator = prepareCalculator(_profileProperties, currentConditions);
     setCalculator(preparedCalculator);
     return preparedCalculator;
   }
@@ -203,15 +184,13 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
     setProfileProperties((prev) => ({ ...prev, ...props }));
   };
 
-  const debouncedProfileUpdate = useCallback(debounce(updateProfileProperties, 0), [updateProfileProperties]);
-
   return (
     <CalculationContext.Provider value={{
       profileProperties,
 
       fetchBinaryFile,
       setProfileProperties,
-      updateProfileProperties: debouncedProfileUpdate,
+      updateProfileProperties,
 
       calculator,
       hitResult,
@@ -223,7 +202,7 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
       isLoaded,
       setIsLoaded,
 
-      sightHeight,
+      scHeight,
       rTwist,
     }}>
       {children}

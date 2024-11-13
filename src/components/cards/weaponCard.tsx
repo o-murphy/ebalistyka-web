@@ -99,7 +99,7 @@ const ValueDialogChip = ({title, icon, dimension}) => {
 }
 
 const WeaponCard: React.FC<WeaponCardProps> = ({ expanded = true }) => {
-    const { isLoaded, sightHeight, rTwist } = useCalculator()
+    const { isLoaded, scHeight, rTwist } = useCalculator()
 
     if (!isLoaded) {
         return <CustomCard title={"Weapon"} expanded={expanded} />
@@ -108,7 +108,7 @@ const WeaponCard: React.FC<WeaponCardProps> = ({ expanded = true }) => {
         <CustomCard title={"Weapon"} expanded={expanded}>
             <WeaponName />
 
-            <ValueDialogChip icon={"crosshairs"} title={"Sight height"} dimension={sightHeight}/>
+            <ValueDialogChip icon={"crosshairs"} title={"Sight height"} dimension={scHeight}/>
             <ValueDialogChip icon={"screw-flat-top"} title={"Twist"} dimension={rTwist}/>
 
 
