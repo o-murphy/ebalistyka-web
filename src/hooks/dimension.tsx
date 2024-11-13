@@ -29,7 +29,7 @@ export interface DimensionProps {
     asPref: number;
     setAsPref: (value: number) => void;
     rangePref: DimensionRange;
-    reset: () => void;
+    // reset: () => void;
     accuracy: number;
 }
 
@@ -124,7 +124,49 @@ export const useDimension = ({
         asPref,
         setAsPref,
         rangePref,
-        reset,
+        // reset,
         accuracy
     };
 };
+
+
+export interface NumeralRange {
+    min: number;
+    max: number;
+    accuracy: number;
+}
+
+
+
+export interface UseNumeralArgs {
+    symbol: string;
+    range: NumeralRange;
+}
+
+export interface NumeralProps {
+    range: NumeralRange;
+    value: number;
+    setValue: (value: number) => void;
+    isValid: boolean;
+    asString: string;
+    symbol: string;
+    // reset: () => void;
+    accuracy: number;
+}
+
+export const useNumeral = ({symbol, range}: UseNumeralArgs): NumeralProps => {
+
+    const [value, setValue] = useState(0);
+
+    const {min, max, accuracy} = range;
+
+    const isValid = useMemo(() => value >= min && value <= max, [value])
+
+    const asString = useMemo(() => `${value.toFixed(accuracy)} ${symbol}`, [value])
+
+    return {
+        value, setValue,
+        range, symbol, asString,
+        isValid, accuracy
+    }
+}

@@ -1,7 +1,8 @@
 import { Chip, Icon, Surface, Text } from "react-native-paper";
 import React from "react";
 import { Pressable, StyleSheet } from "react-native";
-import { ValueDialog } from "../../mobile/components"
+import { DimensionDialog, DimensionFieldProps, NumericDialog, NumericFieldProps } from "../../mobile/components"
+import { DimensionProps, NumeralProps } from "../../../hooks/dimension";
 
 
 const PressableValue = ({ icon, value, title, onPress = null }) => {
@@ -19,9 +20,9 @@ const PressableValue = ({ icon, value, title, onPress = null }) => {
 }
 
 
-const ValueDialogDimensionChip = ({ title, icon, dimension }) => {
+const DimensionDialogChip = ({ title, icon, dimension }: {title: string, icon: string, dimension: DimensionProps}) => {
     return (
-        <ValueDialog
+        <DimensionDialog
             label={title}
             icon={icon}
             enableSlider={false}
@@ -31,6 +32,24 @@ const ValueDialogDimensionChip = ({ title, icon, dimension }) => {
                     icon={icon}
                     title={title}
                     value={`${dimension.asString} ${dimension.symbol}`}
+                />
+            }
+        />
+    )
+}
+
+const NumericDialogChip = ({ title, icon, numeral }: {title: string, icon: string, numeral: NumeralProps}) => {
+    return (
+        <NumericDialog
+            label={title}
+            icon={icon}
+            enableSlider={false}
+            numeral={numeral}
+            button={
+                <PressableValue
+                    icon={icon}
+                    title={title}
+                    value={`${numeral.value.toFixed(numeral.range.accuracy)} ${numeral.symbol}`}
                 />
             }
         />
@@ -47,4 +66,7 @@ const styles = StyleSheet.create({
     },
 })
 
-export default ValueDialogDimensionChip;
+export {
+    DimensionDialogChip,
+    NumericDialogChip,
+};

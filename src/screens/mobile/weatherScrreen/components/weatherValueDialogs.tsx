@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react"
 import { Dialog, FAB, HelperText, Portal, TextInput } from "react-native-paper"
-import { ValueDialog, ValueDialogProps, ValueDialogStyles, ValueSlider } from "../../components";
+import { DimensionDialog, DimensionDialogProps, ValueDialogStyles, DimensionSlider } from "../../components";
 import { DoubleSpinBox, SpinBoxProps } from "../../../../components/widgets/doubleSpinBox";
 import { useCurrentConditions } from "../../../../context/currentConditions";
 
 
-const ValueDialogHumidity: React.FC<Partial<ValueDialogProps>> = ({
+const ValueDialogHumidity: React.FC<Partial<DimensionDialogProps>> = ({
     button, fieldKey, label, icon, autofocus = false, enableSlider = false
 }) => {
     const { currentConditions, updateCurrentConditions } = useCurrentConditions();
@@ -61,7 +61,7 @@ const ValueDialogHumidity: React.FC<Partial<ValueDialogProps>> = ({
                     <Dialog.Content style={ValueDialogStyles.dialogContent}>
                         <DoubleSpinBox value={localValue} onValueChange={setLocalValue} onError={setError} {...fieldProps} />
                         {error && <HelperText type="error" visible={!!error}>{error.message}</HelperText>}
-                        {enableSlider && <ValueSlider fieldProps={fieldProps} value={localValue} onChange={setLocalValue} style={ValueDialogStyles.slider} />}
+                        {enableSlider && <DimensionSlider fieldProps={fieldProps} value={localValue} onChange={setLocalValue} style={ValueDialogStyles.slider} />}
                     </Dialog.Content>
                     <Dialog.Actions>
                         {!error && <FAB size="small" icon="check" mode="flat" variant="secondary" onPress={onSubmit} />}
@@ -77,7 +77,7 @@ const ValueDialogHumidity: React.FC<Partial<ValueDialogProps>> = ({
 const WeatherTemperatureDialog: React.FC<{ button: React.ReactElement }> = ({ button }) => {
     const { temperature } = useCurrentConditions()
     return (
-        <ValueDialog
+        <DimensionDialog
             button={button}
             label="Temperature"
             icon="thermometer"
@@ -91,7 +91,7 @@ const WeatherPowderTemperatureDialog: React.FC<{ button: React.ReactElement }> =
     const { powderTemperature } = useCurrentConditions()
 
     return (
-        <ValueDialog
+        <DimensionDialog
             button={button}
             label="Powder temperature"
             icon="thermometer"
@@ -105,7 +105,7 @@ const WeatherPressureDialog: React.FC<{ button: React.ReactElement }> = ({ butto
     const { pressure } = useCurrentConditions()
 
     return (
-        <ValueDialog
+        <DimensionDialog
             button={button}
             label="Pressure"
             icon="thermometer"

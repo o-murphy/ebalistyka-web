@@ -2,7 +2,9 @@ import React, { useMemo } from "react";
 import CustomCard from "./customCard";
 import { useCalculator } from "../../context/profileContext";
 import { TextInputChip } from "../widgets/inputChip";
-import { ValueDialogChip } from "../../screens/desktop/components";
+import { DimensionDialogChip, NumericDialogChip } from "../../screens/desktop/components";
+import { Divider } from "react-native-paper";
+import { min, range } from "lodash";
 
 interface ProjectileCardProps {
     expanded?: boolean;
@@ -24,7 +26,7 @@ const ProjectileName = () => {
 
 const ProjectileCard: React.FC<ProjectileCardProps> = ({ expanded = true }) => {
     const { isLoaded } = useCalculator()
-    const { cMuzzleVelocity, cZeroPTemperature } = useCalculator();
+    const { cMuzzleVelocity, cZeroPTemperature, cTCoeff } = useCalculator();
 
     if (!isLoaded) {
         return <CustomCard title={"Projectile"} expanded={expanded} />
@@ -32,9 +34,11 @@ const ProjectileCard: React.FC<ProjectileCardProps> = ({ expanded = true }) => {
     return (
         <CustomCard title={"Projectile"} expanded={expanded}>
             <ProjectileName />
-            <ValueDialogChip icon="speedometer" title="Muzzle velocity" dimension={cMuzzleVelocity}/>
-            <ValueDialogChip icon="thermometer" title="Powder temperature" dimension={cZeroPTemperature}/>
-            {/* <PowderSensField /> */}
+            <DimensionDialogChip icon="speedometer" title="Muzzle velocity" dimension={cMuzzleVelocity}/>
+            <Divider />
+            <DimensionDialogChip icon="thermometer" title="Powder temperature" dimension={cZeroPTemperature}/>
+            <Divider />
+            <NumericDialogChip icon="percent" title="Powder sensitivity" numeral={cTCoeff}/>
         </CustomCard>
     );
 };

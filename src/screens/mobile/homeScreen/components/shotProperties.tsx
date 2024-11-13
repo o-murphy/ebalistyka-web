@@ -4,7 +4,6 @@ import { FAB, Surface, Text } from "react-native-paper"
 import { useNavigation } from "@react-navigation/native"
 import WindDirectionPicker from "../../../../components/widgets/windDirectionPicker"
 import { useCurrentConditions } from "../../../../context/currentConditions"
-import { DeviceType } from "expo-device"
 import useDeviceType from "../../../../hooks/deviceType"
 
 

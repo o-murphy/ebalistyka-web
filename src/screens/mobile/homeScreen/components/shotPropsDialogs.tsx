@@ -1,13 +1,13 @@
 import React from "react";
 import { useCurrentConditions } from "../../../../context/currentConditions";
-import { ValueDialog } from "../../components";
+import { DimensionDialog } from "../../components";
 
 
 export const WindSpeedDialog: React.FC<{ button: React.ReactElement }> = ({ button }) => {
     const { windSpeed } = useCurrentConditions()
 
     return (
-        <ValueDialog
+        <DimensionDialog
             button={button}
             label="Wind speed"
             icon="windsock"
@@ -21,7 +21,7 @@ export const LookAngleDialog: React.FC<{ button: React.ReactElement }> = ({ butt
     const { lookAngle } = useCurrentConditions()
 
     return (
-        <ValueDialog
+        <DimensionDialog
             button={button}
             label="Look angle"
             icon="angle-acute"
@@ -35,7 +35,7 @@ export const TargetDistanceDialog: React.FC<{ button: React.ReactElement }> = ({
     const { targetDistance } = useCurrentConditions()
 
     return (
-        <ValueDialog
+        <DimensionDialog
             button={button}
             label="Target distance"
             icon="map-marker-distance"

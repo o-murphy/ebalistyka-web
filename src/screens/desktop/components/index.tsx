@@ -1,7 +1,8 @@
 import ScreenBackground from "./screenBackground";
-import ValueDialogDimensionChip from "./valueDialogChip";
+import { DimensionDialogChip, NumericDialogChip } from "./valueDialogChip";
 
 export {
     ScreenBackground,
-    ValueDialogDimensionChip as ValueDialogChip,
+    DimensionDialogChip,
+    NumericDialogChip,
 };

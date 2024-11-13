@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { ScrollView } from "react-native";
 import { Dialog, FAB, IconButton, Portal, Surface, Switch, Text } from "react-native-paper";
 import { useTableSettings } from "../../../../context/tableSettingsContext";
-import { NumericField } from "../../components";
+import { DimensionField } from "../../components";
 
 
 const displayOptions = [
@@ -96,7 +96,7 @@ const TableSettingsDialog = ({ visible, setVisible }) => {
                         <Dialog.Content>
 
                             <Surface style={{ marginVertical: 8 }} elevation={0}>
-                                <NumericField
+                                <DimensionField
                                     label="Trajectory range"
                                     icon="map-marker-distance"
                                     dimension={trajectoryRange}
@@ -107,7 +107,7 @@ const TableSettingsDialog = ({ visible, setVisible }) => {
                             </Surface>
 
                             <Surface style={{ marginVertical: 8 }} elevation={0}>
-                                <NumericField
+                                <DimensionField
                                     label="Trajectory step"
                                     icon="delta"
                                     dimension={trajectoryStep}

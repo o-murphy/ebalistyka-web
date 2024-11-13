@@ -4,7 +4,7 @@ import CustomCard from "./customCard";
 import { StyleSheet } from "react-native";
 import { useCalculator } from "../../context/profileContext";
 import { TextInputChip } from "../widgets/inputChip";
-import { ValueDialogChip } from "../../screens/desktop/components";
+import { DimensionDialogChip } from "../../screens/desktop/components";
 
 
 interface WeaponCardProps {
@@ -57,13 +57,13 @@ const WeaponCard: React.FC<WeaponCardProps> = ({ expanded = true }) => {
         <CustomCard title={"Weapon"} expanded={expanded}>
             <WeaponName />
 
-            <ValueDialogChip icon={"crosshairs"} title={"Sight height"} dimension={scHeight} />
+            <DimensionDialogChip icon={"crosshairs"} title={"Sight height"} dimension={scHeight} />
             <Divider />
-            <ValueDialogChip icon={"screw-flat-top"} title={"Twist"} dimension={rTwist} />
+            <DimensionDialogChip icon={"screw-flat-top"} title={"Twist"} dimension={rTwist} />
             <TwistSwitch />
-            <ValueDialogChip icon={"angle-acute"} title={"Look angle"} dimension={cZeroWPitch} />
+            <DimensionDialogChip icon={"angle-acute"} title={"Look angle"} dimension={cZeroWPitch} />
             <Divider />
-            <ValueDialogChip icon={"arrow-left-right"} title={"Zero distance"} dimension={zeroDistance} />
+            <DimensionDialogChip icon={"arrow-left-right"} title={"Zero distance"} dimension={zeroDistance} />
 
         </CustomCard>
     );

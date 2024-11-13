@@ -6,7 +6,7 @@ import { Angular, Energy, Pressure, Temperature, Unit, UnitProps, Weight } from 
 import { SettingsSaveBanner, UnitSelectorChip } from "./components";
 import { ScreenBackground, ScrollViewSurface } from "../components";
 import { useAppSettings } from "../../../context/settingsContext";
-import { NumericField } from "../components";
+import { DimensionField } from "../components";
 
 interface UnitConfig {
     icon: string;
@@ -85,7 +85,7 @@ export const SettingsContent = () => {
 
                 <List.Section title="Home screen settings">
                     <Surface elevation={0} style={{ marginHorizontal: 16 }}>
-                        <NumericField
+                        <DimensionField
                             label="Home screen trajectory step"
                             icon="delta"
                             dimension={homeScreenDistanceStep}

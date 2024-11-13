@@ -4,7 +4,7 @@ import parseA7P, { ProfileProps } from '../utils/parseA7P';
 import { makeShot, prepareCalculator, PreparedZeroData, shootTheTarget } from '../utils/ballisticsCalculator';
 import { Angular, Distance, getGlobalUsePowderSensitivity, HitResult, setGlobalUsePowderSensitivity, Temperature, Velocity } from 'js-ballistics/dist/v2';
 import { useCurrentConditions } from './currentConditions';
-import { DimensionProps, useDimension, UseDimensionArgs } from '../hooks/dimension';
+import { DimensionProps, NumeralProps, useDimension, UseDimensionArgs, useNumeral, UseNumeralArgs } from '../hooks/dimension';
 import { Unit } from 'js-ballistics';
 
 
@@ -27,6 +27,7 @@ interface CalculationContextType {
   zeroDistance: DimensionProps;
   cMuzzleVelocity: DimensionProps;
   cZeroPTemperature: DimensionProps;
+  cTCoeff: NumeralProps;
 }
 
 
@@ -102,6 +103,16 @@ const dimensions: Record<string, UseDimensionArgs> = {
   }
 }
 
+const numerals: Record<string, UseNumeralArgs> = {
+  cTCoeff: {
+    symbol: "%/15°C",
+    range: {
+        min: 0,
+        max: 100,
+        accuracy: 2
+    }
+  }
+}
 
 export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [profileProperties, setProfileProperties] = useState<ProfileProps | null>(null);
@@ -121,6 +132,8 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
   const cMuzzleVelocity = useDimension(dimensions.cMuzzleVelocity)
   const cZeroPTemperature = useDimension(dimensions.cZeroPTemperature)
 
+  const cTCoeff = useNumeral(numerals.cTCoeff)
+
   const setParsedProps = (props: ProfileProps) => {
     setProfileProperties(props)
 
@@ -131,6 +144,7 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
 
     cMuzzleVelocity.setAsDef((props.cMuzzleVelocity ?? 8000) / 10)
     cZeroPTemperature.setAsDef(props.cZeroPTemperature ?? 15)
+    cTCoeff.setValue((props.cTCoeff ?? 1000) / 1000)
   }
 
   useEffect(() => {
@@ -159,6 +173,7 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
           zeroDistance: zeroDistance.asDef,
           cMuzzleVelocity: cMuzzleVelocity.asDef * 10,
           cZeroPTemperature: cZeroPTemperature.asDef,
+          cTCoeff: cTCoeff.value * 1000
         });
         await AsyncStorage.setItem('profileProperties', jsonValue);
       } catch (error) {
@@ -261,7 +276,8 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
       zeroDistance,
 
       cMuzzleVelocity,
-      cZeroPTemperature
+      cZeroPTemperature,
+      cTCoeff,
     }}>
       {children}
     </CalculationContext.Provider>
