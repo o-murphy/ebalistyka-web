@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createContext, useState, useContext, useEffect, ReactNode } from 'react';
-import { CurrentConditionsProps } from '../utils/ballisticsCalculator';
+import { CurrentConditionsValues } from '../utils/ballisticsCalculator';
 import { DimensionProps, useDimension, dimensions, useNumeral, numerals, NumeralProps } from '../hooks/dimension';
 
 
@@ -8,9 +8,9 @@ import { DimensionProps, useDimension, dimensions, useNumeral, numerals, Numeral
 
 
 interface ConditionsContextType {
-    currentConditions: CurrentConditionsProps;
-    setCurrentConditions: (value: CurrentConditionsProps) => void;
-    updateCurrentConditions: (value: Partial<CurrentConditionsProps>) => void;
+    flags: CurrentConditionsValues;
+    setFlags: (value: CurrentConditionsValues) => void;
+    updateFlags: (value: Partial<CurrentConditionsValues>) => void;
     temperature: DimensionProps;
     pressure: DimensionProps;
     windSpeed: DimensionProps;
@@ -25,7 +25,7 @@ interface ConditionsContextType {
 export const ConditionsContext = createContext<ConditionsContextType | null>(null);
 
 export const ConditionsProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-    const [currentConditions, setCurrentConditions] = useState<CurrentConditionsProps | null>(defaultConditions);
+    const [flags, setFlags] = useState<CurrentConditionsValues | null>(defaultConditions);
 
     const temperature = useDimension(dimensions.temperature)
     const powderTemperature = useDimension(dimensions.powderTemperature)
@@ -40,8 +40,8 @@ export const ConditionsProvider: React.FC<{ children: ReactNode }> = ({ children
     useEffect(() => {
         const load = async () => {
             const conditionsValue = await AsyncStorage.getItem('currentConditions');
-            const conditionsValueParsed: CurrentConditionsProps = JSON.parse(conditionsValue)
-            setCurrentConditions(conditionsValueParsed || defaultConditions)
+            const conditionsValueParsed: CurrentConditionsValues = JSON.parse(conditionsValue)
+            setFlags(conditionsValueParsed || defaultConditions)
 
             temperature.setAsDef(conditionsValueParsed.temperature || 15)
             powderTemperature.setAsDef(conditionsValueParsed.powderTemperature || 15)
@@ -57,10 +57,10 @@ export const ConditionsProvider: React.FC<{ children: ReactNode }> = ({ children
     }, []);
 
     useEffect(() => {
-        const save = async (currentConditions) => {
+        const save = async (flags) => {
             try {
                 const jsonValue = JSON.stringify({
-                    ...currentConditions,
+                    ...flags,
                     temperature: temperature.asDef,
                     powderTemperature: powderTemperature.asDef,
                     pressure: pressure.asDef,
@@ -75,9 +75,9 @@ export const ConditionsProvider: React.FC<{ children: ReactNode }> = ({ children
                 console.error('Failed to save current conditions:', error);
             }
         };
-        save(currentConditions);
+        save(flags);
     }, [
-        currentConditions,
+        flags,
         temperature,
         powderTemperature,
         pressure,
@@ -87,15 +87,15 @@ export const ConditionsProvider: React.FC<{ children: ReactNode }> = ({ children
         targetDistance,
     ]);
 
-    const updateCurrentConditions = (props: Partial<CurrentConditionsProps>) => {
-        setCurrentConditions((prev) => ({ ...prev, ...props }));
+    const updateFlags = (props: Partial<CurrentConditionsValues>) => {
+        setFlags((prev) => ({ ...prev, ...props }));
     };
 
     return (
         <ConditionsContext.Provider value={{
-            currentConditions,
-            setCurrentConditions,
-            updateCurrentConditions,
+            flags,
+            setFlags,
+            updateFlags,
             temperature,
             pressure,
             powderTemperature,
@@ -119,7 +119,7 @@ export const useCurrentConditions = () => {
 };
 
 
-const defaultConditions: CurrentConditionsProps = {
+const defaultConditions: CurrentConditionsValues = {
     temperature: 15,
     pressure: 1000,
     humidity: 50,

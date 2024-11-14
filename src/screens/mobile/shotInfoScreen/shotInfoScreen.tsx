@@ -26,7 +26,7 @@ const formatUnit = (value, unit, precision = 1) =>
 const calculateSpeedOfSound = () => {
 
     const {preferredUnits } = usePreferredUnits()
-    const { temperature, pressure, currentConditions } = useCurrentConditions()
+    const { temperature, pressure, flags: currentConditions } = useCurrentConditions()
 
     const speedOfSound = new Atmo({
         pressure: UNew.hPa(pressure.asPref),

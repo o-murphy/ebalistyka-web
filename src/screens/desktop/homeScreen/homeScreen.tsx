@@ -66,7 +66,7 @@ const TopContainer = () => {
 
 const CurrentShot = () => {
     const { fire } = useCalculator()
-    const { profileProperties } = useProfile();
+    const profileProperties = useProfile();
 
     const currentConditions = useCurrentConditions();
 

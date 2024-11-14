@@ -14,7 +14,7 @@ import { useCalculator } from "../../../context/calculatorContext";
 
 const CurrentVelocity = () => {
     const { adjustedResult } = useCalculator()
-    const { temperature, powderTemperature, currentConditions } = useCurrentConditions()
+    const { temperature, powderTemperature, flags: currentConditions } = useCurrentConditions()
     const { useDifferentPowderTemperature } = currentConditions
     // NOTE: temporary 
     const muzzleVelocity = useDimension({
@@ -83,7 +83,7 @@ const PowderSenseValue = () => {
 
 
 export const WeatherTopContainer = () => {
-    const { currentConditions, updateCurrentConditions, humidity } = useCurrentConditions()
+    const { flags: currentConditions, updateFlags: updateCurrentConditions, humidity } = useCurrentConditions()
     const { usePowderSens, useDifferentPowderTemperature } = currentConditions
 
     const onTogglePowderSens = () => {

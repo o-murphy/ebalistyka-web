@@ -28,11 +28,13 @@ export const CalculatorProvider: React.FC<{ children: ReactNode }> = ({ children
         cZeroAirHumidity, cZeroAirPressure, cZeroAirTemperature, cZeroPTemperature
     } = useProfile()
 
-    const {
-        currentConditions,
-        temperature, pressure, humidity, powderTemperature,
-        windDirection, windSpeed, lookAngle, targetDistance,
-    } = useCurrentConditions()
+    // const {
+    //     currentConditions,
+    //     temperature, pressure, humidity, powderTemperature,
+    //     windDirection, windSpeed, lookAngle, targetDistance,
+    // } = useCurrentConditions()
+
+    const currentConditions = useCurrentConditions()
 
     const zero = () => {
         const _profileProperties = {
@@ -52,19 +54,7 @@ export const CalculatorProvider: React.FC<{ children: ReactNode }> = ({ children
             cZeroAirPressure: cZeroAirPressure.asDef * 10,
             cZeroPTemperature: cZeroPTemperature.asDef,
         }
-        const _currentConditions = {
-            temperature: temperature.asDef,
-            pressure: pressure.asDef,
-            humidity: humidity.value,
-            powderTemperature: powderTemperature.asDef,
-            useDifferentPowderTemperature: currentConditions.useDifferentPowderTemperature,
-            usePowderSens: currentConditions.usePowderSens,
-            windDirection: windDirection.asDef,
-            windSpeed: windSpeed.asDef,
-            lookAngle: lookAngle.asDef,
-            targetDistance: targetDistance.asDef,
-        }
-        const preparedCalculator = prepareCalculator(_profileProperties, _currentConditions);
+        const preparedCalculator = prepareCalculator(_profileProperties, currentConditions);
         setCalculator(preparedCalculator);
         return preparedCalculator;
     }
@@ -75,29 +65,15 @@ export const CalculatorProvider: React.FC<{ children: ReactNode }> = ({ children
         // Wrap main calculation in a setTimeout to allow the UI to update first
         setTimeout(async () => {
             try {
-
-                const _currentConditions = {
-                    temperature: temperature.asDef,
-                    pressure: pressure.asDef,
-                    humidity: humidity.value,
-                    powderTemperature: powderTemperature.asDef,
-                    useDifferentPowderTemperature: currentConditions.useDifferentPowderTemperature,
-                    usePowderSens: currentConditions.usePowderSens,
-                    windDirection: windDirection.asDef,
-                    windSpeed: windSpeed.asDef,
-                    lookAngle: lookAngle.asDef,
-                    targetDistance: targetDistance.asDef,
-                }
-
                 // must use powder sense
-                setGlobalUsePowderSensitivity(_currentConditions.usePowderSens)
+                setGlobalUsePowderSensitivity(currentConditions.flags.usePowderSens)
                 console.log("Use powder sens.", getGlobalUsePowderSensitivity())
 
                 const currentCalc: PreparedZeroData = zero();
                 if (currentCalc) {
                     if (!currentCalc.error) {
-                        const result = makeShot(currentCalc, _currentConditions);
-                        const adjustedResult = shootTheTarget(currentCalc, _currentConditions);
+                        const result = makeShot(currentCalc, currentConditions);
+                        const adjustedResult = shootTheTarget(currentCalc, currentConditions);
 
                         setHitResult(result);
                         setAdjustedResult(adjustedResult);

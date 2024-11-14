@@ -7,13 +7,7 @@ import { DimensionProps, NumeralProps, useDimension, useNumeral, numerals, dimen
 interface ProfileContextType {
   profileProperties: ProfileProps | null;
   fetchBinaryFile: (file: string) => Promise<void>;
-
   updateProfileProperties: (props: Partial<ProfileProps>) => void;
-  // calculator: PreparedZeroData | null;
-  // hitResult: HitResult | null | Error;
-  // adjustedResult: HitResult | null | Error;
-  // fire: () => Promise<void>;
-  // inProgress: boolean;
   isLoaded: boolean;
   setIsLoaded: (loaded: boolean) => void;
 
@@ -39,36 +33,9 @@ interface ProfileContextType {
 export const ProfileContext = createContext<ProfileContextType | null>(null);
 
 
-// const prepareCurrentConditions = () => {
-//   const cc = useCurrentConditions()
-
-//   return {
-//     temperature: cc.temperature.asDef,
-//     pressure: cc.pressure.asDef,
-//     humidity: cc.currentConditions.humidity,
-//     powderTemperature: cc.powderTemperature.asDef,
-//     useDifferentPowderTemperature: cc.currentConditions.useDifferentPowderTemperature,
-//     usePowderSens: cc.currentConditions.usePowderSens,
-//     windDirection: cc.windDirection.asDef,
-//     windSpeed: cc.windSpeed.asDef,
-//     lookAngle: cc.lookAngle.asDef,
-//     targetDistance: cc.targetDistance.asDef,
-//   }
-// }
-
-
-
-
-
 export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [profileProperties, setProfileProperties] = useState<ProfileProps | null>(null);
-  // const [calculator, setCalculator] = useState<PreparedZeroData | null>(null);
-  // const [hitResult, setHitResult] = useState<HitResult | Error | null>(null);
-  // const [adjustedResult, setAdjustedResult] = useState<HitResult | Error | null>(null);
   const [isLoaded, setIsLoaded] = useState(false); // Track loading state
-  // const [inProgress, setInProgress] = useState<boolean>(false);
-
-  // const currentConditions = prepareCurrentConditions()
 
   const scHeight = useDimension(dimensions.scHeight)
   const rTwist = useDimension(dimensions.rTwist)
@@ -158,49 +125,6 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
     rTwist
   ]);
 
-  // const zero = () => {
-  //   const _profileProperties = {
-  //     ...profileProperties,
-  //     rTwist: rTwist.asDef * 100,
-  //     scHeight: scHeight.asDef,
-  //   }
-  //   const preparedCalculator = prepareCalculator(_profileProperties, currentConditions);
-  //   setCalculator(preparedCalculator);
-  //   return preparedCalculator;
-  // }
-
-  // const fire = async () => {
-
-  //   setInProgress(true); // Set loading state before beginning async operations
-
-  //   // Wrap main calculation in a setTimeout to allow the UI to update first
-  //   setTimeout(async () => {
-  //     try {
-
-  //       // must use powder sense
-  //       setGlobalUsePowderSensitivity(currentConditions.usePowderSens)
-  //       console.log("Use powder sens.", getGlobalUsePowderSensitivity())
-
-  //       const currentCalc: PreparedZeroData = zero();
-  //       if (currentCalc) {
-  //         if (!currentCalc.error) {
-  //           const result = makeShot(currentCalc, currentConditions);
-  //           const adjustedResult = shootTheTarget(currentCalc, currentConditions);
-
-  //           setHitResult(result);
-  //           setAdjustedResult(adjustedResult);
-  //         } else {
-  //           setHitResult(currentCalc.error);
-  //         }
-  //       }
-  //     } catch (error) {
-  //       console.error('Error during fire:', error);
-  //     } finally {
-  //       setInProgress(false); // Ensure loading state is reset after calculations
-  //     }
-  //   }, 10);
-  // };
-
   const fetchBinaryFile = async (file: string) => {
     try {
       const response = await fetch(file);
@@ -226,34 +150,20 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
   return (
     <ProfileContext.Provider value={{
       profileProperties,
-
       fetchBinaryFile,
-      // setProfileProperties,
       updateProfileProperties,
-
-      // calculator,
-      // hitResult,
-      // adjustedResult,
-
-      // fire,
-      // inProgress,
-
       isLoaded,
       setIsLoaded,
-
       scHeight,
       rTwist,
       cZeroWPitch,
       zeroDistance,
-
       cMuzzleVelocity,
       cZeroTemperature,
       cTCoeff,
-
       bDiameter,
       bLength,
       bWeight,
-
       cZeroAirTemperature,
       cZeroAirPressure,
       cZeroAirHumidity,

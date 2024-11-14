@@ -146,7 +146,7 @@ const ProfileDetails = () => {
     const conds = {
         temp: `${currentConditions.temperature.asString} ${currentConditions.temperature.symbol}`,
         press: `${currentConditions.pressure.asString} ${currentConditions.pressure.symbol}`,
-        humidity: `${currentConditions.currentConditions?.humidity} %`,
+        humidity: `${currentConditions.flags?.humidity} %`,
         windSpeed: `${currentConditions.windSpeed.asPref}  ${currentConditions.windSpeed.symbol}`,
         windDir: `${currentConditions.windDirection.asDef.toFixed(0)} °`,
     }
