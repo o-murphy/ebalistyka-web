@@ -1,10 +1,11 @@
 import { View } from "react-native"
 import { Chip, Divider, List, Text, Surface, useTheme } from "react-native-paper"
-import { useCalculator } from "../../../../context/profileContext"
+import { useProfile } from "../../../../context/profileContext"
 import { usePreferredUnits } from "../../../../context/preferredUnitsContext"
 import { HitResult, UNew, Unit, UnitProps } from "js-ballistics/dist/v2"
 import getFractionDigits from "../../../../utils/fractionConvertor"
 import { useCurrentConditions } from "../../../../context/currentConditions"
+import { useCalculator } from "../../../../context/calculatorContext"
 
 
 const Section = ({ text, value, divider = true }) => {
@@ -113,7 +114,8 @@ const BCDetails = ({ dragModel, coeffs }) => {
 const ProfileDetails = () => {
 
     const { preferredUnits } = usePreferredUnits()
-    const { profileProperties, adjustedResult } = useCalculator()
+    const { profileProperties } = useProfile()
+    const { adjustedResult } = useCalculator()
     const currentConditions = useCurrentConditions()
     const theme = useTheme()
 
@@ -144,15 +146,15 @@ const ProfileDetails = () => {
     const conds = {
         temp: `${currentConditions.temperature.asString} ${currentConditions.temperature.symbol}`,
         press: `${currentConditions.pressure.asString} ${currentConditions.pressure.symbol}`,
-        humidity: `${currentConditions.currentConditions?.humidity} %`,
+        humidity: `${currentConditions.flags?.humidity} %`,
         windSpeed: `${currentConditions.windSpeed.asPref}  ${currentConditions.windSpeed.symbol}`,
         windDir: `${currentConditions.windDirection.asDef.toFixed(0)} °`,
     }
 
     return (
         <Surface style={{
-            borderBottomLeftRadius: 32,
-            borderBottomRightRadius: 32,
+            borderBottomLeftRadius: 16,
+            borderBottomRightRadius: 16,
             overflow: "hidden",
         }}
             elevation={2}>

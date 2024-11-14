@@ -1,4 +1,4 @@
-import { CalculationState, useCalculator } from "../../../context/profileContext";
+import { CalculationState, useProfile } from "../../../context/profileContext";
 import { MeasureFormFieldProps, MeasureFormFieldRefreshable } from "./measureField"
 import { UNew, Unit, UnitProps, Measure } from "js-ballistics/dist/v2"
 import { usePreferredUnits } from "../../../context/preferredUnitsContext";
@@ -7,7 +7,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 
 
 export const WindSpeedField = () => {
-    const { calcState, currentConditions, updateCurrentConditions } = useCalculator();
+    const { calcState, currentConditions, updateCurrentConditions } = useProfile();
 
     const { preferredUnits } = usePreferredUnits()
 

@@ -1,11 +1,12 @@
 import { StyleSheet } from "react-native";
 import { Chip, Divider, Surface, Text } from "react-native-paper";
-import { useCalculator } from "../../../context/profileContext";
+import { useProfile } from "../../../context/profileContext";
 import { UNew, Atmo, HitResult, UnitProps } from "js-ballistics/dist/v2";
 import { usePreferredUnits } from "../../../context/preferredUnitsContext";
 import { useEffect, useState, useMemo } from "react";
 import { ScreenBackground, ScrollViewSurface } from "../components";
 import { useCurrentConditions } from "../../../context/currentConditions";
+import { useCalculator } from "../../../context/calculatorContext";
 
 const InfoRow = ({ title, value, icon = null, last = false }) => (
     <Surface elevation={0}>
@@ -25,7 +26,7 @@ const formatUnit = (value, unit, precision = 1) =>
 const calculateSpeedOfSound = () => {
 
     const {preferredUnits } = usePreferredUnits()
-    const { temperature, pressure, currentConditions } = useCurrentConditions()
+    const { temperature, pressure, flags: currentConditions } = useCurrentConditions()
 
     const speedOfSound = new Atmo({
         pressure: UNew.hPa(pressure.asPref),
@@ -40,9 +41,10 @@ const adjustmentSort = (closest, item) =>
 
 
 export const ShotInfoContent = () => {
-    const { profileProperties, adjustedResult } = useCalculator();
+    const { profileProperties } = useProfile();
     const { targetDistance } = useCurrentConditions()
     const { preferredUnits } = usePreferredUnits();
+    const { adjustedResult } = useCalculator()
     const [hold, setHold] = useState(null);
 
     useEffect(() => {
@@ -57,6 +59,7 @@ export const ShotInfoContent = () => {
     }, [adjustedResult]);
 
     const trajectory = adjustedResult instanceof HitResult ? adjustedResult.trajectory : null;
+    const speedOfSound = calculateSpeedOfSound();
 
     const rows = useMemo(() => {
         const targetDistanceRow = `${targetDistance.asString} ${targetDistance.symbol}`
@@ -70,8 +73,6 @@ export const ShotInfoContent = () => {
             trajectory[0].velocity,
             preferredUnits.velocity
         );
-
-        const speedOfSound = calculateSpeedOfSound();
 
         const velocityOnTarget = hold?.velocity
             ? formatUnit(hold.velocity, preferredUnits.velocity, 0)
@@ -146,8 +147,8 @@ const styles = StyleSheet.create({
     },
     scrollViewContainer: {
         paddingBottom: 16,
-        borderBottomRightRadius: 32,
-        borderBottomLeftRadius: 32,
+        borderBottomRightRadius: 16,
+        borderBottomLeftRadius: 16,
     },
     infoRow: {
         flexDirection: "row",

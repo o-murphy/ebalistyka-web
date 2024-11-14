@@ -4,20 +4,7 @@ import { FAB, Surface, Text } from "react-native-paper"
 import { useNavigation } from "@react-navigation/native"
 import WindDirectionPicker from "../../../../components/widgets/windDirectionPicker"
 import { useCurrentConditions } from "../../../../context/currentConditions"
-import { DeviceType, getDeviceTypeAsync } from "expo-device"
-
-
-const getDeviceType = () => {
-    const [devType, setDevType] = useState(DeviceType.PHONE)
-
-    useEffect(() => {
-      getDeviceTypeAsync().then((deviceType) => {
-        setDevType(deviceType);
-      });
-    }, []);
-
-    return devType
-}
+import useDeviceType from "../../../../hooks/deviceType"
 
 
 const ShotPropertiesContainer = () => {
@@ -29,8 +16,7 @@ const ShotPropertiesContainer = () => {
     let onInfoPress = null;
 
     try {
-        const devType = getDeviceType()
-        console.log("Device type", DeviceType[devType])
+        const devType = useDeviceType()
         const navigation = useNavigation()
         onInfoPress = () => navigation.navigate("ShotInfo")
     } catch {
@@ -127,7 +113,7 @@ const ShotPropertiesContainer = () => {
 
 const styles = StyleSheet.create({
     surface: {
-        flex: 7,
+        flex: 5,
         flexDirection: "row",
         // minHeight: 200,
         justifyContent: "space-between",

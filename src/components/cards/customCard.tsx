@@ -54,8 +54,9 @@ const CustomCard: React.FC<CustomCardProps> = ({ children = null, title = null, 
 
 const styles = StyleSheet.create({
     card: {
-        marginTop: 14,
-        marginHorizontal: 14,
+        minWidth: 360,
+        marginTop: 16,
+        marginHorizontal: 8,
     },
     iconButton: {},
     title: {},

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useCalculator } from "../../../../context/profileContext";
+import { useProfile } from "../../../../context/profileContext";
 import { usePreferredUnits } from "../../../../context/preferredUnitsContext";
 import { UNew, Unit, UnitProps, Velocity } from "js-ballistics/dist/v2";
 import { DoubleSpinBox, SpinBoxProps } from "../../doubleSpinBox";
@@ -11,7 +11,7 @@ import { TouchableValueSelector } from "./touchableSelector";
 
 
 const TargetWindSpeedClickable = () => {
-    const { fire, updMeasureErr, currentConditions, updateCurrentConditions } = useCalculator();
+    const { fire, updMeasureErr, currentConditions, updateCurrentConditions } = useProfile();
     const { preferredUnits } = usePreferredUnits();
     const targetRef = useRef(currentConditions);
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { StyleSheet } from "react-native";
 import { Chip, FAB, Icon, Surface } from "react-native-paper";
-import { useCalculator } from "../../../../context/profileContext";
+import { useProfile } from "../../../../context/profileContext";
 
 
 const BulletIcon = ({ size, color }) => {
@@ -14,7 +14,7 @@ const BulletIcon = ({ size, color }) => {
 
 
 const ProfileTitle = () => {
-    const { profileProperties } = useCalculator();
+    const { profileProperties } = useProfile();
 
     const [profileData, setProfileData] = useState({
         profileName: profileProperties?.profileName || "",

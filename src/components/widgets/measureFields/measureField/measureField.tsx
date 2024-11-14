@@ -3,7 +3,7 @@ import { StyleProp, StyleSheet, View, ViewStyle } from "react-native";
 import { TextInput, HelperText } from "react-native-paper";
 import { DoubleSpinBox, SpinBoxProps } from "../../doubleSpinBox";
 import { RefreshFabState, RefreshFAB } from "../../refreshFAB";
-import { useCalculator } from "../../../../context/profileContext";
+import { useProfile } from "../../../../context/profileContext";
 
 export interface MeasureFormFieldProps extends SpinBoxProps {
   fKey?: string;
@@ -71,7 +71,7 @@ export const MeasureFormFieldRefreshable: React.FC<MeasureFormFieldRefreshablePr
   { fieldProps, value, onValueChange, onError, refreshable, buttonPosition = "right" }
 ) => {
   const [error, setError] = useState<Error>(null)
-  const { updMeasureErr } = useCalculator()
+  const { updMeasureErr } = useProfile()
   
   const getFabState = () => {
     if (!refreshable && !error) {

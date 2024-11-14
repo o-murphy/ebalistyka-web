@@ -1,18 +1,20 @@
 import { StyleSheet } from "react-native";
-import { Button, Chip, FAB, Surface, Switch, Text } from "react-native-paper";
-import { ScreenBackground, ScrollViewSurface } from "../components";
-import { useCalculator } from "../../../context/profileContext";
-import { WeatherHumidityDialog, WeatherPowderTemperatureDialog, WeatherPressureDialog, WeatherTemperatureDialog } from "./components";
+import { Chip, FAB, Surface, Switch, Text } from "react-native-paper";
+import { NumericDialog, ScreenBackground, ScrollViewSurface } from "../components";
+import { useProfile } from "../../../context/profileContext";
+import { WeatherPressureDialog, WeatherTemperatureDialog } from "./components";
 import { HitResult, Unit, Velocity } from "js-ballistics/dist/v2";
 import { useCurrentConditions } from "../../../context/currentConditions";
 import { useDimension } from "../../../hooks/dimension";
 import { useEffect } from "react";
+import { DimensionDialogChip } from "../../desktop/components";
+import { useCalculator } from "../../../context/calculatorContext";
 
 
 
 const CurrentVelocity = () => {
     const { adjustedResult } = useCalculator()
-    const { temperature, powderTemperature, currentConditions } = useCurrentConditions()
+    const { temperature, powderTemperature, flags: currentConditions } = useCurrentConditions()
     const { useDifferentPowderTemperature } = currentConditions
     // NOTE: temporary 
     const muzzleVelocity = useDimension({
@@ -42,7 +44,7 @@ const CurrentVelocity = () => {
                 <Text style={{ flex: 3 }}>
                     {`Muzzle velocity for ${currentTemp} ${currentTempSymbol} of powder temperature`}
                 </Text>
-                <Chip style={{ flex: 2 }}>
+                <Chip style={{ flex: 2 }} disabled>
                     {currentMuzzleVelocity} {velocitySymbol}
                 </Chip>
             </Surface>
@@ -51,7 +53,8 @@ const CurrentVelocity = () => {
 }
 
 const PowderSense = () => {
-    const { profileProperties, adjustedResult } = useCalculator()
+    const { profileProperties } = useProfile()
+    const { adjustedResult } = useCalculator()
 
     if (adjustedResult instanceof HitResult) {
         return (
@@ -59,7 +62,7 @@ const PowderSense = () => {
                 <Text style={{ flex: 3 }}>
                     Powder sensitivity
                 </Text>
-                <Chip style={{ flex: 2 }}>
+                <Chip style={{ flex: 2 }} disabled>
                     {(profileProperties.cTCoeff / 1000).toFixed(2)} %/15°C
                 </Chip>
             </Surface>
@@ -71,25 +74,16 @@ const PowderSense = () => {
 const PowderSenseValue = () => {
     const { powderTemperature } = useCurrentConditions()
 
-    const currentTemp = powderTemperature.asString
-    const currentTempSymbol = powderTemperature.symbol
     return (
-        <WeatherPowderTemperatureDialog button={
-            <Button
-                mode="outlined"
-                icon={"thermometer"}
-                onPress={() => console.log('cTemp')}
-                style={styles.fabStyle}
-            >
-                Powder temperature {currentTemp} {currentTempSymbol}
-            </Button>
-        } />
+        <Surface style={{marginHorizontal: 16}} elevation={0}>
+            <DimensionDialogChip icon={"thermometer"} title={"Powder temperature"} dimension={powderTemperature} enableSlider={true}/>
+        </Surface>
     )
 }
 
 
 export const WeatherTopContainer = () => {
-    const { currentConditions, updateCurrentConditions } = useCurrentConditions()
+    const { flags: currentConditions, updateFlags: updateCurrentConditions, humidity } = useCurrentConditions()
     const { usePowderSens, useDifferentPowderTemperature } = currentConditions
 
     const onTogglePowderSens = () => {
@@ -117,15 +111,22 @@ export const WeatherTopContainer = () => {
                         style={styles.fabStyle}
                     />
                 } />
-                <WeatherHumidityDialog button={
-                    <FAB
-                        size="small"
-                        icon={"water"}
-                        onPress={() => console.log('Wind')}
-                        label={"50 %"}
-                        style={styles.fabStyle}
-                    />
-                } />
+
+                <NumericDialog 
+                    button={
+                        <FAB
+                            size="small"
+                            icon={"water"}
+                            onPress={() => console.log('Wind')}
+                            label={"50 %"}
+                            style={styles.fabStyle}
+                        />
+                    }
+                    label="Humidity"
+                    icon="water"
+                    numeral={humidity}
+                    enableSlider
+                />
 
                 <WeatherPressureDialog button={
                     <FAB

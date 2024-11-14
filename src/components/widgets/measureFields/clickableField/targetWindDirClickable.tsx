@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useCalculator } from "../../../../context/profileContext";
+import { useProfile } from "../../../../context/profileContext";
 import { UNew, Unit, UnitProps } from "js-ballistics/dist/v2";
 import { DoubleSpinBox, SpinBoxProps } from "../../doubleSpinBox";
 import getFractionDigits from "../../../../utils/fractionConvertor";
@@ -9,7 +9,7 @@ import { TouchableValueSelector } from "./touchableSelector";
 
 
 const TargetWindDirClickable = () => {
-    const { fire, updMeasureErr, currentConditions, updateCurrentConditions } = useCalculator();
+    const { fire, updMeasureErr, currentConditions, updateCurrentConditions } = useProfile();
     const targetRef = useRef(currentConditions);
 
     const [isFiring, setIsFiring] = useState(false); // Track if firing is in progress

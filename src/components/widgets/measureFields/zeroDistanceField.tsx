@@ -1,4 +1,4 @@
-import { CalculationState, useCalculator } from "../../../context/profileContext";
+import { CalculationState, useProfile } from "../../../context/profileContext";
 import { MeasureFormFieldProps, MeasureFormFieldRefreshable } from "./measureField"
 import { UNew, Unit, UnitProps, Distance } from "js-ballistics/dist/v2"
 import { usePreferredUnits } from "../../../context/preferredUnitsContext";
@@ -7,7 +7,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 
 
 export const ZeroDistanceField = () => {
-    const { calcState, profileProperties, updateProfileProperties, currentConditions } = useCalculator();
+    const { calcState, profileProperties, updateProfileProperties, currentConditions } = useProfile();
     const { preferredUnits } = usePreferredUnits()
 
     const [refreshable, setRefreshable] = useState(false)

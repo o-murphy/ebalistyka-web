@@ -48,12 +48,13 @@ const TrajectoryTooltip: React.FC<TrajectoryTooltipProps> = ({ active, label, pa
 
 export interface WindageChartProps {
   results: HitResult | Error,
+  trajectory: TrajectoryData[],
   preferredUnits: any,
   maxDistance: Distance,
 }
 
 export const TrajectoryChart: React.FC<WindageChartProps> = ({
-  results, preferredUnits, maxDistance
+  results, trajectory, preferredUnits, maxDistance
 }) => {
   const theme = useTheme()
 
@@ -108,7 +109,8 @@ export const TrajectoryChart: React.FC<WindageChartProps> = ({
     return parseFloat(barrelHeight.toFixed(heightAccuracy))
   }
 
-  const result = results.trajectory.filter(row => row.distance.rawValue <= maxDistance.rawValue);
+  // const result = results.trajectory.filter(row => row.distance.rawValue <= maxDistance.rawValue);
+  const result = trajectory;
   
   // Mapping the data to Recharts format
   const data = result.map(row => ({

@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Svg, Circle, Text } from 'react-native-svg';
 import HT5 from '../../../../../assets/HT5'; // Your base SVG
-import { useCalculator } from '../../../../context/profileContext';
+import { useProfile } from '../../../../context/profileContext';
 import { usePreferredUnits } from '../../../../context/preferredUnitsContext';
 import { TrajectoryData, UNew, Unit } from 'js-ballistics/dist/v2';
 import { useTheme } from 'react-native-paper';
@@ -18,7 +18,7 @@ export const Reticle: React.FC<ReticleProps> = ({ trajectory, step = 100 }) => {
 
     const Mil1 = 20
 
-    const { currentConditions } = useCalculator()
+    const { currentConditions } = useProfile()
     const { preferredUnits } = usePreferredUnits()
     const theme = useTheme()
 

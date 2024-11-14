@@ -1,195 +1,129 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { createContext, useState, useContext, useEffect, ReactNode, useCallback, useMemo } from 'react';
+import { createContext, useState, useContext, useEffect, ReactNode } from 'react';
 import parseA7P, { ProfileProps } from '../utils/parseA7P';
-import { CurrentConditionsProps, makeShot, prepareCalculator, PreparedZeroData, shootTheTarget } from '../utils/ballisticsCalculator';
-import { getGlobalUsePowderSensitivity, HitResult, setGlobalUsePowderSensitivity } from 'js-ballistics/dist/v2';
-import debounce from '../utils/debounce';
-import { useCurrentConditions } from './currentConditions';
+import { DimensionProps, NumeralProps, useDimension, useNumeral, numerals, dimensions } from '../hooks/dimension';
 
 
-export enum CalculationState {
-  Error = -1,
-  NoData = 0,
-  ZeroUpdated = 1,
-  ConditionsUpdated = 2,
-  Complete = 3,
-  InvalidData = 4,
-}
-
-interface CalculationContextType {
+interface ProfileContextType {
   profileProperties: ProfileProps | null;
   fetchBinaryFile: (file: string) => Promise<void>;
-  setProfileProperties: React.Dispatch<React.SetStateAction<ProfileProps | null>>;
   updateProfileProperties: (props: Partial<ProfileProps>) => void;
-  calculator: PreparedZeroData | null;
-  hitResult: HitResult | null | Error;
-  adjustedResult: HitResult | null | Error;
-  calcState: CalculationState;
-  setCalcState: React.Dispatch<React.SetStateAction<CalculationState>>;
-  // autoRefresh: boolean;
-  // setAutoRefresh: React.Dispatch<React.SetStateAction<boolean>>;
-  fire: () => Promise<void>;
-  inProgress: boolean;
-  trajectoryMode: TrajectoryMode,
-  setTrajectoryMode: React.Dispatch<React.SetStateAction<TrajectoryMode>>,
-  dataToDisplay: DataToDisplay,
-  setDataToDisplay: React.Dispatch<React.SetStateAction<DataToDisplay>>,
-  updMeasureErr: (props: { fkey: string, isError: boolean }) => void,
-  isLoaded: boolean,
-  setIsLoaded: (lodaded: boolean) => void,
+  isLoaded: boolean;
+  setIsLoaded: (loaded: boolean) => void;
+
+  scHeight: DimensionProps;
+  rTwist: DimensionProps;
+  cZeroWPitch: DimensionProps;
+  zeroDistance: DimensionProps;
+  cMuzzleVelocity: DimensionProps;
+  cZeroTemperature: DimensionProps;
+  cTCoeff: NumeralProps;
+
+  bDiameter: DimensionProps;
+  bLength: DimensionProps;
+  bWeight: DimensionProps;
+
+  cZeroAirTemperature: DimensionProps;
+  cZeroAirPressure: DimensionProps;
+  cZeroAirHumidity: NumeralProps;
+  cZeroPTemperature: DimensionProps;
 }
 
 
-const saveProfileProperties = async (profileProperties) => {
-  try {
-    const jsonValue = JSON.stringify(profileProperties);
-    await AsyncStorage.setItem('profileProperties', jsonValue);
-  } catch (error) {
-    console.error('Failed to save profile properties:', error);
-  }
-};
+export const ProfileContext = createContext<ProfileContextType | null>(null);
 
-
-const loadUserData = async () => {
-  try {
-    const profileValue = await AsyncStorage.getItem('profileProperties');
-    return profileValue
-  } catch (error) {
-    console.error('Failed to load user data:', error);
-  }
-}
-
-
-const useUserData = async (setProfileProperties, setIsLoaded) => {
-  const profileValue = await loadUserData()
-
-  if (profileValue !== null && profileValue !== 'null') {
-    setProfileProperties(JSON.parse(profileValue));
-    setIsLoaded(true); // Mark as loaded after attempting to load data
-  } else {
-    console.log("Loading defaults")
-    setProfileProperties(JSON.parse(defaultProfile))
-  }
-};
-
-export enum TrajectoryMode {
-  Zero = 1,
-  Adjusted = 2
-}
-
-export enum DataToDisplay {
-  Table = 1,
-  Chart = 2,
-  Reticle = 3,
-  DragModel = 4,
-}
-
-export const CalculationContext = createContext<CalculationContextType | null>(null);
-
-
-const prepareCurrentConditions = () => {
-  const cc = useCurrentConditions()
-
-  return {
-    // ...defaultConditions,
-    temperature: cc.temperature.asDef,
-    pressure: cc.pressure.asDef,
-    humidity: cc.currentConditions.humidity,
-    powderTemperature: cc.powderTemperature.asDef,
-    useDifferentPowderTemperature: cc.currentConditions.useDifferentPowderTemperature,
-    usePowderSens: cc.currentConditions.usePowderSens,
-    windDirection: cc.windDirection.asDef,
-    windSpeed: cc.windSpeed.asDef,
-    lookAngle: cc.lookAngle.asDef,
-    targetDistance: cc.targetDistance.asDef,
-  }
-}
 
 export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [profileProperties, setProfileProperties] = useState<ProfileProps | null>(null);
-
-
-
-
-  const [calcState, setCalcState] = useState<CalculationState>(CalculationState.NoData);
-  const [calculator, setCalculator] = useState<PreparedZeroData | null>(null);
-  const [hitResult, setHitResult] = useState<HitResult | Error | null>(null);
-  const [adjustedResult, setAdjustedResult] = useState<HitResult | Error | null>(null);
-
   const [isLoaded, setIsLoaded] = useState(false); // Track loading state
 
-  const [inProgress, setInProgress] = useState<boolean>(false)
+  const scHeight = useDimension(dimensions.scHeight)
+  const rTwist = useDimension(dimensions.rTwist)
+  const cZeroWPitch = useDimension(dimensions.cZeroWPitch)
+  const zeroDistance = useDimension(dimensions.zeroDistance)
 
-  const [trajectoryMode, setTrajectoryMode] = useState<TrajectoryMode>(TrajectoryMode.Adjusted)
-  const [dataToDisplay, setDataToDisplay] = useState<DataToDisplay>(DataToDisplay.Table);
+  const cMuzzleVelocity = useDimension(dimensions.cMuzzleVelocity)
+  const cZeroTemperature = useDimension(dimensions.cZeroPTemperature)
 
-  const [measureErr, setMeasureErr] = useState({})
+  const cTCoeff = useNumeral(numerals.cTCoeff)
 
-  const currentConditions = prepareCurrentConditions()
+  const bDiameter = useDimension(dimensions.bDiameter)
+  const bLength = useDimension(dimensions.bLength)
+  const bWeight = useDimension(dimensions.bWeight)
 
-  const updMeasureErr = ({ fkey, isError }) => {
-    setMeasureErr((prev) => ({
-      ...prev,
-      ...{ [fkey]: isError },
-    }));
-  };
+  const cZeroAirTemperature = useDimension(dimensions.temperature)
+  const cZeroAirPressure = useDimension(dimensions.pressure)
+  const cZeroAirHumidity = useNumeral(numerals.humidity)
+  const cZeroPTemperature = useDimension(dimensions.temperature)
+
+  const setParsedProps = (props: ProfileProps) => {
+    setProfileProperties(props)
+
+    scHeight.setAsDef(props.scHeight ?? 2)
+    rTwist.setAsDef((props.rTwist ?? 10) / 100)
+    cZeroWPitch.setAsDef(props?.cZeroWPitch ?? 10)
+    zeroDistance.setAsDef(props.zeroDistance ?? (props.distances[props.cZeroDistanceIdx] ?? 10000) / 100)
+
+    cMuzzleVelocity.setAsDef((props.cMuzzleVelocity ?? 8000) / 10)
+    cZeroTemperature.setAsDef(props.cZeroTemperature ?? 15)
+    cTCoeff.setValue((props.cTCoeff ?? 1000) / 1000)
+
+    bDiameter.setAsDef((props.bDiameter ?? 338) / 1000)
+    bLength.setAsDef((props.bLength ?? 1.8) / 1000)
+    bWeight.setAsDef((props.bWeight ?? 300) / 10)
+
+    cZeroAirTemperature.setAsDef(props.cZeroAirTemperature ?? 15)
+    cZeroAirPressure.setAsDef((props.cZeroAirPressure ?? 10000) / 10)
+    cZeroAirHumidity.setValue(props.cZeroAirHumidity ?? 50)
+    cZeroPTemperature.setValue(props.cZeroPTemperature ?? 50)
+  }
 
   useEffect(() => {
-    useUserData(setProfileProperties, setIsLoaded); // Load data on mount
+    const load = async () => {
+      const profileValue = await AsyncStorage.getItem('profileProperties')
+      const profileValueParsed: ProfileProps = JSON.parse(profileValue ?? defaultProfile)
+      if (profileValue !== null && profileValue !== 'null') {
+
+        updateProfileProperties(profileValueParsed)
+
+        setIsLoaded(true)
+        console.log("loaded profile cache")
+      }
+    };
+    load();
   }, []);
 
   useEffect(() => {
-    if (isLoaded) { // Only save if data has been loaded
-      saveProfileProperties(profileProperties); // Save profile properties whenever it changes
-    }
-  }, [profileProperties, isLoaded]);
-
-  const zero = () => {
-
-    const preparedCalculator = prepareCalculator(profileProperties, currentConditions);
-    setCalculator(preparedCalculator);
-    return preparedCalculator;
-  }
-
-  const fire = async () => {
-    const allFieldsValid = Object.values(measureErr).every(value => value === false);
-    if (!allFieldsValid) {
-      setCalcState(CalculationState.InvalidData);
-      return;
-    }
-
-    setInProgress(true); // Set loading state before beginning async operations
-
-    // Wrap main calculation in a setTimeout to allow the UI to update first
-    setTimeout(async () => {
+    const save = async (profileProperties) => {
       try {
-
-        // must use powder sense
-        setGlobalUsePowderSensitivity(currentConditions.usePowderSens)
-        console.log("Use powder sens.", getGlobalUsePowderSensitivity())
-
-        const currentCalc: PreparedZeroData = zero();
-        if (currentCalc) {
-          if (!currentCalc.error) {
-            const result = makeShot(currentCalc, currentConditions);
-            const adjustedResult = shootTheTarget(currentCalc, currentConditions);
-
-            setHitResult(result);
-            setAdjustedResult(adjustedResult);
-            setCalcState(result instanceof Error ? CalculationState.Error : CalculationState.Complete);
-          } else {
-            setHitResult(currentCalc.error);
-            setCalcState(CalculationState.Error);
-          }
-        }
+        const jsonValue = JSON.stringify({
+          ...profileProperties,
+          rTwist: rTwist.asDef * 100,
+          scHeight: scHeight.asDef,
+          cZeroWPitch: cZeroWPitch.asDef,
+          zeroDistance: zeroDistance.asDef,
+          cMuzzleVelocity: cMuzzleVelocity.asDef * 10,
+          cZeroTemperature: cZeroTemperature.asDef,
+          cTCoeff: cTCoeff.value * 1000,
+          bDiameter: bDiameter.asDef * 1000,
+          bLength: bLength.asDef * 1000,
+          bWeight: bWeight.asDef * 10,
+          cZeroAirHumidity: cZeroAirHumidity.value,
+          cZeroAirTemperature: cZeroAirTemperature.asDef,
+          cZeroAirPressure: cZeroAirPressure.asDef * 10,
+          cZeroPTemperature: cZeroPTemperature.asDef,
+        });
+        await AsyncStorage.setItem('profileProperties', jsonValue);
       } catch (error) {
-        console.error('Error during fire:', error);
-        setCalcState(CalculationState.Error);
-      } finally {
-        setInProgress(false); // Ensure loading state is reset after calculations
+        console.error('Failed to cache profile:', error);
       }
-    }, 10);
-  };
+    };
+    save(profileProperties);
+  }, [
+    profileProperties,
+    scHeight,
+    rTwist
+  ]);
 
   const fetchBinaryFile = async (file: string) => {
     try {
@@ -198,7 +132,7 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
 
       parseA7P(arrayBuffer)
         .then(parsedData => {
-          setProfileProperties(parsedData);
+          updateProfileProperties(parsedData);
         })
         .catch(error => {
           console.error('Error parsing A7P file:', error);
@@ -209,50 +143,41 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
   };
 
   const updateProfileProperties = (props: Partial<ProfileProps>) => {
-    setProfileProperties((prev) => ({ ...prev, ...props }));
-    setCalcState(CalculationState.ZeroUpdated);
+    setParsedProps({ ...profileProperties, ...props });
+    // setParsedProps((prev) => ({ ...prev, ...props }))
   };
 
-  const debouncedProfileUpdate = useCallback(debounce(updateProfileProperties, 0), [updateProfileProperties]);
-
   return (
-    <CalculationContext.Provider value={{
+    <ProfileContext.Provider value={{
       profileProperties,
-
       fetchBinaryFile,
-      setProfileProperties,
-      updateProfileProperties: debouncedProfileUpdate,
-
-      calculator,
-      hitResult,
-      adjustedResult,
-
-      calcState,
-      setCalcState,
-
-      fire,
-      inProgress,
-
-      trajectoryMode,
-      setTrajectoryMode,
-
-      dataToDisplay,
-      setDataToDisplay,
-
-      updMeasureErr,
-
+      updateProfileProperties,
       isLoaded,
       setIsLoaded,
+      scHeight,
+      rTwist,
+      cZeroWPitch,
+      zeroDistance,
+      cMuzzleVelocity,
+      cZeroTemperature,
+      cTCoeff,
+      bDiameter,
+      bLength,
+      bWeight,
+      cZeroAirTemperature,
+      cZeroAirPressure,
+      cZeroAirHumidity,
+      cZeroPTemperature,
     }}>
       {children}
-    </CalculationContext.Provider>
+    </ProfileContext.Provider>
   );
 };
 
-export const useCalculator = () => {
-  const context = useContext(CalculationContext);
+export const useProfile = () => {
+  const context = useContext(ProfileContext);
   if (!context) {
-    throw new Error('useCalculator must be used within a ProfileProvider');
+    throw new Error('useProfile must be used within a ProfileProvider');
   }
   return context;
 };

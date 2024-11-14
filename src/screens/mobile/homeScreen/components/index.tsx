@@ -1,8 +1,9 @@
-import TopContainer from "./topContainer";
 import BotContainer from "./botContainer";
+import TopContainer, { TopContainerFabs } from "./topContainer";
 
 
 export {
     TopContainer,
-    BotContainer
+    BotContainer,
+    TopContainerFabs,
 }

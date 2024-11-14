@@ -1,22 +1,13 @@
 import { Appbar, useTheme } from "react-native-paper"
 import { useThemeSwitch } from "../../context/themeContext"
 import SettingsUnitCard from "../cards/settingsCard"
-import { useEffect, useState } from "react"
-import { DeviceType, getDeviceTypeAsync } from "expo-device";
+import { useState } from "react"
 import { NativeStackHeaderProps } from "@react-navigation/native-stack"
 import { Platform } from 'react-native';
 import FileUploadButton from "./fileUpdoader";
-// import { HomeScreenTopAppBar } from "../../screens/mobile/homeScreen";
+
 
 const TopAppBar = ({...props}: NativeStackHeaderProps) => {
-
-    const [devType, setDevType] = useState(DeviceType.PHONE)
-
-    useEffect(() => {
-      getDeviceTypeAsync().then((deviceType) => {
-        setDevType(deviceType);
-      });
-    }, []);
 
     const { toggleNightMode } = useThemeSwitch()
 

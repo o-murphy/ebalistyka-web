@@ -1,6 +1,6 @@
-import { useState, useEffect, useMemo, useCallback } from 'react';
-import { AbstractUnit, Measure, Unit, UnitProps } from 'js-ballistics/dist/v2';
+import { useState, useEffect, useMemo } from 'react';
 import { usePreferredUnits } from '../context/preferredUnitsContext';
+import { AbstractUnit, Measure, Unit, UnitProps, Pressure, Temperature, Velocity, Angular, Distance, Weight } from 'js-ballistics/dist/v2';
 
 type MeasureType = (typeof Measure)[keyof typeof Measure];
 
@@ -29,7 +29,7 @@ export interface DimensionProps {
     asPref: number;
     setAsPref: (value: number) => void;
     rangePref: DimensionRange;
-    reset: () => void;
+    // reset: () => void;
     accuracy: number;
 }
 
@@ -111,7 +111,7 @@ export const useDimension = ({
     // Convert the value to a string representation with the appropriate accuracy
     const asString = useMemo(() => localValue.In(preferredUnits[prefUnitFlag]).toFixed(accuracy), [localValue, preferredUnits, accuracy]);
 
-    const reset = useCallback(() => setLocalValue(new measure(0, defUnit)), [defUnit]);
+    // const reset = useCallback(() => setLocalValue(new measure(0, defUnit)), [defUnit]);
 
     return {
         value,
@@ -124,7 +124,203 @@ export const useDimension = ({
         asPref,
         setAsPref,
         rangePref,
-        reset,
+        // reset,
         accuracy
     };
 };
+
+
+export interface NumeralRange {
+    min: number;
+    max: number;
+    accuracy: number;
+}
+
+
+
+export interface UseNumeralArgs {
+    symbol: string;
+    range: NumeralRange;
+}
+
+export interface NumeralProps {
+    range: NumeralRange;
+    value: number;
+    setValue: (value: number) => void;
+    isValid: boolean;
+    asString: string;
+    symbol: string;
+    // reset: () => void;
+    accuracy: number;
+}
+
+export const useNumeral = ({ symbol, range }: UseNumeralArgs): NumeralProps => {
+
+    const [value, setValue] = useState(0);
+
+    const { min, max, accuracy } = range;
+
+    const isValid = useMemo(() => value >= min && value <= max, [value])
+
+    const asString = useMemo(() => `${value.toFixed(accuracy)} ${symbol}`, [value])
+
+    return {
+        value, setValue,
+        range, symbol, asString,
+        isValid, accuracy
+    }
+}
+
+
+export const dimensions: Record<string, UseDimensionArgs> = {
+    temperature: {
+        measure: Temperature,
+        defUnit: Unit.Celsius,
+        prefUnitFlag: "temperature",
+        min: -50,
+        max: 50,
+        precision: 2
+    },
+    powderTemperature: {
+        measure: Temperature,
+        defUnit: Unit.Celsius,
+        prefUnitFlag: "temperature",
+        min: -50,
+        max: 50,
+        precision: 2
+    },
+    pressure: {
+        measure: Pressure,
+        defUnit: Unit.hPa,
+        prefUnitFlag: "pressure",
+        min: 870,
+        max: 1084,
+        precision: 1
+    },
+    windSpeed: {
+        measure: Velocity,
+        defUnit: Unit.MPS,
+        prefUnitFlag: "velocity",
+        min: 0,
+        max: 100,
+        precision: 1
+    },
+    windDirection: {
+        measure: Angular,
+        defUnit: Unit.Degree,
+        prefUnitFlag: "angular",
+        min: 0,
+        max: 360,
+        precision: 1
+    },
+    lookAngle: {
+        measure: Angular,
+        defUnit: Unit.Degree,
+        prefUnitFlag: "angular",
+        min: -90,
+        max: 90,
+        precision: 0.1
+    },
+    targetDistance: {
+        measure: Distance,
+        defUnit: Unit.Meter,
+        prefUnitFlag: "distance",
+        min: 0,
+        max: 3000,
+        precision: 1
+    },
+    // }
+
+    // const dimensions: Record<string, UseDimensionArgs> = {
+    scHeight: {
+        measure: Distance,
+        defUnit: Unit.Millimeter,
+        prefUnitFlag: "sizes",
+        min: 0,
+        max: 200,
+        precision: 1
+    },
+    rTwist: {
+        measure: Distance,
+        defUnit: Unit.Inch,
+        prefUnitFlag: "sizes",
+        min: 0,
+        max: 100,
+        precision: 0.01
+    },
+    cZeroWPitch: {
+        measure: Angular,
+        defUnit: Unit.Degree,
+        prefUnitFlag: "angular",
+        min: -90,
+        max: 90,
+        precision: 1
+    },
+    zeroDistance: {
+        measure: Distance,
+        defUnit: Unit.Meter,
+        prefUnitFlag: "distance",
+        min: 0,
+        max: 3000,
+        precision: 1
+    },
+    cMuzzleVelocity: {
+        measure: Velocity,
+        defUnit: Unit.MPS,
+        prefUnitFlag: "velocity",
+        min: 0,
+        max: 2000,
+        precision: 1
+    },
+    cZeroPTemperature: {
+        measure: Temperature,
+        defUnit: Unit.Celsius,
+        prefUnitFlag: "temperature",
+        min: -50,
+        max: 50,
+        precision: 1
+    },
+    bDiameter: {
+        measure: Distance,
+        defUnit: Unit.Inch,
+        prefUnitFlag: "sizes",
+        min: 0,
+        max: 6.1,
+        precision: 0.001
+    },
+    bLength: {
+        measure: Distance,
+        defUnit: Unit.Inch,
+        prefUnitFlag: "sizes",
+        min: 0,
+        max: 23.6,
+        precision: 0.001
+    },
+    bWeight: {
+        measure: Weight,
+        defUnit: Unit.Grain,
+        prefUnitFlag: "weight",
+        min: 0,
+        max: 112038.9,
+        precision: 0.1
+    },
+}
+
+export const numerals: Record<string, UseNumeralArgs> = {
+    cTCoeff: {
+        symbol: "%/15°C",
+        range: {
+            min: 0,
+            max: 100,
+            accuracy: 2
+        }
+    },
+    humidity: {
+        symbol: "%",
+        range: {
+            min: 0,
+            max: 100,
+            accuracy: 0
+        }
+    }
+}

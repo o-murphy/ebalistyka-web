@@ -39,16 +39,9 @@ const navigationViewCollapsed = () => {
 const RootDrawer = ({ ...props }) => {
     const theme = useTheme()
 
-    const [open, setOpen] = useState(true)
-    const [collapsed, setCollapsed] = useState(true)
-
-    const drawerWidth = collapsed ? 80 : 300
-
     return (
         <Drawer
             drawerType={"permanent"}
-            onOpen={() => setOpen(true)}
-            onClose={() => setCollapsed(true)}
             style={{}}
             drawerPosition={"left"}
             renderDrawerContent={navigationViewCollapsed}

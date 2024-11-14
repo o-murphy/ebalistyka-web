@@ -1,9 +1,8 @@
 import React from "react";
 import CustomCard from "./customCard";
-import { useCalculator } from "../../context/profileContext";
-import { ZeroTemperatureField } from "../widgets/measureFields";
-import { ZeroPressureField } from "../widgets/measureFields/zeroPressureField";
-import { ZeroHumidityField } from "../widgets/measureFields/zeroHumidityField";
+import { useProfile } from "../../context/profileContext";
+import { DimensionDialogChip, NumericDialogChip } from "../../screens/desktop/components";
+import { Divider } from "react-native-paper";
 
 interface AtmoCardProps {
     label?: string;
@@ -11,16 +10,20 @@ interface AtmoCardProps {
 }
 
 const ZeroAtmoCard: React.FC<AtmoCardProps> = ({ label = "Zero atmosphere", expanded = true }) => {
-    const { isLoaded } = useCalculator()
+    const { isLoaded, cZeroAirHumidity, cZeroAirTemperature, cZeroAirPressure, cZeroPTemperature } = useProfile()
 
     if (!isLoaded) {
-        return <CustomCard title={"Weapon"} expanded={expanded} />
+        return <CustomCard title={label} expanded={expanded} />
     }
     return (
         <CustomCard title={label} expanded={expanded}>
-            <ZeroTemperatureField />
-            <ZeroPressureField />
-            <ZeroHumidityField />
+            <DimensionDialogChip icon={"thermometer"} title={"Temperature"} dimension={cZeroAirTemperature} />
+            <Divider />
+            <DimensionDialogChip icon={"gauge"} title={"Pressure"} dimension={cZeroAirPressure} />
+            <Divider />
+            <NumericDialogChip icon="water" title="humidity" numeral={cZeroAirHumidity} />
+            <Divider />
+            <DimensionDialogChip icon="thermometer" title="Powder temperature" dimension={cZeroPTemperature} />
         </CustomCard>
     );
 };

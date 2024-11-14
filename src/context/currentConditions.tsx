@@ -1,88 +1,31 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createContext, useState, useContext, useEffect, ReactNode } from 'react';
-import { CurrentConditionsProps } from '../utils/ballisticsCalculator';
-import { DimensionProps, useDimension, UseDimensionArgs } from '../hooks/dimension';
-import { Unit, Pressure, Temperature, Velocity, Angular, Distance } from 'js-ballistics/dist/v2';
+import { CurrentConditionsValues } from '../utils/ballisticsCalculator';
+import { DimensionProps, useDimension, dimensions, useNumeral, numerals, NumeralProps } from '../hooks/dimension';
 
 
-const dimensions: Record<string, UseDimensionArgs> = {
-    temperature: {
-        measure: Temperature,
-        defUnit: Unit.Celsius,
-        prefUnitFlag: "temperature",
-        min: -50,
-        max: 50,
-        precision: 2
-    },
-    powderTemperature: {
-        measure: Temperature,
-        defUnit: Unit.Celsius,
-        prefUnitFlag: "temperature",
-        min: -50,
-        max: 50,
-        precision: 2
-    },
-    pressure: {
-        measure: Pressure,
-        defUnit: Unit.hPa,
-        prefUnitFlag: "pressure",
-        min: 870,
-        max: 1084,
-        precision: 1
-    },
-    windSpeed: {
-        measure: Velocity,
-        defUnit: Unit.MPS,
-        prefUnitFlag: "velocity",
-        min: 0,
-        max: 100,
-        precision: 1
-    },
-    windDirection: {
-        measure: Angular,
-        defUnit: Unit.Degree,
-        prefUnitFlag: "angular",
-        min: 0,
-        max: 360,
-        precision: 1
-    },
-    lookAngle: {
-        measure: Angular,
-        defUnit: Unit.Degree,
-        prefUnitFlag: "angular",
-        min: -90,
-        max: 90,
-        precision: 0.1
-    },
-    targetDistance: {
-        measure: Distance,
-        defUnit: Unit.Meter,
-        prefUnitFlag: "distance",
-        min: 0,
-        max: 3000,
-        precision: 1
-    }
-}
+
 
 
 interface ConditionsContextType {
-    currentConditions: CurrentConditionsProps;
-    setCurrentConditions: (value: CurrentConditionsProps) => void;
-    updateCurrentConditions: (value: Partial<CurrentConditionsProps>) => void;
+    flags: CurrentConditionsValues;
+    setFlags: (value: CurrentConditionsValues) => void;
+    updateFlags: (value: Partial<CurrentConditionsValues>) => void;
     temperature: DimensionProps;
     pressure: DimensionProps;
-    windSpeed: DimensionProps,
-    windDirection: DimensionProps,
-    lookAngle: DimensionProps,
-    targetDistance: DimensionProps,
-    powderTemperature: DimensionProps
+    windSpeed: DimensionProps;
+    windDirection: DimensionProps;
+    lookAngle: DimensionProps;
+    targetDistance: DimensionProps;
+    powderTemperature: DimensionProps;
+    humidity: NumeralProps;
 }
 
 
 export const ConditionsContext = createContext<ConditionsContextType | null>(null);
 
 export const ConditionsProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-    const [currentConditions, setCurrentConditions] = useState<CurrentConditionsProps | null>(defaultConditions);
+    const [flags, setFlags] = useState<CurrentConditionsValues | null>(defaultConditions);
 
     const temperature = useDimension(dimensions.temperature)
     const powderTemperature = useDimension(dimensions.powderTemperature)
@@ -92,11 +35,13 @@ export const ConditionsProvider: React.FC<{ children: ReactNode }> = ({ children
     const lookAngle = useDimension(dimensions.lookAngle)
     const targetDistance = useDimension(dimensions.targetDistance)
 
+    const humidity = useNumeral(numerals.humidity)
+
     useEffect(() => {
         const load = async () => {
             const conditionsValue = await AsyncStorage.getItem('currentConditions');
-            const conditionsValueParsed: CurrentConditionsProps = JSON.parse(conditionsValue)
-            setCurrentConditions(conditionsValueParsed || defaultConditions)
+            const conditionsValueParsed: CurrentConditionsValues = JSON.parse(conditionsValue)
+            setFlags(conditionsValueParsed || defaultConditions)
 
             temperature.setAsDef(conditionsValueParsed.temperature || 15)
             powderTemperature.setAsDef(conditionsValueParsed.powderTemperature || 15)
@@ -105,16 +50,17 @@ export const ConditionsProvider: React.FC<{ children: ReactNode }> = ({ children
             windDirection.setAsDef(conditionsValueParsed.windDirection || 0)
             lookAngle.setAsDef(conditionsValueParsed.lookAngle || 0)
             targetDistance.setAsDef(conditionsValueParsed.targetDistance || 100)
+            humidity.setValue(conditionsValueParsed.humidity)
             console.log("Loaded conditions")
         };
         load();    
     }, []);
 
     useEffect(() => {
-        const save = async (currentConditions) => {
+        const save = async (flags) => {
             try {
                 const jsonValue = JSON.stringify({
-                    ...currentConditions,
+                    ...flags,
                     temperature: temperature.asDef,
                     powderTemperature: powderTemperature.asDef,
                     pressure: pressure.asDef,
@@ -122,15 +68,16 @@ export const ConditionsProvider: React.FC<{ children: ReactNode }> = ({ children
                     windDirection: windDirection.asDef,
                     lookAngle: lookAngle.asDef,
                     targetDistance: targetDistance.asDef,
+                    humidity: humidity.value,
                 });
                 await AsyncStorage.setItem('currentConditions', jsonValue);
             } catch (error) {
                 console.error('Failed to save current conditions:', error);
             }
         };
-        save(currentConditions);
+        save(flags);
     }, [
-        currentConditions,
+        flags,
         temperature,
         powderTemperature,
         pressure,
@@ -140,15 +87,15 @@ export const ConditionsProvider: React.FC<{ children: ReactNode }> = ({ children
         targetDistance,
     ]);
 
-    const updateCurrentConditions = (props: Partial<CurrentConditionsProps>) => {
-        setCurrentConditions((prev) => ({ ...prev, ...props }));
+    const updateFlags = (props: Partial<CurrentConditionsValues>) => {
+        setFlags((prev) => ({ ...prev, ...props }));
     };
 
     return (
         <ConditionsContext.Provider value={{
-            currentConditions,
-            setCurrentConditions,
-            updateCurrentConditions,
+            flags,
+            setFlags,
+            updateFlags,
             temperature,
             pressure,
             powderTemperature,
@@ -156,6 +103,7 @@ export const ConditionsProvider: React.FC<{ children: ReactNode }> = ({ children
             windDirection,
             lookAngle,
             targetDistance,
+            humidity,
         }}>
             {children}
         </ConditionsContext.Provider>
@@ -171,7 +119,7 @@ export const useCurrentConditions = () => {
 };
 
 
-const defaultConditions: CurrentConditionsProps = {
+const defaultConditions: CurrentConditionsValues = {
     temperature: 15,
     pressure: 1000,
     humidity: 50,

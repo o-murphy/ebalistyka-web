@@ -1,11 +1,14 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react"
 import { Dialog, FAB, Portal } from "react-native-paper"
 import { RulerSlider } from "../../../components/widgets/ruler/ruler"
-import NumericField from "./numericField"
-import { DimensionProps } from "../../../hooks/dimension"
-import { StyleSheet } from "react-native"
+import { DimensionField, NumericField } from "./numericField"
+import { DimensionProps, NumeralProps } from "../../../hooks/dimension"
+import { StyleProp, StyleSheet, ViewStyle } from "react-native"
+import { DeviceType } from "expo-device";
+import useDeviceType from "../../../hooks/deviceType"
 
-interface ValueDialogProps {
+
+export interface DimensionDialogProps {
     button: React.ReactElement;
     label: string;
     icon: string;
@@ -14,10 +17,36 @@ interface ValueDialogProps {
 }
 
 
-const ValueSlider = ({ dimension, value, onChange, style = null }) => {
+export interface NumericDialogProps {
+    button: React.ReactElement;
+    label: string;
+    icon: string;
+    enableSlider?: boolean;
+    numeral: NumeralProps;
+}
+
+
+export interface DimensionSliderProps {
+    dimension: DimensionProps;
+    value: number;
+    onChange: (value: number) => void;
+    style: StyleProp<ViewStyle>;
+}
+
+export interface NumericSliderProps {
+    value: number;
+    onChange: (value: number) => void;
+    style: StyleProp<ViewStyle>;
+    numeral: NumeralProps;
+}
+
+
+
+
+export const DimensionSlider: React.FC<DimensionSliderProps> = ({ dimension, value, onChange, style = null }) => {
     const scrollWheelProps = useMemo(() => ({
-        minValue: dimension.min,
-        maxValue: dimension.max,
+        minValue: dimension.rangePref.min,
+        maxValue: dimension.rangePref.max,
         width: 200,
         height: 350,
         fraction: dimension.accuracy,
@@ -28,12 +57,36 @@ const ValueSlider = ({ dimension, value, onChange, style = null }) => {
     return <RulerSlider {...scrollWheelProps} value={value} style={style} />;
 };
 
-const ValueDialog: React.FC<ValueDialogProps> = ({
+
+export const NumericSlider: React.FC<NumericSliderProps> = ({ value, onChange, style = null, numeral }) => {
+    const scrollWheelProps = useMemo(() => ({
+        minValue: numeral.range.min,
+        maxValue: numeral.range.max,
+        width: 200,
+        height: 350,
+        fraction: numeral.range.accuracy,
+        step: 1,
+        onChange
+    }), [numeral]);
+
+    return <RulerSlider {...scrollWheelProps} value={value} style={style} />;
+};
+
+export const DimensionDialog: React.FC<DimensionDialogProps> = ({
     button, label, icon, enableSlider = false, dimension
 }) => {
     const [visible, setVisible] = useState(false);
     const [localValue, setLocalValue] = useState(dimension.asPref);
     const [localError, setLocalError] = useState<Error | null>(null);
+
+    const [showSlider, setShowSlider] = useState(false)
+
+    const deviceType = useDeviceType()
+
+    useEffect(() => {
+        console.log("ENSL", enableSlider, deviceType, DeviceType.PHONE, deviceType, DeviceType.TABLET)
+        setShowSlider((deviceType === DeviceType.PHONE || deviceType === DeviceType.TABLET) && enableSlider);
+    }, [deviceType]);
 
     useEffect(() => {
         setLocalValue(dimension.asPref)
@@ -61,14 +114,77 @@ const ValueDialog: React.FC<ValueDialogProps> = ({
                     <Dialog.Icon icon={icon} />
                     <Dialog.Title style={styles.dialogTitle}>{`${label}, ${dimension.symbol}`}</Dialog.Title>
                     <Dialog.Content style={styles.dialogContent}>
-                        <NumericField
+                        <DimensionField
                             label="" icon=""
                             dimension={dimension}
                             value={localValue}
                             onValueChange={setLocalValue}
                             onError={setLocalError}
                         />
-                        {enableSlider && <ValueSlider dimension={dimension} value={localValue} onChange={setLocalValue} style={styles.slider} />}
+                        {showSlider && <DimensionSlider dimension={dimension} value={localValue} onChange={setLocalValue} style={styles.slider} />}
+
+                    </Dialog.Content>
+                    <Dialog.Actions>
+                        {!localError && <FAB size="small" icon="check" mode="flat" variant="secondary" onPress={onSubmit} />}
+                        <FAB size="small" icon="close" mode="flat" variant="tertiary" onPress={onDecline} />
+                    </Dialog.Actions>
+                </Dialog>
+            </Portal>
+        </>
+    );
+};
+
+
+
+export const NumericDialog: React.FC<NumericDialogProps> = ({
+    button, label, icon, enableSlider = false, numeral
+}) => {
+    const [visible, setVisible] = useState(false);
+    const [localValue, setLocalValue] = useState(numeral.value);
+    const [localError, setLocalError] = useState<Error | null>(null);
+
+    const [showSlider, setShowSlider] = useState(false)
+
+    const deviceType = useDeviceType()
+
+    useEffect(() => {
+        setShowSlider((deviceType === DeviceType.PHONE || deviceType === DeviceType.TABLET) && enableSlider);
+    }, [deviceType]);
+
+    useEffect(() => {
+        setLocalValue(numeral.value)
+    }, [numeral])
+
+    const showDialog = useCallback(() => {
+        setVisible(true);
+    }, []);
+
+    const onSubmit = useCallback(() => {
+        numeral.setValue(localValue)
+        setVisible(false)
+    }, [numeral, localValue]);
+
+    const onDecline = useCallback(() => {
+        setLocalValue(numeral.value)
+        setVisible(false)
+    }, [numeral, setLocalValue]);
+
+    return (
+        <>
+            {React.cloneElement(button, { label: `${numeral.value.toFixed(numeral.range.accuracy)} ${numeral.symbol}`, onPress: showDialog })}
+            <Portal>
+                <Dialog visible={visible} onDismiss={onDecline} style={styles.dialog}>
+                    <Dialog.Icon icon={icon} />
+                    <Dialog.Title style={styles.dialogTitle}>{`${label}, ${numeral.symbol}`}</Dialog.Title>
+                    <Dialog.Content style={styles.dialogContent}>
+                        <NumericField
+                            label="" icon=""
+                            numeral={numeral}
+                            value={localValue}
+                            onValueChange={setLocalValue}
+                            onError={setLocalError}
+                        />
+                        {showSlider && <NumericSlider numeral={numeral} value={localValue} onChange={setLocalValue} style={styles.slider} />}
 
                     </Dialog.Content>
                     <Dialog.Actions>
@@ -108,10 +224,4 @@ const styles = StyleSheet.create({
     },
 });
 
-
-export {
-    ValueDialogProps,
-    ValueDialog,
-    ValueSlider,
-    styles as ValueDialogStyles
-};
+export {styles as ValueDialogStyles};

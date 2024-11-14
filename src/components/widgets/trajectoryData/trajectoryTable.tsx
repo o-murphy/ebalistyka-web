@@ -1,4 +1,5 @@
-import { useCalculator } from '../../../context/profileContext';
+import { useCalculator } from '../../../context/calculatorContext';
+import { useProfile } from '../../../context/profileContext';
 import { TrajectoryTable } from './abstract';
 
 
