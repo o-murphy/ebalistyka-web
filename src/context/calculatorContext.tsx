@@ -28,30 +28,24 @@ export const CalculatorProvider: React.FC<{ children: ReactNode }> = ({ children
         cZeroAirHumidity, cZeroAirPressure, cZeroAirTemperature, cZeroPTemperature
     } = useProfile()
 
-    // const {
-    //     currentConditions,
-    //     temperature, pressure, humidity, powderTemperature,
-    //     windDirection, windSpeed, lookAngle, targetDistance,
-    // } = useCurrentConditions()
-
     const currentConditions = useCurrentConditions()
 
     const zero = () => {
         const _profileProperties = {
             ...profileProperties,
-            rTwist: rTwist.asDef * 100,
+            rTwist: rTwist.asDef,
             scHeight: scHeight.asDef,
             cZeroWPitch: cZeroWPitch.asDef,
             zeroDistance: zeroDistance.asDef,
-            cMuzzleVelocity: cMuzzleVelocity.asDef * 10,
+            cMuzzleVelocity: cMuzzleVelocity.asDef,
             cZeroTemperature: cZeroTemperature.asDef,
-            cTCoeff: cTCoeff.value * 1000,
-            bDiameter: bDiameter.asDef * 1000,
-            bLength: bLength.asDef * 1000,
-            bWeight: bWeight.asDef * 10,
+            cTCoeff: cTCoeff.value,
+            bDiameter: bDiameter.asDef,
+            bLength: bLength.asDef,
+            bWeight: bWeight.asDef,
             cZeroAirHumidity: cZeroAirHumidity.value,
             cZeroAirTemperature: cZeroAirTemperature.asDef,
-            cZeroAirPressure: cZeroAirPressure.asDef * 10,
+            cZeroAirPressure: cZeroAirPressure.asDef,
             cZeroPTemperature: cZeroPTemperature.asDef,
         }
         const preparedCalculator = prepareCalculator(_profileProperties, currentConditions);
@@ -66,14 +60,15 @@ export const CalculatorProvider: React.FC<{ children: ReactNode }> = ({ children
         setTimeout(async () => {
             try {
                 // must use powder sense
-                setGlobalUsePowderSensitivity(currentConditions.flags.usePowderSens)
-                console.log("Use powder sens.", getGlobalUsePowderSensitivity())
+                // setGlobalUsePowderSensitivity(currentConditions.flags.usePowderSens)
+                // console.log("Use powder sens.", getGlobalUsePowderSensitivity())
+                console.log("Use powder sens.", currentConditions.flags.usePowderSens)
 
                 const currentCalc: PreparedZeroData = zero();
                 if (currentCalc) {
                     if (!currentCalc.error) {
-                        const result = makeShot(currentCalc, currentConditions);
-                        const adjustedResult = shootTheTarget(currentCalc, currentConditions);
+                        const result = makeShot(profileProperties, currentCalc, currentConditions);
+                        const adjustedResult = shootTheTarget(profileProperties, currentCalc, currentConditions);
 
                         setHitResult(result);
                         setAdjustedResult(adjustedResult);
