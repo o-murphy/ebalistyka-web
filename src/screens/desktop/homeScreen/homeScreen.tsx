@@ -89,7 +89,7 @@ const HomeScreen = ({ navigation }) => {
             >
                 <CurrentShot />
 
-                <CustomCard title={"Hold"} style={{ maxWidth: 400, maxHeight: 800 }}>
+                <CustomCard title={"Hold"} style={{ maxWidth: 400, maxHeight: 800, overflow: "scroll" }}>
                     <BotContainer />
                 </CustomCard>
 

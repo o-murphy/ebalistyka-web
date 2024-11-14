@@ -109,15 +109,6 @@ const TablesScreen = ({ navigation }) => {
     )
 }
 
-
-// const styles = StyleSheet.create({
-//     scrollView: {
-//         flex: 1,
-//     },
-//     scrollViewContainer: {
-//     },
-// })
-
 const styles = StyleSheet.create({
     surface: {
         flexDirection: "row",

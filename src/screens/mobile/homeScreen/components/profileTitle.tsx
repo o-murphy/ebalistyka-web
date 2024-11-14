@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { StyleSheet } from "react-native";
 import { Chip, FAB, Icon, Surface } from "react-native-paper";
 import { useProfile } from "../../../../context/profileContext";
+import { useNavigation } from "@react-navigation/native";
 
 
 const BulletIcon = ({ size, color }) => {
@@ -15,6 +16,8 @@ const BulletIcon = ({ size, color }) => {
 
 const ProfileTitle = () => {
     const { profileProperties } = useProfile();
+
+    const navigation = useNavigation()
 
     const [profileData, setProfileData] = useState({
         profileName: profileProperties?.profileName || "",
@@ -38,20 +41,22 @@ const ProfileTitle = () => {
             <Chip
                 closeIcon="square-edit-outline"
                 mode={"flat"}
-                onClose={() => { }}
+                icon={({ size, color }) => <BulletIcon color={color} size={size} />}
+                onPress={() => navigation.navigate("Profile")}
+                onClose={() => navigation.navigate("Profile")}
                 style={[styles.chip]}
-                disabled={true}
+                // disabled={true}
             >
                 {profileText}
             </Chip>
-            <FAB
+            {/* <FAB
                 size="small"
                 mode="flat"
                 variant="secondary"
                 animated={false}
                 disabled={true}
                 icon={({ size, color }) => <BulletIcon color={color} size={size} />}
-            />
+            /> */}
         </Surface>
     );
 };
@@ -65,7 +70,7 @@ const styles = StyleSheet.create({
     },
     chip: {
         flex: 1,
-        marginRight: 8,
+        // marginRight: 8,
         justifyContent: "center",
         alignItems: "center",
     },

@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import { ScreenBackground } from "../components";
 import WeaponCard from "../../../components/cards/weaponCard";
 import ProjectileCard from "../../../components/cards/projectileCard";
@@ -24,23 +24,6 @@ const PropertiesScreen = ({ navigation }) => {
         </ScreenBackground>
     )
 }
-
-
-// const HomeScreen = ({ navigation }) => {
-//     return (
-//         <ScreenBackground>
-//             <ScrollViewSurface
-//                 style={styles.scrollView}
-//                 elevation={0}
-//                 surfaceStyle={styles.surface}
-//             >
-//                 <CurrentShot />
-//                 <CurrentWeather />
-//                 <ShotInfo />
-//             </ScrollViewSurface>
-//         </ScreenBackground>
-//     )
-// }
 
 const styles = StyleSheet.create({
     surface: {

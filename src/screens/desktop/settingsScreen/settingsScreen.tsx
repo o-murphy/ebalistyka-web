@@ -1,4 +1,3 @@
-import { Surface } from "react-native-paper";
 import { SettingsContent } from "../../mobile/settingsScreen"
 import { ScreenBackground } from "../components";
 import { StyleSheet } from "react-native";
