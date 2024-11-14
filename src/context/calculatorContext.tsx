@@ -1,5 +1,5 @@
 import { getGlobalUsePowderSensitivity, HitResult, setGlobalUsePowderSensitivity } from "js-ballistics/dist/v2";
-import { createContext, ReactNode, useContext, useState } from "react";
+import { createContext, ReactNode, useContext, useMemo, useState } from "react";
 import { makeShot, prepareCalculator, PreparedZeroData, shootTheTarget } from "../utils/ballisticsCalculator";
 import { useProfile } from "./profileContext";
 import { useCurrentConditions } from "./currentConditions";
@@ -22,32 +22,32 @@ export const CalculatorProvider: React.FC<{ children: ReactNode }> = ({ children
     const [adjustedResult, setAdjustedResult] = useState<HitResult | Error | null>(null);
     const [inProgress, setInProgress] = useState<boolean>(false);
 
-    const {
-        profileProperties, rTwist, scHeight, cZeroWPitch, zeroDistance, cMuzzleVelocity,
-        cZeroTemperature, cTCoeff, bDiameter, bLength, bWeight,
-        cZeroAirHumidity, cZeroAirPressure, cZeroAirTemperature, cZeroPTemperature
-    } = useProfile()
+    const profileProperties = useProfile()
 
     const currentConditions = useCurrentConditions()
 
-    const zero = () => {
-        const _profileProperties = {
-            ...profileProperties,
-            rTwist: rTwist.asDef,
-            scHeight: scHeight.asDef,
-            cZeroWPitch: cZeroWPitch.asDef,
-            zeroDistance: zeroDistance.asDef,
-            cMuzzleVelocity: cMuzzleVelocity.asDef,
-            cZeroTemperature: cZeroTemperature.asDef,
-            cTCoeff: cTCoeff.value,
-            bDiameter: bDiameter.asDef,
-            bLength: bLength.asDef,
-            bWeight: bWeight.asDef,
-            cZeroAirHumidity: cZeroAirHumidity.value,
-            cZeroAirTemperature: cZeroAirTemperature.asDef,
-            cZeroAirPressure: cZeroAirPressure.asDef,
-            cZeroPTemperature: cZeroPTemperature.asDef,
+    const _profileProperties = useMemo(() => {
+        return {
+            ...profileProperties.profileProperties,
+            rTwist: profileProperties.rTwist.asDef,
+            scHeight: profileProperties.scHeight.asDef,
+            cZeroWPitch: profileProperties.cZeroWPitch.asDef,
+            zeroDistance: profileProperties.zeroDistance.asDef,
+            cMuzzleVelocity: profileProperties.cMuzzleVelocity.asDef,
+            cZeroTemperature: profileProperties.cZeroTemperature.asDef,
+            cTCoeff: profileProperties.cTCoeff.value,
+            bDiameter: profileProperties.bDiameter.asDef,
+            bLength: profileProperties.bLength.asDef,
+            bWeight: profileProperties.bWeight.asDef,
+            cZeroAirHumidity: profileProperties.cZeroAirHumidity.value,
+            cZeroAirTemperature: profileProperties.cZeroAirTemperature.asDef,
+            cZeroAirPressure: profileProperties.cZeroAirPressure.asDef,
+            cZeroPTemperature: profileProperties.cZeroPTemperature.asDef,
         }
+    }, [profileProperties])
+
+    const zero = () => {
+
         const preparedCalculator = prepareCalculator(_profileProperties, currentConditions);
         setCalculator(preparedCalculator);
         return preparedCalculator;
@@ -67,8 +67,8 @@ export const CalculatorProvider: React.FC<{ children: ReactNode }> = ({ children
                 const currentCalc: PreparedZeroData = zero();
                 if (currentCalc) {
                     if (!currentCalc.error) {
-                        const result = makeShot(profileProperties, currentCalc, currentConditions);
-                        const adjustedResult = shootTheTarget(profileProperties, currentCalc, currentConditions);
+                        const result = makeShot(_profileProperties, currentCalc, currentConditions);
+                        const adjustedResult = shootTheTarget(_profileProperties, currentCalc, currentConditions);
 
                         setHitResult(result);
                         setAdjustedResult(adjustedResult);

@@ -11,6 +11,8 @@ import { ScrollViewSurface } from "../../mobile/components";
 import ProfileTitle from "../../mobile/homeScreen/components/profileTitle";
 import ShotPropertiesContainer from "../../mobile/homeScreen/components/shotProperties";
 import { useCalculator } from "../../../context/calculatorContext";
+import CustomCard from "../../../components/cards/customCard";
+import { TopContainerFabsLabels } from "../../mobile/homeScreen/components/topContainer";
 
 
 const TILE_BASE_SIZE = 400;
@@ -33,18 +35,6 @@ export const TileSurface = ({ children, widthRatio = 1, heightRatio = 1, style =
     )
 }
 
-
-const CurrentWeather = () => {
-    return (
-        <TileSurface style={styles.column} widthRatio={1} heightRatio={1}>
-            <Surface style={{ borderRadius: 16, overflow: "hidden" }} elevation={1}>
-                <WeatherTopContainer />
-            </Surface>
-        </TileSurface>
-    )
-}
-
-
 const TopContainer = () => {
 
     return (
@@ -59,6 +49,7 @@ const TopContainer = () => {
             <ProfileTitle />
             <ShotPropertiesContainer />
             <TopContainerFabs />
+            <TopContainerFabsLabels />
         </Surface>
     );
 };
@@ -80,19 +71,11 @@ const CurrentShot = () => {
     ]);
 
     return (
-        <TileSurface style={styles.column} widthRatio={1} heightRatio={2}>
+        <CustomCard title={"Current conditions"} style={{ maxWidth: 400, maxHeight: 800 }}>
             <TopContainer />
-            <BotContainer />
-        </TileSurface>
+            <WeatherTopContainer />
+        </CustomCard>
     );
-}
-
-const ShotInfo = () => {
-    return (
-        <TileSurface style={styles.column} widthRatio={1} heightRatio={2}>
-            <ShotInfoContent />
-        </TileSurface>
-    )
 }
 
 
@@ -105,8 +88,15 @@ const HomeScreen = ({ navigation }) => {
                 surfaceStyle={styles.surface}
             >
                 <CurrentShot />
-                <CurrentWeather />
-                <ShotInfo />
+
+                <CustomCard title={"Hold"} style={{ maxWidth: 400, maxHeight: 800 }}>
+                    <BotContainer />
+                </CustomCard>
+
+                <CustomCard title={"Shot info"} style={{ minWidth: 400, maxHeight: 800 }}>
+                    <ShotInfoContent />
+                </CustomCard>
+
             </ScrollViewSurface>
         </ScreenBackground>
     )

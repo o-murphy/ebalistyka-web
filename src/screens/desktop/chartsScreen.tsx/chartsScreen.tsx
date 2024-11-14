@@ -2,34 +2,40 @@ import { StyleSheet } from "react-native";
 import { ScrollViewSurface } from "../../mobile/components";
 import { ScreenBackground } from "../components";
 import { Surface } from "react-native-paper";
-import { HorizontalTrajectoryChart, HorizontalWindageChart } from "../../../components/widgets/trajectoryData";
+import { DragChart, HorizontalTrajectoryChart, HorizontalWindageChart } from "../../../components/widgets/trajectoryData";
+import CustomCard from "../../../components/cards/customCard";
 
 
 export const ChartsContent = () => {
     return (
-        <Surface style={{ flex: 1 }} elevation={0}>
-            <Surface
-                style={{
-                    flex: 1,
-                    padding: 16,
-                    margin: 16,
-                    maxWidth: 800,
-                    maxHeight: 800,
-                    minWidth: 600,
-                    borderRadius: 16
-                }}
-                elevation={1}
-            >
-                <ScrollViewSurface
-                    style={{ flex: 1 }}
-                    surfaceStyle={{ paddingBottom: 16 }}
-                    elevation={0}
-                >
+        <ScrollViewSurface
+            style={styles.scrollView}
+            elevation={0}
+            surfaceStyle={styles.surface}
+        >
+
+            <Surface style={styles.column} elevation={0}>
+
+                <CustomCard title={"Trajectory"} style={{ minWidth: 720 }}>
                     <HorizontalTrajectoryChart />
+                </CustomCard>
+
+                <CustomCard title={"Windage"} style={{ minWidth: 720 }}>
                     <HorizontalWindageChart />
-                </ScrollViewSurface>
+                </CustomCard>
+
             </Surface>
-        </Surface>
+
+            <Surface style={styles.column} elevation={0}>
+
+                <CustomCard title={"Drag model"} style={{ minWidth: 720 }}>
+                    <DragChart />
+                </CustomCard>
+
+            </Surface>
+
+
+        </ScrollViewSurface>
     )
 }
 
@@ -44,12 +50,22 @@ const ChartsScreen = ({ navigation }) => {
 
 
 const styles = StyleSheet.create({
+    surface: {
+        flexDirection: "row",
+        flexWrap: "wrap",
+    },
+    column: {
+        flexDirection: "column",
+        flexWrap: "wrap",
+    },
     scrollView: {
         flex: 1,
+        margin: 16
     },
     scrollViewContainer: {
+        // додаткові стилі для контейнера
     },
-})
+});
 
 
 export default ChartsScreen;

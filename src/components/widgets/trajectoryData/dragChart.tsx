@@ -4,6 +4,7 @@ import { useProfile } from '../../../context/profileContext';
 import { Table } from 'js-ballistics/dist/v2';
 import React from 'react';
 import { ToolTipRow } from './abstract';
+import { useCalculator } from '../../../context/calculatorContext';
 
 interface DragTooltipProps {
     active?: boolean;
@@ -54,7 +55,8 @@ const combineDragTables = (dragTable, customDragTable) => {
 };
 
 const DragChart = () => {
-    const { calculator, profileProperties } = useProfile();
+    const { calculator } = useCalculator()
+    const { profileProperties } = useProfile();
     const theme = useTheme();
 
     let dragTable = null;
@@ -76,7 +78,7 @@ const DragChart = () => {
     const data = combineDragTables(dragTable, customDragTable);
 
     return (
-        <ResponsiveContainer width="100%" height={400}>
+        <ResponsiveContainer width="100%" height={300}>
             <LineChart
                 data={data}
                 margin={{ top: 50, right: 90, left: 30, bottom: 35 }}
@@ -116,7 +118,7 @@ const DragChart = () => {
                         stroke={"orange"}
                         strokeWidth={2}
                         dot={false}
-                        name="Custom"
+                        name="Current"
                     />
                 )}
             </LineChart>

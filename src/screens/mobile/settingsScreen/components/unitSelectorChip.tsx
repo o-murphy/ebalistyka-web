@@ -49,7 +49,7 @@ const UnitSelectorChip: React.FC<UnitSelectorProps> = ({ label, value, options, 
                 </Surface>
             </Pressable>
             <Portal>
-                <Dialog visible={dialogVisible} onDismiss={onDismiss}>
+                <Dialog visible={dialogVisible} onDismiss={onDismiss} style={{maxWidth: 400, alignSelf: "center"}}>
                     <Dialog.Content>
                         <RadioButton.Group onValueChange={onSelect} value={value}>
                             {options.map((item, index) => <RadioButton.Item

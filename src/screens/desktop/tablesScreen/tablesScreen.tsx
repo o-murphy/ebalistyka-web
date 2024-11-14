@@ -61,35 +61,35 @@ export const TablesContent = () => {
                 height: topLayoutHeight + botLayoutHeight,
             }}
             surfaceStyle={styles.scrollViewContainer}
-            overScrollMode="never" 
-            bounces={false} 
-            alwaysBounceVertical={false} 
+            overScrollMode="never"
+            bounces={false}
+            alwaysBounceVertical={false}
             scrollToOverflowEnabled={false}
         >
-                <TableSettingsDialog visible={settingsVisible} setVisible={setSettingsVisible} />
+            <TableSettingsDialog visible={settingsVisible} setVisible={setSettingsVisible} />
 
-                <Surface
-                    onLayout={handleTopLayout}
-                    elevation={0}
-                >
-                    <ProfileDetails />
-                    <ZerosView hitResult={hitResult} />
-                </Surface>
+            <Surface
+                onLayout={handleTopLayout}
+                elevation={0}
+            >
+                <ProfileDetails />
+                <ZerosView hitResult={hitResult} />
+            </Surface>
 
-                <Surface
-                    style={{ height: layoutHeight }}
-                    onLayout={handleBotLayout}
-                    elevation={1}
-                >
-                    <Surface style={{ flexDirection: "row", justifyContent: "space-between" }} elevation={0}>
-                        <IconButton icon={"export-variant"} onPress={onExport} />
-                        <Surface style={{ justifyContent: "center" }} elevation={0}>
-                            <Text variant={"labelLarge"} style={{ textAlign: "center" }}>Trajectory</Text>
-                        </Surface>
-                        <IconButton icon={"tune"} onPress={onSettings} />
+            <Surface
+                style={{ height: layoutHeight }}
+                onLayout={handleBotLayout}
+                elevation={1}
+            >
+                <Surface style={{ flexDirection: "row", justifyContent: "space-between" }} elevation={0}>
+                    <IconButton icon={"export-variant"} onPress={onExport} />
+                    <Surface style={{ justifyContent: "center" }} elevation={0}>
+                        <Text variant={"labelLarge"} style={{ textAlign: "center" }}>Trajectory</Text>
                     </Surface>
-                    <TrajectoryTable hitResult={hitResult} style={{ flex: 1 }} />
+                    <IconButton icon={"tune"} onPress={onSettings} />
                 </Surface>
+                <TrajectoryTable hitResult={hitResult} style={{ flex: 1 }} />
+            </Surface>
 
         </ScrollViewSurface>
     )
@@ -99,21 +99,48 @@ export const TablesContent = () => {
 const TablesScreen = ({ navigation }) => {
     return (
         <ScreenBackground>
-            <Surface style={{padding: 8, margin: 16, borderRadius: 16, aspectRatio: 1, flex: 1, maxWidth: 900}}>
-                <TablesContent />
+            {/* <Surface style={{padding: 8, margin: 16, borderRadius: 16, aspectRatio: 1, flex: 1, maxWidth: 900}}> */}
+            <Surface style={[styles.surface, {padding: 8}]} elevation={0}>
+                <Surface style={{ padding: 8, margin: 16, borderRadius: 16, aspectRatio: 1, flex: 1, maxWidth: 900 }}>
+                    <TablesContent />
+                </Surface>
             </Surface>
         </ScreenBackground>
     )
 }
 
 
+// const styles = StyleSheet.create({
+//     scrollView: {
+//         flex: 1,
+//     },
+//     scrollViewContainer: {
+//     },
+// })
+
 const styles = StyleSheet.create({
+    surface: {
+        flexDirection: "row",
+        flexWrap: "wrap",
+    },
+    column: {
+        // margin: 8,
+        marginBottom: 16,
+        marginRight: 16,
+        borderRadius: 16,
+        overflow: "hidden",
+        alignSelf: "flex-start"
+    },
     scrollView: {
         flex: 1,
+        margin: 16,
+        borderRadius: 16,
+        overflow: "hidden",
+        // paddingBottom: 32,  // not uses on HomeContent
     },
     scrollViewContainer: {
+        // додаткові стилі для контейнера
     },
-})
-
+});
 
 export default TablesScreen;

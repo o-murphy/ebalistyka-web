@@ -131,7 +131,7 @@ export const prepareCalculator = (profile: ProfileProps, currentConditions: Curr
         powderTemp: UNew.Celsius(profile.cZeroTemperature),
     });
 
-    let muzzleVelocity = null;
+    let muzzleVelocity = zeroAmmo.mv;
 
     if (currentConditions.flags.usePowderSens) {
         if (currentConditions.flags.useDifferentPowderTemperature) {
@@ -148,12 +148,15 @@ export const prepareCalculator = (profile: ProfileProps, currentConditions: Curr
         mv: muzzleVelocity,
     });
 
+
     const zeroShot = new Shot({
         weapon: zeroWeapon,
         ammo: zeroAmmo,
         atmo: zeroAtmo,
         lookAngle: zeroData.lookAngle
     });
+
+    console.log(profile.cMuzzleVelocity)
 
     const calc = new Calculator();
     const zeroElevation = calc.setWeaponZero(zeroShot, zeroData.zeroDistance);
@@ -163,6 +166,7 @@ export const prepareCalculator = (profile: ProfileProps, currentConditions: Curr
 };
 
 export const makeShot = (profile: ProfileProps, calculator: PreparedZeroData, currentConditions: CurrentConditionsType): HitResult | Error => {
+    console.log(profile.cMuzzleVelocity)
 
     try {
 
@@ -203,6 +207,7 @@ export const makeShot = (profile: ProfileProps, calculator: PreparedZeroData, cu
             tempModifier: profile.cTCoeff / 100,
             mv: currentMuzzleVelocity
         })
+        console.log(shotAmmo.mv)
 
         const targetShot = new Shot({
             weapon: weapon,
@@ -228,6 +233,7 @@ export const makeShot = (profile: ProfileProps, calculator: PreparedZeroData, cu
 }
 
 export const shootTheTarget = (profile: ProfileProps, calculator: PreparedZeroData, currentConditions: CurrentConditionsType): HitResult | Error => {
+    console.log(profile.cMuzzleVelocity)
 
     try {
         const { weapon, ammo, calc } = calculator;
@@ -252,7 +258,7 @@ export const shootTheTarget = (profile: ProfileProps, calculator: PreparedZeroDa
         }
 
         // let shotAmmo = ammo;
-        let currentMuzzleVelocity = UNew.MPS(profile.cMuzzleVelocity / 10) // ammo.mv;
+        let currentMuzzleVelocity = UNew.MPS(profile.cMuzzleVelocity) // ammo.mv;
 
         if (currentConditions.flags.usePowderSens) {
             if (currentConditions.flags.useDifferentPowderTemperature) {

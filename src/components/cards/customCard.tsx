@@ -32,15 +32,15 @@ const CustomCard: React.FC<CustomCardProps> = ({ children = null, title = null, 
                 title={_title}
                 style={styles.title}
                 titleStyle={styles.title}
-                right={children ? (props) => (
-                    iconButton ?? <IconButton
-                        {...props}
-                        style={styles.iconButton}
-                        size={20}
-                        icon={isExpanded ? "chevron-up" : "chevron-down"}
-                        onPress={toggleExpansion}
-                    />
-                ) : null}
+                // right={children ? (props) => (
+                //     iconButton ?? <IconButton
+                //         {...props}
+                //         style={styles.iconButton}
+                //         size={20}
+                //         icon={isExpanded ? "chevron-up" : "chevron-down"}
+                //         onPress={toggleExpansion}
+                //     />
+                // ) : null}
             />
 
             {isExpanded && children && (
@@ -55,8 +55,7 @@ const CustomCard: React.FC<CustomCardProps> = ({ children = null, title = null, 
 const styles = StyleSheet.create({
     card: {
         minWidth: 360,
-        marginTop: 16,
-        marginHorizontal: 8,
+        margin: 8,
     },
     iconButton: {},
     title: {},

@@ -16,22 +16,28 @@ export const TopContainerFabs = () => {
     )
 }
 
+
+export const TopContainerFabsLabels = () => {
+    return (
+        <Surface style={styles.shotPropsLabelContainer} elevation={0}>
+            {bigFABsLabels.map((text, index) => (
+                <Text key={index} style={styles.shotPropsLabel}>
+                    {text}
+                </Text>
+            ))}
+        </Surface>
+    )
+}
+
+
 export const TopContainer = () => {
 
     return (
         <Surface style={styles.topContainer} elevation={1}>
             <ProfileTitle />
             <ShotPropertiesContainer />
-
             <TopContainerFabs />
-
-            <Surface style={styles.shotPropsLabelContainer} elevation={0}>
-                {bigFABsLabels.map((text, index) => (
-                    <Text key={index} style={styles.shotPropsLabel}>
-                        {text}
-                    </Text>
-                ))}
-            </Surface>
+            <TopContainerFabsLabels />
         </Surface>
     );
 };
