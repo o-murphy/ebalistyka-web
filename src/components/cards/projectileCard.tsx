@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import CustomCard from "./customCard";
-import { useCalculator } from "../../context/profileContext";
+import { useProfile } from "../../context/profileContext";
 import { TextInputChip } from "../widgets/inputChip";
 import { DimensionDialogChip, NumericDialogChip } from "../../screens/desktop/components";
 import { Divider } from "react-native-paper";
@@ -11,7 +11,7 @@ interface ProjectileCardProps {
 }
 
 const ProjectileName = () => {
-    const { profileProperties, updateProfileProperties } = useCalculator();
+    const { profileProperties, updateProfileProperties } = useProfile();
     const text = useMemo(() => profileProperties?.cartridgeName, [profileProperties?.cartridgeName])
     return (
         <TextInputChip
@@ -25,8 +25,8 @@ const ProjectileName = () => {
 }
 
 const ProjectileCard: React.FC<ProjectileCardProps> = ({ expanded = true }) => {
-    const { isLoaded } = useCalculator()
-    const { cMuzzleVelocity, cZeroPTemperature, cTCoeff } = useCalculator();
+    const { isLoaded } = useProfile()
+    const { cMuzzleVelocity, cZeroTemperature: cZeroPTemperature, cTCoeff } = useProfile();
 
     if (!isLoaded) {
         return <CustomCard title={"Projectile"} expanded={expanded} />

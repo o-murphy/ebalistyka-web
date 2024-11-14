@@ -1,13 +1,14 @@
 import { StyleSheet } from "react-native";
-import { Button, Chip, FAB, Surface, Switch, Text } from "react-native-paper";
+import { Chip, FAB, Surface, Switch, Text } from "react-native-paper";
 import { NumericDialog, ScreenBackground, ScrollViewSurface } from "../components";
-import { useCalculator } from "../../../context/profileContext";
+import { useProfile } from "../../../context/profileContext";
 import { WeatherPressureDialog, WeatherTemperatureDialog } from "./components";
 import { HitResult, Unit, Velocity } from "js-ballistics/dist/v2";
 import { useCurrentConditions } from "../../../context/currentConditions";
-import { numerals, useDimension } from "../../../hooks/dimension";
+import { useDimension } from "../../../hooks/dimension";
 import { useEffect } from "react";
 import { DimensionDialogChip } from "../../desktop/components";
+import { useCalculator } from "../../../context/calculatorContext";
 
 
 
@@ -52,7 +53,8 @@ const CurrentVelocity = () => {
 }
 
 const PowderSense = () => {
-    const { profileProperties, adjustedResult } = useCalculator()
+    const { profileProperties } = useProfile()
+    const { adjustedResult } = useCalculator()
 
     if (adjustedResult instanceof HitResult) {
         return (

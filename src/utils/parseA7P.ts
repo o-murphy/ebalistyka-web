@@ -35,6 +35,8 @@ export interface ProfileProps {
     userNote: string;
     zeroX: number;
     zeroY: number;
+
+    zeroDistance?: number;
 }
 
 export default async function parseA7P(arrayBuffer: any) {

@@ -3,7 +3,7 @@ import { HitResult, TrajectoryData, UNew, UnitProps } from 'js-ballistics/dist/v
 import { StyleSheet, ScrollView, View } from 'react-native';
 import { useState } from 'react';
 import { usePreferredUnits } from '../../../../context/preferredUnitsContext';
-import { useCalculator } from '../../../../context/profileContext';
+import { useProfile } from '../../../../context/profileContext';
 
 
 export const TrajectoryTable = ({ hitResult, reverse = false }: { hitResult: HitResult | Error, reverse?: boolean }) => {
@@ -12,7 +12,7 @@ export const TrajectoryTable = ({ hitResult, reverse = false }: { hitResult: Hit
   const [containerWidth, setContainerWidth] = useState(tableWidth); // State for container width
 
   const { preferredUnits } = usePreferredUnits()
-  const { currentConditions } = useCalculator()
+  const { currentConditions } = useProfile()
 
 
 

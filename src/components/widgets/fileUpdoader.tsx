@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { View, StyleSheet, Alert } from 'react-native';
 import { Button, useTheme } from 'react-native-paper';
 import parseA7P, { ProfileProps } from '../../utils/parseA7P';
-import { useCalculator } from '../../context/profileContext';
+import { useProfile } from '../../context/profileContext';
 
 const allowedExtensions = ['.a7p'];
 
@@ -13,7 +13,7 @@ const FileUploadButton = () => {
     const theme = useTheme();
     const fileInputRef = useRef(null);
 
-    const { profileProperties, setProfileProperties, updateProfileProperties, setIsLoaded } = useCalculator();
+    const { profileProperties, setProfileProperties, updateProfileProperties, setIsLoaded } = useProfile();
 
     const onSuccess = (data: ProfileProps) => {
     //   if (profileProperties) {

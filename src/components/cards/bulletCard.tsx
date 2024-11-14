@@ -2,7 +2,7 @@ import { Text, Chip, Divider } from "react-native-paper";
 import React, { useMemo } from "react";
 import CustomCard from "./customCard";
 import { StyleSheet, View } from "react-native";
-import { useCalculator } from "../../context/profileContext";
+import { useProfile } from "../../context/profileContext";
 import { TextInputChip } from "../widgets/inputChip";
 import { DimensionDialogChip } from "../../screens/desktop/components";
 
@@ -11,7 +11,7 @@ interface BulletCardProps {
 }
 
 const BulletName = () => {
-    const { profileProperties, updateProfileProperties } = useCalculator();
+    const { profileProperties, updateProfileProperties } = useProfile();
     const text = useMemo(() => profileProperties?.bulletName, [profileProperties?.bulletName])
     return (
         <TextInputChip
@@ -50,7 +50,7 @@ const DragModelEdit = () => {
 }
 
 const BulletCard: React.FC<BulletCardProps> = ({ expanded = true }) => {
-    const { isLoaded, bDiameter, bLength, bWeight } = useCalculator()
+    const { isLoaded, bDiameter, bLength, bWeight } = useProfile()
 
     if (!isLoaded) {
         return <CustomCard title={"Bullet"} expanded={expanded} />

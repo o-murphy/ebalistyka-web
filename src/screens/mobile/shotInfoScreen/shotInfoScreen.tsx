@@ -1,11 +1,12 @@
 import { StyleSheet } from "react-native";
 import { Chip, Divider, Surface, Text } from "react-native-paper";
-import { useCalculator } from "../../../context/profileContext";
+import { useProfile } from "../../../context/profileContext";
 import { UNew, Atmo, HitResult, UnitProps } from "js-ballistics/dist/v2";
 import { usePreferredUnits } from "../../../context/preferredUnitsContext";
 import { useEffect, useState, useMemo } from "react";
 import { ScreenBackground, ScrollViewSurface } from "../components";
 import { useCurrentConditions } from "../../../context/currentConditions";
+import { useCalculator } from "../../../context/calculatorContext";
 
 const InfoRow = ({ title, value, icon = null, last = false }) => (
     <Surface elevation={0}>
@@ -40,9 +41,10 @@ const adjustmentSort = (closest, item) =>
 
 
 export const ShotInfoContent = () => {
-    const { profileProperties, adjustedResult } = useCalculator();
+    const { profileProperties } = useProfile();
     const { targetDistance } = useCurrentConditions()
     const { preferredUnits } = usePreferredUnits();
+    const { adjustedResult } = useCalculator()
     const [hold, setHold] = useState(null);
 
     useEffect(() => {

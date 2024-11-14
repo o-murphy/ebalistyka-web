@@ -6,10 +6,11 @@ import { ShotInfoContent } from "../../mobile/shotInfoScreen";
 import { BotContainer, TopContainerFabs } from "../../mobile/homeScreen/components";
 import { useEffect } from "react";
 import { useCurrentConditions } from "../../../context/currentConditions";
-import { useCalculator } from "../../../context/profileContext";
+import { useProfile } from "../../../context/profileContext";
 import { ScrollViewSurface } from "../../mobile/components";
 import ProfileTitle from "../../mobile/homeScreen/components/profileTitle";
 import ShotPropertiesContainer from "../../mobile/homeScreen/components/shotProperties";
+import { useCalculator } from "../../../context/calculatorContext";
 
 
 const TILE_BASE_SIZE = 400;
@@ -64,7 +65,8 @@ const TopContainer = () => {
 
 
 const CurrentShot = () => {
-    const { profileProperties, fire } = useCalculator();
+    const { fire } = useCalculator()
+    const { profileProperties } = useProfile();
 
     const currentConditions = useCurrentConditions();
 
@@ -74,14 +76,7 @@ const CurrentShot = () => {
         }
     }, [
         currentConditions,
-
-        // scHeight.value,
-        // rTwist.value,
-        // zeroDistance.value,
-        // cZeroWPitch.value,
-        // profileProperties.twistDir,
-    
-    
+        profileProperties
     ]);
 
     return (

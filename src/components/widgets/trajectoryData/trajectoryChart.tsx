@@ -1,9 +1,9 @@
 import React from 'react';
-import { useCalculator } from '../../../context/profileContext';
 import { usePreferredUnits } from '../../../context/preferredUnitsContext';
 import { TrajectoryChart, WindageChart } from './abstract';
 import { useTableSettings } from '../../../context/tableSettingsContext';
 import { HitResult } from 'js-ballistics';
+import { useCalculator } from '../../../context/calculatorContext';
 
 
 const filterTrajectory = (hitResult: HitResult) => {

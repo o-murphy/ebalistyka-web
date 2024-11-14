@@ -1,12 +1,13 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { StyleSheet } from "react-native";
 import { Surface, Text } from "react-native-paper";
-import { useCalculator } from "../../../../context/profileContext";
+import { useProfile } from "../../../../context/profileContext";
 import { HitResult } from "js-ballistics/dist/v2";
 import { HoldPage } from "./holdPage";
 import CarouselView from "./carouselView";
 import { ShotTable } from "./shotTablePage";
 import { useCurrentConditions } from "../../../../context/currentConditions";
+import { useCalculator } from "../../../../context/calculatorContext";
 
 
 const adjustmentSort = (closest, item) => {
@@ -14,7 +15,8 @@ const adjustmentSort = (closest, item) => {
 };
 
 const BotContainer = () => {
-    const { profileProperties, adjustedResult } = useCalculator();
+    const { adjustedResult } = useCalculator()
+    const { profileProperties } = useProfile();
     const { windDirection } = useCurrentConditions();
     const [hold, setHold] = useState(null);
 

@@ -2,7 +2,7 @@ import { Divider, SegmentedButtons } from "react-native-paper";
 import React, { useMemo, useCallback } from "react";
 import CustomCard from "./customCard";
 import { StyleSheet } from "react-native";
-import { useCalculator } from "../../context/profileContext";
+import { useProfile } from "../../context/profileContext";
 import { TextInputChip } from "../widgets/inputChip";
 import { DimensionDialogChip } from "../../screens/desktop/components";
 
@@ -12,7 +12,7 @@ interface WeaponCardProps {
 }
 
 const WeaponName = () => {
-    const { profileProperties, updateProfileProperties } = useCalculator();
+    const { profileProperties, updateProfileProperties } = useProfile();
     const text = useMemo(() => profileProperties?.cartridgeName, [profileProperties?.cartridgeName])
     return (
         <TextInputChip
@@ -26,7 +26,7 @@ const WeaponName = () => {
 }
 
 const TwistSwitch = () => {
-    const { profileProperties, updateProfileProperties } = useCalculator();
+    const { profileProperties, updateProfileProperties } = useProfile();
 
     const twist = useMemo(() => profileProperties?.twistDir, [profileProperties?.twistDir])
 
@@ -48,7 +48,7 @@ const TwistSwitch = () => {
 
 
 const WeaponCard: React.FC<WeaponCardProps> = ({ expanded = true }) => {
-    const { isLoaded, scHeight, rTwist, cZeroWPitch, zeroDistance } = useCalculator()
+    const { isLoaded, scHeight, rTwist, cZeroWPitch, zeroDistance } = useProfile()
 
     if (!isLoaded) {
         return <CustomCard title={"Weapon"} expanded={expanded} />

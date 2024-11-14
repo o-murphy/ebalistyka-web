@@ -3,9 +3,10 @@ import { Angular, HitResult, TrajectoryData, Unit } from "js-ballistics/dist/v2"
 import { StyleSheet, View } from "react-native";
 import HT5 from '../../../../../../assets/HT5'; // Your base SVG
 import { Chip, Surface, Text, useTheme } from "react-native-paper";
-import { useCalculator } from '../../../../../context/profileContext';
+import { useProfile } from '../../../../../context/profileContext';
 import Svg, { Circle, Text as SvgText } from 'react-native-svg';
 import { usePreferredUnits } from '../../../../../context/preferredUnitsContext';
+import { useCalculator } from '../../../../../context/calculatorContext';
 
 
 interface Hold {

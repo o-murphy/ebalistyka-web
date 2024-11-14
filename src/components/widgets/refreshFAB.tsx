@@ -1,5 +1,5 @@
 import { StyleProp, ViewStyle } from "react-native";
-import { CalculationState, useCalculator } from "../../context/profileContext";
+import { CalculationState, useProfile } from "../../context/profileContext";
 import { FAB, Tooltip } from "react-native-paper";
 import React from "react";
 
@@ -16,7 +16,7 @@ export interface RefreshFabProps {
 }
 
 export const RefreshFAB: React.FC<RefreshFabProps> = ({ state = RefreshFabState.Actual, style = null }) => {
-    const { fire, calcState, setCalcState } = useCalculator()
+    const { fire, calcState, setCalcState } = useProfile()
 
     const onPress = () => {
         if (state !== RefreshFabState.Error && calcState !== CalculationState.Error) {

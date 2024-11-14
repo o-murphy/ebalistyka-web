@@ -1,10 +1,10 @@
-import { CalculationState, useCalculator } from "../../../context/profileContext";
+import { CalculationState, useProfile } from "../../../context/profileContext";
 import { MeasureFormFieldProps, MeasureFormFieldRefreshable } from "./measureField"
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 
 export const CurrentHumidityField = () => {
-    const { calcState, currentConditions, updateCurrentConditions } = useCalculator();
+    const { calcState, currentConditions, updateCurrentConditions } = useProfile();
 
     const [refreshable, setRefreshable] = useState(false)
 

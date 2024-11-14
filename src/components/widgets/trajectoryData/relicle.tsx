@@ -1,10 +1,10 @@
 import { TrajectoryData, UNew } from "js-ballistics/dist/v2"
-import { useCalculator } from "../../../context/profileContext"
+import { useProfile } from "../../../context/profileContext"
 import { Reticle } from "./abstract"
 
 
 export const TrajectoryReticle = () => {
-    const { hitResult } = useCalculator()
+    const { hitResult } = useProfile()
     if (!(hitResult instanceof Error)) {
         const trajectory = [...hitResult?.trajectory]
         trajectory.shift()
@@ -16,7 +16,7 @@ export const TrajectoryReticle = () => {
 }
 
 export const AdjustedReticle = () => {
-    const { adjustedResult } = useCalculator()
+    const { adjustedResult } = useProfile()
 
     if (!(adjustedResult instanceof Error)) {
 

@@ -1,17 +1,17 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ProfileProvider } from './src/context/profileContext';
 import { ThemeProvider } from './src/context/themeContext';
 import { PreferredUnitsProvider } from './src/context/preferredUnitsContext';
 import MobileView from './src/screens/mobile/mobile';
 import MainScreen from './src/screens/desktop/desktop';
 
-import { Platform } from 'react-native';
 import { DeviceType } from "expo-device";
 import { AppSettingsProvider } from './src/context/settingsContext';
 import { ConditionsProvider } from './src/context/currentConditions';
 import { TableSettingsProvider } from './src/context/tableSettingsContext';
 import useDeviceType from './src/hooks/deviceType';
 import { useWindowDimensions } from 'react-native';
+import { CalculatorProvider } from './src/context/calculatorContext';
 
 
 const MOBILE_WIDTH = 500;
@@ -45,17 +45,15 @@ export default function App() {
     <ThemeProvider>
       <PreferredUnitsProvider>
         <AppSettingsProvider>
-
           <ConditionsProvider>
             <ProfileProvider>
-              <TableSettingsProvider>
-
-                <AdaptiveView />
-
-              </TableSettingsProvider>
+              <CalculatorProvider>
+                <TableSettingsProvider>
+                  <AdaptiveView />
+                </TableSettingsProvider>
+              </CalculatorProvider>
             </ProfileProvider>
           </ConditionsProvider>
-
         </AppSettingsProvider>
       </PreferredUnitsProvider>
     </ThemeProvider>
