@@ -1,9 +1,9 @@
 import { Table, Row, Col, TableWrapper } from 'react-native-table-component';
-import { ScrollViewSurface } from "../../../components";
 import { StyleSheet } from "react-native";
 import { Divider, useTheme } from "react-native-paper";
 import { HitResult, Unit, UnitProps } from "js-ballistics/dist/v2";
 import { useCalculator, useAppSettings, usePreferredUnits } from "../../../../../context";
+import { ScrollViewSurface } from '../../../../../components/widgets';
 
 const adjustmentSort = (closest, item) => {
     return Math.abs(item.dropAdjustment.rawValue) < Math.abs(closest.dropAdjustment.rawValue) ? item : closest;

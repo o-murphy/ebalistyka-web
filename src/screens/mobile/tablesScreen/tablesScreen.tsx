@@ -4,7 +4,8 @@ import { IconButton, Surface, Text } from "react-native-paper";
 import { TrajectoryTable, ZerosDataTable } from "./components/tableView";
 import { TableSettingsProvider, useTableSettings, useCalculator } from "../../../context";
 import { ProfileDetails, TableSettingsDialog } from "./components";
-import { ScreenBackground, ScrollViewSurface } from "../components";
+import { ScreenBackground } from "../components";
+import { ScrollViewSurface } from "../../../components/widgets";
 
 
 const ZerosView = ({ hitResult }) => {

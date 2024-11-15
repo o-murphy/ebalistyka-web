@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { ProfileProvider } from './src/context/profileContext';
-import { ThemeProvider } from './src/context/themeContext';
-import { PreferredUnitsProvider } from './src/context/preferredUnitsContext';
-import MobileView from './src/screens/mobile/mobile';
-import MainScreen from './src/screens/desktop/desktop';
-
-import { DeviceType } from "expo-device";
-import { AppSettingsProvider } from './src/context/appSettingsContext';
-import { ConditionsProvider } from './src/context/currentConditions';
-import { TableSettingsProvider } from './src/context/tableSettingsContext';
-import useDeviceType from './src/hooks/deviceType';
 import { useWindowDimensions } from 'react-native';
-import { CalculatorProvider } from './src/context/calculatorContext';
+import { DeviceType } from "expo-device";
+import {
+  AppSettingsProvider,
+  ProfileProvider,
+  ThemeProvider,
+  PreferredUnitsProvider,
+  ConditionsProvider,
+  TableSettingsProvider,
+  CalculatorProvider,
+} from './src/context';
+import { useDeviceType } from './src/hooks';
+import { MobileView, DesktopView } from './src/screens';
 
 
 const MOBILE_WIDTH = 500;
@@ -33,13 +33,11 @@ const AdaptiveView = () => {
     return null
   }
 
-  return isMobile ? <MobileView /> : <MainScreen />
+  return isMobile ? <MobileView /> : <DesktopView />
 }
 
 
 export default function App() {
-
-
 
   return (
     <ThemeProvider>

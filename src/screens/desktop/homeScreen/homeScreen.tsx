@@ -1,12 +1,12 @@
 import { StyleSheet } from "react-native";
 import { ScreenBackground } from "../components";
 import { Surface } from "react-native-paper";
-import { WeatherTopContainer } from "../../mobile/weatherScrreen";
-import { ShotInfoContent } from "../../mobile/shotInfoScreen";
+import { WeatherTopContainer } from "../../../components/containers/weatherContainer";
+import { ShotInfoContainer } from "../../../components/containers/shotInfoContainer";
 import { BotContainer, TopContainerFabs } from "../../mobile/homeScreen/components";
 import { useEffect } from "react";
 import { useCurrentConditions, useCalculator, useProfile } from "../../../context";
-import { ScrollViewSurface } from "../../mobile/components";
+import { ScrollViewSurface } from "../../../components/widgets";
 import ProfileTitle from "../../mobile/homeScreen/components/profileTitle";
 import ShotPropertiesContainer from "../../mobile/homeScreen/components/shotProperties";
 import CustomCard from "../../../components/cards/customCard";
@@ -92,7 +92,7 @@ const HomeScreen = ({ navigation }) => {
                 </CustomCard>
 
                 <CustomCard title={"Shot info"} style={{ minWidth: 400, maxHeight: 800 }}>
-                    <ShotInfoContent />
+                    <ShotInfoContainer />
                 </CustomCard>
 
             </ScrollViewSurface>

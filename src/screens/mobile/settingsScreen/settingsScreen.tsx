@@ -4,8 +4,8 @@ import { Divider, List, Surface } from "react-native-paper";
 import { usePreferredUnits, useAppSettings } from "../../../context";
 import { Angular, Energy, Pressure, Temperature, Unit, UnitProps, Weight } from "js-ballistics/dist/v2";
 import { SettingsSaveBanner, UnitSelectorChip } from "./components";
-import { ScreenBackground, ScrollViewSurface } from "../components";
-import { DimensionField } from "../../../components/widgets";
+import { ScreenBackground } from "../components";
+import { DimensionField, ScrollViewSurface } from "../../../components/widgets";
 
 
 interface UnitConfig {
@@ -22,7 +22,7 @@ export const getUnitList = (measure: Object): Unit[] =>
     );
 
 
-export const SettingsContent = () => {
+export const SettingsContainer = () => {
     const { preferredUnits, setPreferredUnits } = usePreferredUnits();
     const [bannerVisible, setBannerVisible] = useState(false);
     const { homeScreenDistanceStep } = useAppSettings()
@@ -145,7 +145,7 @@ const renderUnitSelectors = (localUnits, handleUnitChange: (unit) => void) => {
 const SettingsScreen = ({ navigation }) => {
     return (
         <ScreenBackground>
-            <SettingsContent />
+            <SettingsContainer />
         </ScreenBackground>
     )
 }

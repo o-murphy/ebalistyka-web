@@ -19,6 +19,7 @@ import {
     DimensionFieldProps, 
     NumericFieldProps
 } from "./numericField";
+import ScrollViewSurface from "./scrollViewSurface";
 
 
 export {
@@ -37,4 +38,5 @@ export {
     DimensionFieldProps,
     NumericField, 
     NumericFieldProps,
+    ScrollViewSurface
 }

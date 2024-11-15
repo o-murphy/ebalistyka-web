@@ -1,8 +1,7 @@
 import { StyleSheet } from "react-native";
 import { ScreenBackground } from "../components";
 import { WeaponCard, ProjectileCard, BulletCard, WeatherCard } from "../../../components/cards";
-import { ScrollViewSurface } from "../../mobile/components";
-
+import { ScrollViewSurface } from "../../../components/widgets";
 
 
 const PropertiesScreen = ({ navigation }) => {

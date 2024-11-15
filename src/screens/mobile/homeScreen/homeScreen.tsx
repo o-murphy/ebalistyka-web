@@ -2,7 +2,8 @@ import { useEffect } from "react";
 import { StyleSheet } from "react-native";
 import { TopContainer, BotContainer } from "./components";
 import { useProfile, useCurrentConditions, useCalculator } from "../../../context";
-import { ScreenBackground, ScrollViewSurface } from "../components";
+import { ScreenBackground } from "../components";
+import { ScrollViewSurface } from "../../../components/widgets";
 
 
 export const HomeContent = () => {

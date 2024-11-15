@@ -4,7 +4,7 @@ import { useThemeSwitch } from "../../context";
 import RootScreenManager from "./RootScreenManager";
 
 
-const MainScreen = () => {
+const DesktopView = () => {
 
     const { theme } = useThemeSwitch();
 
@@ -15,4 +15,4 @@ const MainScreen = () => {
     );
 };
 
-export default MainScreen;
+export default DesktopView;

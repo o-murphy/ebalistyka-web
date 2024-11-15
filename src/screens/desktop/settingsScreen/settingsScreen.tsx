@@ -2,8 +2,7 @@ import { SettingsContent } from "../../mobile/settingsScreen"
 import { ScreenBackground } from "../components";
 import { StyleSheet } from "react-native";
 import { TileSurface } from "../homeScreen/homeScreen";
-import { ScrollViewSurface } from "../../mobile/components";
-
+import { ScrollViewSurface } from "../../../components/widgets";
 
 
 const SettingsScreen = () => {

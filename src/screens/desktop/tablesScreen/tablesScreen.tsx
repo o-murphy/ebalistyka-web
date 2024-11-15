@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 import { IconButton, Surface, Text } from "react-native-paper";
 import { useTableSettings, useCalculator } from "../../../context";
 import { TrajectoryTable, ZerosDataTable } from "../../mobile/tablesScreen/components/tableView";
-import { ScrollViewSurface } from "../../mobile/components";
+import { ScrollViewSurface } from "../../../components/widgets";
 import { ProfileDetails, TableSettingsDialog } from "../../mobile/tablesScreen/components";
 import { ScreenBackground } from "../components";
 

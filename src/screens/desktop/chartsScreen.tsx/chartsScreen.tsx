@@ -1,9 +1,9 @@
 import { StyleSheet } from "react-native";
-import { ScrollViewSurface } from "../../mobile/components";
 import { ScreenBackground } from "../components";
 import { Surface } from "react-native-paper";
 import { DragChart, HorizontalTrajectoryChart, HorizontalWindageChart } from "../../../components/widgets/trajectoryData";
 import CustomCard from "../../../components/cards/customCard";
+import { ScrollViewSurface } from "../../../components/widgets";
 
 
 export const ChartsContent = () => {

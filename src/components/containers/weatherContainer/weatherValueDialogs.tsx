@@ -1,6 +1,6 @@
 import React from "react"
-import { DimensionDialog } from "../../../../components/widgets";
-import { useCurrentConditions } from "../../../../context";
+import { DimensionDialog } from "../../../components/widgets";
+import { useCurrentConditions } from "../../../context";
 
 
 const WeatherTemperatureDialog: React.FC<{ button: React.ReactElement }> = ({ button }) => {
