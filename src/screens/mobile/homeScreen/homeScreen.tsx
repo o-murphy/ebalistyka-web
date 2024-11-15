@@ -1,10 +1,8 @@
 import { useEffect } from "react";
 import { StyleSheet } from "react-native";
 import { TopContainer, BotContainer } from "./components";
-import { useProfile } from "../../../context/profileContext";
+import { useProfile, useCurrentConditions, useCalculator } from "../../../context";
 import { ScreenBackground, ScrollViewSurface } from "../components";
-import { useCurrentConditions } from "../../../context/currentConditions";
-import { useCalculator } from "../../../context/calculatorContext";
 
 
 export const HomeContent = () => {

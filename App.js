@@ -6,7 +6,7 @@ import MobileView from './src/screens/mobile/mobile';
 import MainScreen from './src/screens/desktop/desktop';
 
 import { DeviceType } from "expo-device";
-import { AppSettingsProvider } from './src/context/settingsContext';
+import { AppSettingsProvider } from './src/context/appSettingsContext';
 import { ConditionsProvider } from './src/context/currentConditions';
 import { TableSettingsProvider } from './src/context/tableSettingsContext';
 import useDeviceType from './src/hooks/deviceType';

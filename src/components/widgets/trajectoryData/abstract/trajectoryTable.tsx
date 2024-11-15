@@ -2,8 +2,7 @@ import { DataTable, Text, useTheme } from 'react-native-paper';
 import { HitResult, TrajectoryData, UNew, UnitProps } from 'js-ballistics/dist/v2';
 import { StyleSheet, ScrollView, View } from 'react-native';
 import { useState } from 'react';
-import { usePreferredUnits } from '../../../../context/preferredUnitsContext';
-import { useProfile } from '../../../../context/profileContext';
+import { usePreferredUnits } from '../../../../context';
 
 
 export const TrajectoryTable = ({ hitResult, reverse = false }: { hitResult: HitResult | Error, reverse?: boolean }) => {
@@ -12,7 +11,7 @@ export const TrajectoryTable = ({ hitResult, reverse = false }: { hitResult: Hit
   const [containerWidth, setContainerWidth] = useState(tableWidth); // State for container width
 
   const { preferredUnits } = usePreferredUnits()
-  const { currentConditions } = useProfile()
+  const { currentConditions } = currentConditions()
 
 
 

@@ -1,13 +1,9 @@
-import { useProfile } from "../../../../../context/profileContext";
 import { Table, Row, Col, TableWrapper } from 'react-native-table-component';
 import { ScrollViewSurface } from "../../../components";
 import { StyleSheet } from "react-native";
 import { Divider, useTheme } from "react-native-paper";
 import { HitResult, Unit, UnitProps } from "js-ballistics/dist/v2";
-import { UNew } from "js-ballistics";
-import { usePreferredUnits } from "../../../../../context/preferredUnitsContext";
-import { useAppSettings } from "../../../../../context/settingsContext";
-import { useCalculator } from "../../../../../context/calculatorContext";
+import { useCalculator, useAppSettings, usePreferredUnits } from "../../../../../context";
 
 const adjustmentSort = (closest, item) => {
     return Math.abs(item.dropAdjustment.rawValue) < Math.abs(closest.dropAdjustment.rawValue) ? item : closest;

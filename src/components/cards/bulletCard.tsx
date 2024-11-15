@@ -2,7 +2,7 @@ import { Text, Chip, Divider } from "react-native-paper";
 import React, { useMemo } from "react";
 import CustomCard from "./customCard";
 import { StyleSheet, View } from "react-native";
-import { useProfile } from "../../context/profileContext";
+import { useProfile } from "../../context";
 import { TextInputChip } from "../widgets";
 import { DimensionDialogChip } from "../widgets";
 

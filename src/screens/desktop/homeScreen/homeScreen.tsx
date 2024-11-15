@@ -5,12 +5,10 @@ import { WeatherTopContainer } from "../../mobile/weatherScrreen";
 import { ShotInfoContent } from "../../mobile/shotInfoScreen";
 import { BotContainer, TopContainerFabs } from "../../mobile/homeScreen/components";
 import { useEffect } from "react";
-import { useCurrentConditions } from "../../../context/currentConditions";
-import { useProfile } from "../../../context/profileContext";
+import { useCurrentConditions, useCalculator, useProfile } from "../../../context";
 import { ScrollViewSurface } from "../../mobile/components";
 import ProfileTitle from "../../mobile/homeScreen/components/profileTitle";
 import ShotPropertiesContainer from "../../mobile/homeScreen/components/shotProperties";
-import { useCalculator } from "../../../context/calculatorContext";
 import CustomCard from "../../../components/cards/customCard";
 import { TopContainerFabsLabels } from "../../mobile/homeScreen/components/topContainer";
 

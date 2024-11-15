@@ -2,10 +2,10 @@ import React, { useCallback, useEffect, useMemo, useState } from "react"
 import { Dialog, FAB, Portal } from "react-native-paper"
 import { RulerSlider } from "./ruler/ruler"
 import { DimensionField, NumericField } from "./numericField"
-import { DimensionProps, NumeralProps } from "../../hooks/dimension"
+import { DimensionProps, NumeralProps } from "../../hooks"
 import { StyleProp, StyleSheet, ViewStyle } from "react-native"
 import { DeviceType } from "expo-device";
-import useDeviceType from "../../hooks/deviceType"
+import { useDeviceType } from "../../hooks"
 
 
 export interface DimensionDialogProps {

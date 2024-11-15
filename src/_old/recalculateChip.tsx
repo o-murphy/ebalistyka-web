@@ -1,5 +1,5 @@
 import { Chip, Icon, ActivityIndicator, useTheme } from "react-native-paper"
-import { useProfile } from "../../context/profileContext"
+import { useProfile } from "../../context"
 import { StyleProp, ViewStyle } from "react-native"
 import { ReactNode } from "react"
 

@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import CustomCard from "./customCard";
-import { useProfile } from "../../context/profileContext";
+import { useProfile } from "../../context";
 import { TextInputChip } from "../widgets";
 import { Divider } from "react-native-paper";
 import { DimensionDialogChip, NumericDialogChip } from "../widgets";

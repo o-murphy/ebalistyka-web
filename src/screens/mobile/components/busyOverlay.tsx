@@ -1,5 +1,5 @@
 import { ActivityIndicator, useTheme } from "react-native-paper"
-import { useProfile } from "../../context/profileContext"
+import { useProfile } from "../../../context"
 import { Animated, View } from "react-native"
 import { useEffect, useRef } from "react";
 

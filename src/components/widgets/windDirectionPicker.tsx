@@ -4,7 +4,7 @@ import { StyleProp, StyleSheet, View, ViewStyle } from "react-native";
 import CircularSlider from "./circularSlider/web";
 import CircularSliderNative from "./circularSlider/circularSliderNative";
 import { DeviceType } from "expo-device";
-import useDeviceType from "../../hooks/deviceType";
+import { useDeviceType } from "../../hooks";
 
 
 interface WindDirectionPickerProps {

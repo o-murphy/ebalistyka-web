@@ -3,9 +3,8 @@ import { View, ScrollView, StyleSheet, Pressable, StyleProp, TextStyle, ViewStyl
 import { useTheme } from 'react-native-paper';
 import { Table, Row } from 'react-native-table-component';
 import { HitResult, TrajFlag, UnitProps } from 'js-ballistics/dist/v2';
-import { usePreferredUnits } from '../../../../../context/preferredUnitsContext';
 import RowDetailsDialog from './rowDetaisDialog';
-import { useTableSettings } from '../../../../../context/tableSettingsContext';
+import { usePreferredUnits, useTableSettings } from '../../../../../context';
 
 
 interface TableDataType {

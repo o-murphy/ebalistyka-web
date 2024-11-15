@@ -3,7 +3,7 @@ import React, { createContext, useContext, useState, ReactNode, useEffect } from
 import { MD3LightTheme, MD3DarkTheme, MD3Theme } from 'react-native-paper';
 
 // Define the shape of the context value
-interface ThemeContextType {
+export interface ThemeContextType {
   theme: MD3Theme;
   toggleNightMode: () => void;
 }

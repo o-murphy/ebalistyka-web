@@ -1,7 +1,7 @@
 import React from "react";
 import { Divider } from "react-native-paper";
 import CustomCard from "./customCard";
-import { useProfile } from "../../context/profileContext";
+import { useProfile } from "../../context";
 import { DimensionDialogChip, NumericDialogChip } from "../widgets";
 
 

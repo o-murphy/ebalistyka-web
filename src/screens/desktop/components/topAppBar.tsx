@@ -1,5 +1,5 @@
 import { Appbar, useTheme } from "react-native-paper"
-import { useThemeSwitch } from "../../../context/themeContext"
+import { useThemeSwitch } from "../../../context"
 import SettingsCard from "../../../components/cards/settingsCard"
 import { useState } from "react"
 import { NativeStackHeaderProps } from "@react-navigation/native-stack"

@@ -1,7 +1,7 @@
 import React from 'react';
 import { PaperProvider } from 'react-native-paper';
 import RootScreenManager from './RootScreenManager';
-import { useThemeSwitch } from '../../context/themeContext';
+import { useThemeSwitch } from '../../context';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 

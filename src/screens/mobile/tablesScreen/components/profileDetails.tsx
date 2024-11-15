@@ -1,11 +1,8 @@
 import { View } from "react-native"
 import { Chip, Divider, List, Text, Surface, useTheme } from "react-native-paper"
-import { useProfile } from "../../../../context/profileContext"
-import { usePreferredUnits } from "../../../../context/preferredUnitsContext"
+import { useProfile, usePreferredUnits, useCurrentConditions, useCalculator } from "../../../../context"
 import { HitResult, UNew, UnitProps } from "js-ballistics/dist/v2"
-import { useCurrentConditions } from "../../../../context/currentConditions"
-import { useCalculator } from "../../../../context/calculatorContext"
-import { dimensions, useDimension } from "../../../../hooks/dimension"
+import { dimensions, useDimension } from "../../../../hooks"
 import { useEffect, useMemo } from "react"
 
 

@@ -1,6 +1,6 @@
 import React from "react";
 import { DimensionDialog } from "../../../../components/widgets";
-import { useCurrentConditions } from "../../../../context/currentConditions";
+import { useCurrentConditions } from "../../../../context";
 
 
 export const WindSpeedDialog: React.FC<{ button: React.ReactElement }> = ({ button }) => {

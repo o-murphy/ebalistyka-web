@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
 import { Divider, List, Surface } from "react-native-paper";
-import { usePreferredUnits } from "../../../context/preferredUnitsContext";
+import { usePreferredUnits, useAppSettings } from "../../../context";
 import { Angular, Energy, Pressure, Temperature, Unit, UnitProps, Weight } from "js-ballistics/dist/v2";
 import { SettingsSaveBanner, UnitSelectorChip } from "./components";
 import { ScreenBackground, ScrollViewSurface } from "../components";
-import { useAppSettings } from "../../../context/settingsContext";
 import { DimensionField } from "../../../components/widgets";
 
 

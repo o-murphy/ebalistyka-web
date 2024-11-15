@@ -2,10 +2,9 @@ import { useState } from "react";
 import { StyleSheet } from "react-native";
 import { IconButton, Surface, Text } from "react-native-paper";
 import { TrajectoryTable, ZerosDataTable } from "./components/tableView";
-import { TableSettingsProvider, useTableSettings } from "../../../context/tableSettingsContext";
+import { TableSettingsProvider, useTableSettings, useCalculator } from "../../../context";
 import { ProfileDetails, TableSettingsDialog } from "./components";
 import { ScreenBackground, ScrollViewSurface } from "../components";
-import { useCalculator } from "../../../context/calculatorContext";
 
 
 const ZerosView = ({ hitResult }) => {

@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Button, useTheme } from 'react-native-paper';
 import parseA7P, { ProfileProps } from '../../utils/parseA7P';
-import { useProfile } from '../../context/profileContext';
+import { useProfile } from '../../context';
 
 const allowedExtensions = ['.a7p'];
 

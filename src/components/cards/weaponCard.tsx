@@ -2,7 +2,7 @@ import { Divider, SegmentedButtons } from "react-native-paper";
 import React, { useMemo, useCallback } from "react";
 import CustomCard from "./customCard";
 import { StyleSheet } from "react-native";
-import { useProfile } from "../../context/profileContext";
+import { useProfile } from "../../context";
 import { TextInputChip } from "../widgets";
 import { DimensionDialogChip } from "../widgets";
 

@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect, useCallback, useMemo } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Distance, Unit } from 'js-ballistics/dist/v2';
-import { DimensionProps, useDimension } from '../hooks/dimension';
+import { DimensionProps, useDimension } from '../hooks';
 
 interface AppSettings {
     homeScreenDistanceStep: number;
@@ -9,7 +9,7 @@ interface AppSettings {
 
 
 // Define the context value type, including the setter function
-interface AppSettingsContextType {
+export interface AppSettingsContextType {
     homeScreenDistanceStep: DimensionProps;
     saveAppSettings: () => void;
 }

@@ -17,7 +17,7 @@ interface PreferredUnits {
 }
 
 // Define the context value type, including the setter function
-interface PreferredUnitsContextType {
+export interface PreferredUnitsContextType {
   preferredUnits: PreferredUnits;
   setPreferredUnits: React.Dispatch<React.SetStateAction<PreferredUnits>>;
 }

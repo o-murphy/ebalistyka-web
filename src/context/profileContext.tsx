@@ -1,10 +1,10 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createContext, useState, useContext, useEffect, ReactNode } from 'react';
 import parseA7P, { ProfileProps } from '../utils/parseA7P';
-import { DimensionProps, NumeralProps, useDimension, useNumeral, numerals, dimensions } from '../hooks/dimension';
+import { DimensionProps, NumeralProps, useDimension, useNumeral, numerals, dimensions } from '../hooks';
 
 
-interface ProfileContextType {
+export interface ProfileContextType {
   profileProperties: ProfileProps | null;
   fetchBinaryFile: (file: string) => Promise<void>;
   updateProfileProperties: (props: Partial<ProfileProps>) => void;

@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react"
 import { HelperText, Surface, TextInput } from "react-native-paper"
-import { DimensionProps, NumeralProps } from "../../hooks/dimension"
+import { DimensionProps, NumeralProps } from "../../hooks"
 import { DoubleSpinBox, SpinBoxProps } from "./doubleSpinBox";
 import { StyleSheet, View } from "react-native";
 

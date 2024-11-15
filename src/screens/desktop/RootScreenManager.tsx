@@ -7,7 +7,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { navigationRef } from "./RootNavigation";
 import { HomeScreen } from './homeScreen';
-import { BusyOverlayAnimated } from '../mobile/busyOverlay';
+import { BusyOverlayAnimated } from '../mobile/components';
 import { Drawer as PaperDrawer, Surface, useTheme } from "react-native-paper";
 import { Drawer } from 'react-native-drawer-layout';
 import { useNavigation } from "@react-navigation/native"

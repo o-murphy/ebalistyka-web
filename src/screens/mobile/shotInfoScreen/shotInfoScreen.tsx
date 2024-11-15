@@ -1,12 +1,10 @@
 import { StyleSheet } from "react-native";
 import { Chip, Divider, Surface, Text } from "react-native-paper";
-import { useProfile } from "../../../context/profileContext";
+import { useProfile, useCurrentConditions, useCalculator, usePreferredUnits } from "../../../context";
 import { UNew, Atmo, HitResult, UnitProps } from "js-ballistics/dist/v2";
-import { usePreferredUnits } from "../../../context/preferredUnitsContext";
 import { useEffect, useState, useMemo } from "react";
 import { ScreenBackground, ScrollViewSurface } from "../components";
-import { useCurrentConditions } from "../../../context/currentConditions";
-import { useCalculator } from "../../../context/calculatorContext";
+
 
 const InfoRow = ({ title, value, icon = null, last = false }) => (
     <Surface elevation={0}>

@@ -2,8 +2,7 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Svg, Circle, Text } from 'react-native-svg';
 import HT5 from '../../../../../assets/HT5'; // Your base SVG
-import { useProfile } from '../../../../context/profileContext';
-import { usePreferredUnits } from '../../../../context/preferredUnitsContext';
+import { useProfile, usePreferredUnits } from '../../../../context';
 import { TrajectoryData, UNew, Unit } from 'js-ballistics/dist/v2';
 import { useTheme } from 'react-native-paper';
 

@@ -1,13 +1,13 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createContext, useState, useContext, useEffect, ReactNode } from 'react';
 import { CurrentConditionsValues } from '../utils/ballisticsCalculator';
-import { DimensionProps, useDimension, dimensions, useNumeral, numerals, NumeralProps } from '../hooks/dimension';
+import { DimensionProps, useDimension, dimensions, useNumeral, numerals, NumeralProps } from '../hooks';
 
 
 
 
 
-interface ConditionsContextType {
+export interface ConditionsContextType {
     flags: CurrentConditionsValues;
     setFlags: (value: CurrentConditionsValues) => void;
     updateFlags: (value: Partial<CurrentConditionsValues>) => void;

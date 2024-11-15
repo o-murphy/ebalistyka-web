@@ -4,18 +4,10 @@ import Calculator, {
     DragModel,
     HitResult,
     Wind,
-    getGlobalUsePowderSensitivity,
-    setGlobalUsePowderSensitivity,
-    AbstractUnit,
-    Temperature,
-    Pressure,
-    Velocity,
-    Angular,
-    Distance
 } from 'js-ballistics/dist/v2';
 import { ProfileProps } from './parseA7P';
 import { Unit } from 'js-ballistics';
-import { DimensionProps } from '../hooks/dimension';
+import { DimensionProps } from '../hooks';
 
 export interface PreparedZeroData {
     weapon: Weapon;

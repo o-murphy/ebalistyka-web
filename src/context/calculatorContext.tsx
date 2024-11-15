@@ -1,5 +1,5 @@
-import { getGlobalUsePowderSensitivity, HitResult, setGlobalUsePowderSensitivity } from "js-ballistics/dist/v2";
 import { createContext, ReactNode, useContext, useMemo, useState } from "react";
+import { HitResult } from "js-ballistics/dist/v2";
 import { makeShot, prepareCalculator, PreparedZeroData, shootTheTarget } from "../utils/ballisticsCalculator";
 import { useProfile } from "./profileContext";
 import { useCurrentConditions } from "./currentConditions";

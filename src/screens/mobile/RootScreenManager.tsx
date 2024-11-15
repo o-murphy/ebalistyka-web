@@ -13,7 +13,7 @@ import { WeatherScreen, WeatherTopAppBar } from './weatherScrreen';
 import { TablesScreen, TablesTopAppBar } from './tablesScreen';
 import { ConvertorScreen, ConvertorTopAppBar } from './convertorScreen';
 import { ShotInfoScreen, ShotInfoTopAppBar } from './shotInfoScreen';
-import { BusyOverlayAnimated } from './busyOverlay';
+import { BusyOverlayAnimated } from './components';
 import { SettingsScreen, SettingsScreenTopAppBar } from './settingsScreen';
 
 

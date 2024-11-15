@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { usePreferredUnits } from '../context/preferredUnitsContext';
+import { usePreferredUnits } from '../context';
 import { AbstractUnit, Measure, Unit, UnitProps, Pressure, Temperature, Velocity, Angular, Distance, Weight } from 'js-ballistics/dist/v2';
 
 type MeasureType = (typeof Measure)[keyof typeof Measure];
@@ -11,7 +11,7 @@ function getFractionDigits(precisionInOriginalUnit: number, conversionFactor: nu
 }
 
 // Type definition for DimensionRange
-export interface DimensionRange {
+export interface ValueRange {
     min: number;
     max: number;
     accuracy: number;
@@ -28,7 +28,7 @@ export interface DimensionProps {
     setAsDef: (value: number) => void;
     asPref: number;
     setAsPref: (value: number) => void;
-    rangePref: DimensionRange;
+    rangePref: ValueRange;
     // reset: () => void;
     accuracy: number;
 }
@@ -130,21 +130,14 @@ export const useDimension = ({
 };
 
 
-export interface NumeralRange {
-    min: number;
-    max: number;
-    accuracy: number;
-}
-
-
 
 export interface UseNumeralArgs {
     symbol: string;
-    range: NumeralRange;
+    range: ValueRange;
 }
 
 export interface NumeralProps {
-    range: NumeralRange;
+    range: ValueRange;
     value: number;
     setValue: (value: number) => void;
     isValid: boolean;
