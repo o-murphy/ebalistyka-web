@@ -1,13 +1,14 @@
+import { useEffect } from "react";
 import { StyleSheet } from "react-native";
 import { Chip, FAB, Surface, Switch, Text } from "react-native-paper";
-import { NumericDialog, ScreenBackground, ScrollViewSurface } from "../components";
+import { ScreenBackground, ScrollViewSurface } from "../components";
 import { useProfile } from "../../../context/profileContext";
 import { WeatherPressureDialog, WeatherTemperatureDialog } from "./components";
 import { HitResult, Unit, Velocity } from "js-ballistics/dist/v2";
 import { useCurrentConditions } from "../../../context/currentConditions";
 import { useDimension } from "../../../hooks/dimension";
-import { useEffect } from "react";
-import { DimensionDialogChip } from "../../desktop/components";
+import { NumericDialog } from "../../../components/widgets";
+import { DimensionDialogChip } from "../../../components/widgets";
 import { useCalculator } from "../../../context/calculatorContext";
 
 

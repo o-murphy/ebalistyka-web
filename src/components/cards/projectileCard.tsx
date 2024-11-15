@@ -1,13 +1,13 @@
 import React, { useMemo } from "react";
 import CustomCard from "./customCard";
 import { useProfile } from "../../context/profileContext";
-import { TextInputChip } from "../widgets/inputChip";
-import { DimensionDialogChip, NumericDialogChip } from "../../screens/desktop/components";
+import { TextInputChip } from "../widgets";
 import { Divider } from "react-native-paper";
-import { min, range } from "lodash";
+import { DimensionDialogChip, NumericDialogChip } from "../widgets";
+
 
 interface ProjectileCardProps {
-    expanded?: boolean;
+    title?: string;
 }
 
 const ProjectileName = () => {
@@ -24,15 +24,16 @@ const ProjectileName = () => {
     )
 }
 
-const ProjectileCard: React.FC<ProjectileCardProps> = ({ expanded = true }) => {
+const ProjectileCard: React.FC<ProjectileCardProps> = ({title = "Projectile"}) => {
     const { isLoaded } = useProfile()
     const { cMuzzleVelocity, cZeroTemperature: cZeroPTemperature, cTCoeff } = useProfile();
 
     if (!isLoaded) {
-        return <CustomCard title={"Projectile"} expanded={expanded} />
+        return <CustomCard title={title} />
     }
+
     return (
-        <CustomCard title={"Projectile"} expanded={expanded}>
+        <CustomCard title={title} >
             <ProjectileName />
             <DimensionDialogChip icon="speedometer" title="Muzzle velocity" dimension={cMuzzleVelocity}/>
             <Divider />

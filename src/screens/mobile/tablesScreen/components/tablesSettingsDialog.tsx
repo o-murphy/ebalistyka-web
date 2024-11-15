@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { ScrollView } from "react-native";
 import { Dialog, FAB, IconButton, Portal, Surface, Switch, Text } from "react-native-paper";
 import { useTableSettings } from "../../../../context/tableSettingsContext";
-import { DimensionField } from "../../components";
+import { DimensionField } from "../../../../components/widgets";
 
 
 const displayOptions = [

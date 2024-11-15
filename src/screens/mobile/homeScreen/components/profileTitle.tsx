@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { StyleSheet } from "react-native";
-import { Chip, FAB, Icon, Surface } from "react-native-paper";
+import { Chip, Icon, Surface } from "react-native-paper";
 import { useProfile } from "../../../../context/profileContext";
 import { useNavigation } from "@react-navigation/native";
 

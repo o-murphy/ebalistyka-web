@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { View, ScrollView, StyleSheet, Pressable, StyleProp, TextStyle, ViewStyle, Platform } from 'react-native';
+import { View, ScrollView, StyleSheet, Pressable, StyleProp, TextStyle, ViewStyle, FlatList } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import { Table, Row } from 'react-native-table-component';
-import { HitResult, TrajFlag, UNew, UnitProps } from 'js-ballistics/dist/v2';
+import { HitResult, TrajFlag, UnitProps } from 'js-ballistics/dist/v2';
 import { usePreferredUnits } from '../../../../../context/preferredUnitsContext';
 import RowDetailsDialog from './rowDetaisDialog';
 import { useTableSettings } from '../../../../../context/tableSettingsContext';
@@ -66,76 +66,174 @@ const useMappedTableData = ({ row, displayFlag = false }) => {
 }
 
 
-export const ResponsiveTableView: React.FC<ResponsiveTableViewProps> = ({ tableHeaders, tableData, style = null, rowLongPress = null }) => {
+// export const ResponsiveTableView: React.FC<ResponsiveTableViewProps> = ({ tableHeaders, tableData, style = null, rowLongPress = null }) => {
 
-    const theme = useTheme()
-    const [selection, setSelection] = useState(null)
+//     const theme = useTheme()
+//     const [selection, setSelection] = useState(null)
 
-    const select = (index) => {
-        setSelection(index)
-    }
+//     const select = (index) => {
+//         setSelection(index)
+//     }
 
-    const onLongPress = (index) => {
-        setSelection(index)
-        rowLongPress?.(index)
-    }
+//     const onLongPress = (index) => {
+//         setSelection(index)
+//         rowLongPress?.(index)
+//     }
+
+//     const styles = StyleSheet.create({
+//         noSelect: {
+//             userSelect: 'none'
+//         },
+//         horizontalScroll: {
+//             flexGrow: 1,
+//         },
+//         tableContainer: { minWidth: "100%" },  // Ensures the table takes up available space
+//         table: {},
+//         header: {
+//             height: 64,
+//         },
+//         headerText: { textAlign: 'center', fontWeight: 'bold', color: theme.colors.onSurfaceVariant },
+
+//         selectedRow: { backgroundColor: theme.colors.secondaryContainer },
+//         selectedRowText: { textAlign: 'center', color: theme.colors.onSecondaryContainer },
+
+//         dataWrapper: { flex: 1, },  // Adjust as needed for vertical scrollable area
+
+//         borderStyle: { borderWidth: 2, borderColor: theme.colors.surfaceVariant }
+//     });
+
+//     return (
+//         <View style={[style, styles.noSelect]}>
+
+//             <ScrollView horizontal contentContainerStyle={styles.horizontalScroll} overScrollMode="never" bounces={false} alwaysBounceHorizontal={false} alwaysBounceVertical={false}>
+//                 <View style={styles.tableContainer}>
+//                     <Table borderStyle={styles.borderStyle} style={styles.table}>
+//                         <Row data={tableHeaders} style={styles.header} textStyle={styles.headerText} />
+//                     </Table>
+
+//                     <ScrollView style={styles.dataWrapper} overScrollMode="never" bounces={false} alwaysBounceVertical={false}>
+//                         <Table borderStyle={styles.borderStyle} style={styles.table}>
+//                             {tableData.map((rowData, index) => (
+//                                 <Pressable
+//                                     key={index}
+//                                     onPress={() => select(index)} // Regular press
+//                                     onLongPress={(event) => onLongPress(index)} // Long press
+//                                     delayLongPress={300} // Optional: delay before the long press is recognized
+//                                 >
+//                                     <Row
+//                                         data={rowData.data}
+//                                         style={index === selection ? styles.selectedRow : (rowData.style || {})}
+//                                         textStyle={index === selection ? styles.selectedRowText : (rowData.textStyle || {})}
+//                                         borderStyle={styles.borderStyle}
+//                                     />
+//                                 </Pressable>
+//                             ))}
+//                         </Table>
+//                     </ScrollView>
+//                 </View>
+//             </ScrollView>
+//         </View>
+//     );
+// };
+
+export const ResponsiveTableView: React.FC<ResponsiveTableViewProps> = ({ 
+    tableHeaders, 
+    tableData, 
+    style = null, 
+    rowLongPress = null 
+}) => {
+    const theme = useTheme();
+    const [selection, setSelection] = useState<number | null>(null);
+
+    const select = (index: number) => {
+        setSelection(index);
+    };
+
+    const onLongPress = (index: number) => {
+        setSelection(index);
+        rowLongPress?.(index);
+    };
 
     const styles = StyleSheet.create({
         noSelect: {
-            userSelect: 'none'
+            userSelect: 'none',
         },
         horizontalScroll: {
             flexGrow: 1,
         },
-        tableContainer: { minWidth: "100%" },  // Ensures the table takes up available space
+        tableContainer: {
+            minWidth: '100%', // Ensures the table takes up available space
+        },
         table: {},
         header: {
             height: 64,
         },
-        headerText: { textAlign: 'center', fontWeight: 'bold', color: theme.colors.onSurfaceVariant },
-
-        selectedRow: { backgroundColor: theme.colors.secondaryContainer },
-        selectedRowText: { textAlign: 'center', color: theme.colors.onSecondaryContainer },
-
-        dataWrapper: { flex: 1, },  // Adjust as needed for vertical scrollable area
-
-        borderStyle: { borderWidth: 2, borderColor: theme.colors.surfaceVariant }
+        headerText: {
+            textAlign: 'center',
+            fontWeight: 'bold',
+            color: theme.colors.onSurfaceVariant,
+        },
+        selectedRow: {
+            backgroundColor: theme.colors.secondaryContainer,
+        },
+        selectedRowText: {
+            textAlign: 'center',
+            color: theme.colors.onSecondaryContainer,
+        },
+        borderStyle: {
+            borderWidth: 2,
+            borderColor: theme.colors.surfaceVariant,
+        },
     });
 
     return (
         <View style={[style, styles.noSelect]}>
-
-            <ScrollView horizontal contentContainerStyle={styles.horizontalScroll} overScrollMode="never" bounces={false} alwaysBounceHorizontal={false} alwaysBounceVertical={false}>
+            <ScrollView
+                horizontal
+                contentContainerStyle={styles.horizontalScroll}
+                overScrollMode="never"
+                bounces={false}
+                alwaysBounceHorizontal={false}
+                alwaysBounceVertical={false}
+            >
                 <View style={styles.tableContainer}>
+                    {/* Table Header */}
                     <Table borderStyle={styles.borderStyle} style={styles.table}>
-                        <Row data={tableHeaders} style={styles.header} textStyle={styles.headerText} />
+                        <Row 
+                            data={tableHeaders} 
+                            style={styles.header} 
+                            textStyle={styles.headerText} 
+                        />
                     </Table>
 
-                    <ScrollView style={styles.dataWrapper} overScrollMode="never" bounces={false} alwaysBounceVertical={false}>
-                        <Table borderStyle={styles.borderStyle} style={styles.table}>
-                            {tableData.map((rowData, index) => (
-                                <Pressable
-                                    key={index}
-                                    onPress={() => select(index)} // Regular press
-                                    onLongPress={(event) => onLongPress(index)} // Long press
-                                    delayLongPress={300} // Optional: delay before the long press is recognized
-                                >
-                                    <Row
-                                        data={rowData.data}
-                                        style={index === selection ? styles.selectedRow : (rowData.style || {})}
-                                        textStyle={index === selection ? styles.selectedRowText : (rowData.textStyle || {})}
-                                        borderStyle={styles.borderStyle}
-                                    />
-                                </Pressable>
-                            ))}
-                        </Table>
-                    </ScrollView>
+                    {/* Table Rows with Lazy Loading */}
+                    <FlatList
+                        data={tableData}
+                        keyExtractor={(_, index) => index.toString()}
+                        renderItem={({ item, index }) => (
+                            <Pressable
+                                onPress={() => select(index)} // Regular press
+                                onLongPress={() => onLongPress(index)} // Long press
+                                delayLongPress={300} // Optional: delay before the long press is recognized
+                            >
+                                <Row
+                                    data={item.data}
+                                    style={index === selection ? styles.selectedRow : (item.style || {})}
+                                    textStyle={index === selection ? styles.selectedRowText : (item.textStyle || {})}
+                                    borderStyle={styles.borderStyle}
+                                />
+                            </Pressable>
+                        )}
+                        initialNumToRender={20} // Number of rows to render initially
+                        maxToRenderPerBatch={20} // Number of rows to render per batch
+                        windowSize={5} // Viewport size for rendering rows
+                        showsVerticalScrollIndicator={false}
+                    />
                 </View>
             </ScrollView>
         </View>
     );
 };
-
 
 export const ZerosDataTable = ({ hitResult, style = null }) => {
     if (!(hitResult instanceof HitResult)) return <></>

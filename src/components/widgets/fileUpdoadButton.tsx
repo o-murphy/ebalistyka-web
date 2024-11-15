@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, StyleSheet, Alert } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { Button, useTheme } from 'react-native-paper';
 import parseA7P, { ProfileProps } from '../../utils/parseA7P';
 import { useProfile } from '../../context/profileContext';
@@ -13,15 +13,11 @@ const FileUploadButton = () => {
     const theme = useTheme();
     const fileInputRef = useRef(null);
 
-    const { profileProperties, setProfileProperties, updateProfileProperties, setIsLoaded } = useProfile();
+    const { updateProfileProperties, setIsLoaded } = useProfile();
 
     const onSuccess = (data: ProfileProps) => {
-    //   if (profileProperties) {
         updateProfileProperties(data)
-    //   } else {
-    //     setProfileProperties(data)
-    //   }
-      setIsLoaded(true); // Mark as loaded after attempting to load data
+        setIsLoaded(true); // Mark as loaded after attempting to load data
     }
 
     // Function to handle file selection
@@ -30,7 +26,7 @@ const FileUploadButton = () => {
         if (file) {
             // Ensure the file type is allowed
             const fileExtension = file.name.slice((file.name.lastIndexOf(".")) >= 0 ? file.name.lastIndexOf(".") : file.name.length).toLowerCase();
-            
+
             console.log("Selected file extension:", fileExtension);
             if (allowedExtensions.includes(fileExtension)) {
                 setFileName(file.name); // Update the filename state

@@ -1,7 +1,7 @@
 
 
 
-import React, { useState } from 'react';
+import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -12,7 +12,7 @@ import { Drawer as PaperDrawer, Surface, useTheme } from "react-native-paper";
 import { Drawer } from 'react-native-drawer-layout';
 import { useNavigation } from "@react-navigation/native"
 import { StyleSheet } from 'react-native';
-import TopAppBar from '../../components/widgets/topAppBar';
+import { TopAppBar } from './components';
 import { TablesScreen } from './tablesScreen';
 import { SettingsScreen } from './settingsScreen';
 import { ChartsScreen } from './chartsScreen.tsx';

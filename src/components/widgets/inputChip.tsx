@@ -1,8 +1,8 @@
-import { TextInput } from "react-native-paper"
-import SimpleDialog from "../dialogs/simpleDialog"
-import { StyleProp, ViewStyle } from "react-native"
 import React, { ReactNode, useState } from "react";
+import { StyleProp, ViewStyle } from "react-native";
+import { TextInput } from "react-native-paper";
 import { IconSource } from "react-native-paper/src/components/Icon";
+import { SimpleDialog } from "../dialogs";
 
 
 export interface TextInputChipProps {
@@ -14,7 +14,7 @@ export interface TextInputChipProps {
 }
 
 
-export const TextInputChip: React.FC<TextInputChipProps> = ({
+const TextInputChip: React.FC<TextInputChipProps> = ({
     style = null,
     text = "",
     onTextChange = null,
@@ -45,3 +45,5 @@ export const TextInputChip: React.FC<TextInputChipProps> = ({
         </SimpleDialog>
     )
 }
+
+export default TextInputChip;

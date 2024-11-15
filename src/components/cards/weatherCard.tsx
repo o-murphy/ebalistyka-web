@@ -1,22 +1,23 @@
 import React from "react";
+import { Divider } from "react-native-paper";
 import CustomCard from "./customCard";
 import { useProfile } from "../../context/profileContext";
-import { DimensionDialogChip, NumericDialogChip } from "../../screens/desktop/components";
-import { Divider } from "react-native-paper";
+import { DimensionDialogChip, NumericDialogChip } from "../widgets";
 
-interface AtmoCardProps {
-    label?: string;
-    expanded?: boolean;
+
+interface WeatherCard {
+    title?: string;
 }
 
-const ZeroAtmoCard: React.FC<AtmoCardProps> = ({ label = "Zero atmosphere", expanded = true }) => {
+const WeatherCard: React.FC<WeatherCard> = ({ title = "Zero atmosphere" }) => {
     const { isLoaded, cZeroAirHumidity, cZeroAirTemperature, cZeroAirPressure, cZeroPTemperature } = useProfile()
 
     if (!isLoaded) {
-        return <CustomCard title={label} expanded={expanded} />
+        return <CustomCard title={title} />
     }
+
     return (
-        <CustomCard title={label} expanded={expanded}>
+        <CustomCard title={title} >
             <DimensionDialogChip icon={"thermometer"} title={"Temperature"} dimension={cZeroAirTemperature} />
             <Divider />
             <DimensionDialogChip icon={"gauge"} title={"Pressure"} dimension={cZeroAirPressure} />
@@ -28,4 +29,4 @@ const ZeroAtmoCard: React.FC<AtmoCardProps> = ({ label = "Zero atmosphere", expa
     );
 };
 
-export default ZeroAtmoCard;
+export default WeatherCard;

@@ -1,8 +1,8 @@
 import { Chip, Icon, Surface, Text } from "react-native-paper";
 import React from "react";
 import { Pressable, StyleSheet } from "react-native";
-import { DimensionDialog, DimensionFieldProps, NumericDialog, NumericFieldProps } from "../../mobile/components"
-import { DimensionProps, NumeralProps } from "../../../hooks/dimension";
+import { DimensionDialog, NumericDialog } from "./valueDialog";
+import { DimensionProps, NumeralProps } from "../../hooks/dimension";
 
 
 export interface DimensionDialogChipProps {

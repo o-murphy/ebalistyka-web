@@ -58,11 +58,11 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
 
   const setParsedProps = (props: ProfileProps) => {
     setProfileProperties(props)
-
     scHeight.setAsDef(props.scHeight ?? 2)
     rTwist.setAsDef((props.rTwist ?? 10) / 100)
     cZeroWPitch.setAsDef(props?.cZeroWPitch ?? 10)
-    zeroDistance.setAsDef(props.zeroDistance ?? (props.distances[props.cZeroDistanceIdx] ?? 10000) / 100)
+    // zeroDistance.setAsDef(((props?.zeroDistance || props.distances[props.cZeroDistanceIdx]) ?? 10000) / 100)
+    zeroDistance.setAsDef(props?.zeroDistance || 100)
 
     cMuzzleVelocity.setAsDef((props.cMuzzleVelocity ?? 8000) / 10)
     cZeroTemperature.setAsDef(props.cZeroTemperature ?? 15)

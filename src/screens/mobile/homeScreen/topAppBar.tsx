@@ -1,5 +1,5 @@
 import { Appbar, useTheme } from "react-native-paper";
-import FileUploadButton from "../../../components/widgets/fileUpdoader";
+import FileUploadButton from "../../../components/widgets/fileUpdoadButton";
 import { useThemeSwitch } from "../../../context/themeContext";
 import { NativeStackHeaderProps } from "@react-navigation/native-stack";
 import { TopAppBar } from "../components";

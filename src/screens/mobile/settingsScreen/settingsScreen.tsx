@@ -6,7 +6,8 @@ import { Angular, Energy, Pressure, Temperature, Unit, UnitProps, Weight } from 
 import { SettingsSaveBanner, UnitSelectorChip } from "./components";
 import { ScreenBackground, ScrollViewSurface } from "../components";
 import { useAppSettings } from "../../../context/settingsContext";
-import { DimensionField } from "../components";
+import { DimensionField } from "../../../components/widgets";
+
 
 interface UnitConfig {
     icon: string;

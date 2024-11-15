@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from "react"
 import { HelperText, Surface, TextInput } from "react-native-paper"
-import { DimensionProps, NumeralProps } from "../../../hooks/dimension"
-import { DoubleSpinBox, SpinBoxProps } from "../../../components/widgets/doubleSpinBox";
+import { DimensionProps, NumeralProps } from "../../hooks/dimension"
+import { DoubleSpinBox, SpinBoxProps } from "./doubleSpinBox";
 import { StyleSheet, View } from "react-native";
 
 

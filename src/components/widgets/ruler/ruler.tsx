@@ -9,16 +9,6 @@ import {
 import { Text, useTheme } from 'react-native-paper';
 
 
-function createArray(min, max, step) {
-  const result = [];
-  for (let i = min; i <= max; i += step) {
-      // Round each value to a fixed number of decimal places
-      result.push(Number(i));
-  }
-  return result;
-}
-
-
 export const TickList = ({children}) => {
   return (
     <View style={{

@@ -2,10 +2,11 @@ import { View } from "react-native"
 import { Chip, Divider, List, Text, Surface, useTheme } from "react-native-paper"
 import { useProfile } from "../../../../context/profileContext"
 import { usePreferredUnits } from "../../../../context/preferredUnitsContext"
-import { HitResult, UNew, Unit, UnitProps } from "js-ballistics/dist/v2"
-import getFractionDigits from "../../../../utils/fractionConvertor"
+import { HitResult, UNew, UnitProps } from "js-ballistics/dist/v2"
 import { useCurrentConditions } from "../../../../context/currentConditions"
 import { useCalculator } from "../../../../context/calculatorContext"
+import { dimensions, useDimension } from "../../../../hooks/dimension"
+import { useEffect, useMemo } from "react"
 
 
 const Section = ({ text, value, divider = true }) => {
@@ -41,8 +42,6 @@ const SectionTitle = ({ title }) => {
 
 
 const SectionSubtitle = ({ subtitle }) => {
-    const theme = useTheme()
-
     return (
         <View style={{ marginTop: 16, marginBottom: 4, justifyContent: "center" }}>
 
@@ -113,43 +112,42 @@ const BCDetails = ({ dragModel, coeffs }) => {
 
 const ProfileDetails = () => {
 
-    const { preferredUnits } = usePreferredUnits()
-    const { profileProperties } = useProfile()
-    const { adjustedResult } = useCalculator()
-    const currentConditions = useCurrentConditions()
     const theme = useTheme()
+    const { hitResult } = useCalculator()
+    const profileProperties = useProfile()
+    const currentConditions = useCurrentConditions()
 
-    const caliberAccuracy = getFractionDigits(0.001, UNew.Inch(1).In(preferredUnits.sizes))
-    const twistAccuracy = getFractionDigits(0.1, UNew.Inch(1).In(preferredUnits.sizes))
-    const bLengthAccuracy = getFractionDigits(0.01, UNew.Inch(1).In(preferredUnits.sizes))
-    const bWeightAccuracy = getFractionDigits(0.1, UNew.Grain(1).In(preferredUnits.weight))
+    const currentMv = useDimension(dimensions.cMuzzleVelocity)
 
-    const props = {
-        profName: profileProperties?.profileName,
-        caliber: `${UNew.Inch(profileProperties?.bDiameter / 1000).In(preferredUnits.sizes).toFixed(caliberAccuracy)} ${UnitProps[preferredUnits.sizes].symbol}`,
-        twist: `1:${UNew.Inch(profileProperties?.rTwist / 100).In(preferredUnits.sizes).toFixed(twistAccuracy)} ${UnitProps[preferredUnits.sizes].symbol}`,
-        twistDir: profileProperties?.twistDir,
-        dragModel: profileProperties?.bcType,
-        zeroMv: `${UNew.MPS(profileProperties?.cMuzzleVelocity / 10).In(preferredUnits.velocity).toFixed(0)} ${UnitProps[preferredUnits.velocity].symbol}`,
-        zeroDist: `${UNew.Meter(profileProperties?.distances[profileProperties?.cZeroDistanceIdx] / 100).In(preferredUnits.distance).toFixed(0)} ${UnitProps[preferredUnits.distance].symbol}`,
-        bLength: `${UNew.Inch(profileProperties?.bLength / 1000).In(preferredUnits.sizes).toFixed(bLengthAccuracy)} ${UnitProps[preferredUnits.sizes].symbol}`,
-        bWeight: `${UNew.Grain(profileProperties?.bWeight / 10).In(preferredUnits.weight).toFixed(bWeightAccuracy)} ${UnitProps[preferredUnits.weight].symbol}`,
-        scHeight: `${UNew.Centimeter(profileProperties?.scHeight / 10).In(preferredUnits.sizes).toFixed(twistAccuracy)} ${UnitProps[preferredUnits.sizes].symbol}`,
+    useEffect(() => {
+        if (hitResult instanceof HitResult) {
+            currentMv.setValue(hitResult.trajectory[0].velocity)
+        }
+    }, [hitResult])
 
-        coeffs: profileProperties?.coefRows,
-
-        bulletName: profileProperties?.bulletName,
-
-        mv: (adjustedResult instanceof HitResult) ? `${adjustedResult.trajectory[0].velocity.In(preferredUnits.velocity).toFixed(0)} ${UnitProps[preferredUnits.velocity].symbol}` : "<NaN>"
-    }
-
-    const conds = {
-        temp: `${currentConditions.temperature.asString} ${currentConditions.temperature.symbol}`,
-        press: `${currentConditions.pressure.asString} ${currentConditions.pressure.symbol}`,
-        humidity: `${currentConditions.flags?.humidity} %`,
-        windSpeed: `${currentConditions.windSpeed.asPref}  ${currentConditions.windSpeed.symbol}`,
-        windDir: `${currentConditions.windDirection.asDef.toFixed(0)} °`,
-    }
+    const [props, conds] = useMemo(() => {
+        return [{
+            profName: profileProperties.profileProperties.profileName,
+            caliber: `${profileProperties.bDiameter.asString} ${profileProperties.bDiameter.symbol}`,
+            twist: `1:${profileProperties.rTwist.asString} ${profileProperties.rTwist.symbol}`,
+            twistDir: profileProperties.profileProperties.twistDir,
+            dragModel: profileProperties.profileProperties.bcType,
+            zeroMv: `${profileProperties.cMuzzleVelocity.asString} ${profileProperties.cMuzzleVelocity.symbol}`,
+            zeroDist: `${profileProperties.zeroDistance.asString} ${profileProperties.zeroDistance.symbol}`,
+            bLength: `${profileProperties.bLength.asString} ${profileProperties.bLength.symbol}`,
+            bWeight: `${profileProperties.bWeight.asString} ${profileProperties.bWeight.symbol}`,
+            scHeight: `${profileProperties.scHeight.asString} ${profileProperties.scHeight.symbol}`,
+            coeffs: profileProperties.profileProperties.coefRows,
+            bulletName: profileProperties.profileProperties.bulletName,
+            currentMv: `${currentMv.asString} ${currentMv.symbol}`
+        }, {
+            temp: `${currentConditions.temperature.asString} ${currentConditions.temperature.symbol}`,
+            press: `${currentConditions.pressure.asString} ${currentConditions.pressure.symbol}`,
+            humidity: `${currentConditions.flags?.humidity} %`,
+            windSpeed: `${currentConditions.windSpeed.asPref}  ${currentConditions.windSpeed.symbol}`,
+            windDir: `${currentConditions.windDirection.asDef.toFixed(0)} °`,
+        }]
+    }, [hitResult])
 
     return (
         <Surface style={{
@@ -192,7 +190,7 @@ const ProfileDetails = () => {
                         <SectionSubtitle subtitle={props.bulletName} />
                         <BCDetails dragModel={props.dragModel} coeffs={props.coeffs} />
 
-                        <Section text={"Muzzle velocity"} value={props.mv} />
+                        <Section text={"Muzzle velocity"} value={props.currentMv} />
                         <Section text={"Zero muzzle velocity"} value={props.zeroMv} />
                         <Section text={"Zero distance"} value={props.zeroDist} />
                         <Section text={"Bullet length"} value={props.bLength} />

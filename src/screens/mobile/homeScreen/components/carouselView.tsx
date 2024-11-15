@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, FlatList, Dimensions, StyleSheet, Animated } from 'react-native';
-import { Icon, IconButton, Surface, useTheme } from 'react-native-paper';
+import { View, FlatList, StyleSheet, Animated } from 'react-native';
+import { IconButton, Surface, useTheme } from 'react-native-paper';
 
 // const screenWidth = Dimensions.get('window').width;
 

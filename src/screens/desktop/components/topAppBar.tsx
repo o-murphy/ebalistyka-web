@@ -1,10 +1,10 @@
 import { Appbar, useTheme } from "react-native-paper"
-import { useThemeSwitch } from "../../context/themeContext"
-import SettingsUnitCard from "../cards/settingsCard"
+import { useThemeSwitch } from "../../../context/themeContext"
+import SettingsCard from "../../../components/cards/settingsCard"
 import { useState } from "react"
 import { NativeStackHeaderProps } from "@react-navigation/native-stack"
 import { Platform } from 'react-native';
-import FileUploadButton from "./fileUpdoader";
+import FileUploadButton from "../../../components/widgets/fileUpdoadButton";
 
 
 const TopAppBar = ({...props}: NativeStackHeaderProps) => {
@@ -30,7 +30,7 @@ const TopAppBar = ({...props}: NativeStackHeaderProps) => {
 
             {/* <Appbar.Action icon="cog-outline" onPress={() => setSettingsVisible(true)} /> */}
 
-            <SettingsUnitCard visibility={[settingsVisible, setSettingsVisible]} />
+            <SettingsCard visibility={[settingsVisible, setSettingsVisible]} />
 
         </Appbar.Header>
     )

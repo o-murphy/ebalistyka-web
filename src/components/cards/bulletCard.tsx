@@ -3,11 +3,12 @@ import React, { useMemo } from "react";
 import CustomCard from "./customCard";
 import { StyleSheet, View } from "react-native";
 import { useProfile } from "../../context/profileContext";
-import { TextInputChip } from "../widgets/inputChip";
-import { DimensionDialogChip } from "../../screens/desktop/components";
+import { TextInputChip } from "../widgets";
+import { DimensionDialogChip } from "../widgets";
+
 
 interface BulletCardProps {
-    expanded?: boolean;
+    title?: string;
 }
 
 const BulletName = () => {
@@ -49,14 +50,15 @@ const DragModelEdit = () => {
     )
 }
 
-const BulletCard: React.FC<BulletCardProps> = ({ expanded = true }) => {
+const BulletCard: React.FC<BulletCardProps> = ({ title = "Bullet" }) => {
     const { isLoaded, bDiameter, bLength, bWeight } = useProfile()
 
     if (!isLoaded) {
-        return <CustomCard title={"Bullet"} expanded={expanded} />
+        return <CustomCard title={title} />
     }
+    
     return (
-        <CustomCard title={"Bullet"} expanded={expanded}>
+        <CustomCard title={title} >
             <BulletName />
             <DimensionDialogChip icon={"diameter-variant"} title={"Bullet diameter"} dimension={bDiameter} />
             <Divider />

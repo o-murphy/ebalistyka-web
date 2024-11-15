@@ -4,7 +4,7 @@ import { StyleSheet, View } from "react-native";
 import { SettingsContent } from "../../screens/mobile/settingsScreen";
 
 
-export default function SettingsUnitCard({ visibility }) {
+const SettingsCard = ({ visibility }) => {
 
     const [visible, setVisible] = visibility
 
@@ -37,3 +37,5 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
 });
+
+export default SettingsCard;

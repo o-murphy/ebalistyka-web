@@ -7,7 +7,16 @@ import { DeviceType } from "expo-device";
 import useDeviceType from "../../hooks/deviceType";
 
 
-function degreesToTime(angle) {
+interface WindDirectionPickerProps {
+    value: number;
+    onChange: (value: number) => void;
+    style?: StyleProp<ViewStyle>;
+    diameter?: number;
+    props?: any
+}
+
+
+const degreesToTime = (angle) => {
     // Normalize the angle to be within 0-360 degrees
     angle = angle % 360;
 
@@ -27,17 +36,12 @@ function degreesToTime(angle) {
     return `${formattedHours}:${formattedMinutes}`;
 }
 
-function meterText(value) {
+const meterText = (value) => {
     return `${(value * 30).toFixed(0)}° (${degreesToTime(value * 30)})`
 }
 
-export default function WindDirectionPicker({ value, onChange, style = null, diameter = 198, ...props }: {
-    value: number,
-    onChange: (value: number) => void,
-    style?: StyleProp<ViewStyle>,
-    diameter?: number,
-    props?: any
-}) {
+
+const WindDirectionPicker: React.FC<WindDirectionPickerProps> = ({ value, onChange, style = null, diameter = 198, ...props }) => {
 
     const theme = useTheme()
 
@@ -116,3 +120,5 @@ const styles = StyleSheet.create({
         userSelect: 'none', // This will prevent text selection on web
     },
 })
+
+export default WindDirectionPicker;

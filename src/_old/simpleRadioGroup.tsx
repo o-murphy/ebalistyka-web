@@ -15,7 +15,7 @@ type RadioProps = {
 }
 
 
-export default function RadioGroup({initialValue, onChange, items}: RadioProps) {
+const SimpleRadioGroup: React.FC<RadioProps> = ({initialValue, onChange, items}) => {
 
     const [value, setValue] = useState(initialValue);
 
@@ -33,3 +33,5 @@ export default function RadioGroup({initialValue, onChange, items}: RadioProps) 
     );
 
 }
+
+export default SimpleRadioGroup;

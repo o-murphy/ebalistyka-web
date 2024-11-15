@@ -47,7 +47,6 @@ export const CalculatorProvider: React.FC<{ children: ReactNode }> = ({ children
     }, [profileProperties])
 
     const zero = () => {
-
         const preparedCalculator = prepareCalculator(_profileProperties, currentConditions);
         setCalculator(preparedCalculator);
         return preparedCalculator;

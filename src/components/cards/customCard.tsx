@@ -1,27 +1,20 @@
 import { Card } from "react-native-paper";
-import { useState, ReactNode, isValidElement } from "react";
+import { ReactNode, isValidElement } from "react";
 import { StyleProp, StyleSheet, ViewStyle } from "react-native";
-import { IconButton, Text } from "react-native-paper";
+import { Text } from "react-native-paper";
 
 interface CustomCardProps {
     children?: ReactNode;
     title?: string|ReactNode;
-    style?: StyleProp<ViewStyle>
-    expanded?: boolean;
-    iconButton?: ReactNode;
+    style?: StyleProp<ViewStyle>;
 }
 
-const CustomCard: React.FC<CustomCardProps> = ({ children = null, title = null, style = null, expanded = true, iconButton = null }) => {
-    const [isExpanded, setIsExpanded] = useState<boolean>(expanded);
-
-    const toggleExpansion = () => {
-        setIsExpanded(!isExpanded);
-    };
+const CustomCard: React.FC<CustomCardProps> = ({ children = null, title = null, style = null }) => {
 
     const _title = isValidElement(title) ? (
         title
     ) : (
-        <Text variant="bodyLarge" onPress={toggleExpansion}>
+        <Text variant="bodyLarge">
             {title}
         </Text>
     )
@@ -32,18 +25,9 @@ const CustomCard: React.FC<CustomCardProps> = ({ children = null, title = null, 
                 title={_title}
                 style={styles.title}
                 titleStyle={styles.title}
-                // right={children ? (props) => (
-                //     iconButton ?? <IconButton
-                //         {...props}
-                //         style={styles.iconButton}
-                //         size={20}
-                //         icon={isExpanded ? "chevron-up" : "chevron-down"}
-                //         onPress={toggleExpansion}
-                //     />
-                // ) : null}
             />
 
-            {isExpanded && children && (
+            {children && (
                 <Card.Content style={styles.content}>
                     {children}
                 </Card.Content>

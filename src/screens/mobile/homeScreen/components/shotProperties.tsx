@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react"
 import { LayoutChangeEvent, StyleSheet } from "react-native"
 import { FAB, Surface, Text } from "react-native-paper"
 import { useNavigation } from "@react-navigation/native"
-import WindDirectionPicker from "../../../../components/widgets/windDirectionPicker"
+import { WindDirectionPicker } from "../../../../components/widgets"
 import { useCurrentConditions } from "../../../../context/currentConditions"
 import useDeviceType from "../../../../hooks/deviceType"
 

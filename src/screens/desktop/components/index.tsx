@@ -1,8 +1,7 @@
+import TopAppBar from "./topAppBar";
 import ScreenBackground from "./screenBackground";
-import { DimensionDialogChip, NumericDialogChip } from "./valueDialogChip";
 
 export {
+    TopAppBar,
     ScreenBackground,
-    DimensionDialogChip,
-    NumericDialogChip,
 };

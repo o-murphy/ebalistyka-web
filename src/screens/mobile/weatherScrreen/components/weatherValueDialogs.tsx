@@ -1,7 +1,6 @@
 import React from "react"
-import { DimensionDialog } from "../../components";
+import { DimensionDialog } from "../../../../components/widgets";
 import { useCurrentConditions } from "../../../../context/currentConditions";
-
 
 
 const WeatherTemperatureDialog: React.FC<{ button: React.ReactElement }> = ({ button }) => {
@@ -16,20 +15,6 @@ const WeatherTemperatureDialog: React.FC<{ button: React.ReactElement }> = ({ bu
         />
     )
 };
-
-// const WeatherPowderTemperatureDialog: React.FC<{ button: React.ReactElement }> = ({ button }) => {
-//     const { powderTemperature } = useCurrentConditions()
-
-//     return (
-//         <DimensionDialog
-//             button={button}
-//             label="Powder temperature"
-//             icon="thermometer"
-//             dimension={powderTemperature}
-//             enableSlider
-//         />
-//     )
-// };
 
 const WeatherPressureDialog: React.FC<{ button: React.ReactElement }> = ({ button }) => {
     const { pressure } = useCurrentConditions()
@@ -49,5 +34,4 @@ const WeatherPressureDialog: React.FC<{ button: React.ReactElement }> = ({ butto
 export {
     WeatherTemperatureDialog,
     WeatherPressureDialog,
-    // WeatherPowderTemperatureDialog,
 };

@@ -1,9 +1,6 @@
 import { StyleSheet } from "react-native";
 import { ScreenBackground } from "../components";
-import WeaponCard from "../../../components/cards/weaponCard";
-import ProjectileCard from "../../../components/cards/projectileCard";
-import BulletCard from "../../../components/cards/bulletCard";
-import ZeroAtmoCard from "../../../components/cards/zeroAtmoCard";
+import { WeaponCard, ProjectileCard, BulletCard, WeatherCard } from "../../../components/cards";
 import { ScrollViewSurface } from "../../mobile/components";
 
 
@@ -19,7 +16,7 @@ const PropertiesScreen = ({ navigation }) => {
                 <WeaponCard />
                 <ProjectileCard />
                 <BulletCard />
-                <ZeroAtmoCard />
+                <WeatherCard />
             </ScrollViewSurface>
         </ScreenBackground>
     )

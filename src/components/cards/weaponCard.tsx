@@ -3,12 +3,12 @@ import React, { useMemo, useCallback } from "react";
 import CustomCard from "./customCard";
 import { StyleSheet } from "react-native";
 import { useProfile } from "../../context/profileContext";
-import { TextInputChip } from "../widgets/inputChip";
-import { DimensionDialogChip } from "../../screens/desktop/components";
+import { TextInputChip } from "../widgets";
+import { DimensionDialogChip } from "../widgets";
 
 
 interface WeaponCardProps {
-    expanded?: boolean;
+    title?: string;
 }
 
 const WeaponName = () => {
@@ -47,14 +47,14 @@ const TwistSwitch = () => {
 
 
 
-const WeaponCard: React.FC<WeaponCardProps> = ({ expanded = true }) => {
+const WeaponCard: React.FC<WeaponCardProps> = ({ title = "Weapon"}) => {
     const { isLoaded, scHeight, rTwist, cZeroWPitch, zeroDistance } = useProfile()
 
     if (!isLoaded) {
-        return <CustomCard title={"Weapon"} expanded={expanded} />
+        return <CustomCard title={title} />
     }
     return (
-        <CustomCard title={"Weapon"} expanded={expanded}>
+        <CustomCard title={title} >
             <WeaponName />
 
             <DimensionDialogChip icon={"crosshairs"} title={"Sight height"} dimension={scHeight} />
@@ -70,7 +70,7 @@ const WeaponCard: React.FC<WeaponCardProps> = ({ expanded = true }) => {
 };
 
 
-export const inputStyles = StyleSheet.create({
+const inputStyles = StyleSheet.create({
     style: {
         height: 24,
     },
