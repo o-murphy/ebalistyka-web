@@ -1,7 +1,7 @@
 import { Card, useTheme } from 'react-native-paper';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { useProfile, useCalculator } from '../../../context';
-import { Table } from 'js-ballistics/dist/v2';
+import { Table } from 'js-ballistics';
 import React from 'react';
 import { ToolTipRow } from './abstract';
 

@@ -1,6 +1,6 @@
 import { CalculationState, useProfile } from "../../../context/profileContext";
 import { MeasureFormFieldProps, MeasureFormFieldRefreshable } from "./measureField"
-import { UNew, Unit, UnitProps, Measure } from "js-ballistics/dist/v2"
+import { UNew, Unit, UnitProps, Measure } from "js-ballistics"
 import { usePreferredUnits } from "../../../context/preferredUnitsContext";
 import getFractionDigits from "../../../utils/fractionConvertor";
 import { useEffect, useState } from "react";

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
 import { Divider, List, Surface } from "react-native-paper";
 import { usePreferredUnits, useAppSettings } from "../../../context";
-import { Angular, Energy, Pressure, Temperature, Unit, UnitProps, Weight } from "js-ballistics/dist/v2";
+import { Angular, Energy, Pressure, Temperature, Unit, UnitProps, Weight } from "js-ballistics";
 import { SettingsSaveBanner, UnitSelectorChip } from "./components";
 import { ScreenBackground } from "../components";
 import { DimensionField, ScrollViewSurface } from "../../../components/widgets";

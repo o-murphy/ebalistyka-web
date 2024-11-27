@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Pressable, StyleSheet } from "react-native";
 import { Chip, Dialog, Icon, Portal, RadioButton, Text, Surface } from "react-native-paper";
-import { Unit, UnitProps } from "js-ballistics/dist/v2";
+import { Unit, UnitProps } from "js-ballistics";
 
 
 export interface UnitSelectorProps {

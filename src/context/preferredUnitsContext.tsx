@@ -1,4 +1,4 @@
-import { Unit } from 'js-ballistics/dist/v2';
+import { Unit } from 'js-ballistics';
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 

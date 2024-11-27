@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useProfile } from "../../../../context/profileContext";
 import { usePreferredUnits } from "../../../../context/preferredUnitsContext";
-import { UNew, Unit, UnitProps, Velocity } from "js-ballistics/dist/v2";
+import { UNew, Unit, UnitProps, Velocity } from "js-ballistics";
 import { DoubleSpinBox, SpinBoxProps } from "../../doubleSpinBox";
 import getFractionDigits from "../../../../utils/fractionConvertor";
 import { MeasureFormFieldProps } from "../measureField";

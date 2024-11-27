@@ -1,7 +1,7 @@
 import { Table, Row, Col, TableWrapper } from 'react-native-table-component';
 import { StyleSheet } from "react-native";
 import { Divider, useTheme } from "react-native-paper";
-import { HitResult, Unit, UnitProps } from "js-ballistics/dist/v2";
+import { HitResult, Unit, UnitProps } from "js-ballistics";
 import { useCalculator, useAppSettings, usePreferredUnits } from "../../../../../context";
 import { ScrollViewSurface } from '../../../../../components/widgets';
 

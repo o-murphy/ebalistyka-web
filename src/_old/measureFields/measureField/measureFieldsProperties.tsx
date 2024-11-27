@@ -1,4 +1,4 @@
-import { Unit, UnitProps } from "js-ballistics/dist/v2";
+import { Unit, UnitProps } from "js-ballistics";
 import { MeasureFormFieldProps } from "./measureField";
 
 export const measureFieldsProps: Record<string, Partial<MeasureFormFieldProps>> = {

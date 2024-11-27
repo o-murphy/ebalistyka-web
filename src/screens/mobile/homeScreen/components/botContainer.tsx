@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { StyleSheet } from "react-native";
 import { Surface, Text } from "react-native-paper";
 import { useProfile, useCurrentConditions, useCalculator } from "../../../../context";
-import { HitResult } from "js-ballistics/dist/v2";
+import { HitResult } from "js-ballistics";
 import { HoldPage } from "./holdPage";
 import CarouselView from "./carouselView";
 import { ShotTable } from "./shotTablePage";

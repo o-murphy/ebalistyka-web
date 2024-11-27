@@ -1,5 +1,5 @@
 import { createContext, ReactNode, useContext, useMemo, useState } from "react";
-import { HitResult } from "js-ballistics/dist/v2";
+import { HitResult } from "js-ballistics";
 import { makeShot, prepareCalculator, PreparedZeroData, shootTheTarget } from "../utils/ballisticsCalculator";
 import { useProfile } from "./profileContext";
 import { useCurrentConditions } from "./currentConditions";

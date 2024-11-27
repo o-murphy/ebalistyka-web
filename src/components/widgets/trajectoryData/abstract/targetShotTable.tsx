@@ -1,5 +1,5 @@
 import { DataTable, Text, useTheme } from 'react-native-paper';
-import { HitResult, TrajectoryData, Unit, UnitProps } from 'js-ballistics/dist/v2';
+import { HitResult, TrajectoryData, Unit, UnitProps } from 'js-ballistics';
 import { StyleSheet } from 'react-native';
 import { useState } from 'react';
 

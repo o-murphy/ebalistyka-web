@@ -1,6 +1,6 @@
 import { Chip, Divider, Surface, Text } from "react-native-paper";
 import { useProfile, useCurrentConditions, useCalculator, usePreferredUnits } from "../../../context";
-import { UNew, Atmo, HitResult, UnitProps } from "js-ballistics/dist/v2";
+import { UNew, Atmo, HitResult, UnitProps } from "js-ballistics";
 import { useEffect, useState, useMemo } from "react";
 import { ScrollViewSurface } from "../../../components/widgets";
 import { StyleSheet } from "react-native";

@@ -2,7 +2,7 @@ import { StyleSheet, View } from "react-native"
 import { Dialog, FAB, Portal, useTheme } from "react-native-paper"
 import { Table, Row } from 'react-native-table-component';
 import { usePreferredUnits } from "../../../../../context";
-import { TrajectoryData, UnitProps } from "js-ballistics/dist/v2";
+import { TrajectoryData, UnitProps } from "js-ballistics";
 import React from "react";
 
 

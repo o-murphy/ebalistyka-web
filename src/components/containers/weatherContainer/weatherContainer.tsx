@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { StyleSheet } from "react-native";
 import { Chip, FAB, Surface, Switch, Text } from "react-native-paper";
 import { useProfile, useCalculator, useCurrentConditions } from "../../../context";
-import { HitResult, Unit, Velocity } from "js-ballistics/dist/v2";
+import { HitResult, Unit, Velocity } from "js-ballistics";
 import { useDimension } from "../../../hooks";
 import { NumericDialog, ScrollViewSurface } from "../../../components/widgets";
 import { DimensionDialogChip } from "../../../components/widgets";

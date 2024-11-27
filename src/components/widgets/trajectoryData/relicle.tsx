@@ -1,4 +1,4 @@
-import { TrajectoryData, UNew } from "js-ballistics/dist/v2"
+import { TrajectoryData, UNew } from "js-ballistics"
 import { useCalculator } from "../../../context"
 import { Reticle } from "./abstract"
 

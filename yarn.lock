@@ -5172,9 +5172,9 @@ join-component@^1.1.0:
   integrity sha512-bF7vcQxbODoGK1imE2P9GS9aw4zD0Sd+Hni68IMZLj7zRnquH7dXUmMw9hDI5S/Jzt7q+IyTXN0rSg2GI0IKhQ==
 
 js-ballistics@^2.0.0-beta.2:
-  version "2.0.0-beta.2"
-  resolved "https://registry.yarnpkg.com/js-ballistics/-/js-ballistics-2.0.0-beta.2.tgz#dfd4939321c40d64435f229dc9710a013de102b3"
-  integrity sha512-NTjmIgPWRvAvQ+MtIq+YebJ24taqgA7UnBtptXQ+eWsYf54NEeGcRF+c3sWwBVNLLm6wsrIhsi/BU2EqecLcaQ==
+  version "2.0.0-rc.0"
+  resolved "https://registry.yarnpkg.com/js-ballistics/-/js-ballistics-2.0.0-rc.0.tgz#e304142aceb6eb9bea3a22efb7d954033c62ca9b"
+  integrity sha512-cq3wyt34lwB2KJi9D07fJK8bjF5gejymkYOU5zXx8/+G0or+ovud6WjSF0JujMeGhKTmqMD2zuFNhOR9THsApw==
 
 "js-tokens@^3.0.0 || ^4.0.0", js-tokens@^4.0.0:
   version "4.0.0"

@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { Angular, Unit, UnitProps } from "js-ballistics/dist/v2";
+import { Angular, Unit, UnitProps } from "js-ballistics";
 import { StyleSheet } from "react-native";
 import { Divider, Icon, Surface, Text } from "react-native-paper";
 

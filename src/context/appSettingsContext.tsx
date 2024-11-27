@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect, useCallback, useMemo } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Distance, Unit } from 'js-ballistics/dist/v2';
+import { Distance, Unit } from 'js-ballistics';
 import { DimensionProps, useDimension } from '../hooks';
 
 interface AppSettings {

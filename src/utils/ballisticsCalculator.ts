@@ -4,7 +4,7 @@ import Calculator, {
     DragModel,
     HitResult,
     Wind,
-} from 'js-ballistics/dist/v2';
+} from 'js-ballistics';
 import { ProfileProps } from './parseA7P';
 import { Unit } from 'js-ballistics';
 import { DimensionProps } from '../hooks';

@@ -1,6 +1,6 @@
 import { Card, Text, useTheme } from 'react-native-paper';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { Angular, Distance, HitResult, TrajectoryData, UNew, UnitProps } from 'js-ballistics/dist/v2';
+import { Angular, Distance, HitResult, TrajectoryData, UNew, UnitProps } from 'js-ballistics';
 import getFractionDigits from '../../../../utils/fractionConvertor';
 import React from 'react';
 import { ToolTipRow } from './tooltipRow';

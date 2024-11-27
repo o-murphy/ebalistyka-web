@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { usePreferredUnits } from '../context';
-import { AbstractUnit, Measure, Unit, UnitProps, Pressure, Temperature, Velocity, Angular, Distance, Weight } from 'js-ballistics/dist/v2';
+import { AbstractUnit, Measure, Unit, UnitProps, Pressure, Temperature, Velocity, Angular, Distance, Weight } from 'js-ballistics';
 
 type MeasureType = (typeof Measure)[keyof typeof Measure];
 

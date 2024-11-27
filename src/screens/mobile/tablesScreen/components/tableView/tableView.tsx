@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, ScrollView, StyleSheet, Pressable, StyleProp, TextStyle, ViewStyle, FlatList } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import { Table, Row } from 'react-native-table-component';
-import { HitResult, TrajFlag, UnitProps } from 'js-ballistics/dist/v2';
+import { HitResult, TrajFlag, UnitProps } from 'js-ballistics';
 import RowDetailsDialog from './rowDetaisDialog';
 import { usePreferredUnits, useTableSettings } from '../../../../../context';
 

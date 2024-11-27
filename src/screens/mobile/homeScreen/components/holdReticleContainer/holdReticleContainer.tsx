@@ -1,5 +1,5 @@
 import React from 'react';
-import { Angular, HitResult, TrajectoryData, Unit } from "js-ballistics/dist/v2";
+import { Angular, HitResult, TrajectoryData, Unit } from "js-ballistics";
 import { StyleSheet, View } from "react-native";
 import HT5 from '../../../../../../assets/HT5'; // Your base SVG
 import { Chip, Surface, Text, useTheme } from "react-native-paper";

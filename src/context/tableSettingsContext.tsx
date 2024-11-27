@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createContext, useState, useContext, useEffect, ReactNode } from 'react';
 import { ActivityIndicator } from 'react-native-paper';
 import { DimensionProps, useDimension } from '../hooks';
-import { Distance } from 'js-ballistics/dist/v2';
+import { Distance } from 'js-ballistics';
 import { Unit } from 'js-ballistics';
 
 export interface TableSettings {
