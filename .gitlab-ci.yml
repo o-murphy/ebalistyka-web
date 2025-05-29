@@ -1,0 +1,19 @@
+image: node:lts
+
+pages: # The job name MUST be 'pages' for GitLab Pages to recognize it
+  stage: deploy # Typically runs in the deploy stage
+  script:
+    # - apt-get update && apt-get install -y jq
+    # - jq 'del(.expo.experiments.baseUrl)' app.json > tmp.json && mv tmp.json app.json
+    - cat app.json
+    - yarn install
+    - yarn predeploy
+    - mv public .public # Rename the initial 'public' directory
+    - mkdir public
+    - mv dist/* public/ # Move built files to the 'public' directory
+  artifacts:
+    paths:
+      - public # GitLab Pages will serve content from this directory
+  rules:
+    # - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
+    - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
