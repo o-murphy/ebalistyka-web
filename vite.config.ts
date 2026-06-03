@@ -11,6 +11,8 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
+      '@react-native-async-storage/async-storage': path.resolve(__dirname, './src/lib/asyncStorage.ts'),
+      'react-native': 'react-native-web',
     },
   },
   base: '/ebalistyka-web/',

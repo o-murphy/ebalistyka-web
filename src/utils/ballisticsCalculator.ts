@@ -1,4 +1,5 @@
-import Calculator, {
+import {
+    Calculator,
     Ammo, Atmo, BCPoint, DragModelMultiBC, Shot, UNew, Weapon,
     DragModel,
     HitResult,

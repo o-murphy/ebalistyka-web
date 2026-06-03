@@ -82,13 +82,9 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
     const load = async () => {
       const profileValue = await AsyncStorage.getItem('profileProperties')
       const profileValueParsed: ProfileProps = JSON.parse(profileValue ?? defaultProfile)
-      if (profileValue !== null && profileValue !== 'null') {
-
-        updateProfileProperties(profileValueParsed)
-
-        setIsLoaded(true)
-        console.log("loaded profile cache")
-      }
+      updateProfileProperties(profileValueParsed)
+      setIsLoaded(true)
+      console.log("loaded profile cache")
     };
     load();
   }, []);

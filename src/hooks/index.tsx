@@ -1,16 +1,3 @@
-import useDeviceType from "./deviceType";
-import { useDimension, useNumeral, DimensionProps, UseDimensionArgs, NumeralProps, UseNumeralArgs, ValueRange, dimensions, numerals } from "./dimension";
-
-
-export {
-    useDeviceType,
-    useDimension,
-    useNumeral,
-    DimensionProps,
-    UseDimensionArgs,
-    NumeralProps,
-    UseNumeralArgs,
-    ValueRange,
-    dimensions,
-    numerals,
-}
+export { default as useDeviceType } from './deviceType'
+export { useDimension, useNumeral, dimensions, numerals } from './dimension'
+export type { DimensionProps, UseDimensionArgs, NumeralProps, UseNumeralArgs, ValueRange } from './dimension'

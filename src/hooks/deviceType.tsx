@@ -1,20 +1,15 @@
-import { getDeviceTypeAsync } from "expo-device";
-import { useEffect, useState } from "react";
-import { useWindowDimensions } from "react-native";
+import { useState, useEffect } from 'react'
 
 const useDeviceType = () => {
-    const [devType, setDevType] = useState(null)
-    // const [isMobile, setIsMobile] = useState(false)
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768)
 
-    const windowDimensions = useWindowDimensions()
+  useEffect(() => {
+    const handler = () => setIsMobile(window.innerWidth < 768)
+    window.addEventListener('resize', handler)
+    return () => window.removeEventListener('resize', handler)
+  }, [])
 
-    useEffect(() => {
-      getDeviceTypeAsync().then((deviceType) => {
-        setDevType(deviceType);
-      });
-    }, [windowDimensions]);
-
-    return devType
+  return isMobile ? 'phone' : 'desktop'
 }
 
-export default useDeviceType;
+export default useDeviceType

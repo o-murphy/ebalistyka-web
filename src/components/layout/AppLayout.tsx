@@ -1,6 +1,8 @@
+import { useEffect, useRef } from 'react'
 import { NavLink, Outlet } from 'react-router'
-import { Target, Cloud, Table2, Repeat2, Info, Settings, BarChart2, SlidersHorizontal } from 'lucide-react'
+import { Target, Cloud, Table2, Repeat2, Settings, BarChart2, SlidersHorizontal } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { useCalculator, useProfile, useCurrentConditions } from '@/context'
 
 const mobileRoutes = [
   { to: '/',          icon: Target,            label: 'Home' },
@@ -36,9 +38,51 @@ const NavItem = ({ to, icon: Icon, label, collapsed = false }: {
   </NavLink>
 )
 
+function AutoFireEffect() {
+  const { fire } = useCalculator()
+  const profileCtx = useProfile()
+  const cond = useCurrentConditions()
+  const fireRef = useRef(fire)
+  useEffect(() => { fireRef.current = fire }, [fire])
+
+  useEffect(() => {
+    if (!profileCtx.isLoaded) return
+    const timer = setTimeout(() => fireRef.current(), 80)
+    return () => clearTimeout(timer)
+  }, [
+    profileCtx.isLoaded,
+    profileCtx.scHeight.asDef,
+    profileCtx.rTwist.asDef,
+    profileCtx.cZeroWPitch.asDef,
+    profileCtx.zeroDistance.asDef,
+    profileCtx.cMuzzleVelocity.asDef,
+    profileCtx.cZeroTemperature.asDef,
+    profileCtx.cTCoeff.value,
+    profileCtx.bDiameter.asDef,
+    profileCtx.bLength.asDef,
+    profileCtx.bWeight.asDef,
+    profileCtx.cZeroAirTemperature.asDef,
+    profileCtx.cZeroAirPressure.asDef,
+    profileCtx.cZeroAirHumidity.value,
+    cond.temperature.asDef,
+    cond.pressure.asDef,
+    cond.humidity.value,
+    cond.windSpeed.asDef,
+    cond.windDirection.asDef,
+    cond.lookAngle.asDef,
+    cond.targetDistance.asDef,
+    cond.flags.usePowderSens,
+    cond.flags.useDifferentPowderTemperature,
+    cond.powderTemperature.asDef,
+  ])
+
+  return null
+}
+
 export function AppLayout() {
   return (
     <div className="flex h-screen bg-background text-foreground">
+      <AutoFireEffect />
 
       {/* Desktop sidebar */}
       <aside className="hidden md:flex flex-col w-16 lg:w-56 border-r border-border shrink-0 p-2 gap-1">

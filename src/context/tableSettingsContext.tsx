@@ -1,6 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createContext, useState, useContext, useEffect, ReactNode } from 'react';
-import { ActivityIndicator } from 'react-native-paper';
 import { DimensionProps, useDimension } from '../hooks';
 import { Distance } from 'js-ballistics';
 import { Unit } from 'js-ballistics';
@@ -124,5 +123,8 @@ export const useTableSettings = () => {
   return context;
 };
 
-// Add a LoadingSpinner component or replace it with an actual spinner component
-const LoadingSpinner = () => <ActivityIndicator />;
+const LoadingSpinner = () => (
+  <div className="flex items-center justify-center h-full">
+    <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+  </div>
+);
