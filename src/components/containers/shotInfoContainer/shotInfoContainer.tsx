@@ -35,7 +35,7 @@ const calculateSpeedOfSound = () => {
 };
 
 const adjustmentSort = (closest, item) =>
-    Math.abs(item.dropAdjustment.rawValue) < Math.abs(closest.dropAdjustment.rawValue) ? item : closest;
+    Math.abs(item.dropAngle.rawValue) < Math.abs(closest.dropAngle.rawValue) ? item : closest;
 
 
 export const ShotInfoContainer = () => {

@@ -19,7 +19,7 @@ export const TargetShotTable = ({ hitResult, reverse = false }: { hitResult: Hit
   }
 
   const hold = !hitResultError && hitResult?.shot?.relativeAngle
-  const wind = !hitResultError && hitResult?.trajectory.filter((row) => row.dropAdjustment.In(Unit.MIL) <= 0.001)[1]?.windageAdjustment
+  const wind = !hitResultError && hitResult?.trajectory.filter((row) => row.dropAngle.In(Unit.MIL) <= 0.001)[1]?.windageAngle
 
   if (!hold || !wind) {
     return null
@@ -34,7 +34,7 @@ export const TargetShotTable = ({ hitResult, reverse = false }: { hitResult: Hit
   }
 
   const dataRowStyle = (row: TrajectoryData): Object => {
-    const rawAdj = parseFloat(row.dropAdjustment.rawValue.toFixed(4))
+    const rawAdj = parseFloat(row.dropAngle.rawValue.toFixed(4))
     return {
       textStyle: rawAdj === 0 ? tableStyles.cellZeroText : tableStyles.cellText,
       style: theme?.dark ? tableStyles.cellDark : tableStyles.cellLight,

@@ -1,9 +1,9 @@
 import Calculator, {
-    Ammo, Atmo, BCPoint, DragModelMultiBC, Shot, UNew, Weapon, Table as DragTable,
-    DragDataPoint,
+    Ammo, Atmo, BCPoint, DragModelMultiBC, Shot, UNew, Weapon,
     DragModel,
     HitResult,
     Wind,
+    TrajFlag,
 } from 'js-ballistics';
 import { ProfileProps } from './parseA7P';
 import { Unit } from 'js-ballistics';
@@ -50,7 +50,7 @@ const dragModel = (profile: ProfileProps) => {
     switch (profile.bcType) {
         case "G7":
             return {
-                dragTable: DragTable.G7,
+                dragTable: "G7" as const,
                 bcPoints: profile.coefRows.map((row) => new BCPoint({
                     BC: row.bcCd / 10000,
                     V: UNew.MPS(row.mv / 10),
@@ -58,7 +58,7 @@ const dragModel = (profile: ProfileProps) => {
             };
         case "G1":
             return {
-                dragTable: DragTable.G1,
+                dragTable: "G1" as const,
                 bcPoints: profile.coefRows.map((row) => new BCPoint({
                     BC: row.bcCd / 10000,
                     V: UNew.MPS(row.mv / 10),
@@ -66,13 +66,13 @@ const dragModel = (profile: ProfileProps) => {
             };
         default:
             return {
-                dragModel: profile.coefRows.map((item) => new DragDataPoint(item.mv, item.bcCd)),
+                dragTable: profile.coefRows.map((item) => ({ Mach: item.mv, CD: item.bcCd })),
                 bcPoints: null,
             };
     }
 };
 
-export const prepareCalculator = (profile: ProfileProps, currentConditions: CurrentConditionsType): PreparedZeroData => {
+export const prepareCalculator = async (profile: ProfileProps, currentConditions: CurrentConditionsType): Promise<PreparedZeroData> => {
 
     const zeroData = {
         atmo: {
@@ -105,13 +105,13 @@ export const prepareCalculator = (profile: ProfileProps, currentConditions: Curr
                 BC: row.bcCd / 10000,
                 V: UNew.MPS(row.mv / 10),
             })),
-            dragTable: profile.bcType === "G7" ? DragTable.G7 : DragTable.G1,
+            dragTable: profile.bcType === "G7" ? "G7" : "G1",
             ...bulletProps,
         });
     } else {
         dm = new DragModel({
             bc: 1,
-            dragTable: dragTable,
+            dragTable: dragTable as any,
             ...bulletProps,
         });
     }
@@ -121,6 +121,7 @@ export const prepareCalculator = (profile: ProfileProps, currentConditions: Curr
         tempModifier: profile.cTCoeff / 100,
         mv: UNew.MPS(profile.cMuzzleVelocity),
         powderTemp: UNew.Celsius(profile.cZeroTemperature),
+        usePowderSensitivity: true,
     });
 
     let muzzleVelocity = zeroAmmo.mv;
@@ -138,8 +139,8 @@ export const prepareCalculator = (profile: ProfileProps, currentConditions: Curr
         tempModifier: profile.cTCoeff / 100,
         powderTemp: UNew.Celsius(profile.cZeroTemperature),
         mv: muzzleVelocity,
+        usePowderSensitivity: true,
     });
-
 
     const zeroShot = new Shot({
         weapon: zeroWeapon,
@@ -150,18 +151,21 @@ export const prepareCalculator = (profile: ProfileProps, currentConditions: Curr
 
     console.log(profile.cMuzzleVelocity)
 
-    const calc = new Calculator();
-    const zeroElevation = calc.setWeaponZero(zeroShot, zeroData.zeroDistance);
-    console.log(`Barrel elevation for ${zeroData.zeroDistance} zero: ${zeroElevation.to(Unit.Degree)}`)
-    console.log(`Muzzle velocity at zero temperature ${zeroAtmo.temperature} is ${zeroAmmo.getVelocityForTemp(zeroAtmo.temperature).to(Unit.MPS)}`)
-    return { weapon: zeroWeapon, ammo: zeroAmmo, calc: calc, error: null };
+    try {
+        const calc = new Calculator();
+        const zeroElevation = await calc.setWeaponZero(zeroShot, zeroData.zeroDistance);
+        console.log(`Barrel elevation for ${zeroData.zeroDistance} zero: ${zeroElevation.to(Unit.Degree)}`)
+        console.log(`Muzzle velocity at zero temperature ${zeroAtmo.temperature} is ${zeroAmmo.getVelocityForTemp(zeroAtmo.temperature).to(Unit.MPS)}`)
+        return { weapon: zeroWeapon, ammo: zeroAmmo, calc: calc, error: null };
+    } catch (error) {
+        return { weapon: zeroWeapon, ammo: zeroAmmo, calc: new Calculator(), error: error as Error };
+    }
 };
 
-export const makeShot = (profile: ProfileProps, calculator: PreparedZeroData, currentConditions: CurrentConditionsType): HitResult | Error => {
+export const makeShot = async (profile: ProfileProps, calculator: PreparedZeroData, currentConditions: CurrentConditionsType): Promise<HitResult | Error> => {
     console.log(profile.cMuzzleVelocity)
 
     try {
-
         const { weapon, ammo, calc } = calculator;
 
         const shotData = {
@@ -183,8 +187,7 @@ export const makeShot = (profile: ProfileProps, calculator: PreparedZeroData, cu
 
         const atmo = new Atmo(shotData.atmo);
 
-        // let shotAmmo = ammo;
-        let currentMuzzleVelocity = UNew.MPS(profile.cMuzzleVelocity) //ammo.mv;
+        let currentMuzzleVelocity = UNew.MPS(profile.cMuzzleVelocity)
 
         if (currentConditions.flags.usePowderSens) {
             if (currentConditions.flags.useDifferentPowderTemperature) {
@@ -195,9 +198,11 @@ export const makeShot = (profile: ProfileProps, calculator: PreparedZeroData, cu
         }
 
         const shotAmmo = new Ammo({
-            ...ammo,
+            dm: ammo.dm,
             tempModifier: profile.cTCoeff / 100,
-            mv: currentMuzzleVelocity
+            powderTemp: ammo.powderTemp,
+            mv: currentMuzzleVelocity,
+            usePowderSensitivity: ammo.usePowderSensitivity,
         })
         console.log(shotAmmo.mv)
 
@@ -205,26 +210,25 @@ export const makeShot = (profile: ProfileProps, calculator: PreparedZeroData, cu
             weapon: weapon,
             ammo: shotAmmo,
             atmo: atmo,
-            lookAngle: shotData.lookAngle,  // TODO: add look angle 
+            lookAngle: shotData.lookAngle,
             winds: [new Wind(shotData.wind)]
         });
 
-        const hit = calc.fire({
+        const hit = await calc.fire({
             shot: targetShot,
             ...shotData.trajectoryProps,
-            extraData: true
-
+            filterFlags: TrajFlag.ALL,
         });
 
         return hit;
 
     } catch (error) {
-        return error
+        return error as Error
     }
 
 }
 
-export const shootTheTarget = (profile: ProfileProps, calculator: PreparedZeroData, currentConditions: CurrentConditionsType): HitResult | Error => {
+export const shootTheTarget = async (profile: ProfileProps, calculator: PreparedZeroData, currentConditions: CurrentConditionsType): Promise<HitResult | Error> => {
     console.log(profile.cMuzzleVelocity)
 
     try {
@@ -249,8 +253,7 @@ export const shootTheTarget = (profile: ProfileProps, calculator: PreparedZeroDa
             targetDistance: currentConditions.targetDistance.value
         }
 
-        // let shotAmmo = ammo;
-        let currentMuzzleVelocity = UNew.MPS(profile.cMuzzleVelocity) // ammo.mv;
+        let currentMuzzleVelocity = UNew.MPS(profile.cMuzzleVelocity)
 
         if (currentConditions.flags.usePowderSens) {
             if (currentConditions.flags.useDifferentPowderTemperature) {
@@ -261,9 +264,11 @@ export const shootTheTarget = (profile: ProfileProps, calculator: PreparedZeroDa
         }
 
         const shotAmmo = new Ammo({
-            ...ammo,
+            dm: ammo.dm,
             tempModifier: profile.cTCoeff / 1000 / 100,
-            mv: currentMuzzleVelocity
+            powderTemp: ammo.powderTemp,
+            mv: currentMuzzleVelocity,
+            usePowderSensitivity: ammo.usePowderSensitivity,
         })
 
         const newShot = new Shot({
@@ -274,15 +279,14 @@ export const shootTheTarget = (profile: ProfileProps, calculator: PreparedZeroDa
             lookAngle: shotData.lookAngle
         })
 
-        const newElevation = calc.barrelElevationForTarget(newShot, shotData.targetDistance)
-        // const horizontal = UNew.Meter(Math.cos(newShot.lookAngle.In(Unit.Radian)) * shotData.targetDistance.In(Unit.Meter))
+        const newElevation = await calc.barrelElevationForTarget(newShot, shotData.targetDistance)
         const hold = UNew.MIL(newElevation.In(Unit.MIL) - weapon.zeroElevation.In(Unit.MIL))
         console.log(`Elevalion: ${newElevation.to(Unit.MIL)} at ${shotData.targetDistance.to(Unit.Meter)}`)
         console.log(`Hold: ${hold.to(Unit.MIL)} at ${shotData.targetDistance.to(Unit.Meter)}`)
         newShot.relativeAngle = hold
-        const adjustedHit = calc.fire({ shot: newShot, ...shotData.trajectoryProps, extraData: true })
+        const adjustedHit = await calc.fire({ shot: newShot, ...shotData.trajectoryProps, filterFlags: TrajFlag.ALL })
         return adjustedHit
     } catch (error) {
-        return error
+        return error as Error
     }
 }

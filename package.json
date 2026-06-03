@@ -25,7 +25,7 @@
     "expo-status-bar": "^1.12.1",
     "i": "^0.3.7",
     "install": "^0.13.0",
-    "js-ballistics": "^2.0.0-beta.2",
+    "js-ballistics": "^3.0.0-beta.2",
     "lodash": "^4.17.21",
     "protobufjs": "^7.4.0",
     "react": "^18.3.1",

@@ -9,7 +9,7 @@ import { ShotTable } from "./shotTablePage";
 
 
 const adjustmentSort = (closest, item) => {
-    return Math.abs(item.dropAdjustment.rawValue) < Math.abs(closest.dropAdjustment.rawValue) ? item : closest;
+    return Math.abs(item.dropAngle.rawValue) < Math.abs(closest.dropAngle.rawValue) ? item : closest;
 };
 
 const BotContainer = () => {
@@ -26,7 +26,7 @@ const BotContainer = () => {
 
             setHold({
                 hold: adjustedResult?.shot?.relativeAngle,
-                wind: holdRow.windageAdjustment,
+                wind: holdRow.windageAngle,
             });
         }
     }, [adjustedResult, windDirection]);

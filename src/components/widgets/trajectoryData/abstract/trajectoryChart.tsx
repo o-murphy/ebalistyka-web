@@ -87,7 +87,7 @@ export const TrajectoryChart: React.FC<WindageChartProps> = ({
 
   const prepareSightLine = (row: TrajectoryData) => {
     const windAdj = findOppositeLeg(
-      row.lookDistance.In(preferredUnits.drop),
+      row.slantDistance.In(preferredUnits.drop),
       results.shot.lookAngle.In(Unit.Degree)
     )
     return parseFloat(windAdj.toFixed(dropAdjAccuracy));
@@ -95,7 +95,7 @@ export const TrajectoryChart: React.FC<WindageChartProps> = ({
 
   const prepareZeroSightLine = (row: TrajectoryData) => {
     const windAdj = findOppositeLeg(
-      row.lookDistance.In(preferredUnits.drop),
+      row.slantDistance.In(preferredUnits.drop),
       results.shot.lookAngle.In(Unit.Degree) + hold
     )
     return parseFloat(windAdj.toFixed(dropAdjAccuracy));
@@ -103,7 +103,7 @@ export const TrajectoryChart: React.FC<WindageChartProps> = ({
 
   const prepareBarrelLine = (row: TrajectoryData) => {
     const barrelHeight = findOppositeLeg(
-      row.lookDistance.In(preferredUnits.drop),
+      row.slantDistance.In(preferredUnits.drop),
       results.shot.barrelElevation.In(Unit.Degree)
     ) - results.shot.weapon.sightHeight.In(preferredUnits.drop)
     return parseFloat(barrelHeight.toFixed(heightAccuracy))
@@ -122,8 +122,8 @@ export const TrajectoryChart: React.FC<WindageChartProps> = ({
     barrelLine: prepareBarrelLine(row),
     height: roundHeight(row.height),
 
-    drop: roundHeight(row.targetDrop),
-    dropAdjustment: roundDropAdj(row.dropAdjustment)
+    drop: roundHeight(row.slantHeight),
+    dropAdjustment: roundDropAdj(row.dropAngle)
   }));
 
   return (

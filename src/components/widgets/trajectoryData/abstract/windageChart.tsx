@@ -71,7 +71,7 @@ export const WindageChart: React.FC<WindageChartProps> = ({
     const data = result.map(row => ({
         distance: row.distance.In(preferredUnits.distance),
         windage: row.windage.In(preferredUnits.drop),
-        windageAdj: row.windageAdjustment.In(preferredUnits.adjustment), // Include adjustment value in data
+        windageAdj: row.windageAngle.In(preferredUnits.adjustment), // Include adjustment value in data
     }));
 
     return (

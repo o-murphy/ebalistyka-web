@@ -25,9 +25,9 @@ const HoldReticleContainer: React.FC<{ hold: Hold }> = ({ hold }) => {
     if (adjustedResult instanceof HitResult) {
       const hold = adjustedResult.shot.relativeAngle
       const trajectory: TrajectoryData[] = [...adjustedResult?.trajectory]
-      const holdRow = trajectory.slice(1).reduce((closest, item) => Math.abs(item.dropAdjustment.rawValue) < Math.abs(closest.dropAdjustment.rawValue) ? item : closest, trajectory[1]);
+      const holdRow = trajectory.slice(1).reduce((closest, item) => Math.abs(item.dropAngle.rawValue) < Math.abs(closest.dropAngle.rawValue) ? item : closest, trajectory[1]);
       const point = {
-        cx: holdRow.windageAdjustment.In(Unit.MIL) * Mil1,
+        cx: holdRow.windageAngle.In(Unit.MIL) * Mil1,
         cy: - hold.In(Unit.MIL) * Mil1,
         desc: holdRow.distance.In(preferredUnits.distance).toFixed(0)
       }

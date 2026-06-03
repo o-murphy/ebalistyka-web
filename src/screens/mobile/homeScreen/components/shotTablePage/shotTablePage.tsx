@@ -6,7 +6,7 @@ import { useCalculator, useAppSettings, usePreferredUnits } from "../../../../..
 import { ScrollViewSurface } from '../../../../../components/widgets';
 
 const adjustmentSort = (closest, item) => {
-    return Math.abs(item.dropAdjustment.rawValue) < Math.abs(closest.dropAdjustment.rawValue) ? item : closest;
+    return Math.abs(item.dropAngle.rawValue) < Math.abs(closest.dropAngle.rawValue) ? item : closest;
 };
 
 
@@ -77,18 +77,18 @@ const ShotTablePage = () => {
 
     const distances = tPart.map((row, index) => row.distance.In(pu.distance).toFixed(0) + ` ${UnitProps[pu.distance].symbol}`);
     const heights = tPart.map((row, index) => row.height.In(pu.drop).toFixed(1));
-    const dropAdjustmentMil = tPart.map((row, index) => row.dropAdjustment.In(Unit.MIL).toFixed(2));
-    const dropAdjustmentMOA = tPart.map((row, index) => row.dropAdjustment.In(Unit.MOA).toFixed(2));
+    const dropAdjustmentMil = tPart.map((row, index) => row.dropAngle.In(Unit.MIL).toFixed(2));
+    const dropAdjustmentMOA = tPart.map((row, index) => row.dropAngle.In(Unit.MOA).toFixed(2));
     const holdMil = tPart.map((row, index) => (
-        hold.In(Unit.MIL) - row.dropAdjustment.In(Unit.MIL)
+        hold.In(Unit.MIL) - row.dropAngle.In(Unit.MIL)
     ).toFixed(2));
     const holdMOA = tPart.map((row, index) => (
-        hold.In(Unit.MOA) - row.dropAdjustment.In(Unit.MOA)
+        hold.In(Unit.MOA) - row.dropAngle.In(Unit.MOA)
     ).toFixed(2));
 
     const windage = tPart.map((row, index) => row.windage.In(pu.drop).toFixed(1));
-    const windAdjMil = tPart.map((row, index) => row.windageAdjustment.In(Unit.MIL).toFixed(2));
-    const windAdjMOA = tPart.map((row, index) => row.windageAdjustment.In(Unit.MOA).toFixed(2));
+    const windAdjMil = tPart.map((row, index) => row.windageAngle.In(Unit.MIL).toFixed(2));
+    const windAdjMOA = tPart.map((row, index) => row.windageAngle.In(Unit.MOA).toFixed(2));
 
     const velocity = tPart.map((row, index) => row.velocity.In(pu.velocity).toFixed(0));
     const time = tPart.map((row, index) => row.time.toFixed(3));

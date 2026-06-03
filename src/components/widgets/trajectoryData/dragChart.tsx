@@ -1,7 +1,7 @@
 import { Card, useTheme } from 'react-native-paper';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { useProfile, useCalculator } from '../../../context';
-import { Table } from 'js-ballistics';
+import { DragTables } from 'js-ballistics';
 import React from 'react';
 import { ToolTipRow } from './abstract';
 
@@ -62,10 +62,10 @@ const DragChart = () => {
 
     switch (profileProperties?.bcType) {
         case "G1":
-            dragTable = Table.G1;
+            dragTable = DragTables.G1;
             break;
         case "G7":
-            dragTable = Table.G7;
+            dragTable = DragTables.G7;
             break;
         default:
             break;

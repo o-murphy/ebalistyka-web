@@ -56,13 +56,13 @@ export const TrajectoryTable = ({ hitResult, reverse = false }: { hitResult: Hit
     style: theme?.dark ? tableStyles.cellDark : tableStyles.cellLight,
   }
 
-  const holdRow = trajectory.slice(1).reduce((closest, item) => Math.abs(item.dropAdjustment.rawValue) < Math.abs(closest.dropAdjustment.rawValue) ? item : closest, trajectory[1]);
+  const holdRow = trajectory.slice(1).reduce((closest, item) => Math.abs(item.dropAngle.rawValue) < Math.abs(closest.dropAngle.rawValue) ? item : closest, trajectory[1]);
 
   // reverse && trajectory.sort((a, b) => b.time - a.time)
 
 
   const dataRowStyle = (row: TrajectoryData): Object => {
-    // const rawAdj = parseFloat(row.dropAdjustment.rawValue.toFixed(4))
+    // const rawAdj = parseFloat(row.dropAngle.rawValue.toFixed(4))
     // return {
     //   textStyle: rawAdj === 0 ? tableStyles.cellZeroText : tableStyles.cellText,
     //   style: theme?.dark ? tableStyles.cellDark : tableStyles.cellLight,
@@ -131,12 +131,12 @@ export const TrajectoryTable = ({ hitResult, reverse = false }: { hitResult: Hit
                 <DataTable.Cell {...dataRowStyle(row)}>{(row.distance).In(preferredUnits.distance).toFixed(0)}</DataTable.Cell>
                 <DataTable.Cell {...dataRowStyle(row)}>{row.velocity.In(preferredUnits.velocity).toFixed(0)}</DataTable.Cell>
                 <DataTable.Cell {...dataRowStyle(row)}>{row.height.In(preferredUnits.drop).toFixed(1)}</DataTable.Cell>
-                <DataTable.Cell {...dataRowStyle(row)}>{row.targetDrop.In(preferredUnits.drop).toFixed(1)}</DataTable.Cell>
-                <DataTable.Cell {...dataRowStyle(row)}>{row.dropAdjustment.In(preferredUnits.adjustment).toFixed(2)}</DataTable.Cell>
+                <DataTable.Cell {...dataRowStyle(row)}>{row.slantHeight.In(preferredUnits.drop).toFixed(1)}</DataTable.Cell>
+                <DataTable.Cell {...dataRowStyle(row)}>{row.dropAngle.In(preferredUnits.adjustment).toFixed(2)}</DataTable.Cell>
                 <DataTable.Cell {...dataRowStyle(row)}>{row.windage.In(preferredUnits.drop).toFixed(1)}</DataTable.Cell>
-                <DataTable.Cell {...dataRowStyle(row)}>{row.windageAdjustment.In(preferredUnits.adjustment).toFixed(2)}</DataTable.Cell>
+                <DataTable.Cell {...dataRowStyle(row)}>{row.windageAngle.In(preferredUnits.adjustment).toFixed(2)}</DataTable.Cell>
                 <DataTable.Cell {...dataRowStyle(row)}>{row.mach.toFixed(2)}</DataTable.Cell>
-                <DataTable.Cell {...dataRowStyle(row)}>{row.densityFactor.toFixed(2)}</DataTable.Cell>
+                <DataTable.Cell {...dataRowStyle(row)}>{row.densityRatio.toFixed(2)}</DataTable.Cell>
                 <DataTable.Cell {...dataRowStyle(row)}>{row.drag.toFixed(3)}</DataTable.Cell>
                 <DataTable.Cell {...dataRowStyle(row)}>{row.energy.In(preferredUnits.energy).toFixed(0)}</DataTable.Cell>
               </DataTable.Row>

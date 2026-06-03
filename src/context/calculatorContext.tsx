@@ -46,8 +46,8 @@ export const CalculatorProvider: React.FC<{ children: ReactNode }> = ({ children
         }
     }, [profileProperties])
 
-    const zero = () => {
-        const preparedCalculator = prepareCalculator(_profileProperties, currentConditions);
+    const zero = async () => {
+        const preparedCalculator = await prepareCalculator(_profileProperties, currentConditions);
         setCalculator(preparedCalculator);
         return preparedCalculator;
     }
@@ -58,16 +58,13 @@ export const CalculatorProvider: React.FC<{ children: ReactNode }> = ({ children
         // Wrap main calculation in a setTimeout to allow the UI to update first
         setTimeout(async () => {
             try {
-                // must use powder sense
-                // setGlobalUsePowderSensitivity(currentConditions.flags.usePowderSens)
-                // console.log("Use powder sens.", getGlobalUsePowderSensitivity())
                 console.log("Use powder sens.", currentConditions.flags.usePowderSens)
 
-                const currentCalc: PreparedZeroData = zero();
+                const currentCalc: PreparedZeroData = await zero();
                 if (currentCalc) {
                     if (!currentCalc.error) {
-                        const result = makeShot(_profileProperties, currentCalc, currentConditions);
-                        const adjustedResult = shootTheTarget(_profileProperties, currentCalc, currentConditions);
+                        const result = await makeShot(_profileProperties, currentCalc, currentConditions);
+                        const adjustedResult = await shootTheTarget(_profileProperties, currentCalc, currentConditions);
 
                         setHitResult(result);
                         setAdjustedResult(adjustedResult);

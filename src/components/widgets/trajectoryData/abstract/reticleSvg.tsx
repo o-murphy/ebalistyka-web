@@ -29,8 +29,8 @@ export const Reticle: React.FC<ReticleProps> = ({ trajectory, step = 100 }) => {
 
     const preparedData = trajectory.filter(filterValues).map((value) => {
         return {
-            cx: value.windageAdjustment.In(Unit.MIL) * Mil1,
-            cy: value.dropAdjustment.In(Unit.MIL) * Mil1,
+            cx: value.windageAngle.In(Unit.MIL) * Mil1,
+            cy: value.dropAngle.In(Unit.MIL) * Mil1,
             dst: value.distance.In(preferredUnits.distance).toFixed(0),
         }
     })

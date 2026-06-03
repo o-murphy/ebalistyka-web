@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { usePreferredUnits } from '../context';
-import { AbstractUnit, Measure, Unit, UnitProps, Pressure, Temperature, Velocity, Angular, Distance, Weight } from 'js-ballistics';
+import { Dimension, Measure, Unit, UnitProps, Pressure, Temperature, Velocity, Angular, Distance, Weight } from 'js-ballistics';
 
 type MeasureType = (typeof Measure)[keyof typeof Measure];
 
@@ -19,8 +19,8 @@ export interface ValueRange {
 
 // Type definition for DimensionProps
 export interface DimensionProps {
-    value: AbstractUnit;
-    setValue: (value: number | AbstractUnit) => void;
+    value: Dimension<Unit>;
+    setValue: (value: number | Dimension<Unit>) => void;
     isValid: boolean;
     asString: string;
     symbol: string;
@@ -53,7 +53,7 @@ export const useDimension = ({
     precision
 }: UseDimensionArgs): DimensionProps => {
     const { preferredUnits } = usePreferredUnits();
-    const [localValue, setLocalValue] = useState<AbstractUnit>(new measure(0, defUnit));
+    const [localValue, setLocalValue] = useState<Dimension<Unit>>(new measure(0, defUnit));
     const [isValid, setIsValid] = useState(true);
 
     const symbol = UnitProps[preferredUnits[prefUnitFlag]].symbol;
@@ -82,8 +82,8 @@ export const useDimension = ({
     // Memoize the current value of the dimension
     const value = useMemo(() => localValue, [localValue]);
 
-    // Set the value, either as a number or AbstractUnit
-    const setValue = (value: number | AbstractUnit): void => {
+    // Set the value, either as a number or Dimension<Unit>
+    const setValue = (value: number | Dimension<Unit>): void => {
         const newValue = typeof value === 'number' ? new measure(value, defUnit) : value;
         if (newValue instanceof measure) {
             setLocalValue(newValue);

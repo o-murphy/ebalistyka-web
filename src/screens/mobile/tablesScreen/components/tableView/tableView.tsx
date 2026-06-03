@@ -54,10 +54,10 @@ const useMappedTableData = ({ row, displayFlag = false }) => {
         tableSettings?.displayRange && (row.distance).In(pu.distance).toFixed(0),
         tableSettings?.displayVelocity && row.velocity.In(pu.velocity).toFixed(0),
         tableSettings?.displayHeight && row.height.In(pu.drop).toFixed(1),
-        tableSettings?.displayDrop && row.targetDrop.In(pu.drop).toFixed(1),
-        tableSettings?.displayDropAdjustment && row.dropAdjustment.In(pu.adjustment).toFixed(2),
+        tableSettings?.displayDrop && row.slantHeight.In(pu.drop).toFixed(1),
+        tableSettings?.displayDropAdjustment && row.dropAngle.In(pu.adjustment).toFixed(2),
         tableSettings?.displayWindage && row.windage.In(pu.drop).toFixed(1),
-        tableSettings?.displayWindageAdjustment && row.windageAdjustment.In(pu.adjustment).toFixed(2),
+        tableSettings?.displayWindageAdjustment && row.windageAngle.In(pu.adjustment).toFixed(2),
         tableSettings?.displayMach && row.mach.toFixed(2),
         tableSettings?.displayDrag && row.drag.toFixed(3),
         tableSettings?.displayEnergy && row.energy.In(pu.energy).toFixed(0),
@@ -309,8 +309,8 @@ export const TrajectoryTable = ({ hitResult, style = null }) => {
     trajectory = trajectory.filter(row => row.distance.rawValue <= trajectoryRangeRaw)
 
     const zeroRow = trajectory.slice(1).reduce((closest, item) => {
-        const itemDifference = Math.abs(item.dropAdjustment.rawValue - 0);
-        const closestDifference = Math.abs(closest.dropAdjustment.rawValue - 0);
+        const itemDifference = Math.abs(item.dropAngle.rawValue - 0);
+        const closestDifference = Math.abs(closest.dropAngle.rawValue - 0);
         return itemDifference < closestDifference ? item : closest;
     }, trajectory[1]); // Start with the first element as the initial closest
 
