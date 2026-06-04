@@ -81,7 +81,8 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
   useEffect(() => {
     const load = async () => {
       const profileValue = await AsyncStorage.getItem('profileProperties')
-      const profileValueParsed: ProfileProps = JSON.parse(profileValue ?? defaultProfile)
+      const validJson = profileValue && profileValue !== 'null' ? profileValue : defaultProfile
+      const profileValueParsed: ProfileProps = JSON.parse(validJson)
       updateProfileProperties(profileValueParsed)
       setIsLoaded(true)
       console.log("loaded profile cache")
@@ -91,6 +92,7 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
 
   useEffect(() => {
     const save = async (profileProperties) => {
+      if (!profileProperties) return;
       try {
         const jsonValue = JSON.stringify({
           ...profileProperties,

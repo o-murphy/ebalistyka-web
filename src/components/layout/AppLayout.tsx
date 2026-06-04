@@ -20,21 +20,21 @@ const desktopRoutes = [
   { to: '/settings',  icon: Settings,          label: 'Settings' },
 ]
 
-const NavItem = ({ to, icon: Icon, label, collapsed = false }: {
-  to: string, icon: React.ElementType, label: string, collapsed?: boolean
+const NavItem = ({ to, icon: Icon, label }: {
+  to: string, icon: React.ElementType, label: string
 }) => (
   <NavLink
     to={to}
     end={to === '/'}
     className={({ isActive }) => cn(
-      'flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-sm font-medium',
+      'flex items-center gap-3 rounded-lg transition-colors text-sm font-medium',
       'hover:bg-accent hover:text-accent-foreground',
       isActive ? 'bg-accent text-accent-foreground' : 'text-muted-foreground',
-      collapsed && 'justify-center px-2',
+      'justify-center px-2 py-2 lg:justify-start lg:px-3',
     )}
   >
     <Icon className="w-5 h-5 shrink-0" />
-    {!collapsed && <span>{label}</span>}
+    <span className="hidden lg:inline">{label}</span>
   </NavLink>
 )
 
@@ -91,7 +91,7 @@ export function AppLayout() {
           <span className="hidden lg:block font-bold text-base">eBalistyka</span>
         </div>
         {desktopRoutes.map(r => (
-          <NavItem key={r.to} {...r} collapsed={false} />
+          <NavItem key={r.to} {...r} />
         ))}
       </aside>
 
