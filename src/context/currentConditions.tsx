@@ -40,20 +40,23 @@ export const ConditionsProvider: React.FC<{ children: ReactNode }> = ({ children
     useEffect(() => {
         const load = async () => {
             const conditionsValue = await AsyncStorage.getItem('currentConditions');
-            const conditionsValueParsed: CurrentConditionsValues = JSON.parse(conditionsValue)
-            setFlags(conditionsValueParsed || defaultConditions)
+            const conditionsValueParsed: CurrentConditionsValues = conditionsValue
+                ? JSON.parse(conditionsValue)
+                : null
+            const c = conditionsValueParsed || defaultConditions
+            setFlags(c)
 
-            temperature.setAsDef(conditionsValueParsed.temperature || 15)
-            powderTemperature.setAsDef(conditionsValueParsed.powderTemperature || 15)
-            pressure.setAsDef(conditionsValueParsed.pressure || 1000)
-            windSpeed.setAsDef(conditionsValueParsed.windSpeed || 0)
-            windDirection.setAsDef(conditionsValueParsed.windDirection || 0)
-            lookAngle.setAsDef(conditionsValueParsed.lookAngle || 0)
-            targetDistance.setAsDef(conditionsValueParsed.targetDistance || 100)
-            humidity.setValue(conditionsValueParsed.humidity)
+            temperature.setAsDef(c.temperature ?? 15)
+            powderTemperature.setAsDef(c.powderTemperature ?? 15)
+            pressure.setAsDef(c.pressure ?? 1000)
+            windSpeed.setAsDef(c.windSpeed ?? 0)
+            windDirection.setAsDef(c.windDirection ?? 0)
+            lookAngle.setAsDef(c.lookAngle ?? 0)
+            targetDistance.setAsDef(c.targetDistance ?? 100)
+            humidity.setValue(c.humidity ?? 50)
             console.log("Loaded conditions")
         };
-        load();    
+        load();
     }, []);
 
     useEffect(() => {

@@ -1,6 +1,6 @@
 import { createContext, ReactNode, useContext, useMemo, useState } from "react";
 import { HitResult } from "js-ballistics";
-import { makeShot, prepareCalculator, PreparedZeroData, shootTheTarget } from "../utils/ballisticsCalculator";
+import { makeShot, prepareCalculator, PreparedZeroData, shootTheTarget, CurrentConditionsType } from "../utils/ballisticsCalculator";
 import { useProfile } from "./profileContext";
 import { useCurrentConditions } from "./currentConditions";
 
@@ -23,7 +23,6 @@ export const CalculatorProvider: React.FC<{ children: ReactNode }> = ({ children
     const [inProgress, setInProgress] = useState<boolean>(false);
 
     const profileProperties = useProfile()
-
     const currentConditions = useCurrentConditions()
 
     const _profileProperties = useMemo(() => {
@@ -46,25 +45,44 @@ export const CalculatorProvider: React.FC<{ children: ReactNode }> = ({ children
         }
     }, [profileProperties])
 
+    // Map ConditionsContextType → CurrentConditionsType (fixes humidity: NumeralProps → number)
+    const _currentConditions: CurrentConditionsType = useMemo(() => ({
+        flags: {
+            usePowderSens: currentConditions.flags?.usePowderSens ?? true,
+            useDifferentPowderTemperature: currentConditions.flags?.useDifferentPowderTemperature ?? false,
+        },
+        temperature: currentConditions.temperature,
+        pressure: currentConditions.pressure,
+        humidity: currentConditions.humidity.value,
+        windSpeed: currentConditions.windSpeed,
+        windDirection: currentConditions.windDirection,
+        lookAngle: currentConditions.lookAngle,
+        targetDistance: currentConditions.targetDistance,
+        powderTemperature: currentConditions.powderTemperature,
+    }), [currentConditions])
+
     const zero = async () => {
-        const preparedCalculator = await prepareCalculator(_profileProperties, currentConditions);
+        const preparedCalculator = await prepareCalculator(_profileProperties, _currentConditions);
         setCalculator(preparedCalculator);
         return preparedCalculator;
     }
 
     const fire = async () => {
-        setInProgress(true); // Set loading state before beginning async operations
+        // Guard: don't fire if profile isn't loaded yet
+        if (!_profileProperties?.coefRows || !_profileProperties?.bcType) {
+            console.warn('Profile not loaded, skipping fire')
+            return
+        }
 
-        // Wrap main calculation in a setTimeout to allow the UI to update first
+        setInProgress(true);
+
         setTimeout(async () => {
             try {
-                console.log("Use powder sens.", currentConditions.flags.usePowderSens)
-
                 const currentCalc: PreparedZeroData = await zero();
                 if (currentCalc) {
                     if (!currentCalc.error) {
-                        const result = await makeShot(_profileProperties, currentCalc, currentConditions);
-                        const adjustedResult = await shootTheTarget(_profileProperties, currentCalc, currentConditions);
+                        const result = await makeShot(_profileProperties, currentCalc, _currentConditions);
+                        const adjustedResult = await shootTheTarget(_profileProperties, currentCalc, _currentConditions);
 
                         setHitResult(result);
                         setAdjustedResult(adjustedResult);
@@ -75,7 +93,7 @@ export const CalculatorProvider: React.FC<{ children: ReactNode }> = ({ children
             } catch (error) {
                 console.error('Error during fire:', error);
             } finally {
-                setInProgress(false); // Ensure loading state is reset after calculations
+                setInProgress(false);
             }
         }, 10);
     };
