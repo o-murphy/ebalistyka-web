@@ -1,7 +1,7 @@
 import {
     Calculator,
     Ammo, Atmo, BCPoint, DragModelMultiBC, Shot, UNew, Weapon,
-    DragModel,
+    DragModel, DragTables,
     HitResult,
     Wind,
     TrajFlag,
@@ -106,7 +106,7 @@ export const prepareCalculator = async (profile: ProfileProps, currentConditions
                 BC: row.bcCd / 10000,
                 V: UNew.MPS(row.mv / 10),
             })),
-            dragTable: profile.bcType === "G7" ? "G7" : "G1",
+            dragTable: profile.bcType === "G7" ? DragTables.G7 : DragTables.G1,
             ...bulletProps,
         });
     } else {
@@ -266,7 +266,7 @@ export const shootTheTarget = async (profile: ProfileProps, calculator: Prepared
 
         const shotAmmo = new Ammo({
             dm: ammo.dm,
-            tempModifier: profile.cTCoeff / 1000 / 100,
+            tempModifier: profile.cTCoeff / 100,
             powderTemp: ammo.powderTemp,
             mv: currentMuzzleVelocity,
             usePowderSensitivity: ammo.usePowderSensitivity,
