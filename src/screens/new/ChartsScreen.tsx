@@ -58,28 +58,29 @@ export const ChartsScreen = () => {
       <Section title={`Elevation & Windage (${adjSymbol}) vs Range (${distSymbol})`}>
         <ResponsiveContainer width="100%" height={280}>
           <LineChart data={data} margin={{ top: 4, right: 4, left: 0, bottom: 4 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+            <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
             <XAxis
               dataKey="range"
-              tick={{ fontSize: 11 }}
-              stroke="hsl(var(--muted-foreground))"
-              label={{ value: distSymbol, position: 'insideBottomRight', offset: -4, fontSize: 11 }}
+              tick={{ fontSize: 11, fill: '#94a3b8' }}
+              stroke="#475569"
+              label={{ value: distSymbol, position: 'insideBottomRight', offset: -4, fontSize: 11, fill: '#94a3b8' }}
             />
-            <YAxis tick={{ fontSize: 11 }} stroke="hsl(var(--muted-foreground))" />
+            <YAxis tick={{ fontSize: 11, fill: '#94a3b8' }} stroke="#475569" />
             <Tooltip
               contentStyle={{
-                background: 'hsl(var(--card))',
-                border: '1px solid hsl(var(--border))',
+                background: '#1e293b',
+                border: '1px solid #334155',
                 borderRadius: 8,
                 fontSize: 12,
+                color: '#f1f5f9',
               }}
             />
-            <Legend wrapperStyle={{ fontSize: 12 }} />
+            <Legend wrapperStyle={{ fontSize: 12, color: '#94a3b8' }} />
             <Line
               type="monotone"
               dataKey="elevation"
               name={`Elevation (${adjSymbol})`}
-              stroke="hsl(var(--primary))"
+              stroke="#38bdf8"
               dot={false}
               strokeWidth={2}
             />
@@ -87,7 +88,7 @@ export const ChartsScreen = () => {
               type="monotone"
               dataKey="windage"
               name={`Windage (${adjSymbol})`}
-              stroke="hsl(var(--chart-2, #f97316))"
+              stroke="#f97316"
               dot={false}
               strokeWidth={2}
               strokeDasharray="4 2"
@@ -99,22 +100,23 @@ export const ChartsScreen = () => {
       <Section title={`Velocity (${velSymbol}) vs Range (${distSymbol})`}>
         <ResponsiveContainer width="100%" height={200}>
           <LineChart data={data} margin={{ top: 4, right: 4, left: 0, bottom: 4 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-            <XAxis dataKey="range" tick={{ fontSize: 11 }} stroke="hsl(var(--muted-foreground))" />
-            <YAxis tick={{ fontSize: 11 }} stroke="hsl(var(--muted-foreground))" />
+            <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+            <XAxis dataKey="range" tick={{ fontSize: 11, fill: '#94a3b8' }} stroke="#475569" />
+            <YAxis tick={{ fontSize: 11, fill: '#94a3b8' }} stroke="#475569" />
             <Tooltip
               contentStyle={{
-                background: 'hsl(var(--card))',
-                border: '1px solid hsl(var(--border))',
+                background: '#1e293b',
+                border: '1px solid #334155',
                 borderRadius: 8,
                 fontSize: 12,
+                color: '#f1f5f9',
               }}
             />
             <Line
               type="monotone"
               dataKey="velocity"
               name={`Velocity (${velSymbol})`}
-              stroke="hsl(var(--chart-3, #22c55e))"
+              stroke="#4ade80"
               dot={false}
               strokeWidth={2}
             />
@@ -125,22 +127,23 @@ export const ChartsScreen = () => {
       <Section title={`Mach vs Range (${distSymbol})`}>
         <ResponsiveContainer width="100%" height={180}>
           <LineChart data={data} margin={{ top: 4, right: 4, left: 0, bottom: 4 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-            <XAxis dataKey="range" tick={{ fontSize: 11 }} stroke="hsl(var(--muted-foreground))" />
-            <YAxis tick={{ fontSize: 11 }} stroke="hsl(var(--muted-foreground))" />
+            <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+            <XAxis dataKey="range" tick={{ fontSize: 11, fill: '#94a3b8' }} stroke="#475569" />
+            <YAxis tick={{ fontSize: 11, fill: '#94a3b8' }} stroke="#475569" />
             <Tooltip
               contentStyle={{
-                background: 'hsl(var(--card))',
-                border: '1px solid hsl(var(--border))',
+                background: '#1e293b',
+                border: '1px solid #334155',
                 borderRadius: 8,
                 fontSize: 12,
+                color: '#f1f5f9',
               }}
             />
             <Line
               type="monotone"
               dataKey="mach"
               name="Mach"
-              stroke="hsl(var(--chart-4, #a855f7))"
+              stroke="#c084fc"
               dot={false}
               strokeWidth={2}
             />
