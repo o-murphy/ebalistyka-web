@@ -25,8 +25,8 @@ export const ChartsScreen = () => {
       .filter((_, i) => i % 10 === 0)
       .map((row) => ({
         range: Math.round(row.distance.In(pu.distance)),
-        elevation: parseFloat(row.dropAdjustment.In(pu.adjustment).toFixed(2)),
-        windage: parseFloat(row.windageAdjustment.In(pu.adjustment).toFixed(2)),
+        elevation: parseFloat(row.dropAngle.In(pu.adjustment).toFixed(2)),
+        windage: parseFloat(row.windageAngle.In(pu.adjustment).toFixed(2)),
         velocity: Math.round(row.velocity.In(pu.velocity)),
         mach: parseFloat(row.mach.toFixed(2)),
       }))

@@ -54,7 +54,7 @@ export const HomeScreen = () => {
     const targetRow = trajectory.filter((r) => r.distance.In(Unit.Meter) <= targetDist + 1).at(-1)
     return {
       elevation: adjustedResult.shot?.relativeAngle ?? null,
-      windage: targetRow?.windageAdjustment ?? null,
+      windage: targetRow?.windageAngle ?? null,
     }
   }, [adjustedResult, targetDistance.asDef])
 

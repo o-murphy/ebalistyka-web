@@ -91,10 +91,10 @@ const TrajectoryTableContent = () => {
                 {ts.displayRange && <td className="px-2 py-1.5 text-right">{row.distance.In(pu.distance).toFixed(0)}</td>}
                 {ts.displayVelocity && <td className="px-2 py-1.5 text-right">{row.velocity.In(pu.velocity).toFixed(0)}</td>}
                 {ts.displayHeight && <td className="px-2 py-1.5 text-right">{row.height?.In(pu.drop).toFixed(2) ?? '—'}</td>}
-                {ts.displayDrop && <td className="px-2 py-1.5 text-right">{row.drop.In(pu.drop).toFixed(2)}</td>}
-                {ts.displayDropAdjustment && <td className="px-2 py-1.5 text-right">{row.dropAdjustment.In(pu.adjustment).toFixed(2)}</td>}
+                {ts.displayDrop && <td className="px-2 py-1.5 text-right">{row.slantHeight.In(pu.drop).toFixed(2)}</td>}
+                {ts.displayDropAdjustment && <td className="px-2 py-1.5 text-right">{row.dropAngle.In(pu.adjustment).toFixed(2)}</td>}
                 {ts.displayWindage && <td className="px-2 py-1.5 text-right">{row.windage.In(pu.drop).toFixed(2)}</td>}
-                {ts.displayWindageAdjustment && <td className="px-2 py-1.5 text-right">{row.windageAdjustment.In(pu.adjustment).toFixed(2)}</td>}
+                {ts.displayWindageAdjustment && <td className="px-2 py-1.5 text-right">{row.windageAngle.In(pu.adjustment).toFixed(2)}</td>}
                 {ts.displayMach && <td className="px-2 py-1.5 text-right">{row.mach.toFixed(2)}</td>}
                 {ts.displayEnergy && <td className="px-2 py-1.5 text-right">{row.energy.In(pu.energy).toFixed(0)}</td>}
                 {ts.displayTime && <td className="px-2 py-1.5 text-right">{row.time.toFixed(3)}</td>}

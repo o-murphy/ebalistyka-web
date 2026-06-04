@@ -24,7 +24,7 @@ export const ShotInfoScreen = () => {
     const targetRow = traj.filter((r) => r.distance.In(Unit.Meter) <= targetDist + 1).at(-1)
     return {
       elevation: adjustedResult.shot?.relativeAngle,
-      windage: targetRow?.windageAdjustment,
+      windage: targetRow?.windageAngle,
       velocity: targetRow?.velocity,
       energy: targetRow?.energy,
       time: targetRow?.time,
